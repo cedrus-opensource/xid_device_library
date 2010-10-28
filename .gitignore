@@ -8,8 +8,8 @@ ReleasePS/
 *.suo
 *.aps
 ipch/
-*_i.c
-*_i.h
-*_p.h
-*_p.c
+CedrusXidDriver/*_i.c
+CedrusXidDriver/*_i.h
+CedrusXidDriver/*_p.h
+CedrusXidDriver/*_p.c
 *.vspscc
