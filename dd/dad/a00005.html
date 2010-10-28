@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: CCedrusXidResponseDevice Class Reference</title>
+<title>XID device library: cedrus::xid_device_scanner_t Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -24,49 +24,73 @@
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
+  <div class="navpath">
+    <ul>
+      <li><a class="el" href="../../dd/da2/a00019.html">cedrus</a>      </li>
+      <li><a class="el" href="../../dd/dad/a00005.html">xid_device_scanner_t</a>      </li>
+    </ul>
+  </div>
 </div>
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<h1>CCedrusXidResponseDevice Class Reference</h1>  </div>
+<h1>cedrus::xid_device_scanner_t Class Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="CCedrusXidResponseDevice" -->
-<p><code>#include &lt;<a class="el" href="../../d3/dfe/a00025_source.html">CedrusXidResponseDevice.h</a>&gt;</code></p>
+<!-- doxytag: class="cedrus::xid_device_scanner_t" -->
+<p><code>#include &lt;<a class="el" href="../../d7/d7a/a00016_source.html">xid_device_scanner_t.h</a>&gt;</code></p>
 
-<p><a href="../../d4/d6d/a00055.html">List of all members.</a></p>
+<p><a href="../../dc/de2/a00024.html">List of all members.</a></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/dad/a00005.html#afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60">MAX_PORTS</a> =  255
+ }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a6d39137c393cae2138000fec0241ae72">CCedrusXidResponseDevice</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a55fc8a62c26c13a652c99710c84aa37d">FinalConstruct</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#aa06dfb55938a88c9ee1a09e4c6467df5">FinalRelease</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a225e26df563aaef8be83670884ce4e7e">set_xid_device</a> (boost::shared_ptr&lt; <a class="el" href="../../d4/d51/a00017.html">cedrus::xid_device_t</a> &gt; xid_device)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a6d3511e21d3d931c49de510daad232d2">getName</a> (BSTR *name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a3b30a9bbf36cbc1f7367300fd0bd281a">getPropertiesViewable</a> (unsigned char *viewable)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a40be1bc9aaebbaae6ad11425d6337fab">showProperties</a> (HWND parentWindow)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a0d33764486a9126eca9d98c0710781bb">setDefaults</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#aaf6651ad3531ce1565d9a397aa294b5c">getProperties</a> (BSTR *parameters)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#aae96b3c996c0536cf8e42ad66e4ef1ac">setProperties</a> (BSTR parameters)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a400f5313cd85043b9133db581f28482f">getButtonCount</a> (unsigned long *count)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#ae482681c3d4d01e124528c114f38780d">getButtonNames</a> (BSTR *names, unsigned long *size)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a8bcaff9676e9772eb5f3ed3e4df736a2">acquire</a> (unsigned char useButtons, unsigned char useAxes, IActiveResponseDevice **device)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#ab3c1037cdbd23280e0bd4bbf9cfa9fbe">getAxisCount</a> (unsigned long *count, AxisType *type)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a76cf804acc09de23a57d7f5669df53d3">getAxisNames</a> (BSTR *names, unsigned long *size)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a0b40a08fad95fc677091b4abd9e93d43">getLastError</a> (BSTR *error)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#ab163d274aebd300cb313f39f2e6e7365">xid_device_scanner_t</a> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a634cb7870c154fadba5c0bf0ce579d93">~xid_device_scanner_t</a> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#ae18504faa4b97cc70b28fd00d9b0d713">detect_valid_xid_devices</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of valid XID devices connected to the computer.  <a href="#ae18504faa4b97cc70b28fd00d9b0d713"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="../../d1/d7c/a00003.html">xid_con_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#ad1952364871ac48b61c0c0a754d11cef">connection_at_index</a> (unsigned int i)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an XID connection object for use by the <a class="el" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a> class.  <a href="#ad1952364871ac48b61c0c0a754d11cef"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 
-<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00053">53</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">CedrusXidResponseDevice.h</a>.</p>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a6d39137c393cae2138000fec0241ae72"></a><!-- doxytag: member="CCedrusXidResponseDevice::CCedrusXidResponseDevice" ref="a6d39137c393cae2138000fec0241ae72" args="()" -->
+<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00043">43</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">xid_device_scanner_t.h</a>.</p>
+<hr/><h2>Member Enumeration Documentation</h2>
+<a class="anchor" id="afe02f572b51f69dd13cb0c058d54f9a1"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::@13" ref="afe02f572b51f69dd13cb0c058d54f9a1" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CCedrusXidResponseDevice::CCedrusXidResponseDevice </td>
+          <td class="memname">anonymous enum</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60"></a><!-- doxytag: member="MAX_PORTS" ref="afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60" args="" -->MAX_PORTS</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00046">46</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">xid_device_scanner_t.h</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ab163d274aebd300cb313f39f2e6e7365"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::xid_device_scanner_t" ref="ab163d274aebd300cb313f39f2e6e7365" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cedrus::xid_device_scanner_t::xid_device_scanner_t </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname">&#160;)</td>
           <td></td>
         </tr>
@@ -74,289 +98,65 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00045">45</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00037">37</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a634cb7870c154fadba5c0bf0ce579d93"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::~xid_device_scanner_t" ref="a634cb7870c154fadba5c0bf0ce579d93" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cedrus::xid_device_scanner_t::~xid_device_scanner_t </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname">&#160;)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00043">43</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a8bcaff9676e9772eb5f3ed3e4df736a2"></a><!-- doxytag: member="CCedrusXidResponseDevice::acquire" ref="a8bcaff9676e9772eb5f3ed3e4df736a2" args="(unsigned char useButtons, unsigned char useAxes, IActiveResponseDevice **device)" -->
+<a class="anchor" id="ad1952364871ac48b61c0c0a754d11cef"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::connection_at_index" ref="ad1952364871ac48b61c0c0a754d11cef" args="(unsigned int i)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::acquire </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="../../d1/d7c/a00003.html">cedrus::xid_con_t</a> &gt; cedrus::xid_device_scanner_t::connection_at_index </td>
           <td>(</td>
-          <td class="paramtype">unsigned char&#160;</td>
-          <td class="paramname"> <em>useButtons</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned char&#160;</td>
-          <td class="paramname"> <em>useAxes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">IActiveResponseDevice **&#160;</td>
-          <td class="paramname"> <em>device</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00147">147</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a55fc8a62c26c13a652c99710c84aa37d"></a><!-- doxytag: member="CCedrusXidResponseDevice::FinalConstruct" ref="a55fc8a62c26c13a652c99710c84aa37d" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">HRESULT CCedrusXidResponseDevice::FinalConstruct </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00064">64</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">CedrusXidResponseDevice.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa06dfb55938a88c9ee1a09e4c6467df5"></a><!-- doxytag: member="CCedrusXidResponseDevice::FinalRelease" ref="aa06dfb55938a88c9ee1a09e4c6467df5" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CCedrusXidResponseDevice::FinalRelease </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00069">69</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">CedrusXidResponseDevice.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ab3c1037cdbd23280e0bd4bbf9cfa9fbe"></a><!-- doxytag: member="CCedrusXidResponseDevice::getAxisCount" ref="ab3c1037cdbd23280e0bd4bbf9cfa9fbe" args="(unsigned long *count, AxisType *type)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::getAxisCount </td>
-          <td>(</td>
-          <td class="paramtype">unsigned long *&#160;</td>
-          <td class="paramname"> <em>count</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">AxisType *&#160;</td>
-          <td class="paramname"> <em>type</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00187">187</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a76cf804acc09de23a57d7f5669df53d3"></a><!-- doxytag: member="CCedrusXidResponseDevice::getAxisNames" ref="a76cf804acc09de23a57d7f5669df53d3" args="(BSTR *names, unsigned long *size)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::getAxisNames </td>
-          <td>(</td>
-          <td class="paramtype">BSTR *&#160;</td>
-          <td class="paramname"> <em>names</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned long *&#160;</td>
-          <td class="paramname"> <em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00194">194</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a400f5313cd85043b9133db581f28482f"></a><!-- doxytag: member="CCedrusXidResponseDevice::getButtonCount" ref="a400f5313cd85043b9133db581f28482f" args="(unsigned long *count)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::getButtonCount </td>
-          <td>(</td>
-          <td class="paramtype">unsigned long *&#160;</td>
-          <td class="paramname"> <em>count</em>&#160;)</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"> <em>i</em>&#160;)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00129">129</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
+<p>Returns an XID connection object for use by the <a class="el" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a> class. </p>
+<p>The connection must be opened after retreiving it.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">i</td><td>index of the device </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>an xid connection object for use by an instance of <a class="el" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a>. </dd></dl>
+
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00154">154</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae482681c3d4d01e124528c114f38780d"></a><!-- doxytag: member="CCedrusXidResponseDevice::getButtonNames" ref="ae482681c3d4d01e124528c114f38780d" args="(BSTR *names, unsigned long *size)" -->
+<a class="anchor" id="ae18504faa4b97cc70b28fd00d9b0d713"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::detect_valid_xid_devices" ref="ae18504faa4b97cc70b28fd00d9b0d713" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::getButtonNames </td>
-          <td>(</td>
-          <td class="paramtype">BSTR *&#160;</td>
-          <td class="paramname"> <em>names</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned long *&#160;</td>
-          <td class="paramname"> <em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00135">135</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0b40a08fad95fc677091b4abd9e93d43"></a><!-- doxytag: member="CCedrusXidResponseDevice::getLastError" ref="a0b40a08fad95fc677091b4abd9e93d43" args="(BSTR *error)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::getLastError </td>
-          <td>(</td>
-          <td class="paramtype">BSTR *&#160;</td>
-          <td class="paramname"> <em>error</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00201">201</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6d3511e21d3d931c49de510daad232d2"></a><!-- doxytag: member="CCedrusXidResponseDevice::getName" ref="a6d3511e21d3d931c49de510daad232d2" args="(BSTR *name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::getName </td>
-          <td>(</td>
-          <td class="paramtype">BSTR *&#160;</td>
-          <td class="paramname"> <em>name</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00084">84</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aaf6651ad3531ce1565d9a397aa294b5c"></a><!-- doxytag: member="CCedrusXidResponseDevice::getProperties" ref="aaf6651ad3531ce1565d9a397aa294b5c" args="(BSTR *parameters)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::getProperties </td>
-          <td>(</td>
-          <td class="paramtype">BSTR *&#160;</td>
-          <td class="paramname"> <em>parameters</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00117">117</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a3b30a9bbf36cbc1f7367300fd0bd281a"></a><!-- doxytag: member="CCedrusXidResponseDevice::getPropertiesViewable" ref="a3b30a9bbf36cbc1f7367300fd0bd281a" args="(unsigned char *viewable)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::getPropertiesViewable </td>
-          <td>(</td>
-          <td class="paramtype">unsigned char *&#160;</td>
-          <td class="paramname"> <em>viewable</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00100">100</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a225e26df563aaef8be83670884ce4e7e"></a><!-- doxytag: member="CCedrusXidResponseDevice::set_xid_device" ref="a225e26df563aaef8be83670884ce4e7e" args="(boost::shared_ptr&lt; cedrus::xid_device_t &gt; xid_device)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CCedrusXidResponseDevice::set_xid_device </td>
-          <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="../../d4/d51/a00017.html">cedrus::xid_device_t</a> &gt;&#160;</td>
-          <td class="paramname"> <em>xid_device</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00076">76</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0d33764486a9126eca9d98c0710781bb"></a><!-- doxytag: member="CCedrusXidResponseDevice::setDefaults" ref="a0d33764486a9126eca9d98c0710781bb" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::setDefaults </td>
+          <td class="memname">int cedrus::xid_device_scanner_t::detect_valid_xid_devices </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
           <td></td>
@@ -365,54 +165,20 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00112">112</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
+<p>Returns the number of valid XID devices connected to the computer. </p>
+<p>In the process of scanning for XID devices, this adds each device to the xid_connections_ vector.</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>number of XID devices detected. </dd></dl>
 
-</div>
-</div>
-<a class="anchor" id="aae96b3c996c0536cf8e42ad66e4ef1ac"></a><!-- doxytag: member="CCedrusXidResponseDevice::setProperties" ref="aae96b3c996c0536cf8e42ad66e4ef1ac" args="(BSTR parameters)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::setProperties </td>
-          <td>(</td>
-          <td class="paramtype">BSTR&#160;</td>
-          <td class="paramname"> <em>parameters</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00123">123</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a40be1bc9aaebbaae6ad11425d6337fab"></a><!-- doxytag: member="CCedrusXidResponseDevice::showProperties" ref="a40be1bc9aaebbaae6ad11425d6337fab" args="(HWND parentWindow)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidResponseDevice::showProperties </td>
-          <td>(</td>
-          <td class="paramtype">HWND&#160;</td>
-          <td class="paramname"> <em>parentWindow</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dc/de2/a00024_source.html#l00106">106</a> of file <a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00067">67</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="../../d3/dfe/a00025_source.html">CedrusXidResponseDevice.h</a></li>
-<li><a class="el" href="../../dc/de2/a00024_source.html">CedrusXidResponseDevice.cpp</a></li>
+<li><a class="el" href="../../d7/d7a/a00016_source.html">xid_device_scanner_t.h</a></li>
+<li><a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Oct 27 2010 14:15:10 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

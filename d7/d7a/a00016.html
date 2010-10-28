@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: cedrus::xid_device_scanner_t Class Reference</title>
+<title>XID device library: xid_device_scanner_t.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -13,172 +13,39 @@
     <ul class="tablist">
       <li><a href="../../index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="../../namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="../../annotated.html"><span>Classes</span></a></li>
-      <li><a href="../../files.html"><span>Files</span></a></li>
+      <li><a href="../../annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="../../files.html"><span>Files</span></a></li>
     </ul>
   </div>
   <div class="tabs2">
     <ul class="tablist">
-      <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
-    </ul>
-  </div>
-  <div class="navpath">
-    <ul>
-      <li><a class="el" href="../../d4/dca/a00048.html">cedrus</a>      </li>
-      <li><a class="el" href="../../d7/d7a/a00016.html">xid_device_scanner_t</a>      </li>
+      <li><a href="../../files.html"><span>File&#160;List</span></a></li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
-<h1>cedrus::xid_device_scanner_t Class Reference</h1>  </div>
+<h1>xid_device_scanner_t.h File Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="cedrus::xid_device_scanner_t" -->
-<p><code>#include &lt;<a class="el" href="../../d5/df9/a00044_source.html">xid_device_scanner_t.h</a>&gt;</code></p>
+<code>#include &lt;vector&gt;</code><br/>
+<code>#include &lt;string&gt;</code><br/>
+<code>#include &lt;boost/shared_ptr.hpp&gt;</code><br/>
 
-<p><a href="../../d9/d73/a00060.html">List of all members.</a></p>
+<p><a href="../../d7/d7a/a00016_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../d7/d7a/a00016.html#afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60">MAX_PORTS</a> =  255
- }</td></tr>
-<tr><td colspan="2"><h2><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d7a/a00016.html#ab163d274aebd300cb313f39f2e6e7365">xid_device_scanner_t</a> (void)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d7a/a00016.html#a634cb7870c154fadba5c0bf0ce579d93">~xid_device_scanner_t</a> (void)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d7a/a00016.html#ae18504faa4b97cc70b28fd00d9b0d713">detect_valid_xid_devices</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of valid XID devices connected to the computer.  <a href="#ae18504faa4b97cc70b28fd00d9b0d713"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="../../d2/de7/a00014.html">xid_con_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d7a/a00016.html#ad1952364871ac48b61c0c0a754d11cef">connection_at_index</a> (unsigned int i)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an XID connection object for use by the <a class="el" href="../../d4/d51/a00017.html" title="abstraction of an XID device">xid_device_t</a> class.  <a href="#ad1952364871ac48b61c0c0a754d11cef"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html">cedrus::xid_device_scanner_t</a></td></tr>
+<tr><td colspan="2"><h2><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da2/a00019.html">cedrus</a></td></tr>
 </table>
-<hr/><a name="_details"></a><h2>Detailed Description</h2>
-
-<p>Definition at line <a class="el" href="../../d5/df9/a00044_source.html#l00043">43</a> of file <a class="el" href="../../d5/df9/a00044_source.html">xid_device_scanner_t.h</a>.</p>
-<hr/><h2>Member Enumeration Documentation</h2>
-<a class="anchor" id="afe02f572b51f69dd13cb0c058d54f9a1"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::@13" ref="afe02f572b51f69dd13cb0c058d54f9a1" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">anonymous enum</td>
-        </tr>
-      </table>
 </div>
-<div class="memdoc">
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60"></a><!-- doxytag: member="MAX_PORTS" ref="afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60" args="" -->MAX_PORTS</em>&nbsp;</td><td>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-<p>Definition at line <a class="el" href="../../d5/df9/a00044_source.html#l00046">46</a> of file <a class="el" href="../../d5/df9/a00044_source.html">xid_device_scanner_t.h</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ab163d274aebd300cb313f39f2e6e7365"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::xid_device_scanner_t" ref="ab163d274aebd300cb313f39f2e6e7365" args="(void)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">cedrus::xid_device_scanner_t::xid_device_scanner_t </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname">&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d6/d42/a00043_source.html#l00037">37</a> of file <a class="el" href="../../d6/d42/a00043_source.html">xid_device_scanner_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a634cb7870c154fadba5c0bf0ce579d93"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::~xid_device_scanner_t" ref="a634cb7870c154fadba5c0bf0ce579d93" args="(void)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">cedrus::xid_device_scanner_t::~xid_device_scanner_t </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname">&#160;)</td>
-          <td><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d6/d42/a00043_source.html#l00043">43</a> of file <a class="el" href="../../d6/d42/a00043_source.html">xid_device_scanner_t.cpp</a>.</p>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ad1952364871ac48b61c0c0a754d11cef"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::connection_at_index" ref="ad1952364871ac48b61c0c0a754d11cef" args="(unsigned int i)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">boost::shared_ptr&lt; <a class="el" href="../../d2/de7/a00014.html">cedrus::xid_con_t</a> &gt; cedrus::xid_device_scanner_t::connection_at_index </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"> <em>i</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Returns an XID connection object for use by the <a class="el" href="../../d4/d51/a00017.html" title="abstraction of an XID device">xid_device_t</a> class. </p>
-<p>The connection must be opened after retreiving it.</p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">i</td><td>index of the device </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>an xid connection object for use by an instance of <a class="el" href="../../d4/d51/a00017.html" title="abstraction of an XID device">xid_device_t</a>. </dd></dl>
-
-<p>Definition at line <a class="el" href="../../d6/d42/a00043_source.html#l00132">132</a> of file <a class="el" href="../../d6/d42/a00043_source.html">xid_device_scanner_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae18504faa4b97cc70b28fd00d9b0d713"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::detect_valid_xid_devices" ref="ae18504faa4b97cc70b28fd00d9b0d713" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cedrus::xid_device_scanner_t::detect_valid_xid_devices </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Returns the number of valid XID devices connected to the computer. </p>
-<p>In the process of scanning for XID devices, this adds each device to the xid_connections_ vector.</p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>number of XID devices detected. </dd></dl>
-
-<p>Definition at line <a class="el" href="../../d6/d42/a00043_source.html#l00067">67</a> of file <a class="el" href="../../d6/d42/a00043_source.html">xid_device_scanner_t.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="../../d5/df9/a00044_source.html">xid_device_scanner_t.h</a></li>
-<li><a class="el" href="../../d6/d42/a00043_source.html">xid_device_scanner_t.cpp</a></li>
-</ul>
-</div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Oct 27 2010 14:15:10 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

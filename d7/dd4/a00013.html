@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: cedrus::response Class Reference</title>
+<title>XID device library: xid_device_config_t.cpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -13,150 +13,31 @@
     <ul class="tablist">
       <li><a href="../../index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="../../namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="../../annotated.html"><span>Classes</span></a></li>
-      <li><a href="../../files.html"><span>Files</span></a></li>
+      <li><a href="../../annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="../../files.html"><span>Files</span></a></li>
     </ul>
   </div>
   <div class="tabs2">
     <ul class="tablist">
-      <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
-    </ul>
-  </div>
-  <div class="navpath">
-    <ul>
-      <li><a class="el" href="../../d4/dca/a00048.html">cedrus</a>      </li>
-      <li><a class="el" href="../../d7/dd4/a00013.html">response</a>      </li>
+      <li><a href="../../files.html"><span>File&#160;List</span></a></li>
     </ul>
   </div>
 </div>
 <div class="header">
-  <div class="summary">
-<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<h1>cedrus::response Class Reference</h1>  </div>
+<h1>xid_device_config_t.cpp File Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="cedrus::response" -->
-<p>struct to encapsulate a response from an XID device  
-<a href="#_details">More...</a></p>
+<code>#include &quot;<a class="el" href="../../d2/de7/a00014_source.html">xid_device_config_t.h</a>&quot;</code><br/>
+<code>#include &lt;Windows.h&gt;</code><br/>
+<code>#include &lt;iostream&gt;</code><br/>
+<code>#include &quot;<a class="el" href="../../d7/dec/a00010_source.html">string_tokenizer.hpp</a>&quot;</code><br/>
 
-<p><code>#include &lt;<a class="el" href="../../d3/dea/a00046_source.html">xid_device_t.h</a>&gt;</code></p>
-
-<p><a href="../../d4/de8/a00061.html">List of all members.</a></p>
+<p><a href="../../d7/dd4/a00013_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dd4/a00013.html#aced8e8a45b60ee6b3dc4967d64b92caf">port</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">port the response came from.  <a href="#aced8e8a45b60ee6b3dc4967d64b92caf"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dd4/a00013.html#a7d98543c9f2fea1c1d10df6e90134d72">button</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">button pressed.  <a href="#a7d98543c9f2fea1c1d10df6e90134d72"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dd4/a00013.html#a4d5b394bc3a04db3389aa6c99a4ca5bc">pressed</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">whether or not a button was pressed  <a href="#a4d5b394bc3a04db3389aa6c99a4ca5bc"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dd4/a00013.html#a17a4679d77dad354a5ef1c0eece34a48">reaction_time</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">reaction time  <a href="#a17a4679d77dad354a5ef1c0eece34a48"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d4/dca/a00048.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dd4/a00013.html#abf360fb3a9b07d04d0873a7a97c78e99">key_state</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">key state.  <a href="#abf360fb3a9b07d04d0873a7a97c78e99"></a><br/></td></tr>
 </table>
-<hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>struct to encapsulate a response from an XID device </p>
-
-<p>Definition at line <a class="el" href="../../d3/dea/a00046_source.html#l00052">52</a> of file <a class="el" href="../../d3/dea/a00046_source.html">xid_device_t.h</a>.</p>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a7d98543c9f2fea1c1d10df6e90134d72"></a><!-- doxytag: member="cedrus::response::button" ref="a7d98543c9f2fea1c1d10df6e90134d72" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="../../d7/dd4/a00013.html#a7d98543c9f2fea1c1d10df6e90134d72">cedrus::response::button</a></td>
-        </tr>
-      </table>
 </div>
-<div class="memdoc">
-
-<p>button pressed. </p>
-<p>This is a 0 based index </p>
-
-<p>Definition at line <a class="el" href="../../d3/dea/a00046_source.html#l00062">62</a> of file <a class="el" href="../../d3/dea/a00046_source.html">xid_device_t.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="abf360fb3a9b07d04d0873a7a97c78e99"></a><!-- doxytag: member="cedrus::response::key_state" ref="abf360fb3a9b07d04d0873a7a97c78e99" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d4/dca/a00048.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a> <a class="el" href="../../d7/dd4/a00013.html#abf360fb3a9b07d04d0873a7a97c78e99">cedrus::response::key_state</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>key state. </p>
-<p>NO_KEY_DETECTED, FOUND_KEY_UP, or FOUND_KEY_DOWN </p>
-
-<p>Definition at line <a class="el" href="../../d3/dea/a00046_source.html#l00077">77</a> of file <a class="el" href="../../d3/dea/a00046_source.html">xid_device_t.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aced8e8a45b60ee6b3dc4967d64b92caf"></a><!-- doxytag: member="cedrus::response::port" ref="aced8e8a45b60ee6b3dc4967d64b92caf" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="../../d7/dd4/a00013.html#aced8e8a45b60ee6b3dc4967d64b92caf">cedrus::response::port</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>port the response came from. </p>
-<p>Usualy 0 </p>
-
-<p>Definition at line <a class="el" href="../../d3/dea/a00046_source.html#l00057">57</a> of file <a class="el" href="../../d3/dea/a00046_source.html">xid_device_t.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4d5b394bc3a04db3389aa6c99a4ca5bc"></a><!-- doxytag: member="cedrus::response::pressed" ref="a4d5b394bc3a04db3389aa6c99a4ca5bc" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="../../d7/dd4/a00013.html#a4d5b394bc3a04db3389aa6c99a4ca5bc">cedrus::response::pressed</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>whether or not a button was pressed </p>
-
-<p>Definition at line <a class="el" href="../../d3/dea/a00046_source.html#l00067">67</a> of file <a class="el" href="../../d3/dea/a00046_source.html">xid_device_t.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a17a4679d77dad354a5ef1c0eece34a48"></a><!-- doxytag: member="cedrus::response::reaction_time" ref="a17a4679d77dad354a5ef1c0eece34a48" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="../../d7/dd4/a00013.html#a17a4679d77dad354a5ef1c0eece34a48">cedrus::response::reaction_time</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>reaction time </p>
-
-<p>Definition at line <a class="el" href="../../d3/dea/a00046_source.html#l00072">72</a> of file <a class="el" href="../../d3/dea/a00046_source.html">xid_device_t.h</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li><a class="el" href="../../d3/dea/a00046_source.html">xid_device_t.h</a></li>
-</ul>
-</div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Oct 27 2010 14:15:10 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

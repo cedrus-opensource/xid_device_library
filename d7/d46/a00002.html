@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: CCedrusXidActiveDevice Class Reference</title>
+<title>XID device library: cedrus::response Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -24,359 +24,139 @@
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
+  <div class="navpath">
+    <ul>
+      <li><a class="el" href="../../dd/da2/a00019.html">cedrus</a>      </li>
+      <li><a class="el" href="../../d7/d46/a00002.html">response</a>      </li>
+    </ul>
+  </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<h1>CCedrusXidActiveDevice Class Reference</h1>  </div>
+<h1>cedrus::response Class Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="CCedrusXidActiveDevice" -->
-<p><code>#include &lt;<a class="el" href="../../dd/da2/a00019_source.html">CedrusXidActiveDevice.h</a>&gt;</code></p>
+<!-- doxytag: class="cedrus::response" -->
+<p>struct to encapsulate a response from an XID device  
+<a href="#_details">More...</a></p>
 
-<p><a href="../../dc/dee/a00053.html">List of all members.</a></p>
+<p><code>#include &lt;<a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a>&gt;</code></p>
+
+<p><a href="../../d3/dfe/a00025.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#aa39e6423210ed1ef40c02a1732b4fdef">CCedrusXidActiveDevice</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">HRESULT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a54e8b3193851fa8a986bd75ac62853ea">FinalConstruct</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a7ac8670cbdebf9e61b346295b44c6ee6">FinalRelease</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a4d4136d680f073dcd5513d68aa609141">setButtonCount</a> (unsigned long count)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a0bb80b8c02fe9c2eabbe1352b86e22b0">set_xid_device</a> (boost::shared_ptr&lt; <a class="el" href="../../d4/d51/a00017.html">cedrus::xid_device_t</a> &gt; xid_device)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a7a7fcfafd216626feb94a69bdec4856e">getName</a> (BSTR *name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a4f27e1b7f8ac0b6d73ed5f8bf7a149fc">getXYIndices</a> (long *xIndex, long *yIndex)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#ae1379498958303957b806e811f5bfec7">processMessage</a> (BSTR message, BSTR *result)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#aed3b9242ed82ad588988c0460c4c178d">getResponseCount</a> (unsigned long *count)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a8e8aac1c72a0b0b7a58fbdf80a933434">getResponseData</a> (tagResponseInfo *data, unsigned long *count)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#ac345e69eb82e8a260d371aeebbcd8169">clearResponseData</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a1bff6e9445f75e15d770fc4c9c46fc86">pollAxisPositions</a> (double *positions, unsigned long *count)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a0b4d27b6dae4d7b0235cc680f2943256">pollAxisChanges</a> (double *changes, unsigned long *count)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">STDMETHOD()&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a14d807213f845df7689a696ccd9ad7c8">getLastError</a> (BSTR *error)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#aced8e8a45b60ee6b3dc4967d64b92caf">port</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">port the response came from.  <a href="#aced8e8a45b60ee6b3dc4967d64b92caf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a7d98543c9f2fea1c1d10df6e90134d72">button</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">button pressed.  <a href="#a7d98543c9f2fea1c1d10df6e90134d72"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a4d5b394bc3a04db3389aa6c99a4ca5bc">pressed</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">whether or not a button was pressed  <a href="#a4d5b394bc3a04db3389aa6c99a4ca5bc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#a17a4679d77dad354a5ef1c0eece34a48">reaction_time</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">reaction time  <a href="#a17a4679d77dad354a5ef1c0eece34a48"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html#abf360fb3a9b07d04d0873a7a97c78e99">key_state</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">key state.  <a href="#abf360fb3a9b07d04d0873a7a97c78e99"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>struct to encapsulate a response from an XID device </p>
 
-<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00052">52</a> of file <a class="el" href="../../dd/da2/a00019_source.html">CedrusXidActiveDevice.h</a>.</p>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aa39e6423210ed1ef40c02a1732b4fdef"></a><!-- doxytag: member="CCedrusXidActiveDevice::CCedrusXidActiveDevice" ref="aa39e6423210ed1ef40c02a1732b4fdef" args="()" -->
+<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00052">52</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a>.</p>
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a7d98543c9f2fea1c1d10df6e90134d72"></a><!-- doxytag: member="cedrus::response::button" ref="a7d98543c9f2fea1c1d10df6e90134d72" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CCedrusXidActiveDevice::CCedrusXidActiveDevice </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td></td>
+          <td class="memname">int <a class="el" href="../../d7/d46/a00002.html#a7d98543c9f2fea1c1d10df6e90134d72">cedrus::response::button</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00040">40</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
+<p>button pressed. </p>
+<p>This is a 0 based index </p>
+
+<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00062">62</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a>.</p>
 
 </div>
 </div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ac345e69eb82e8a260d371aeebbcd8169"></a><!-- doxytag: member="CCedrusXidActiveDevice::clearResponseData" ref="ac345e69eb82e8a260d371aeebbcd8169" args="()" -->
+<a class="anchor" id="abf360fb3a9b07d04d0873a7a97c78e99"></a><!-- doxytag: member="cedrus::response::key_state" ref="abf360fb3a9b07d04d0873a7a97c78e99" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::clearResponseData </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td></td>
+          <td class="memname"><a class="el" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a> <a class="el" href="../../d7/d46/a00002.html#abf360fb3a9b07d04d0873a7a97c78e99">cedrus::response::key_state</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00137">137</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
+<p>key state. </p>
+<p>NO_KEY_DETECTED, FOUND_KEY_UP, or FOUND_KEY_DOWN </p>
+
+<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00077">77</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a54e8b3193851fa8a986bd75ac62853ea"></a><!-- doxytag: member="CCedrusXidActiveDevice::FinalConstruct" ref="a54e8b3193851fa8a986bd75ac62853ea" args="()" -->
+<a class="anchor" id="aced8e8a45b60ee6b3dc4967d64b92caf"></a><!-- doxytag: member="cedrus::response::port" ref="aced8e8a45b60ee6b3dc4967d64b92caf" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">HRESULT CCedrusXidActiveDevice::FinalConstruct </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td><code> [inline]</code></td>
+          <td class="memname">int <a class="el" href="../../d7/d46/a00002.html#aced8e8a45b60ee6b3dc4967d64b92caf">cedrus::response::port</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00063">63</a> of file <a class="el" href="../../dd/da2/a00019_source.html">CedrusXidActiveDevice.h</a>.</p>
+<p>port the response came from. </p>
+<p>Usualy 0 </p>
+
+<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00057">57</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7ac8670cbdebf9e61b346295b44c6ee6"></a><!-- doxytag: member="CCedrusXidActiveDevice::FinalRelease" ref="a7ac8670cbdebf9e61b346295b44c6ee6" args="()" -->
+<a class="anchor" id="a4d5b394bc3a04db3389aa6c99a4ca5bc"></a><!-- doxytag: member="cedrus::response::pressed" ref="a4d5b394bc3a04db3389aa6c99a4ca5bc" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void CCedrusXidActiveDevice::FinalRelease </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td><code> [inline]</code></td>
+          <td class="memname">bool <a class="el" href="../../d7/d46/a00002.html#a4d5b394bc3a04db3389aa6c99a4ca5bc">cedrus::response::pressed</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00068">68</a> of file <a class="el" href="../../dd/da2/a00019_source.html">CedrusXidActiveDevice.h</a>.</p>
+<p>whether or not a button was pressed </p>
+
+<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00067">67</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a14d807213f845df7689a696ccd9ad7c8"></a><!-- doxytag: member="CCedrusXidActiveDevice::getLastError" ref="a14d807213f845df7689a696ccd9ad7c8" args="(BSTR *error)" -->
+<a class="anchor" id="a17a4679d77dad354a5ef1c0eece34a48"></a><!-- doxytag: member="cedrus::response::reaction_time" ref="a17a4679d77dad354a5ef1c0eece34a48" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::getLastError </td>
-          <td>(</td>
-          <td class="paramtype">BSTR *&#160;</td>
-          <td class="paramname"> <em>error</em>&#160;)</td>
-          <td></td>
+          <td class="memname">int <a class="el" href="../../d7/d46/a00002.html#a17a4679d77dad354a5ef1c0eece34a48">cedrus::response::reaction_time</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00164">164</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
+<p>reaction time </p>
+
+<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00072">72</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7a7fcfafd216626feb94a69bdec4856e"></a><!-- doxytag: member="CCedrusXidActiveDevice::getName" ref="a7a7fcfafd216626feb94a69bdec4856e" args="(BSTR *name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::getName </td>
-          <td>(</td>
-          <td class="paramtype">BSTR *&#160;</td>
-          <td class="paramname"> <em>name</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00055">55</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aed3b9242ed82ad588988c0460c4c178d"></a><!-- doxytag: member="CCedrusXidActiveDevice::getResponseCount" ref="aed3b9242ed82ad588988c0460c4c178d" args="(unsigned long *count)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::getResponseCount </td>
-          <td>(</td>
-          <td class="paramtype">unsigned long *&#160;</td>
-          <td class="paramname"> <em>count</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00089">89</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a8e8aac1c72a0b0b7a58fbdf80a933434"></a><!-- doxytag: member="CCedrusXidActiveDevice::getResponseData" ref="a8e8aac1c72a0b0b7a58fbdf80a933434" args="(tagResponseInfo *data, unsigned long *count)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::getResponseData </td>
-          <td>(</td>
-          <td class="paramtype">tagResponseInfo *&#160;</td>
-          <td class="paramname"> <em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned long *&#160;</td>
-          <td class="paramname"> <em>count</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00123">123</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4f27e1b7f8ac0b6d73ed5f8bf7a149fc"></a><!-- doxytag: member="CCedrusXidActiveDevice::getXYIndices" ref="a4f27e1b7f8ac0b6d73ed5f8bf7a149fc" args="(long *xIndex, long *yIndex)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::getXYIndices </td>
-          <td>(</td>
-          <td class="paramtype">long *&#160;</td>
-          <td class="paramname"> <em>xIndex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">long *&#160;</td>
-          <td class="paramname"> <em>yIndex</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00071">71</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0b4d27b6dae4d7b0235cc680f2943256"></a><!-- doxytag: member="CCedrusXidActiveDevice::pollAxisChanges" ref="a0b4d27b6dae4d7b0235cc680f2943256" args="(double *changes, unsigned long *count)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::pollAxisChanges </td>
-          <td>(</td>
-          <td class="paramtype">double *&#160;</td>
-          <td class="paramname"> <em>changes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned long *&#160;</td>
-          <td class="paramname"> <em>count</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00157">157</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a1bff6e9445f75e15d770fc4c9c46fc86"></a><!-- doxytag: member="CCedrusXidActiveDevice::pollAxisPositions" ref="a1bff6e9445f75e15d770fc4c9c46fc86" args="(double *positions, unsigned long *count)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::pollAxisPositions </td>
-          <td>(</td>
-          <td class="paramtype">double *&#160;</td>
-          <td class="paramname"> <em>positions</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned long *&#160;</td>
-          <td class="paramname"> <em>count</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00150">150</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae1379498958303957b806e811f5bfec7"></a><!-- doxytag: member="CCedrusXidActiveDevice::processMessage" ref="ae1379498958303957b806e811f5bfec7" args="(BSTR message, BSTR *result)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::processMessage </td>
-          <td>(</td>
-          <td class="paramtype">BSTR&#160;</td>
-          <td class="paramname"> <em>message</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">BSTR *&#160;</td>
-          <td class="paramname"> <em>result</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00080">80</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0bb80b8c02fe9c2eabbe1352b86e22b0"></a><!-- doxytag: member="CCedrusXidActiveDevice::set_xid_device" ref="a0bb80b8c02fe9c2eabbe1352b86e22b0" args="(boost::shared_ptr&lt; cedrus::xid_device_t &gt; xid_device)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void CCedrusXidActiveDevice::set_xid_device </td>
-          <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="../../d4/d51/a00017.html">cedrus::xid_device_t</a> &gt;&#160;</td>
-          <td class="paramname"> <em>xid_device</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00047">47</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4d4136d680f073dcd5513d68aa609141"></a><!-- doxytag: member="CCedrusXidActiveDevice::setButtonCount" ref="a4d4136d680f073dcd5513d68aa609141" args="(unsigned long count)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">STDMETHODIMP CCedrusXidActiveDevice::setButtonCount </td>
-          <td>(</td>
-          <td class="paramtype">unsigned long&#160;</td>
-          <td class="paramname"> <em>count</em>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00170">170</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="../../dd/da2/a00019_source.html">CedrusXidActiveDevice.h</a></li>
-<li><a class="el" href="../../d1/d2b/a00018_source.html">CedrusXidActiveDevice.cpp</a></li>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li><a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Oct 27 2010 14:15:10 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>
