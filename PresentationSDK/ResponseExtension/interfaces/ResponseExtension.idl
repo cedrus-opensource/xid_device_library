@@ -1,0 +1,159 @@
+import "unknwn.idl";
+import "oaidl.idl";
+
+typedef struct tagResponseInfo
+{
+	unsigned long buttonIndex;
+	unsigned char useTime;
+	__int64 time;
+	unsigned long uncertainty;
+} ResponseInfo;
+
+[
+	uuid(00CD547B-61DA-43F8-930B-45F55BA7ED2D),
+	version(1.0),
+	dual,
+	oleautomation
+]
+interface IActiveResponseDevice: IDispatch
+{
+	[
+	id(0x00000001)
+	]
+	HRESULT _stdcall getName( [out,retval] BSTR * name );
+	[
+	id(0x00000002)
+	]
+	HRESULT _stdcall getXYIndices( [out] long * xIndex, [out] long * yIndex );
+	[
+	id(0x00000003)
+	]
+	HRESULT _stdcall processMessage( [in] BSTR message, [out,retval] BSTR * result );
+	[
+	id(0x00000004)
+	]
+	HRESULT _stdcall getResponseCount( [out,retval] unsigned long * count );
+	[
+	id(0x00000005)
+	]
+	HRESULT _stdcall getResponseData( [out] ResponseInfo * data, [in,out] unsigned long * count );
+	[
+	id(0x00000006)
+	]
+	HRESULT _stdcall clearResponseData( void );
+	[
+	id(0x00000007)
+	]
+	HRESULT _stdcall pollAxisPositions( [out] double * positions, [in,out] unsigned long * count );
+	[
+	id(0x00000008)
+	]
+	HRESULT _stdcall pollAxisChanges( [out] double * changes, [in,out] unsigned long * count );
+	[
+	id(0x00000009)
+	]
+	HRESULT _stdcall getLastError( [out,retval] BSTR * error );
+};
+
+[
+	uuid(D0297FFD-3636-4250-8700-1BFB24930E07)
+]
+typedef enum tagAxisType
+{
+	AT_RELATIVE = 0,
+	AT_ABSOLUTE = 1,
+	AT_FORCE_DWORD = 0x7fffffff
+} AxisType;
+
+[
+	uuid(0AA36774-958A-48F1-BC84-E80E3E91A7AA),
+	version(1.0),
+	dual,
+	oleautomation
+]
+interface IResponseDevice: IDispatch
+{
+	[
+	id(0x00000001)
+	]
+	HRESULT _stdcall getName( [out,retval] BSTR * name );
+	[
+	id(0x00000002)
+	]
+	HRESULT _stdcall getPropertiesViewable( [out,retval] unsigned char * viewable );
+	[
+	id(0x00000003)
+	]
+	HRESULT _stdcall showProperties( HWND parentWindow );
+	[
+	id(0x00000004)
+	]
+	HRESULT _stdcall setDefaults( void );
+	[
+	id(0x00000005)
+	]
+	HRESULT _stdcall getProperties( [out,retval] BSTR * parameters );
+	[
+	id(0x00000006)
+	]
+	HRESULT _stdcall setProperties( [in] BSTR parameters );
+	[
+	id(0x00000007)
+	]
+	HRESULT _stdcall getButtonCount( [out,retval] unsigned long * count );
+	[
+	id(0x00000008)
+	]
+	HRESULT _stdcall getButtonNames( [out] BSTR * names, [in,out] unsigned long * size );
+	[
+	id(0x00000009)
+	]
+	HRESULT _stdcall acquire( [in] unsigned char useButtons, [in] unsigned char useAxes, [out,retval] IActiveResponseDevice ** device );
+	[
+	id(0x0000000A)
+	]
+	HRESULT _stdcall getAxisCount( [out] unsigned long * count, [out] AxisType * type );
+	[
+	id(0x0000000B)
+	]
+	HRESULT _stdcall getAxisNames( [out] BSTR * names, [in,out] unsigned long * size );
+	[
+	id(0x0000000C)
+	]
+	HRESULT _stdcall getLastError( [out,retval] BSTR * error );
+};
+
+
+[
+	uuid(7F2C1D70-B69A-4488-817E-17140910773B),
+	version(1.0),
+	dual,
+	oleautomation
+]
+interface IResponseDeviceEnumerator: IDispatch
+{
+	[
+	id(0x00000001)
+	]
+	HRESULT _stdcall getDeviceCount( [out,retval] unsigned long * count );
+	[
+	id(0x00000002)
+	]
+	HRESULT _stdcall getDevice( [in] unsigned long index, [out,retval] IResponseDevice ** device );
+	[
+	id(0x00000003)
+	]
+	HRESULT _stdcall getLastError( [out,retval] BSTR * error );
+};
+
+[
+	uuid(B393373D-367C-4394-B853-126A1056E12D)
+]
+library ResponseExtension
+{
+	importlib("STDOLE2.TLB");
+
+	interface IButtonDevice;
+	interface IResponseDevice;
+	interface IResponseDeviceEnumerator;
+}; 

@@ -1,0 +1,27 @@
+HKCR
+{
+    CedrusXidDriver.ResponseD.1 = s 'CedrusXidDeviceEnumerator Class'
+    {
+        CLSID = s '{AF16F32C-DC86-4877-B236-422F750978A2}'
+    }
+    CedrusXidDriver.ResponseDev = s 'CedrusXidDeviceEnumerator Class'
+    {
+        CLSID = s '{AF16F32C-DC86-4877-B236-422F750978A2}'
+        CurVer = s 'CedrusXidDriver.ResponseD.1'
+    }
+    NoRemove CLSID
+    {
+        ForceRemove {AF16F32C-DC86-4877-B236-422F750978A2} = s 'CedrusXidDeviceEnumerator Class'
+        {
+            ProgID = s 'CedrusXidDriver.ResponseD.1'
+            VersionIndependentProgID = s 'CedrusXidDriver.ResponseDev'
+            ForceRemove 'Programmable'
+            InprocServer32 = s '%MODULE%'
+            {
+                val ThreadingModel = s 'Apartment'
+            }
+            val AppID = s '%APPID%'
+            'TypeLib' = s '{E49DC21B-C3E8-4318-B4F7-D8BB13FC8274}'
+        }
+    }
+}

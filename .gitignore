@@ -1,0 +1,15 @@
+Debug/
+Release
+DebugPS/
+ReleasePS/
+*.user
+*.opensdf
+*.sdf
+*.suo
+*.aps
+ipch/
+*_i.c
+*_i.h
+*_p.h
+*_p.c
+*.vspscc

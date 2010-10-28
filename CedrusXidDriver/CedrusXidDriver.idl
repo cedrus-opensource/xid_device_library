@@ -1,0 +1,78 @@
+// CedrusXidDriver.idl : IDL source for CedrusXidDriver
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (CedrusXidDriver.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+import "ResponseExtension.idl";
+
+[
+    object,
+    uuid(FA9CE5A1-EB11-4441-97B5-C26A0482D402),
+    dual,
+    nonextensible,
+    helpstring("ICedrusXidDeviceEnumerator Interface"),
+    pointer_default(unique)
+]
+interface ICedrusXidDeviceEnumerator : IDispatch{
+};
+[
+    object,
+    uuid(77A460A8-B899-4780-8F9E-9DE30BFF3787),
+    dual,
+    nonextensible,
+    helpstring("ICedrusXidResponseDevice Interface"),
+    pointer_default(unique)
+]
+interface ICedrusXidResponseDevice : IDispatch{
+};
+[
+    object,
+    uuid(DCFF86E0-51B5-4074-9AFE-370290617219),
+    dual,
+    nonextensible,
+    helpstring("ICedrusXidActiveDevice Interface"),
+    pointer_default(unique)
+]
+interface ICedrusXidActiveDevice : IDispatch{
+    HRESULT _stdcall setButtonCount(unsigned long buttonCount);
+};
+[
+    uuid(E49DC21B-C3E8-4318-B4F7-D8BB13FC8274),
+    version(1.0),
+    helpstring("Cedrus Xid Device Extension")
+]
+library CedrusXidDriverLib
+{
+    importlib("stdole2.tlb");
+    [		
+        uuid(AF16F32C-DC86-4877-B236-422F750978A2),
+        helpstring("CedrusXidDeviceEnumerator Class")
+    ]
+    coclass CedrusXidDeviceEnumerator
+    {
+        [default] interface ICedrusXidDeviceEnumerator;
+        interface IResponseDeviceEnumerator;
+    };
+    [		
+        uuid(AC943237-D115-4EF4-82CD-7FA1F5256510),
+        helpstring("CedrusXidResponseDevice Class")
+    ]
+    coclass CedrusXidResponseDevice
+    {
+        [default] interface ICedrusXidResponseDevice;
+        interface IResponseDevice;
+    };
+    [		
+        uuid(48DD7CDC-E786-4AC6-8B0D-5A89DD68EE5C),
+        helpstring("CedrusXidActiveDevice Class")
+    ]
+    coclass CedrusXidActiveDevice
+    {
+        [default] interface ICedrusXidActiveDevice;
+        interface IActiveResponseDevice;
+    };
+};
+

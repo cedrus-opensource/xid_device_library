@@ -1,0 +1,50 @@
+[DeviceInfo]
+DeviceID = 3001
+DeviceName = RB-530
+XidProductID = 2
+XidModelID = 1
+
+[DeviceOptions]
+# This is a USB device.  There's no reason to check these other common ports.  Add any ports you don't want to check.
+XidIgnoreSerialPorts = /dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.modem,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
+XidNeedsInterByteDelay = Yes
+#XidClockRate = .99857625
+#XidClockRate = .99988576
+#XidClockRate = .9998777397
+#XidClockRate = .999887627
+XidClockRate = .9998837089 #avg
+# As of Oct 2010, only the initial char of the string XidDigitalOutputCommand is used.
+XidDigitalOutputCommand = a
+
+
+[Port0]
+PortName = Accessory Connector
+NumberOfLines = 6
+BitFormat = Parallel
+DefaultIoDirection = Output
+IoDirectionChangeablePerGroup = Yes
+IoDirectionChangeablePerLine = Yes
+UseableAsDigitalOutput = No
+UseableAsResponse = No
+DebouncingTime = 0
+IoLinesPrefix = AC
+IoLinesBaseNumber = 1
+
+[Port1]
+PortName = Keys
+NumberOfLines = 5
+BitFormat = Parallel
+DefaultIoDirection = Input
+IoDirectionChangeablePerGroup = No
+IoDirectionChangeablePerLine = No
+UseableAsDigitalOutput = No
+UseableAsResponse = Yes
+XidDeviceKeyMap1 =  0
+XidDeviceKeyMap2 = -1
+XidDeviceKeyMap3 =  1
+XidDeviceKeyMap4 =  2
+XidDeviceKeyMap5 =  3
+XidDeviceKeyMap6 =  4
+XidDeviceKeyMap7 = -1
+XidDeviceKeyMap8 = -1
+
