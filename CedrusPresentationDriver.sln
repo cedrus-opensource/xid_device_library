@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CedrusXidDriverPS", "Cedrus
 		{BE65EBF8-DCDE-49D6-8E6F-0D68ECAB80AC} = {BE65EBF8-DCDE-49D6-8E6F-0D68ECAB80AC}
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Presentation XID Extension Installer", "Presentation XID Extension Installer\Presentation XID Extension Installer.vdproj", "{C0D9A37D-0A4C-43B3-876B-031E2A9FD425}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -20,16 +22,14 @@ Global
 		{BAF4CA27-AF62-4173-B9A7-AAC18F90318B}.Debug|Win32.Build.0 = Debug|Win32
 		{BAF4CA27-AF62-4173-B9A7-AAC18F90318B}.Release|Win32.ActiveCfg = Release|Win32
 		{BAF4CA27-AF62-4173-B9A7-AAC18F90318B}.Release|Win32.Build.0 = Release|Win32
-		{9087E86A-07EC-48AC-9FC8-9E004A5B86CE}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9087E86A-07EC-48AC-9FC8-9E004A5B86CE}.Debug|Win32.Build.0 = Debug|Win32
-		{9087E86A-07EC-48AC-9FC8-9E004A5B86CE}.Release|Win32.ActiveCfg = Release|Win32
-		{9087E86A-07EC-48AC-9FC8-9E004A5B86CE}.Release|Win32.Build.0 = Release|Win32
 		{BE65EBF8-DCDE-49D6-8E6F-0D68ECAB80AC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BE65EBF8-DCDE-49D6-8E6F-0D68ECAB80AC}.Debug|Win32.Build.0 = Debug|Win32
 		{BE65EBF8-DCDE-49D6-8E6F-0D68ECAB80AC}.Release|Win32.ActiveCfg = Release|Win32
 		{BE65EBF8-DCDE-49D6-8E6F-0D68ECAB80AC}.Release|Win32.Build.0 = Release|Win32
 		{5974125D-28F4-4416-851C-286B70020D2D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5974125D-28F4-4416-851C-286B70020D2D}.Release|Win32.ActiveCfg = Release|Win32
+		{C0D9A37D-0A4C-43B3-876B-031E2A9FD425}.Debug|Win32.ActiveCfg = Debug
+		{C0D9A37D-0A4C-43B3-876B-031E2A9FD425}.Release|Win32.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
