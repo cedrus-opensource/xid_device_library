@@ -652,7 +652,9 @@ RECURSIVE              = YES
 
 EXCLUDE                = devconfig \
                          "property sheets" \
-			 PresentationSDK
+			 PresentationSDK \
+			 CedrusXidDriver \
+			 .git
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 

@@ -118,7 +118,7 @@ namespace cedrus
          * bytes_to_read is less than the size of in_buffer
          * @param[in] bytes_to_read specifies the number of bytes to expect
          * to be returned from the device
-         * @paran[out] number of bytes actually read
+         * @param[out] bytes_read number of bytes actually read
          *
          * @returns NO_ERR if the read was successful, ERROR_READING_PORT otherwise.
          */

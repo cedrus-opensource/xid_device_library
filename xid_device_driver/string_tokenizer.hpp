@@ -43,7 +43,7 @@ namespace cedrus
      * "value,,value,value".  The 2nd empty field will not be returned.
      *
      * @param[in] str the delimited string
-     * @param[in[ delimiters delimiters used to split the string
+     * @param[in] delimiters delimiters used to split the string
      */
     template<typename string_type>
     std::vector<string_type> tokenize(

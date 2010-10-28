@@ -35,7 +35,7 @@
 #include "constants.h"
 
 cedrus::xid_device_t::xid_device_t(
-    boost::shared_ptr<cedrus::xid_con_t> xid_con,
+    boost::shared_ptr<xid_con_t> xid_con,
     const std::wstring &devconfig_path)
     : xid_con_(xid_con),
       product_id_(-1),
