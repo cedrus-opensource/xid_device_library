@@ -1,4 +1,4 @@
-# Cedrus XID Device Library for Windows #
+# Cedrus XID Device and StimTracker Library for Windows #
 
 ## Supported Hardware ##
 
@@ -8,6 +8,7 @@
 * Cedrus RB-834
 * Cedrus SV-1 Voice Key
 * Cedrus Lumina LP-400 fMRI Response Pad System
+* Cedrus StimTracker
 
 More information on this hardware can be found on [cedrus.com](http://www.cedrus.com "cedrus.com")
 
@@ -30,7 +31,7 @@ The Visual Studio 2010 solution comes with our response extension for
 uses the xid_device_driver library to interact with Presentation is in
 the CedrusXidDriver subfolder in the repository.
 
-### C++ Code Example ###
+### C++ Code Example for XID Response Devices ###
 
 Here's a quick, mile high view on using an XID device in your C++
 code:
@@ -50,11 +51,11 @@ code:
     
      // get the first detected connection
     boost::shared_ptr<xid_con_t> xid_con =
-        scanner.connection_at_index(0);
+        scanner.response_device_connection_at_index(0);
 
     // create the device and load its configuration
     boost::shared_ptr<xid_device_t> xid_device(
-        new xid_device_t(xid_con,L"C:\Path\To\DevConfig\Files");
+        new xid_device_t(xid_con,L"C:\\Path\f\To\f\DevConfig\\Files\\");
     
     while(true)
     {
@@ -67,6 +68,32 @@ code:
             // do something with the response
         }
     }
+
+### C++ Code Example for StimTracker ###
+
+    #include "xid_device_scanner_t.h"
+    #include "xid_con_t.h"
+    #include "stim_tracker_t.h"
+
+    using namespace cedrus;
+
+    // create a device scanner object to ease creation of new devices
+    // and connections.  
+    xid_device_scanner_t scanner;
+
+    // get the number of detected XID devices.
+    int num_response_pads = scanner.detect_valid_xid_devices();
+    
+     // get the first detected connection
+    boost::shared_ptr<xid_con_t> xid_con =
+        scanner.stimtracker_connection_at_index(0);
+
+    stim_tracker_t st(xid_con,
+                      L"C:\\Path\\To\\DevConfig\\Files\\");
+
+    st.set_pulse_duration(50); // set pulse duratio to 50ms
+
+    st.raise_lines(3); // raise lines 1 and 2
 
 ## License and Copyright ##
 

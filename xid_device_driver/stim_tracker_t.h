@@ -40,17 +40,50 @@ namespace cedrus
     class stim_tracker_t : public base_device_t
     {
     public:
+        /**
+         * stim_tracker_t constructor
+         *
+         * @param[in] xid_con xid_con_t object to use
+         * @param[in] devconfig_path path to devconfig files.  Defaults to an
+         * empty string. If no path is used, very conservative default values
+         * are used and reults may not be what you expect.  It's highly
+         * recommended to use the devconfig files.
+         */
         stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
             const std::wstring &devconfig_path = L"");
         virtual ~stim_tracker_t(void);
 
+        /**
+         * Raise digital output lines on the StimTracker device.
+         * 
+         * @param[in] lines_bitmask This is a bitmask used to specify the lines
+         * to be raised on the device. Each of the 8 bits in the integer
+         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
+         * @param[in] leave_remaining_lines boolean value of whether or not to
+         * keep the current line state when applying the new bitmask.
+         */
         void raise_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false);
 
+        /**
+         * Clear digital output lines on the StimTracker device.
+         *
+         * @param[in] lines_bitmask This is a bitmask used to specify the lines
+         * to be raised on the device. Each of the 8 bits in the integer
+         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
+         * @param[in] leave_remaining_lines boolean value of whether or not to
+         * keep the current line state when applying the new bitmask.
+         */ 
         void clear_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false);
 
+        /**
+         * Set the pulse duration when raise_lines() is called.  This is how 
+         * long the line will be active.
+         * 
+         * @param[in] duration Length of time in miliseconds
+         */
         void set_pulse_duration(unsigned int duration);
     };
 } // namespace cedrus

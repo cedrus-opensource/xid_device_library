@@ -203,13 +203,34 @@ namespace cedrus
 
         /**
          * Sets the digital output prefix
+         * 
+         * @param[in] prefix A single character.  This should be 'a' for XID
+         * response devices, or 'm' for StimTracker devices.
          */
         void set_digital_out_prefix(char prefix);
 
+        /**
+         * Raise digital output lines on the StimTracker device.
+         * 
+         * @param[in] lines This is a bitmask used to specify the lines
+         * to be raised on the device. Each of the 8 bits in the integer
+         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
+         * @param[in] leave_remaining_lines boolean value of whether or not to
+         * keep the current line state when applying the new bitmask.
+         */
         void set_digital_output_lines(
             unsigned int lines,
             bool leave_remaining_lines = false);
 
+        /**
+         * Clear digital output lines on the StimTracker device.
+         *
+         * @param[in] lines This is a bitmask used to specify the lines
+         * to be raised on the device. Each of the 8 bits in the integer
+         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
+         * @param[in] leave_remaining_lines boolean value of whether or not to
+         * keep the current line state when applying the new bitmask.
+         */ 
         void clear_digital_output_lines(
             unsigned int lines,
             bool leave_remaining_lines = false);

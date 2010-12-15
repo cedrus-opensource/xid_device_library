@@ -43,7 +43,7 @@ namespace cedrus
     {
     public:
         /**
-          * @class base_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
+          * @class base_device_t base_device_t.h "xid_device_driver/base_device_t.h"
           *
           * @brief base class for Cedrus devices.
           */
