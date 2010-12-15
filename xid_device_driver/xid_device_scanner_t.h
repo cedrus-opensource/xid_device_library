@@ -66,10 +66,18 @@ namespace cedrus
          * 
          * The connection must be opened after retreiving it.
          *
+         * Note: This only returns response devices.  Use stimtracker_connection_at_index()
+         * to get stimtracker devices.
+         *
          * @param[in] i index of the device
          * @returns an xid connection object for use by an instance of xid_device_t.
          */
-        boost::shared_ptr<xid_con_t> connection_at_index(unsigned int i);
+        boost::shared_ptr<xid_con_t> response_device_connection_at_index(unsigned int i);
+
+        boost::shared_ptr<xid_con_t> stimtracker_connection_at_index(unsigned int i);
+
+        int rb_device_count() const;
+        int st_device_count() const;
 
     private:
         /**
@@ -80,7 +88,8 @@ namespace cedrus
         void load_available_com_ports();
 
         std::vector<std::wstring> available_com_ports_;
-        std::vector<boost::shared_ptr<cedrus::xid_con_t> > xid_connections_;
+        std::vector<boost::shared_ptr<cedrus::xid_con_t> > rb_connections_;
+        std::vector<boost::shared_ptr<cedrus::xid_con_t> > st_connections_;
     };
 } // namespace cedrus
 

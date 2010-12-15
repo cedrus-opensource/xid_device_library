@@ -59,8 +59,8 @@ CCedrusXidDeviceEnumerator::CCedrusXidDeviceEnumerator()
             devconfig_location_.erase(pos);
         }
     }
-
-    devices_.resize(port_info_.detect_valid_xid_devices());
+    port_info_.detect_valid_xid_devices();
+    devices_.resize(port_info_.rb_device_count());
 }
 
 STDMETHODIMP CCedrusXidDeviceEnumerator::getDeviceCount(unsigned long *count)
@@ -98,7 +98,7 @@ STDMETHODIMP CCedrusXidDeviceEnumerator::getDevice(
                 if(dev)
                 {
                     boost::shared_ptr<cedrus::xid_con_t> xid_con = 
-                        port_info_.connection_at_index(index);
+                        port_info_.response_device_connection_at_index(index);
                     xid_con->open();
 
                     boost::shared_ptr<cedrus::xid_device_t> xid_device(

@@ -68,7 +68,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
 {
     load_available_com_ports();
 
-    xid_connections_.clear();
+    rb_connections_.clear();
+    st_connections_.clear();
     int devices = 0;
 
     for(std::vector<std::wstring>::iterator iter = available_com_ports_.begin(),
@@ -121,7 +122,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
                 {
                     // found an XID device
                     ++devices;
-                    xid_connections_.push_back(xid_con);
+
                     device_found = true;
 
                     if(strcmp(info.c_str(), "_xid0") != 0)
@@ -140,6 +141,24 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
                         xid_con->flush_input();
                         xid_con->flush_output();
                     }
+
+                    char dev_type[10];
+                    xid_con->send_xid_command(
+                        "_d2",
+                        0,
+                        dev_type,
+                        sizeof(dev_type),
+                        1,
+                        1000);
+
+                    if(dev_type[0] == 'S')
+                    {
+                        st_connections_.push_back(xid_con);
+                    }
+                    else
+                    {
+                        rb_connections_.push_back(xid_con);
+                    }
                 }
             }
             
@@ -151,10 +170,29 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
 }
 
 boost::shared_ptr<cedrus::xid_con_t> 
-cedrus::xid_device_scanner_t::connection_at_index(unsigned int i)
+cedrus::xid_device_scanner_t::response_device_connection_at_index(unsigned int i)
 {
-    if(i >= xid_connections_.size())
+    if(i >= rb_connections_.size())
         return boost::shared_ptr<xid_con_t>();
 
-    return xid_connections_[i];
+    return rb_connections_[i];
+}
+
+boost::shared_ptr<cedrus::xid_con_t>
+cedrus::xid_device_scanner_t::stimtracker_connection_at_index(unsigned int i)
+{
+    if( i > st_connections_.size())
+        return boost::shared_ptr<xid_con_t>();
+
+    return st_connections_[i];
+}
+
+int cedrus::xid_device_scanner_t::rb_device_count() const
+{
+    return rb_connections_.size();
+}
+
+int cedrus::xid_device_scanner_t::st_device_count() const
+{
+    return st_connections_.size();
 }
