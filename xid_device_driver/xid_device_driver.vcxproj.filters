@@ -16,6 +16,12 @@
     <ClCompile Include="xid_device_scanner_t.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="base_device_t.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stim_tracker_t.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -37,6 +43,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xid_device_t.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="base_device_t.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stim_tracker_t.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

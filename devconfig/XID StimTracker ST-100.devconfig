@@ -1,0 +1,34 @@
+[DeviceInfo]
+DeviceID = 3051
+# DeviceName is the string that will show up in the drop-down choice control labeled "Device:"
+# (Note: the DeviceName will be pre-prended with the manufacturer name.)
+DeviceName = StimTracker ST-100
+# 83 is the integer value of the char 'S'
+XidProductID = 83
+# 67 is the integer value of the char 'C'
+XidModelID = 67
+
+[DeviceOptions]
+# This is an RS-232 device.  There's no reason to check the modem--or a wireless phone.  Add yours if you know where it is connected.
+XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
+XidNeedsInterByteDelay = No
+XidNeedsInterCommandDelay = Yes
+XidInterCommandDelay = 1.0
+XidClockRate = 1.0
+# As of Oct 2010, only the initial char of the string XidDigitalOutputCommand is used.
+XidDigitalOutputCommand = m
+XidDigitalOutputBytes = 2
+
+[Port0]
+PortName = Event Marker
+NumberOfLines = 8
+BitFormat = Parallel
+DefaultIoDirection = Output
+IoDirectionChangeablePerGroup = No
+IoDirectionChangeablePerLine = No
+UseableAsDigitalOutput = Yes
+UseableAsResponse = No
+DebouncingTime = 0
+IoLinesPrefix = EM
+IoLinesBaseNumber = 0
+

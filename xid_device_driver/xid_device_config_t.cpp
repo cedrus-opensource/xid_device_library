@@ -67,7 +67,8 @@ cedrus::xid_device_config_t::xid_device_config_t(
     const std::wstring &config_file_location)
     : config_file_location_(config_file_location),
       needs_interbyte_delay_(true),
-      number_of_lines_(8)
+      number_of_lines_(8),
+      digital_out_prefix_('a')
 {
 }
 
@@ -114,7 +115,11 @@ void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
         {
             // if this is an RB device, make sure the model IDs match
             if(product_id == 2 && xid_model_id != model_id)
+            {
+                if(!FindNextFile(find_handle, &file_info))
+                    break;
                 continue;
+            }
             
             // we've found the configuration for this device
 
@@ -135,6 +140,21 @@ void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
                 }
             }
 
+            // get the digital output prefix
+            if(GetPrivateProfileString(
+                L"DeviceOptions",
+                L"XidDigitalOutputCommand",
+                L"a",
+                result,
+                sizeof(result),
+                full_file_path.c_str()) != 0)
+            {
+                std::wstring response(result);
+                std::string std_response;
+                std_response.assign(response.begin(), response.end());
+                digital_out_prefix_ = std_response[0];
+            }
+            
             wchar_t port_str[255];
             
             // xid devices support up to 255 ports.  In reality, usually only
@@ -198,10 +218,11 @@ void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
                 }
 
                 if(found->second.compare(L"Keys") == 0 ||
-                   found->second.compare(L"Voice Key") == 0)
+                   found->second.compare(L"Voice Key") == 0 ||
+                   found->second.compare(L"Event Marker") == 0)
                 {
                     // found a RB-Series response pad, Lumina system,
-                    // or SV-1 Voice Key.
+                    // SV-1 Voice Key, or StimTracker.
                     found = res_map.find(L"NumberOfLines");
                     if(found != res_map.end())
                     {
@@ -260,4 +281,9 @@ int cedrus::xid_device_config_t::number_of_lines() const
 bool cedrus::xid_device_config_t::needs_interbyte_delay() const
 {
     return needs_interbyte_delay_;
+}
+
+char cedrus::xid_device_config_t::digital_out_prefix() const
+{
+    return digital_out_prefix_;
 }

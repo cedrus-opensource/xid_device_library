@@ -465,3 +465,59 @@ void cedrus::xid_con_t::set_needs_interbyte_delay(bool needs_delay)
 {
     needs_interbyte_delay_ = needs_delay;
 }
+
+void cedrus::xid_con_t::set_digital_out_prefix(char prefix)
+{
+    set_lines_cmd_[0] = prefix;
+}
+
+void cedrus::xid_con_t::set_digital_output_lines(
+    unsigned int lines,
+    bool leave_remaining_lines)
+{
+    if(lines < 0 || lines > 255)
+        return;
+
+    int bytes_written;
+
+    if(leave_remaining_lines)
+        lines |= lines_state_;
+
+    if(set_lines_cmd_[0] == 'a')
+    {
+        set_lines_cmd_[2] = ~lines;
+    }
+    else
+    {
+        set_lines_cmd_[2] = lines;
+    }
+
+    write((unsigned char*)set_lines_cmd_, 4, bytes_written);
+    lines_state_ = lines;
+}
+
+void cedrus::xid_con_t::clear_digital_output_lines(
+    unsigned int lines,
+    bool leave_remaining_lines)
+{
+    if(lines < 0 || lines > 255)
+        return;
+
+    int bytes_written;
+    lines = ~lines;
+
+    if(leave_remaining_lines)
+        lines = lines & lines_state_;
+
+    if(set_lines_cmd_[0] == 'a')
+    {
+        set_lines_cmd_[2] = ~lines;
+    }
+    else
+    {
+        set_lines_cmd_[2] = lines;
+    }
+
+    write((unsigned char*)set_lines_cmd_, 4, bytes_written);
+    lines_state_ = lines;
+}

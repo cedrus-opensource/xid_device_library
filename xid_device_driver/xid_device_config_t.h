@@ -89,6 +89,11 @@ namespace cedrus
          */
         bool needs_interbyte_delay() const;
 
+        /**
+         * The digital output prefix
+         */ 
+        char digital_out_prefix() const;
+
     private:
         xid_device_config_t(const std::wstring &devconfig_location);
         void load_devconfig(int product_id, int model_id);
@@ -96,6 +101,7 @@ namespace cedrus
         std::wstring config_file_location_;
         bool needs_interbyte_delay_;
         int number_of_lines_;
+        char digital_out_prefix_;
 
         std::map<int,int> key_map_;
     };

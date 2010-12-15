@@ -34,180 +34,6 @@
 #include "xid_con_t.h"
 #include "constants.h"
 
-/* base_device_t */
-cedrus::base_device_t::base_device_t(
-    boost::shared_ptr<xid_con_t> xid_con,
-    const std::wstring &devconfig_path)
-    : xid_con_(xid_con),
-      product_id_(-1),
-      model_id_(0)
-{
-    init_device(devconfig_path);
-}
-
-cedrus::base_device_t::~base_device_t()
-{}
-
-
-void cedrus::base_device_t::reset_rt_timer()
-{
-    char return_info[200];
-    xid_con_->send_xid_command(
-        "e5", // reset rt timer Xid command
-        2,
-        return_info,
-        sizeof(return_info),
-        0);
-}
-
-void cedrus::base_device_t::reset_base_timer()
-{
-    char return_info[200];
-    xid_con_->send_xid_command(
-        "e1", // reset base timer Xid command
-        2,
-        return_info,
-        sizeof(return_info),
-        0);
-}
-
-int cedrus::base_device_t::query_base_timer()
-{
-    char return_info[200];
-    int read = xid_con_->send_xid_command(
-        "e3",
-        2,
-        return_info,
-        sizeof(return_info),
-        6);
-
-    bool valid_response = (read == 6);
-
-    if(valid_response)
-    {
-        union {
-            int as_int;
-            char as_char[4];
-        } rt;
-
-        for(int i = 0; i < 4; ++i)
-        {
-            rt.as_char[i] = return_info[2+i];
-        }
-        return rt.as_int;
-    }
-
-    return GENERAL_ERROR;
-}
-
-void cedrus::base_device_t::init_device(const std::wstring &devconfig_path)
-{
-    product_id_ = get_inquiry("_d2",1,100,100);
-
-    switch(product_id_)
-    {
-    case 0:
-        device_name_ = "Cedrus Lumina LP-400 Response Pad System";
-        break;
-    case 1:
-        device_name_ = "Cedrus SV-1 Voice Key";
-        break;
-    case 2:
-        {
-            model_id_ = get_inquiry("_d3", 1, 100, 100);
-            switch(model_id_)
-            {
-            case 1:
-                device_name_ = "Cedrus RB-530";
-                break;
-            case 2:
-                device_name_ = "Cedrus RB-730";
-                break;
-            case 3:
-                device_name_ = "Cedrus RB-830";
-                break;
-            case 4:
-                device_name_ = "Cedrus RB-834";
-                break;
-            case -99:
-                device_name_ = "Invalid XID Device";
-                break;
-            default:
-                device_name_ = "Unknown Cedrus RB Series Device";
-            }
-            break;
-        }
-    case -99:
-        device_name_ = "Invalid XID Device";
-        break;
-    default:
-        device_name_ = "Unknown XID device";
-        break;
-    }
-
-    if(!devconfig_path.empty())
-    {
-        config_ = xid_device_config_t::config_for_device(
-          product_id_, model_id_, devconfig_path);
-
-        xid_con_->set_needs_interbyte_delay(
-            config_->needs_interbyte_delay());
-    }
-    else
-    {
-        xid_con_->set_needs_interbyte_delay(true);
-    }
-}
-
-int cedrus::base_device_t::get_inquiry(
-    const char in_command[],
-    int expected_bytes_rec,
-    int timeout,
-    int delay)
-{
-    int return_value = INVALID_RETURN_VALUE;
-    char return_info[20];
-
-    int bytes_returned = xid_con_->send_xid_command(
-        in_command,
-        0,
-        return_info,
-        sizeof(return_info),
-        expected_bytes_rec,
-        timeout,
-        delay);
-
-    if(bytes_returned > 0)
-        return_value = atoi(return_info);
-
-    return return_value;
-}
-
-std::string cedrus::base_device_t::get_device_name()
-{
-    return device_name_;
-}
-
-int cedrus::base_device_t::get_product_id() const
-{
-    return product_id_;
-}
-
-int cedrus::base_device_t::get_model_id() const
-{
-    return model_id_;
-}
-
-int cedrus::xid_device_t::get_button_count() const
-{
-    if(config_)
-        return config_->number_of_lines();
-    else
-        return 8;
-}
-
-/*  xid_device_t */
-
 cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
     const std::wstring &devconfig_path)
@@ -220,6 +46,14 @@ cedrus::xid_device_t::xid_device_t(
 
 cedrus::xid_device_t::~xid_device_t(void)
 {
+}
+
+int cedrus::xid_device_t::get_button_count() const
+{
+    if(config_)
+        return config_->number_of_lines();
+    else
+        return 8;
 }
 
 void cedrus::xid_device_t::poll_for_response()

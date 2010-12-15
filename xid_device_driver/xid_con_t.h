@@ -201,6 +201,19 @@ namespace cedrus
          */
         void set_needs_interbyte_delay(bool need_delay = true);
 
+        /**
+         * Sets the digital output prefix
+         */
+        void set_digital_out_prefix(char prefix);
+
+        void set_digital_output_lines(
+            unsigned int lines,
+            bool leave_remaining_lines = false);
+
+        void clear_digital_output_lines(
+            unsigned int lines,
+            bool leave_remaining_lines = false);
+
     private:
         int setup_com_port();
         void setup_dcb(DCB &dcb) const;

@@ -38,6 +38,7 @@
 #include "port_settings_t.h"
 #include "constants.h"
 #include <boost/shared_ptr.hpp>
+#include "base_device_t.h"
 
 namespace cedrus
 {
@@ -77,98 +78,6 @@ namespace cedrus
         cedrus::key_state key_state;
     };
 
-    class base_device_t
-    {
-    public:
-        /**
-          * @class base_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
-          *
-          * @brief base class for Cedrus devices.
-          */
-        base_device_t(
-            boost::shared_ptr<xid_con_t> xid_con,
-            const std::wstring &devconfig_path = L"");
-        virtual ~base_device_t();
-
-        /**
-         * Returns the name of the device
-         *
-         * @returns name of the device
-         */
-        std::string get_device_name();
-
-        /**
-         * product id of the device.
-         * 
-         * @returns product id
-         * 0: Lumina LP-400 response pad system
-         * 1: SV-1 voice key system
-         * 2: RB series response pad.
-         */
-        int get_product_id() const;
-        
-        /**
-         * model ID of the device.
-         * 
-         * This is generally only valid on RB series response pads.
-         *
-         * @returns model id of the device
-         * 1: RB-530
-         * 2: RB-730
-         * 3: RB-830
-         * 4: RB-834
-         */
-        int get_model_id() const;
-
-        /**
-         * Resets the internal device reaction time timer.
-         * 
-         * This should be called when a stimulus is presented
-         */
-        void reset_rt_timer();
-
-        /**
-         * Resets the device's base timer
-         *
-         * This should be called when the device is initialized or an experiment
-         * starts
-         */
-        void reset_base_timer();
-
-        /**
-         * Returns the time elapsed since the base timer was reset
-         */
-        int query_base_timer();
-
-        /**
-         * Send a command to the device
-         *
-         * @param[in] in_command command to send to the device.  Commands are
-         * detailed at http://www.cedrus.com/xid/
-         * @param[in] expected_bytes_rec expected number of bytes to receive
-         * @param[in] timeout time in miliseconds the device should respond in
-         * @param[in] delay some devices need an additional delay between
-         * receiving a command and issuing a response. Defaults to 0
-         * 
-         * @returns an integer value of the response
-         */
-        int get_inquiry(
-            const char in_command[],
-            int expected_bytes_rec = 1,
-            int timeout = 100,
-            int delay = 0);
-
-    protected:
-        boost::shared_ptr<xid_con_t> xid_con_;
-        boost::shared_ptr<cedrus::xid_device_config_t> config_;
-
-    private:
-        void init_device(const std::wstring &devconfig_path);
-        std::string device_name_;
-        int product_id_;
-        int model_id_;
-
-    };
 
     /**
      * @class xid_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
