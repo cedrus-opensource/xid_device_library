@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: xid_con_t.h Source File</title>
+<title>XID device library: constants.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -20,11 +20,12 @@
   <div class="tabs2">
     <ul class="tablist">
       <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>xid_con_t.h</h1>  </div>
+<h1>constants.h</h1>  </div>
 </div>
 <div class="contents">
 <a href="../../df/d86/a00012.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* Copyright (c) 2010, Cedrus Corporation</span>
@@ -58,113 +59,87 @@
 <a name="l00029"></a>00029 <span class="comment"> * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
 <a name="l00030"></a>00030 <span class="comment"> */</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="preprocessor">#ifndef XID_CON_T_H</span>
-<a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#define XID_CON_T_H</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#ifndef CONSTANTS_H</span>
+<a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#define CONSTANTS_H</span>
 <a name="l00034"></a>00034 <span class="preprocessor"></span>
-<a name="l00035"></a>00035 <span class="preprocessor">#include &quot;<a class="code" href="../../da/da0/a00009.html">port_settings_t.h</a>&quot;</span>
-<a name="l00036"></a>00036 <span class="preprocessor">#include &quot;<a class="code" href="../../de/d5e/a00007.html">constants.h</a>&quot;</span>
-<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;Windows.h&gt;</span>
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039 <span class="keyword">namespace </span>cedrus
-<a name="l00040"></a>00040 {
-<a name="l00051"></a><a class="code" href="../../d1/d7c/a00003.html">00051</a>     <span class="keyword">class </span><a class="code" href="../../d1/d7c/a00003.html" title="Implementation of communication with an XID device.">xid_con_t</a>
+<a name="l00035"></a>00035 <span class="keyword">namespace </span>cedrus
+<a name="l00036"></a>00036 {
+<a name="l00037"></a>00037     <span class="keyword">enum</span>
+<a name="l00038"></a>00038     {
+<a name="l00039"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264ad388a380a30c161b3a5add85bf0936a0">00039</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264ad388a380a30c161b3a5add85bf0936a0">NO_ERR</a>                  =   0,
+<a name="l00040"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a5a4ff3f8494a3dbe7713590137db281e">00040</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a5a4ff3f8494a3dbe7713590137db281e">UNDEFINED</a>               =  -1,
+<a name="l00041"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a78e8acba7f967651f2be549dd0e5784d">00041</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a78e8acba7f967651f2be549dd0e5784d">PORT_NOT_AVAILABLE</a>      =  -2,
+<a name="l00042"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a7ff9d25b0b27cc9e9f817dbd28f4c81d">00042</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a7ff9d25b0b27cc9e9f817dbd28f4c81d">ERROR_SETTING_UP_PORT</a>   =  -3,
+<a name="l00043"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a8b261ec71b4a3d8d8eca0f82230a8c00">00043</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a8b261ec71b4a3d8d8eca0f82230a8c00">ERROR_FLUSHING_PORT</a>     =  -4,
+<a name="l00044"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264af10ce18c8feb84a4308a7ac2ed954272">00044</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264af10ce18c8feb84a4308a7ac2ed954272">ERROR_READING_PORT</a>      =  -5,
+<a name="l00045"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a87c973d7694bc85ef22afad7dbac7ae2">00045</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a87c973d7694bc85ef22afad7dbac7ae2">ERROR_WRITING_TO_PORT</a>   =  -6,
+<a name="l00046"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264ab4cf4a161fbe6096cde05a51eb5c5183">00046</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264ab4cf4a161fbe6096cde05a51eb5c5183">ERROR_CLOSING_PORT</a>      =  -7,
+<a name="l00047"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a0bffdea260a7517f2ef7a31f35c24412">00047</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a0bffdea260a7517f2ef7a31f35c24412">GENERAL_ERROR</a>           = -10,
+<a name="l00048"></a><a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a35f96f1a4cac3d0d57442cd8bd912469">00048</a>         <a class="code" href="../../d0/d33/a00027.html#a8ab3bb6e52d1924677f82ec6b6dcd264a35f96f1a4cac3d0d57442cd8bd912469">PORT_OPENED_BUT_ABORTED</a> = -11,
+<a name="l00049"></a>00049     };
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051     <span class="keyword">enum</span>
 <a name="l00052"></a>00052     {
-<a name="l00053"></a>00053     <span class="keyword">public</span>:
-<a name="l00054"></a>00054         
-<a name="l00065"></a>00065         <a class="code" href="../../d1/d7c/a00003.html#ae7aec605a953355c36b51e0e46a1f740" title="xid_con_t constructor">xid_con_t</a>(
-<a name="l00066"></a>00066             <span class="keyword">const</span> std::wstring &amp;port_name,
-<a name="l00067"></a>00067             <span class="keywordtype">int</span> port_speed = 115200,
-<a name="l00068"></a>00068             <span class="keywordtype">int</span> delay_ms = 1,
-<a name="l00069"></a>00069             <a class="code" href="../../d8/d84/a00001.html#a8993bbaeec01141ab44c098b699af0e9">port_settings_t::bytesize</a> byte_size = <a class="code" href="../../d8/d84/a00001.html#a8993bbaeec01141ab44c098b699af0e9ad0f32ca50b41142986393ae34ca07eb0">port_settings_t::BYTESIZE_8</a>,
-<a name="l00070"></a>00070             <a class="code" href="../../d8/d84/a00001.html#aa8b4bb15086b54a953a50afbee44b738">port_settings_t::bitparity</a> bit_parity = <a class="code" href="../../d8/d84/a00001.html#aa8b4bb15086b54a953a50afbee44b738aa8f13df38b308ab75a8fb8d30f5e6fa2">port_settings_t::BITPARITY_NONE</a>,
-<a name="l00071"></a>00071             <a class="code" href="../../d8/d84/a00001.html#ab7758b4e986c348ff876008c169c1097">port_settings_t::stopbits</a> stop_bits = <a class="code" href="../../d8/d84/a00001.html#ab7758b4e986c348ff876008c169c1097afbb135abbf8bbb7ac38bc0c334988900">port_settings_t::STOP_BIT_1</a>
-<a name="l00072"></a>00072             );
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074         <span class="keyword">virtual</span> <a class="code" href="../../d1/d7c/a00003.html#a4d8a45f4ad0bcd7fb4772350eb6831cc">~xid_con_t</a>();
-<a name="l00075"></a>00075 
-<a name="l00083"></a>00083         <span class="keywordtype">int</span> <a class="code" href="../../d1/d7c/a00003.html#a242ebe9826899413fb32d5f06350eddd" title="Closes the device.">close</a>();
-<a name="l00084"></a>00084 
-<a name="l00092"></a>00092         <span class="keywordtype">int</span> <a class="code" href="../../d1/d7c/a00003.html#aef3a51f4abc37543a793e14b163640e4" title="Flush the device&amp;#39;s input buffer.">flush_input</a>();
-<a name="l00093"></a>00093 
-<a name="l00101"></a>00101         <span class="keywordtype">int</span> <a class="code" href="../../d1/d7c/a00003.html#a9b83231e58489b6c5d8d50103f5b0569" title="Flush the device&amp;#39;s output buffer.">flush_output</a>();
-<a name="l00102"></a>00102 
-<a name="l00111"></a>00111         <span class="keywordtype">int</span> <a class="code" href="../../d1/d7c/a00003.html#a6a9c45b6f70e3b35dc9ff87fae60ce0b" title="Opens the COM port for use.">open</a>();
-<a name="l00112"></a>00112 
-<a name="l00125"></a>00125         <span class="keywordtype">int</span> <a class="code" href="../../d1/d7c/a00003.html#a80530da71a395fd5bc3b530a842df6dc" title="Read data from the device.">read</a>(
-<a name="l00126"></a>00126             <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *in_buffer,
-<a name="l00127"></a>00127             <span class="keywordtype">int</span> bytes_to_read,
-<a name="l00128"></a>00128             <span class="keywordtype">int</span> &amp;bytes_read);
-<a name="l00129"></a>00129 
-<a name="l00140"></a>00140         <span class="keywordtype">int</span> <a class="code" href="../../d1/d7c/a00003.html#aea3f3ebc811e14312a8b7e40becffa12" title="Write data to the device.">write</a>(
-<a name="l00141"></a>00141             <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> * <span class="keyword">const</span> in_buffer,
-<a name="l00142"></a>00142             <span class="keywordtype">int</span> bytes_to_write,
-<a name="l00143"></a>00143             <span class="keywordtype">int</span> &amp;bytes_written);
-<a name="l00144"></a>00144 
-<a name="l00151"></a>00151         <a class="code" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">key_state</a> <a class="code" href="../../d1/d7c/a00003.html#acd274eb5c715b78743d44ea1b7444575" title="Checks the device to see if an event response has been sent.">check_for_keypress</a>();
-<a name="l00152"></a>00152 
-<a name="l00156"></a>00156         <span class="keywordtype">void</span> <a class="code" href="../../d1/d7c/a00003.html#a44b2af942c9cbd4371598ef3f739b520" title="Removes the current response from the internal buffer.">remove_current_response</a>();
-<a name="l00157"></a>00157 
-<a name="l00167"></a>00167         <span class="keywordtype">void</span> <a class="code" href="../../d1/d7c/a00003.html#a023f1c22ab34933dd10edcebb635e548" title="Gets the last response from the device.">get_current_response</a>(
-<a name="l00168"></a>00168             <span class="keywordtype">int</span> &amp;port, <span class="keywordtype">int</span> &amp;key, <span class="keywordtype">bool</span> &amp;was_pressed, <span class="keywordtype">int</span> &amp;reaction_time);
-<a name="l00169"></a>00169 
-<a name="l00173"></a>00173         <span class="keywordtype">int</span> <a class="code" href="../../d1/d7c/a00003.html#a1aeda72373fbc25657ee3dcad1cc5ad1" title="Number of keys currently being held down.">get_number_of_keys_down</a>();
-<a name="l00174"></a>00174 
-<a name="l00190"></a>00190         <span class="keywordtype">int</span> <a class="code" href="../../d1/d7c/a00003.html#a39eeebfdafd2f01e61467f773b85a692" title="Send an XID command to the device.">send_xid_command</a>(
-<a name="l00191"></a>00191             <span class="keyword">const</span> <span class="keywordtype">char</span> in_command[],
-<a name="l00192"></a>00192             <span class="keywordtype">int</span> num_bytes,
-<a name="l00193"></a>00193             <span class="keywordtype">char</span> out_response[],
-<a name="l00194"></a>00194             <span class="keywordtype">int</span> max_out_response_size,
-<a name="l00195"></a>00195             <span class="keywordtype">int</span> expected_bytes_rec,
-<a name="l00196"></a>00196             <span class="keywordtype">int</span> timeout = 100,
-<a name="l00197"></a>00197             <span class="keywordtype">int</span> command_delay = 0);
-<a name="l00198"></a>00198 
-<a name="l00202"></a>00202         <span class="keywordtype">void</span> <a class="code" href="../../d1/d7c/a00003.html#a423907fe9db860e1ba6a1392023a4853" title="Sets whether or not the device needs an inter-byte delay.">set_needs_interbyte_delay</a>(<span class="keywordtype">bool</span> need_delay = <span class="keyword">true</span>);
-<a name="l00203"></a>00203 
-<a name="l00204"></a>00204     <span class="keyword">private</span>:
-<a name="l00205"></a>00205         <span class="keywordtype">int</span> setup_com_port();
-<a name="l00206"></a>00206         <span class="keywordtype">void</span> setup_dcb(DCB &amp;dcb) <span class="keyword">const</span>;
-<a name="l00207"></a>00207         <span class="keywordtype">void</span> setup_timeouts(COMMTIMEOUTS &amp;ct) <span class="keyword">const</span>;
-<a name="l00208"></a>00208 
-<a name="l00209"></a>00209         <a class="code" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">key_state</a> xid_input_found();
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211         <a class="code" href="../../d8/d84/a00001.html" title="Handles serial port settings used by the XID devices.">port_settings_t</a> port_settings_;
-<a name="l00212"></a>00212         <span class="keywordtype">int</span> in_buffer_size_;
-<a name="l00213"></a>00213         <span class="keywordtype">int</span> out_buffer_size_;
-<a name="l00214"></a>00214         <span class="keywordtype">int</span> model_id_;
-<a name="l00215"></a>00215         <span class="keywordtype">wchar_t</span> port_name_[40];
-<a name="l00216"></a>00216         HANDLE device_id_;
-<a name="l00217"></a>00217         
-<a name="l00218"></a>00218         <span class="keywordtype">int</span> delay_;
-<a name="l00219"></a>00219 
-<a name="l00220"></a>00220         <span class="keyword">enum</span> {INPUT_BUFFER_SIZE = 1000};
-<a name="l00221"></a>00221         <span class="keyword">enum</span> {XID_PACKET_SIZE = 6};
-<a name="l00222"></a>00222         <span class="keyword">enum</span> {INVALID_PACKET_INDEX = -1};
-<a name="l00223"></a>00223         <span class="keyword">enum</span> {KEY_RELEASE_BITMASK = 0x10};
-<a name="l00224"></a>00224         
-<a name="l00225"></a>00225         <span class="keywordtype">int</span> bytes_in_buffer_;
-<a name="l00226"></a>00226         <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> input_buffer_[INPUT_BUFFER_SIZE];
-<a name="l00227"></a>00227         <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> invalid_port_bits_;
-<a name="l00228"></a>00228 
-<a name="l00229"></a>00229         <span class="keyword">const</span> <span class="keywordtype">double</span> timer_rate_;
-<a name="l00230"></a>00230 
-<a name="l00231"></a>00231         <span class="keywordtype">int</span> first_valid_xid_packet_;
-<a name="l00232"></a>00232         <span class="keywordtype">int</span> num_keys_down_;
-<a name="l00233"></a>00233         <span class="keywordtype">int</span> last_resp_port_;
-<a name="l00234"></a>00234         <span class="keywordtype">int</span> last_resp_key_;
-<a name="l00235"></a>00235         <span class="keywordtype">bool</span> last_resp_pressed_;
-<a name="l00236"></a>00236         <span class="keywordtype">int</span> last_resp_rt_;
-<a name="l00237"></a>00237 
-<a name="l00238"></a>00238         <span class="keywordtype">char</span> lines_state_;
-<a name="l00239"></a>00239         <span class="keywordtype">char</span> set_lines_cmd_[4];
-<a name="l00240"></a>00240 
-<a name="l00241"></a>00241         <span class="keywordtype">bool</span> needs_interbyte_delay_;
-<a name="l00242"></a>00242     };
-<a name="l00243"></a>00243 } <span class="comment">// namespace cedrus</span>
-<a name="l00244"></a>00244 
-<a name="l00245"></a>00245 <span class="preprocessor">#endif // XID_CON_T_H</span>
+<a name="l00053"></a><a class="code" href="../../d0/d33/a00027.html#a763cc6b4cb81b84c96d47400ad045ee1a18056ea701cdbdfcb957a3c6c20fec16">00053</a>         <a class="code" href="../../d0/d33/a00027.html#a763cc6b4cb81b84c96d47400ad045ee1a18056ea701cdbdfcb957a3c6c20fec16">UNKNOWN_MODEL_ID</a> = 0
+<a name="l00054"></a>00054     };
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056     <span class="keyword">enum</span>
+<a name="l00057"></a>00057     {
+<a name="l00058"></a><a class="code" href="../../d0/d33/a00027.html#afda71436605da986088fff608c03bc15a43b2083d5d4cc255ae8186919206545a">00058</a>         <a class="code" href="../../d0/d33/a00027.html#afda71436605da986088fff608c03bc15a43b2083d5d4cc255ae8186919206545a">ANY_MODEL_ID</a> = -2,
+<a name="l00059"></a>00059     };
+<a name="l00060"></a>00060     <span class="keyword">enum</span>
+<a name="l00061"></a>00061     {
+<a name="l00062"></a><a class="code" href="../../d0/d33/a00027.html#a219922c91aa810d7ca92cd8434a69251a28db58b162d8221e1ab85b6b41151bfa">00062</a>         <a class="code" href="../../d0/d33/a00027.html#a219922c91aa810d7ca92cd8434a69251a28db58b162d8221e1ab85b6b41151bfa">NO_XID_DEVICE_FOUND</a> = -1
+<a name="l00063"></a>00063     };
+<a name="l00064"></a>00064     
+<a name="l00065"></a>00065     <span class="keyword">enum</span>
+<a name="l00066"></a>00066     {
+<a name="l00067"></a><a class="code" href="../../d0/d33/a00027.html#ae369718ce77b948622cdf7db1c545450addc35d7b9099081b4a2196ea04856111">00067</a>         <a class="code" href="../../d0/d33/a00027.html#ae369718ce77b948622cdf7db1c545450addc35d7b9099081b4a2196ea04856111">INVALID_RETURN_VALUE</a> = -99
+<a name="l00068"></a>00068     };
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070     <span class="keyword">enum</span>
+<a name="l00071"></a>00071     {
+<a name="l00072"></a><a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cafe012340077a571c30ac5a4872d59a3e">00072</a>         <a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cafe012340077a571c30ac5a4872d59a3e">RB530</a>  =  1,
+<a name="l00073"></a><a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca55a9d1c0ea04cd2b82a1b6bdea9142c1">00073</a>         <a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca55a9d1c0ea04cd2b82a1b6bdea9142c1">RB730</a>  =  2,
+<a name="l00074"></a><a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cad4e35aca962fe0ddc48fe9383218f6ec">00074</a>         <a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cad4e35aca962fe0ddc48fe9383218f6ec">RB830</a>  =  3,
+<a name="l00075"></a><a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cae67a239b4692684c06bfd00252f388f8">00075</a>         <a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cae67a239b4692684c06bfd00252f388f8">RB834</a>  =  4,
+<a name="l00076"></a><a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca77d37f357270ff8b5f6a7e336614be32">00076</a>         <a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca77d37f357270ff8b5f6a7e336614be32">RB630</a>  =  5,
+<a name="l00077"></a><a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca6174716dc665cafa3a631948598e1adf">00077</a>         <a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca6174716dc665cafa3a631948598e1adf">SV1</a>    = 21,
+<a name="l00078"></a><a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca3eea1b9ca56d51425f65d99ea74fa60e">00078</a>         <a class="code" href="../../d0/d33/a00027.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca3eea1b9ca56d51425f65d99ea74fa60e">LUMINA</a> = 31
+<a name="l00079"></a>00079     };
+<a name="l00080"></a>00080     
+<a name="l00081"></a>00081     <span class="keyword">enum</span>
+<a name="l00082"></a>00082     {
+<a name="l00083"></a><a class="code" href="../../d0/d33/a00027.html#af04ccd9cb09ee6e8efab1c9fd45c2254acf2f1744d40f301e9931081644a49921">00083</a>         <a class="code" href="../../d0/d33/a00027.html#af04ccd9cb09ee6e8efab1c9fd45c2254acf2f1744d40f301e9931081644a49921">XID_ID_LUMINA</a> = 0,
+<a name="l00084"></a><a class="code" href="../../d0/d33/a00027.html#af04ccd9cb09ee6e8efab1c9fd45c2254aa64771a47bd221ae5ce84b8ef5a6bfb5">00084</a>         <a class="code" href="../../d0/d33/a00027.html#af04ccd9cb09ee6e8efab1c9fd45c2254aa64771a47bd221ae5ce84b8ef5a6bfb5">XID_ID_SV1</a>    = 1,
+<a name="l00085"></a><a class="code" href="../../d0/d33/a00027.html#af04ccd9cb09ee6e8efab1c9fd45c2254a5d0d864519d3436acbeb4835aff744be">00085</a>         <a class="code" href="../../d0/d33/a00027.html#af04ccd9cb09ee6e8efab1c9fd45c2254a5d0d864519d3436acbeb4835aff744be">XID_ID_RB</a>     = 2
+<a name="l00086"></a>00086     };
+<a name="l00087"></a>00087     
+<a name="l00088"></a>00088     <span class="keyword">enum</span>
+<a name="l00089"></a>00089     {
+<a name="l00090"></a><a class="code" href="../../d0/d33/a00027.html#a293b68f3518e144cf7bcc7157ace38feafde98086ed597d9ced4f069592e6430f">00090</a>         <a class="code" href="../../d0/d33/a00027.html#a293b68f3518e144cf7bcc7157ace38feafde98086ed597d9ced4f069592e6430f">AD_NO_PROMPTS</a> = 0x01,
+<a name="l00091"></a><a class="code" href="../../d0/d33/a00027.html#a293b68f3518e144cf7bcc7157ace38fea20d6fc3fe85242f2e61700b23a20d132">00091</a>         <a class="code" href="../../d0/d33/a00027.html#a293b68f3518e144cf7bcc7157ace38fea20d6fc3fe85242f2e61700b23a20d132">AD_ASK_BEFORE_CONVERTING</a> = 0x02,
+<a name="l00092"></a><a class="code" href="../../d0/d33/a00027.html#a293b68f3518e144cf7bcc7157ace38fea575c5d8ec1485372f10e2998b74e3dd0">00092</a>         <a class="code" href="../../d0/d33/a00027.html#a293b68f3518e144cf7bcc7157ace38fea575c5d8ec1485372f10e2998b74e3dd0">AD_CONVERSION_IRREVERSIBLE</a> = 0x04
+<a name="l00093"></a>00093     };
+<a name="l00094"></a>00094     
+<a name="l00095"></a>00095     <span class="keyword">enum</span>
+<a name="l00096"></a>00096     {
+<a name="l00097"></a><a class="code" href="../../d0/d33/a00027.html#a3744a7d3bf67b7cde7fbe28d6dbac885a60531af8cab079ba955429e90a4489ce">00097</a>         <a class="code" href="../../d0/d33/a00027.html#a3744a7d3bf67b7cde7fbe28d6dbac885a60531af8cab079ba955429e90a4489ce">XID_MODE</a> = <span class="charliteral">&#39;0&#39;</span>
+<a name="l00098"></a>00098     };
+<a name="l00099"></a>00099 
+<a name="l00100"></a><a class="code" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">00100</a>     <span class="keyword">enum</span> <a class="code" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">key_state</a>
+<a name="l00101"></a>00101     {
+<a name="l00102"></a><a class="code" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5a60cd667fc905419b1f3084b186eee132">00102</a>         <a class="code" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5a60cd667fc905419b1f3084b186eee132">NO_KEY_DETECTED</a> = 0,
+<a name="l00103"></a><a class="code" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5a6a609a963d5e73eed8a1fabcf427fccf">00103</a>         <a class="code" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5a6a609a963d5e73eed8a1fabcf427fccf">FOUND_KEY_DOWN</a> = 1,
+<a name="l00104"></a><a class="code" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5ae0e8add5e7ad034a0a95324459244441">00104</a>         <a class="code" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5ae0e8add5e7ad034a0a95324459244441">FOUND_KEY_UP</a> = 2
+<a name="l00105"></a>00105     };
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 } <span class="comment">// namespace cedrus</span>
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 <span class="preprocessor">#endif // CONSTANTS_H</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

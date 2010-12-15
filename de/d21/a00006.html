@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: cedrus::xid_device_t Class Reference</title>
+<title>XID device library: cedrus::xid_con_t Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -21,13 +21,14 @@
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="../../dd/da2/a00019.html">cedrus</a>      </li>
-      <li><a class="el" href="../../de/d21/a00006.html">xid_device_t</a>      </li>
+      <li><a class="el" href="../../d0/d33/a00027.html">cedrus</a>      </li>
+      <li><a class="el" href="../../de/d21/a00006.html">xid_con_t</a>      </li>
     </ul>
   </div>
 </div>
@@ -35,70 +36,98 @@
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<h1>cedrus::xid_device_t Class Reference</h1>  </div>
+<h1>cedrus::xid_con_t Class Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="cedrus::xid_device_t" -->
-<p>abstraction of an XID device  
+<!-- doxytag: class="cedrus::xid_con_t" -->
+<p>Implementation of communication with an XID device.  
 <a href="#_details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../d1/d2b/a00018_source.html">xid_device_driver/xid_device_t.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../db/db2/a00020_source.html">xid_device_driver/xid_con_t.h</a>&gt;</code></p>
 
-<p><a href="../../d6/d5b/a00026.html">List of all members.</a></p>
+<p><a href="../../dc/d87/a00032.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a8ed5e224e1b23bb8fb55a21b008aec45">xid_device_t</a> (boost::shared_ptr&lt; <a class="el" href="../../d1/d7c/a00003.html">xid_con_t</a> &gt; xid_con, const std::wstring &amp;devconfig_path=L&quot;&quot;)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a> constructor  <a href="#a8ed5e224e1b23bb8fb55a21b008aec45"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#ab2fd5765ef102d489a2e5d1948b5b14c">~xid_device_t</a> (void)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a7e854dbd40acca453f6ab1580acc4786">get_xid_inquiry</a> (const char in_command[], int expected_bytes_rec=1, int timeout=100, int delay=0)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an XID command to the device.  <a href="#a7e854dbd40acca453f6ab1580acc4786"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a62be85b2f35c163ac5c9058202824300">reset_rt_timer</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the internal device reaction time timer.  <a href="#a62be85b2f35c163ac5c9058202824300"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#aafce46b9f4bc0e32fd746c3a9dd02376">reset_base_timer</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the device's base timer.  <a href="#aafce46b9f4bc0e32fd746c3a9dd02376"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#affe413a1c9d4cb374083e8f7b741f198">query_base_timer</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the time elapsed since the base timer was reset.  <a href="#affe413a1c9d4cb374083e8f7b741f198"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#ad9c88bf434c9d0af291ee932f94e75d2">poll_for_response</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Poll the COM interface for a button press event.  <a href="#ad9c88bf434c9d0af291ee932f94e75d2"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a16668a1591d70afcc801649f1fcb673d">response_queue_size</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of responses in the response queue.  <a href="#a16668a1591d70afcc801649f1fcb673d"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#ac89a3e503a9adf1c1bb093277555c95d">has_queued_responses</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a7ead6328ad6b8b7a084bc07c62cd7df7">clear_response_queue</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the response queue.  <a href="#a7ead6328ad6b8b7a084bc07c62cd7df7"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/d46/a00002.html">response</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a989c927f6d31ef9f189147c8efdbdfe7">get_next_response</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next response in the queue waiting for processing.  <a href="#a989c927f6d31ef9f189147c8efdbdfe7"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a3a5c824898d9c7a5158d05c9040fef2b">get_device_name</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the device.  <a href="#a3a5c824898d9c7a5158d05c9040fef2b"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a67973357782301424b829e32ca1a2f77">get_product_id</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">product id of the device.  <a href="#a67973357782301424b829e32ca1a2f77"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#aaf95cf64581d6d9a3f78de8fa13bd78e">get_model_id</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">model ID of the device.  <a href="#aaf95cf64581d6d9a3f78de8fa13bd78e"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a96b6f0721f2fb3360b84c92b872ea387">get_button_count</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of buttons the device has.  <a href="#a96b6f0721f2fb3360b84c92b872ea387"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a54a8edc0cec151cd6a7cbd6527087072">input_name_prefix</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prefix used for the device for GUI display purposes.  <a href="#a54a8edc0cec151cd6a7cbd6527087072"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#ae7aec605a953355c36b51e0e46a1f740">xid_con_t</a> (const std::wstring &amp;port_name, int port_speed=115200, int delay_ms=1, <a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">port_settings_t::bytesize</a> byte_size=port_settings_t::BYTESIZE_8, <a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">port_settings_t::bitparity</a> bit_parity=port_settings_t::BITPARITY_NONE, <a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">port_settings_t::stopbits</a> stop_bits=port_settings_t::STOP_BIT_1)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../de/d21/a00006.html" title="Implementation of communication with an XID device.">xid_con_t</a> constructor  <a href="#ae7aec605a953355c36b51e0e46a1f740"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a4d8a45f4ad0bcd7fb4772350eb6831cc">~xid_con_t</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a242ebe9826899413fb32d5f06350eddd">close</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the device.  <a href="#a242ebe9826899413fb32d5f06350eddd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#aef3a51f4abc37543a793e14b163640e4">flush_input</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flush the device's input buffer.  <a href="#aef3a51f4abc37543a793e14b163640e4"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a9b83231e58489b6c5d8d50103f5b0569">flush_output</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flush the device's output buffer.  <a href="#a9b83231e58489b6c5d8d50103f5b0569"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a6a9c45b6f70e3b35dc9ff87fae60ce0b">open</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens the COM port for use.  <a href="#a6a9c45b6f70e3b35dc9ff87fae60ce0b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a80530da71a395fd5bc3b530a842df6dc">read</a> (unsigned char *in_buffer, int bytes_to_read, int &amp;bytes_read)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the device.  <a href="#a80530da71a395fd5bc3b530a842df6dc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#aea3f3ebc811e14312a8b7e40becffa12">write</a> (unsigned char *const in_buffer, int bytes_to_write, int &amp;bytes_written)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Write data to the device.  <a href="#aea3f3ebc811e14312a8b7e40becffa12"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">key_state</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#acd274eb5c715b78743d44ea1b7444575">check_for_keypress</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the device to see if an event response has been sent.  <a href="#acd274eb5c715b78743d44ea1b7444575"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a44b2af942c9cbd4371598ef3f739b520">remove_current_response</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the current response from the internal buffer.  <a href="#a44b2af942c9cbd4371598ef3f739b520"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a023f1c22ab34933dd10edcebb635e548">get_current_response</a> (int &amp;port, int &amp;key, bool &amp;was_pressed, int &amp;reaction_time)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the last response from the device.  <a href="#a023f1c22ab34933dd10edcebb635e548"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a1aeda72373fbc25657ee3dcad1cc5ad1">get_number_of_keys_down</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of keys currently being held down.  <a href="#a1aeda72373fbc25657ee3dcad1cc5ad1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a39eeebfdafd2f01e61467f773b85a692">send_xid_command</a> (const char in_command[], int num_bytes, char out_response[], int max_out_response_size, int expected_bytes_rec, int timeout=100, int command_delay=0)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an XID command to the device.  <a href="#a39eeebfdafd2f01e61467f773b85a692"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a423907fe9db860e1ba6a1392023a4853">set_needs_interbyte_delay</a> (bool need_delay=true)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether or not the device needs an inter-byte delay.  <a href="#a423907fe9db860e1ba6a1392023a4853"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#ad232415c950326bf557b2c453c8f4c03">set_digital_out_prefix</a> (char prefix)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the digital output prefix.  <a href="#ad232415c950326bf557b2c453c8f4c03"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#adf66baae97ee7d575300222390c08caf">set_digital_output_lines</a> (unsigned int lines, bool leave_remaining_lines=false)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Raise digital output lines on the StimTracker device.  <a href="#adf66baae97ee7d575300222390c08caf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html#a73f5736d78d0fb4dbb5dd0d26ecfb00b">clear_digital_output_lines</a> (unsigned int lines, bool leave_remaining_lines=false)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear digital output lines on the StimTracker device.  <a href="#a73f5736d78d0fb4dbb5dd0d26ecfb00b"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>abstraction of an XID device </p>
+<p>Implementation of communication with an XID device. </p>
+<p>This class implements the nuts and bolts of communicating with an XID device. Inter-byte delays are optionally added if it's communicating with a 4 MHz XID device. It also handles the parsing of the XID protocol 6-byte packats. </p>
 
-<p>Definition at line <a class="el" href="../../d1/d2b/a00018_source.html#l00085">85</a> of file <a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a>.</p>
+<p>Definition at line <a class="el" href="../../db/db2/a00020_source.html#l00051">51</a> of file <a class="el" href="../../db/db2/a00020_source.html">xid_con_t.h</a>.</p>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a8ed5e224e1b23bb8fb55a21b008aec45"></a><!-- doxytag: member="cedrus::xid_device_t::xid_device_t" ref="a8ed5e224e1b23bb8fb55a21b008aec45" args="(boost::shared_ptr&lt; xid_con_t &gt; xid_con, const std::wstring &amp;devconfig_path=L&quot;&quot;)" -->
+<a class="anchor" id="ae7aec605a953355c36b51e0e46a1f740"></a><!-- doxytag: member="cedrus::xid_con_t::xid_con_t" ref="ae7aec605a953355c36b51e0e46a1f740" args="(const std::wstring &amp;port_name, int port_speed=115200, int delay_ms=1, port_settings_t::bytesize byte_size=port_settings_t::BYTESIZE_8, port_settings_t::bitparity bit_parity=port_settings_t::BITPARITY_NONE, port_settings_t::stopbits stop_bits=port_settings_t::STOP_BIT_1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cedrus::xid_device_t::xid_device_t </td>
+          <td class="memname">cedrus::xid_con_t::xid_con_t </td>
           <td>(</td>
-          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="../../d1/d7c/a00003.html">xid_con_t</a> &gt;&#160;</td>
-          <td class="paramname"> <em>xid_con</em>, </td>
+          <td class="paramtype">const std::wstring &amp;&#160;</td>
+          <td class="paramname"> <em>port_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::wstring &amp;&#160;</td>
-          <td class="paramname"> <em>devconfig_path</em> = <code>L&quot;&quot;</code>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>port_speed</em> = <code>115200</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>delay_ms</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">port_settings_t::bytesize</a>&#160;</td>
+          <td class="paramname"> <em>byte_size</em> = <code>port_settings_t::BYTESIZE_8</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">port_settings_t::bitparity</a>&#160;</td>
+          <td class="paramname"> <em>bit_parity</em> = <code>port_settings_t::BITPARITY_NONE</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">port_settings_t::stopbits</a>&#160;</td>
+          <td class="paramname"> <em>stop_bits</em> = <code>port_settings_t::STOP_BIT_1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -109,25 +138,29 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p><a class="el" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a> constructor </p>
+<p><a class="el" href="../../de/d21/a00006.html" title="Implementation of communication with an XID device.">xid_con_t</a> constructor </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">xid_con</td><td><a class="el" href="../../d1/d7c/a00003.html" title="Implementation of communication with an XID device.">xid_con_t</a> object to use </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">devconfig_path</td><td>path to devconfig files. Defaults to an empty string. If no path is used, very conservative default values are used and results may not be what you expect. It's highly reccommended to use the devconfig files. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port_name</td><td>COM port name the device is connected to. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port_speed</td><td>speed of the port. This defaults to 115200bps </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">delay_ms</td><td>Inter-byte delay time in miliseconds. Defaults to 1ms. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">byte_size</td><td>Byte size used by the device </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bit_parity</td><td>bit parity of the device. Defaults to none. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">stop_bits</td><td>stop bits of the device. Defaults to 0 </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00037">37</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00035">35</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab2fd5765ef102d489a2e5d1948b5b14c"></a><!-- doxytag: member="cedrus::xid_device_t::~xid_device_t" ref="ab2fd5765ef102d489a2e5d1948b5b14c" args="(void)" -->
+<a class="anchor" id="a4d8a45f4ad0bcd7fb4772350eb6831cc"></a><!-- doxytag: member="cedrus::xid_con_t::~xid_con_t" ref="a4d8a45f4ad0bcd7fb4772350eb6831cc" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cedrus::xid_device_t::~xid_device_t </td>
+          <td class="memname">cedrus::xid_con_t::~xid_con_t </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname">&#160;)</td>
@@ -137,17 +170,17 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00049">49</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00080">80</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a7ead6328ad6b8b7a084bc07c62cd7df7"></a><!-- doxytag: member="cedrus::xid_device_t::clear_response_queue" ref="a7ead6328ad6b8b7a084bc07c62cd7df7" args="()" -->
+<a class="anchor" id="acd274eb5c715b78743d44ea1b7444575"></a><!-- doxytag: member="cedrus::xid_con_t::check_for_keypress" ref="acd274eb5c715b78743d44ea1b7444575" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void cedrus::xid_device_t::clear_response_queue </td>
+          <td class="memname"><a class="el" href="../../d0/d33/a00027.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a> cedrus::xid_con_t::check_for_keypress </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
           <td></td>
@@ -156,39 +189,57 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Clears the response queue. </p>
+<p>Checks the device to see if an event response has been sent. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>key_state if no event was found, NO_KEY_DETECTED is returned. Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00174">174</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00334">334</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a96b6f0721f2fb3360b84c92b872ea387"></a><!-- doxytag: member="cedrus::xid_device_t::get_button_count" ref="a96b6f0721f2fb3360b84c92b872ea387" args="() const " -->
+<a class="anchor" id="a73f5736d78d0fb4dbb5dd0d26ecfb00b"></a><!-- doxytag: member="cedrus::xid_con_t::clear_digital_output_lines" ref="a73f5736d78d0fb4dbb5dd0d26ecfb00b" args="(unsigned int lines, bool leave_remaining_lines=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_device_t::get_button_count </td>
+          <td class="memname">void cedrus::xid_con_t::clear_digital_output_lines </td>
           <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td> const</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"> <em>lines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"> <em>leave_remaining_lines</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Number of buttons the device has. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>number of buttons </dd></dl>
+<p>Clear digital output lines on the StimTracker device. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lines</td><td>This is a bitmask used to specify the lines to be raised on the device. Each of the 8 bits in the integer specifies a line. If bits 0 and 7 are 1, lines 1 and 8 are raised. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">leave_remaining_lines</td><td>boolean value of whether or not to keep the current line state when applying the new bitmask. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00204">204</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00499">499</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3a5c824898d9c7a5158d05c9040fef2b"></a><!-- doxytag: member="cedrus::xid_device_t::get_device_name" ref="a3a5c824898d9c7a5158d05c9040fef2b" args="()" -->
+<a class="anchor" id="a242ebe9826899413fb32d5f06350eddd"></a><!-- doxytag: member="cedrus::xid_con_t::close" ref="a242ebe9826899413fb32d5f06350eddd" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string cedrus::xid_device_t::get_device_name </td>
+          <td class="memname">int cedrus::xid_con_t::close </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
           <td></td>
@@ -197,41 +248,19 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Returns the name of the device. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>name of the device </dd></dl>
+<p>Closes the device. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if closing the device was successful, or ERROR_CLOSING_PORT if it was unsuccessful. Enum values are defined in <a class="el" href="../../df/d86/a00012.html">constants.h</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00189">189</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00086">86</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aaf95cf64581d6d9a3f78de8fa13bd78e"></a><!-- doxytag: member="cedrus::xid_device_t::get_model_id" ref="aaf95cf64581d6d9a3f78de8fa13bd78e" args="() const " -->
+<a class="anchor" id="aef3a51f4abc37543a793e14b163640e4"></a><!-- doxytag: member="cedrus::xid_con_t::flush_input" ref="aef3a51f4abc37543a793e14b163640e4" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_device_t::get_model_id </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>model ID of the device. </p>
-<p>This is generally only valid on RB series response pads.</p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>model id of the device 1: RB-530 2: RB-730 3: RB-830 4: RB-834 </dd></dl>
-
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00199">199</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a989c927f6d31ef9f189147c8efdbdfe7"></a><!-- doxytag: member="cedrus::xid_device_t::get_next_response" ref="a989c927f6d31ef9f189147c8efdbdfe7" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d7/d46/a00002.html">cedrus::response</a> cedrus::xid_device_t::get_next_response </td>
+          <td class="memname">int cedrus::xid_con_t::flush_input </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
           <td></td>
@@ -240,39 +269,199 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Returns the next response in the queue waiting for processing. </p>
+<p>Flush the device's input buffer. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if flushing the device was successful, or ERROR_FLUSHING_PORT if it was unsuccessful. Enum values are defined in <a class="el" href="../../df/d86/a00012.html">constants.h</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00182">182</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00095">95</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a67973357782301424b829e32ca1a2f77"></a><!-- doxytag: member="cedrus::xid_device_t::get_product_id" ref="a67973357782301424b829e32ca1a2f77" args="() const " -->
+<a class="anchor" id="a9b83231e58489b6c5d8d50103f5b0569"></a><!-- doxytag: member="cedrus::xid_con_t::flush_output" ref="a9b83231e58489b6c5d8d50103f5b0569" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_device_t::get_product_id </td>
+          <td class="memname">int cedrus::xid_con_t::flush_output </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>product id of the device. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>product id 0: Lumina LP-400 response pad system 1: SV-1 voice key system 2: RB series response pad. </dd></dl>
+<p>Flush the device's output buffer. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if flushing the device was successful, or ERROR_FLUSHING_PORT if it was unsuccessful. Enum values are defined in <a class="el" href="../../df/d86/a00012.html">constants.h</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00194">194</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00107">107</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7e854dbd40acca453f6ab1580acc4786"></a><!-- doxytag: member="cedrus::xid_device_t::get_xid_inquiry" ref="a7e854dbd40acca453f6ab1580acc4786" args="(const char in_command[], int expected_bytes_rec=1, int timeout=100, int delay=0)" -->
+<a class="anchor" id="a023f1c22ab34933dd10edcebb635e548"></a><!-- doxytag: member="cedrus::xid_con_t::get_current_response" ref="a023f1c22ab34933dd10edcebb635e548" args="(int &amp;port, int &amp;key, bool &amp;was_pressed, int &amp;reaction_time)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_device_t::get_xid_inquiry </td>
+          <td class="memname">void cedrus::xid_con_t::get_current_response </td>
+          <td>(</td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"> <em>port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"> <em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &amp;&#160;</td>
+          <td class="paramname"> <em>was_pressed</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"> <em>reaction_time</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the last response from the device. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">port</td><td>device port the response is from. usually 0 </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">key</td><td>Which key was pressed. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">was_pressed</td><td>true if a key was pressed, false otherwise </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">reaction_time</td><td>reaction time read from the internal device timer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00369">369</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1aeda72373fbc25657ee3dcad1cc5ad1"></a><!-- doxytag: member="cedrus::xid_con_t::get_number_of_keys_down" ref="a1aeda72373fbc25657ee3dcad1cc5ad1" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cedrus::xid_con_t::get_number_of_keys_down </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of keys currently being held down. </p>
+
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00390">390</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6a9c45b6f70e3b35dc9ff87fae60ce0b"></a><!-- doxytag: member="cedrus::xid_con_t::open" ref="a6a9c45b6f70e3b35dc9ff87fae60ce0b" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cedrus::xid_con_t::open </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Opens the COM port for use. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if opening the device for communication was successful. If the operation was unsuccessful, it can return one of the following: PORT_NOT_AVAILABLE, ERROR_SETTING_UP_PORT, ERROR_FLUSHING_PORT. Enum values are defined in <a class="el" href="../../df/d86/a00012.html">constants.h</a>. </dd></dl>
+
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00119">119</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a80530da71a395fd5bc3b530a842df6dc"></a><!-- doxytag: member="cedrus::xid_con_t::read" ref="a80530da71a395fd5bc3b530a842df6dc" args="(unsigned char *in_buffer, int bytes_to_read, int &amp;bytes_read)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cedrus::xid_con_t::read </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"> <em>in_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>bytes_to_read</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"> <em>bytes_read</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Read data from the device. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">in_buffer</td><td>character array to be used for reading data from the device into. It is the user's responsibility to ensure bytes_to_read is less than the size of in_buffer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bytes_to_read</td><td>specifies the number of bytes to expect to be returned from the device </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">bytes_read</td><td>number of bytes actually read</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if the read was successful, ERROR_READING_PORT otherwise. </dd></dl>
+
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00212">212</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a44b2af942c9cbd4371598ef3f739b520"></a><!-- doxytag: member="cedrus::xid_con_t::remove_current_response" ref="a44b2af942c9cbd4371598ef3f739b520" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::xid_con_t::remove_current_response </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Removes the current response from the internal buffer. </p>
+
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00351">351</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a39eeebfdafd2f01e61467f773b85a692"></a><!-- doxytag: member="cedrus::xid_con_t::send_xid_command" ref="a39eeebfdafd2f01e61467f773b85a692" args="(const char in_command[], int num_bytes, char out_response[], int max_out_response_size, int expected_bytes_rec, int timeout=100, int command_delay=0)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cedrus::xid_con_t::send_xid_command </td>
           <td>(</td>
           <td class="paramtype">const char&#160;</td>
           <td class="paramname"> <em>in_command</em>[], </td>
@@ -281,7 +470,25 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>expected_bytes_rec</em> = <code>1</code>, </td>
+          <td class="paramname"> <em>num_bytes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"> <em>out_response</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>max_out_response_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>expected_bytes_rec</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -293,7 +500,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>delay</em> = <code>0</code>&#160;</td>
+          <td class="paramname"> <em>command_delay</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -305,171 +512,162 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Send an XID command to the device. </p>
+<p>XID commands are documented at <a href="http://www.cedrus.com/xid/">http://www.cedrus.com/xid/</a></p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">in_command</td><td>command to send to the device. Commands are detailed at <a href="http://www.cedrus.com/xid/">http://www.cedrus.com/xid/</a> </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">expected_bytes_rec</td><td>expected number of bytes to receive </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">timeout</td><td>time in miliseconds the device should respond in </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">delay</td><td>some devices need an additional delay between receiving a command and issuing a response. Defaults to 0</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">in_command</td><td>command to send to the device </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_bytes</td><td>number of bytes in the command </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">out_response</td><td>response from the device </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">max_out_response_size</td><td>maximum allowed response size </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">expected_bytes_rec</td><td>number of bytes expected </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeout</td><td>command timeout. Defaults to 100ms </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">command_delay</td><td>Some devices need an additional delay between receiving a request and sending a response. Set the delay here. It defaults to 0. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>an integer value of the response </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00053">53</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00395">395</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ac89a3e503a9adf1c1bb093277555c95d"></a><!-- doxytag: member="cedrus::xid_device_t::has_queued_responses" ref="ac89a3e503a9adf1c1bb093277555c95d" args="() const " -->
+<a class="anchor" id="ad232415c950326bf557b2c453c8f4c03"></a><!-- doxytag: member="cedrus::xid_con_t::set_digital_out_prefix" ref="ad232415c950326bf557b2c453c8f4c03" args="(char prefix)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool cedrus::xid_device_t::has_queued_responses </td>
+          <td class="memname">void cedrus::xid_con_t::set_digital_out_prefix </td>
           <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>true if there are queued responses </dd></dl>
-
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00169">169</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a54a8edc0cec151cd6a7cbd6527087072"></a><!-- doxytag: member="cedrus::xid_device_t::input_name_prefix" ref="a54a8edc0cec151cd6a7cbd6527087072" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::wstring cedrus::xid_device_t::input_name_prefix </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Prefix used for the device for GUI display purposes. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>"Button" for Lumina, RB-series pads, and unknown devices. "Voice Response" for SV-1 Voice Key systems. </dd></dl>
-
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00276">276</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad9c88bf434c9d0af291ee932f94e75d2"></a><!-- doxytag: member="cedrus::xid_device_t::poll_for_response" ref="ad9c88bf434c9d0af291ee932f94e75d2" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cedrus::xid_device_t::poll_for_response </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"> <em>prefix</em>&#160;)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Poll the COM interface for a button press event. </p>
-<p>If there is a button press event, it is placed into an internal response queue. </p>
+<p>Sets the digital output prefix. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">prefix</td><td>A single character. This should be 'a' for XID response devices, or 'm' for StimTracker devices. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00128">128</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00469">469</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="affe413a1c9d4cb374083e8f7b741f198"></a><!-- doxytag: member="cedrus::xid_device_t::query_base_timer" ref="affe413a1c9d4cb374083e8f7b741f198" args="()" -->
+<a class="anchor" id="adf66baae97ee7d575300222390c08caf"></a><!-- doxytag: member="cedrus::xid_con_t::set_digital_output_lines" ref="adf66baae97ee7d575300222390c08caf" args="(unsigned int lines, bool leave_remaining_lines=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_device_t::query_base_timer </td>
+          <td class="memname">void cedrus::xid_con_t::set_digital_output_lines </td>
           <td>(</td>
-          <td class="paramname">&#160;)</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"> <em>lines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"> <em>leave_remaining_lines</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Raise digital output lines on the StimTracker device. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lines</td><td>This is a bitmask used to specify the lines to be raised on the device. Each of the 8 bits in the integer specifies a line. If bits 0 and 7 are 1, lines 1 and 8 are raised. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">leave_remaining_lines</td><td>boolean value of whether or not to keep the current line state when applying the new bitmask. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00474">474</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a423907fe9db860e1ba6a1392023a4853"></a><!-- doxytag: member="cedrus::xid_con_t::set_needs_interbyte_delay" ref="a423907fe9db860e1ba6a1392023a4853" args="(bool need_delay=true)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::xid_con_t::set_needs_interbyte_delay </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"> <em>need_delay</em> = <code>true</code>&#160;)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Returns the time elapsed since the base timer was reset. </p>
+<p>Sets whether or not the device needs an inter-byte delay. </p>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00099">99</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00464">464</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aafce46b9f4bc0e32fd746c3a9dd02376"></a><!-- doxytag: member="cedrus::xid_device_t::reset_base_timer" ref="aafce46b9f4bc0e32fd746c3a9dd02376" args="()" -->
+<a class="anchor" id="aea3f3ebc811e14312a8b7e40becffa12"></a><!-- doxytag: member="cedrus::xid_con_t::write" ref="aea3f3ebc811e14312a8b7e40becffa12" args="(unsigned char *const in_buffer, int bytes_to_write, int &amp;bytes_written)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void cedrus::xid_device_t::reset_base_timer </td>
+          <td class="memname">int cedrus::xid_con_t::write </td>
           <td>(</td>
-          <td class="paramname">&#160;)</td>
+          <td class="paramtype">unsigned char *const &#160;</td>
+          <td class="paramname"> <em>in_buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>bytes_to_write</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Resets the device's base timer. </p>
-<p>This should be called when the device is initialized or an experiment starts </p>
-
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00088">88</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a62be85b2f35c163ac5c9058202824300"></a><!-- doxytag: member="cedrus::xid_device_t::reset_rt_timer" ref="a62be85b2f35c163ac5c9058202824300" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">void cedrus::xid_device_t::reset_rt_timer </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"> <em>bytes_written</em>&#160;</td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Resets the internal device reaction time timer. </p>
-<p>This should be called when a stimulus is presented </p>
-
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00077">77</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a16668a1591d70afcc801649f1fcb673d"></a><!-- doxytag: member="cedrus::xid_device_t::response_queue_size" ref="a16668a1591d70afcc801649f1fcb673d" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">std::size_t cedrus::xid_device_t::response_queue_size </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td> const</td>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Number of responses in the response queue. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>number of responses pending processing. </dd></dl>
+<p>Write data to the device. </p>
+<p>If the device is a 4MHz XID unit, an inter-byte delay is used between each byte sent to the device.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">in_buffer</td><td>command to be sent to the device </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">bytes_to_write</td><td>number of bytes in the command to be sent </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">bytes_written</td><td>number of bytes written to the device </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00164">164</a> of file <a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/da2/a00019_source.html#l00233">233</a> of file <a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="../../d1/d2b/a00018_source.html">xid_device_t.h</a></li>
-<li><a class="el" href="../../d4/d51/a00017_source.html">xid_device_t.cpp</a></li>
+<li><a class="el" href="../../db/db2/a00020_source.html">xid_con_t.h</a></li>
+<li><a class="el" href="../../dd/da2/a00019_source.html">xid_con_t.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: CedrusXidDriver.cpp Source File</title>
+<title>XID device library: xid_device_config_t.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -25,7 +25,7 @@
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>CedrusXidDriver.cpp</h1>  </div>
+<h1>xid_device_config_t.h</h1>  </div>
 </div>
 <div class="contents">
 <a href="../../d7/de0/a00022.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* Copyright (c) 2010, Cedrus Corporation</span>
@@ -59,80 +59,48 @@
 <a name="l00029"></a>00029 <span class="comment"> * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
 <a name="l00030"></a>00030 <span class="comment"> */</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="comment">// CedrusXidDriver.cpp : Implementation of DLL Exports.</span>
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034 <span class="comment">//</span>
-<a name="l00035"></a>00035 <span class="comment">// Note: COM+ 1.0 Information:</span>
-<a name="l00036"></a>00036 <span class="comment">//      Please remember to run Microsoft Transaction Explorer to install the component(s).</span>
-<a name="l00037"></a>00037 <span class="comment">//      Registration is not done by default. </span>
+<a name="l00032"></a>00032 <span class="preprocessor">#ifndef XID_DEVICE_CONFIG_T_H</span>
+<a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#define XID_DEVICE_CONFIG_T_H</span>
+<a name="l00034"></a>00034 <span class="preprocessor"></span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;map&gt;</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;string&gt;</span>
+<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;boost/shared_ptr.hpp&gt;</span>
 <a name="l00038"></a>00038 
-<a name="l00039"></a>00039 <span class="preprocessor">#include &quot;<a class="code" href="../../de/d8c/a00036.html">stdafx.h</a>&quot;</span>
-<a name="l00040"></a>00040 <span class="preprocessor">#include &quot;<a class="code" href="../../db/df3/a00034.html">resource.h</a>&quot;</span>
-<a name="l00041"></a>00041 <span class="preprocessor">#include &quot;CedrusXidDriver_i.h&quot;</span>
-<a name="l00042"></a>00042 <span class="preprocessor">#include &quot;<a class="code" href="../../d5/d16/a00029.html">dllmain.h</a>&quot;</span>
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045 <span class="comment">// Used to determine whether the DLL can be unloaded by OLE.</span>
-<a name="l00046"></a><a class="code" href="../../d7/de0/a00022.html#aec790f2871fbeaa4c5ea359ca1340d4e">00046</a> STDAPI <a class="code" href="../../d7/de0/a00022.html#aec790f2871fbeaa4c5ea359ca1340d4e">DllCanUnloadNow</a>(<span class="keywordtype">void</span>)
-<a name="l00047"></a>00047 {
-<a name="l00048"></a>00048             <span class="keywordflow">return</span> <a class="code" href="../../dc/d3c/a00028.html#ac137a50d59dc4592579de8f03dac950e">_AtlModule</a>.DllCanUnloadNow();
-<a name="l00049"></a>00049     }
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051 <span class="comment">// Returns a class factory to create an object of the requested type.</span>
-<a name="l00052"></a><a class="code" href="../../d7/de0/a00022.html#a73a670a07a66998f40cfc83d6fe14e06">00052</a> STDAPI <a class="code" href="../../d7/de0/a00022.html#a73a670a07a66998f40cfc83d6fe14e06">DllGetClassObject</a>(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
-<a name="l00053"></a>00053 {
-<a name="l00054"></a>00054         <span class="keywordflow">return</span> <a class="code" href="../../dc/d3c/a00028.html#ac137a50d59dc4592579de8f03dac950e">_AtlModule</a>.DllGetClassObject(rclsid, riid, ppv);
-<a name="l00055"></a>00055 }
-<a name="l00056"></a>00056 
-<a name="l00057"></a>00057 <span class="comment">// DllRegisterServer - Adds entries to the system registry.</span>
-<a name="l00058"></a><a class="code" href="../../d7/de0/a00022.html#a1789c2983bb86731829d3fbcffe31419">00058</a> STDAPI <a class="code" href="../../d7/de0/a00022.html#a1789c2983bb86731829d3fbcffe31419">DllRegisterServer</a>(<span class="keywordtype">void</span>)
-<a name="l00059"></a>00059 {
-<a name="l00060"></a>00060     <span class="comment">// registers object, typelib and all interfaces in typelib</span>
-<a name="l00061"></a>00061     HRESULT hr = <a class="code" href="../../dc/d3c/a00028.html#ac137a50d59dc4592579de8f03dac950e">_AtlModule</a>.DllRegisterServer();
-<a name="l00062"></a>00062         <span class="keywordflow">return</span> hr;
-<a name="l00063"></a>00063 }
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="comment">// DllUnregisterServer - Removes entries from the system registry.</span>
-<a name="l00066"></a><a class="code" href="../../d7/de0/a00022.html#a42a3a358a5d48982c811a999ec02931a">00066</a> STDAPI <a class="code" href="../../d7/de0/a00022.html#a42a3a358a5d48982c811a999ec02931a">DllUnregisterServer</a>(<span class="keywordtype">void</span>)
-<a name="l00067"></a>00067 {
-<a name="l00068"></a>00068     HRESULT hr = <a class="code" href="../../dc/d3c/a00028.html#ac137a50d59dc4592579de8f03dac950e">_AtlModule</a>.DllUnregisterServer();
-<a name="l00069"></a>00069         <span class="keywordflow">return</span> hr;
-<a name="l00070"></a>00070 }
+<a name="l00039"></a>00039 <span class="keyword">namespace </span>cedrus
+<a name="l00040"></a>00040 {
+<a name="l00046"></a><a class="code" href="../../de/d5e/a00007.html">00046</a>     <span class="keyword">class </span><a class="code" href="../../de/d5e/a00007.html" title="device configuration class">xid_device_config_t</a>
+<a name="l00047"></a>00047     {
+<a name="l00048"></a>00048     <span class="keyword">public</span>:
+<a name="l00069"></a>00069         <span class="keyword">static</span> boost::shared_ptr&lt;xid_device_config_t&gt; <a class="code" href="../../de/d5e/a00007.html#a76748d0cee4b3d925b7c46c99186d456" title="Returns a device configuration object.">config_for_device</a>(
+<a name="l00070"></a>00070             <span class="keywordtype">int</span> product_id, <span class="keywordtype">int</span> model_id, <span class="keyword">const</span> std::wstring &amp;devconfig_location);
 <a name="l00071"></a>00071 
-<a name="l00072"></a>00072 <span class="comment">// DllInstall - Adds/Removes entries to the system registry per user per machine.</span>
-<a name="l00073"></a><a class="code" href="../../d7/de0/a00022.html#a80c4d41d1758bb8ba8a2f60ae71c2707">00073</a> STDAPI <a class="code" href="../../d7/de0/a00022.html#a80c4d41d1758bb8ba8a2f60ae71c2707">DllInstall</a>(BOOL bInstall, LPCWSTR pszCmdLine)
-<a name="l00074"></a>00074 {
-<a name="l00075"></a>00075     HRESULT hr = E_FAIL;
-<a name="l00076"></a>00076     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">wchar_t</span> szUserSwitch[] = L<span class="stringliteral">&quot;user&quot;</span>;
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078     <span class="keywordflow">if</span> (pszCmdLine != NULL)
-<a name="l00079"></a>00079     {
-<a name="l00080"></a>00080         <span class="keywordflow">if</span> (_wcsnicmp(pszCmdLine, szUserSwitch, _countof(szUserSwitch)) == 0)
-<a name="l00081"></a>00081         {
-<a name="l00082"></a>00082             ATL::AtlSetPerUserRegistration(<span class="keyword">true</span>);
-<a name="l00083"></a>00083         }
-<a name="l00084"></a>00084     }
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086     <span class="keywordflow">if</span> (bInstall)
-<a name="l00087"></a>00087     {   
-<a name="l00088"></a>00088         hr = <a class="code" href="../../d7/de0/a00022.html#a1789c2983bb86731829d3fbcffe31419">DllRegisterServer</a>();
-<a name="l00089"></a>00089         <span class="keywordflow">if</span> (FAILED(hr))
-<a name="l00090"></a>00090         {
-<a name="l00091"></a>00091             <a class="code" href="../../d7/de0/a00022.html#a42a3a358a5d48982c811a999ec02931a">DllUnregisterServer</a>();
-<a name="l00092"></a>00092         }
-<a name="l00093"></a>00093     }
-<a name="l00094"></a>00094     <span class="keywordflow">else</span>
-<a name="l00095"></a>00095     {
-<a name="l00096"></a>00096         hr = <a class="code" href="../../d7/de0/a00022.html#a42a3a358a5d48982c811a999ec02931a">DllUnregisterServer</a>();
-<a name="l00097"></a>00097     }
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099     <span class="keywordflow">return</span> hr;
-<a name="l00100"></a>00100 }
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102 
+<a name="l00072"></a>00072         <a class="code" href="../../de/d5e/a00007.html#a9ba83788efe0ef79e48f2f806c08eaa2">~xid_device_config_t</a>(<span class="keywordtype">void</span>);
+<a name="l00073"></a>00073 
+<a name="l00080"></a>00080         <span class="keywordtype">int</span> <a class="code" href="../../de/d5e/a00007.html#a8a95e77a64c2bfc29ffbeca237f2d1c1" title="Gets the actual button pressed based on the devconfig key mapping.">get_mapped_key</a>(<span class="keywordtype">int</span> key) <span class="keyword">const</span>;
+<a name="l00081"></a>00081         
+<a name="l00085"></a>00085         <span class="keywordtype">int</span> <a class="code" href="../../de/d5e/a00007.html#ab00a9f39101fa7797fb133b869800485" title="Number of response lines (or buttons) a device has.">number_of_lines</a>() <span class="keyword">const</span>;
+<a name="l00086"></a>00086 
+<a name="l00090"></a>00090         <span class="keywordtype">bool</span> <a class="code" href="../../de/d5e/a00007.html#a6600007aa4b362bc90542e971aed484e" title="Whether or not the device requires an inter-byte delay.">needs_interbyte_delay</a>() <span class="keyword">const</span>;
+<a name="l00091"></a>00091 
+<a name="l00095"></a>00095         <span class="keywordtype">char</span> <a class="code" href="../../de/d5e/a00007.html#af8bb2a483057c1a560b58bf1cc544c70" title="The digital output prefix.">digital_out_prefix</a>() <span class="keyword">const</span>;
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097     <span class="keyword">private</span>:
+<a name="l00098"></a>00098         <a class="code" href="../../de/d5e/a00007.html" title="device configuration class">xid_device_config_t</a>(<span class="keyword">const</span> std::wstring &amp;devconfig_location);
+<a name="l00099"></a>00099         <span class="keywordtype">void</span> load_devconfig(<span class="keywordtype">int</span> product_id, <span class="keywordtype">int</span> model_id);
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101         std::wstring config_file_location_;
+<a name="l00102"></a>00102         <span class="keywordtype">bool</span> needs_interbyte_delay_;
+<a name="l00103"></a>00103         <span class="keywordtype">int</span> number_of_lines_;
+<a name="l00104"></a>00104         <span class="keywordtype">char</span> digital_out_prefix_;
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106         std::map&lt;int,int&gt; key_map_;
+<a name="l00107"></a>00107     };
+<a name="l00108"></a>00108 } <span class="comment">// namespace cedrus</span>
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110 <span class="preprocessor">#endif // XID_DEVICE_CONFIG_T</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Oct 27 2010 14:15:10 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

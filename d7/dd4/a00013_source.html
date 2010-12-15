@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: xid_device_config_t.cpp Source File</title>
+<title>XID device library: main.cpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -20,276 +20,82 @@
   <div class="tabs2">
     <ul class="tablist">
       <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>xid_device_config_t.cpp</h1>  </div>
+<h1>main.cpp</h1>  </div>
 </div>
 <div class="contents">
-<a href="../../d7/dd4/a00013.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* Copyright (c) 2010, Cedrus Corporation</span>
-<a name="l00002"></a>00002 <span class="comment"> * All rights reserved.</span>
-<a name="l00003"></a>00003 <span class="comment"> *</span>
-<a name="l00004"></a>00004 <span class="comment"> * Redistribution and use in source and binary forms, with or without</span>
-<a name="l00005"></a>00005 <span class="comment"> * modification, are permitted provided that the following conditions are</span>
-<a name="l00006"></a>00006 <span class="comment"> * met:</span>
-<a name="l00007"></a>00007 <span class="comment"> *</span>
-<a name="l00008"></a>00008 <span class="comment"> * Redistributions of source code must retain the above copyright notice,</span>
-<a name="l00009"></a>00009 <span class="comment"> * this list of conditions and the following disclaimer.  </span>
-<a name="l00010"></a>00010 <span class="comment"> *</span>
-<a name="l00011"></a>00011 <span class="comment"> * Redistributions in binary form must reproduce the above copyright</span>
-<a name="l00012"></a>00012 <span class="comment"> * notice, this list of conditions and the following disclaimer in the</span>
-<a name="l00013"></a>00013 <span class="comment"> * documentation and/or other materials provided with the distribution.</span>
-<a name="l00014"></a>00014 <span class="comment"> *</span>
-<a name="l00015"></a>00015 <span class="comment"> * Neither the name of Cedrus Corporation nor the names of its</span>
-<a name="l00016"></a>00016 <span class="comment"> * contributors may be used to endorse or promote products derived from</span>
-<a name="l00017"></a>00017 <span class="comment"> * this software without specific prior written permission.</span>
-<a name="l00018"></a>00018 <span class="comment"> *</span>
-<a name="l00019"></a>00019 <span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</span>
-<a name="l00020"></a>00020 <span class="comment"> * &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT</span>
-<a name="l00021"></a>00021 <span class="comment"> * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR</span>
-<a name="l00022"></a>00022 <span class="comment"> * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT</span>
-<a name="l00023"></a>00023 <span class="comment"> * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
-<a name="l00024"></a>00024 <span class="comment"> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT</span>
-<a name="l00025"></a>00025 <span class="comment"> * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,</span>
-<a name="l00026"></a>00026 <span class="comment"> * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY</span>
-<a name="l00027"></a>00027 <span class="comment"> * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
-<a name="l00028"></a>00028 <span class="comment"> * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
-<a name="l00029"></a>00029 <span class="comment"> * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
-<a name="l00030"></a>00030 <span class="comment"> */</span>
+<a href="../../d7/dd4/a00013.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#include &quot;<a class="code" href="../../dc/de2/a00024.html">xid_device_scanner_t.h</a>&quot;</span>
+<a name="l00002"></a>00002 <span class="preprocessor">#include &quot;<a class="code" href="../../db/db2/a00020.html">xid_con_t.h</a>&quot;</span>
+<a name="l00003"></a>00003 <span class="preprocessor">#include &quot;<a class="code" href="../../d4/d51/a00017.html">stim_tracker_t.h</a>&quot;</span>
+<a name="l00004"></a>00004 <span class="preprocessor">#include &lt;boost/shared_ptr.hpp&gt;</span>
+<a name="l00005"></a>00005 <span class="preprocessor">#include &lt;iostream&gt;</span>
+<a name="l00006"></a>00006 
+<a name="l00007"></a>00007 <span class="keyword">using namespace </span>cedrus;
+<a name="l00008"></a>00008 
+<a name="l00009"></a><a class="code" href="../../d7/dd4/a00013.html#a3c04138a5bfe5d72780bb7e82a18e627">00009</a> <span class="keywordtype">int</span> <a class="code" href="../../d7/dd4/a00013.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv)
+<a name="l00010"></a>00010 {
+<a name="l00011"></a>00011     <a class="code" href="../../d4/dee/a00008.html">xid_device_scanner_t</a> scanner;
+<a name="l00012"></a>00012     scanner.<a class="code" href="../../d4/dee/a00008.html#ae18504faa4b97cc70b28fd00d9b0d713" title="Returns the number of valid XID devices connected to the computer.">detect_valid_xid_devices</a>();
+<a name="l00013"></a>00013     <span class="keywordflow">if</span>(scanner.<a class="code" href="../../d4/dee/a00008.html#ac0ea665d1f56629dddb4cc327dfc884f">st_device_count</a>() == 0)
+<a name="l00014"></a>00014     {
+<a name="l00015"></a>00015         std::cout &lt;&lt; <span class="stringliteral">&quot;No StimTracker found&quot;</span> &lt;&lt; std::endl;
+<a name="l00016"></a>00016         <span class="keywordflow">return</span> 1;
+<a name="l00017"></a>00017     }
+<a name="l00018"></a>00018     <span class="keywordflow">else</span>
+<a name="l00019"></a>00019     {
+<a name="l00020"></a>00020         std::cout &lt;&lt; <span class="stringliteral">&quot;StimTracker found!&quot;</span> &lt;&lt; std::endl;
+<a name="l00021"></a>00021     }
+<a name="l00022"></a>00022     
+<a name="l00023"></a>00023     boost::shared_ptr&lt;xid_con_t&gt; con = 
+<a name="l00024"></a>00024         scanner.<a class="code" href="../../d4/dee/a00008.html#a0b52323d0e28f0f99b48c69a061df2b4">stimtracker_connection_at_index</a>(0);
+<a name="l00025"></a>00025     con-&gt;open();
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027     <a class="code" href="../../dd/dad/a00005.html">stim_tracker_t</a> st(con,
+<a name="l00028"></a>00028         L<span class="stringliteral">&quot;C:\\Users\\grant.CEDRUS\\Development\\PresentationDriver\\devconfig\\&quot;</span>);
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030     std::cout &lt;&lt; st.<a class="code" href="../../d8/d84/a00001.html#a94256bd0bc5cabcd74260ade5d01703b" title="Returns the name of the device.">get_device_name</a>() &lt;&lt; std::endl;
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="preprocessor">#include &quot;<a class="code" href="../../d2/de7/a00014.html">xid_device_config_t.h</a>&quot;</span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;Windows.h&gt;</span>
-<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;iostream&gt;</span>
+<a name="l00032"></a>00032     st.<a class="code" href="../../dd/dad/a00005.html#af295bc3b84719e814ef303c1067096b5" title="Set the pulse duration when raise_lines() is called.">set_pulse_duration</a>(UINT_MAX);
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034     std::cout &lt;&lt; <span class="stringliteral">&quot;Raising all lines&quot;</span> &lt;&lt; std::endl;
 <a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/dec/a00010.html">string_tokenizer.hpp</a>&quot;</span>
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038 boost::shared_ptr&lt;cedrus::xid_device_config_t&gt;
-<a name="l00039"></a><a class="code" href="../../d0/d0b/a00004.html#a76748d0cee4b3d925b7c46c99186d456">00039</a>     <a class="code" href="../../d0/d0b/a00004.html#a76748d0cee4b3d925b7c46c99186d456" title="Returns a device configuration object.">cedrus::xid_device_config_t::config_for_device</a>(
-<a name="l00040"></a>00040         <span class="keywordtype">int</span> product_id,
-<a name="l00041"></a>00041         <span class="keywordtype">int</span> model_id,
-<a name="l00042"></a>00042         <span class="keyword">const</span> std::wstring &amp;devconfig_location)
-<a name="l00043"></a>00043 {
-<a name="l00044"></a>00044     boost::shared_ptr&lt;xid_device_config_t&gt; devconfig;
-<a name="l00045"></a>00045     
-<a name="l00046"></a>00046     <span class="keywordflow">if</span>(product_id == -99 || model_id == -99)
-<a name="l00047"></a>00047     {
-<a name="l00048"></a>00048         <span class="comment">// invalid product or model id</span>
-<a name="l00049"></a>00049         <span class="keywordflow">return</span> devconfig;
-<a name="l00050"></a>00050     }
-<a name="l00051"></a>00051 
-<a name="l00052"></a>00052     <span class="keywordflow">if</span>(devconfig_location.empty())
-<a name="l00053"></a>00053     {
-<a name="l00054"></a>00054         <span class="comment">// no path to devconfig files.  Won&#39;t be able to load them so return</span>
-<a name="l00055"></a>00055         <span class="comment">// an invalid</span>
-<a name="l00056"></a>00056         <span class="keywordflow">return</span> devconfig;
-<a name="l00057"></a>00057     }
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059     devconfig.reset(<span class="keyword">new</span> <a class="code" href="../../d0/d0b/a00004.html" title="device configuration class">xid_device_config_t</a>(devconfig_location));
-<a name="l00060"></a>00060     
-<a name="l00061"></a>00061     devconfig-&gt;load_devconfig(product_id, model_id);
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063     <span class="keywordflow">return</span> devconfig;
-<a name="l00064"></a>00064 }
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066 cedrus::xid_device_config_t::xid_device_config_t(
-<a name="l00067"></a>00067     <span class="keyword">const</span> std::wstring &amp;config_file_location)
-<a name="l00068"></a>00068     : config_file_location_(config_file_location),
-<a name="l00069"></a>00069       needs_interbyte_delay_(true),
-<a name="l00070"></a>00070       number_of_lines_(8)
-<a name="l00071"></a>00071 {
-<a name="l00072"></a>00072 }
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074 
-<a name="l00075"></a><a class="code" href="../../d0/d0b/a00004.html#a9ba83788efe0ef79e48f2f806c08eaa2">00075</a> <a class="code" href="../../d0/d0b/a00004.html#a9ba83788efe0ef79e48f2f806c08eaa2">cedrus::xid_device_config_t::~xid_device_config_t</a>(<span class="keywordtype">void</span>)
-<a name="l00076"></a>00076 {
-<a name="l00077"></a>00077 }
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079 <span class="keywordtype">void</span> cedrus::xid_device_config_t::load_devconfig(<span class="keywordtype">int</span> product_id, <span class="keywordtype">int</span> model_id)
-<a name="l00080"></a>00080 {
-<a name="l00081"></a>00081     std::wstring search_mask = config_file_location_ + L<span class="stringliteral">&quot;*.devconfig&quot;</span>;
-<a name="l00082"></a>00082     WIN32_FIND_DATA file_info;
-<a name="l00083"></a>00083     HANDLE find_handle = FindFirstFile(
-<a name="l00084"></a>00084         search_mask.c_str(),
-<a name="l00085"></a>00085         &amp;file_info);
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087     <span class="keywordflow">while</span>(find_handle)
-<a name="l00088"></a>00088     {
-<a name="l00089"></a>00089         <span class="keywordtype">long</span> device_id = -1;
-<a name="l00090"></a>00090         std::string device_name;
-<a name="l00091"></a>00091         <span class="keywordtype">long</span> xid_product_id = -1;
-<a name="l00092"></a>00092         <span class="keywordtype">long</span> xid_model_id = -1;
-<a name="l00093"></a>00093         std::string digital_output_command;
-<a name="l00094"></a>00094         std::wstring ignored_ports;
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096         <span class="keywordtype">wchar_t</span> result[1024];
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098         std::wstring full_file_path = config_file_location_ +
-<a name="l00099"></a>00099             file_info.cFileName;
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101         xid_product_id = GetPrivateProfileInt(
-<a name="l00102"></a>00102             L<span class="stringliteral">&quot;DeviceInfo&quot;</span>,
-<a name="l00103"></a>00103             L<span class="stringliteral">&quot;XidProductID&quot;</span>,
-<a name="l00104"></a>00104             0,
-<a name="l00105"></a>00105             full_file_path.c_str());
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107         xid_model_id = GetPrivateProfileInt(
-<a name="l00108"></a>00108             L<span class="stringliteral">&quot;DeviceInfo&quot;</span>,
-<a name="l00109"></a>00109             L<span class="stringliteral">&quot;XidModelID&quot;</span>,
-<a name="l00110"></a>00110             0,
-<a name="l00111"></a>00111             full_file_path.c_str());
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113         <span class="keywordflow">if</span>(xid_product_id == product_id &amp;&amp;
-<a name="l00114"></a>00114            xid_model_id == model_id)
-<a name="l00115"></a>00115         {
-<a name="l00116"></a>00116             <span class="comment">// we&#39;ve found the configuration for this device</span>
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118             <span class="comment">// does this device need an interbyte delay?</span>
-<a name="l00119"></a>00119             <span class="keywordflow">if</span>(GetPrivateProfileString(
-<a name="l00120"></a>00120                 L<span class="stringliteral">&quot;DeviceOptions&quot;</span>,
-<a name="l00121"></a>00121                 L<span class="stringliteral">&quot;XidNeedsInterByteDelay&quot;</span>,
-<a name="l00122"></a>00122                 L<span class="stringliteral">&quot;No&quot;</span>,
-<a name="l00123"></a>00123                 result,
-<a name="l00124"></a>00124                 <span class="keyword">sizeof</span>(result),
-<a name="l00125"></a>00125                 full_file_path.c_str()) != 0)
-<a name="l00126"></a>00126             {
-<a name="l00127"></a>00127                 std::wstring byte_delay(result);
-<a name="l00128"></a>00128                 
-<a name="l00129"></a>00129                 <span class="keywordflow">if</span>(byte_delay.compare(L<span class="stringliteral">&quot;Yes&quot;</span>) == 0)
-<a name="l00130"></a>00130                 {
-<a name="l00131"></a>00131                     needs_interbyte_delay_ = <span class="keyword">true</span>;
-<a name="l00132"></a>00132                 }
-<a name="l00133"></a>00133             }
-<a name="l00134"></a>00134 
-<a name="l00135"></a>00135             <span class="keywordtype">wchar_t</span> port_str[255];
-<a name="l00136"></a>00136             
-<a name="l00137"></a>00137             <span class="comment">// xid devices support up to 255 ports.  In reality, usually only</span>
-<a name="l00138"></a>00138             <span class="comment">// 2 or 3 are used</span>
-<a name="l00139"></a>00139             <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt;= 255; ++i)
-<a name="l00140"></a>00140             {
-<a name="l00141"></a>00141                 wsprintf(port_str, L<span class="stringliteral">&quot;Port%d&quot;</span>, i);
-<a name="l00142"></a>00142 
-<a name="l00143"></a>00143                 <span class="keywordtype">int</span> return_size = GetPrivateProfileSection(
-<a name="l00144"></a>00144                     port_str,
-<a name="l00145"></a>00145                     result,
-<a name="l00146"></a>00146                     <span class="keyword">sizeof</span>(result),
-<a name="l00147"></a>00147                     full_file_path.c_str());
-<a name="l00148"></a>00148                 <span class="keywordflow">if</span>(return_size == 0)
-<a name="l00149"></a>00149                 {
-<a name="l00150"></a>00150                     <span class="comment">// section not found.  This should be impossible to get to.</span>
-<a name="l00151"></a>00151                     <span class="keywordflow">continue</span>;
-<a name="l00152"></a>00152                 }
-<a name="l00153"></a>00153 
-<a name="l00154"></a>00154                 <span class="comment">// The result of GetPrivateProfileSection() is a an array of</span>
-<a name="l00155"></a>00155                 <span class="comment">// NULL delimited strings.  Here we create a response std::string</span>
-<a name="l00156"></a>00156                 <span class="comment">// with the contents of the result[] array with nulls replaced</span>
-<a name="l00157"></a>00157                 <span class="comment">// by commas for easier tokenizing.</span>
-<a name="l00158"></a>00158                 std::wstring res_str;
-<a name="l00159"></a>00159                 res_str.reserve(return_size);
-<a name="l00160"></a>00160                 <span class="keywordflow">for</span>(<span class="keywordtype">int</span> j = 0; j &lt; return_size; ++j)
-<a name="l00161"></a>00161                 {
-<a name="l00162"></a>00162                     <span class="keywordflow">if</span>(result[j] != 0)
-<a name="l00163"></a>00163                     {
-<a name="l00164"></a>00164                         res_str.append(1, result[j]);
-<a name="l00165"></a>00165                     }
-<a name="l00166"></a>00166                     <span class="keywordflow">else</span>
-<a name="l00167"></a>00167                     {
-<a name="l00168"></a>00168                         <span class="keywordflow">if</span>(j != (return_size-1))
-<a name="l00169"></a>00169                             res_str.append(1, L<span class="charliteral">&#39;,&#39;</span>);
-<a name="l00170"></a>00170                     }
-<a name="l00171"></a>00171                 }
-<a name="l00172"></a>00172 
-<a name="l00173"></a>00173                 <span class="comment">// Tokenize the result into Key=Value strings.</span>
-<a name="l00174"></a>00174                 std::vector&lt;std::wstring&gt; key_value_pairs =
-<a name="l00175"></a>00175                     cedrus::tokenize&lt;std::wstring&gt;(res_str,L<span class="stringliteral">&quot;,&quot;</span>);
-<a name="l00176"></a>00176                 
-<a name="l00177"></a>00177                 <span class="comment">// turn the Key=Value strings into a std::map</span>
-<a name="l00178"></a>00178                 std::map&lt;std::wstring, std::wstring&gt; res_map;
-<a name="l00179"></a>00179                 <span class="keywordflow">for</span>(std::vector&lt;std::wstring&gt;::iterator iter = key_value_pairs.begin();
-<a name="l00180"></a>00180                     iter != key_value_pairs.end(); ++iter)
-<a name="l00181"></a>00181                 {
-<a name="l00182"></a>00182                     std::vector&lt;std::wstring&gt; key_value = 
-<a name="l00183"></a>00183                         cedrus::tokenize&lt;std::wstring&gt;(*iter, L<span class="stringliteral">&quot;=&quot;</span>);
-<a name="l00184"></a>00184 
-<a name="l00185"></a>00185                     res_map.insert(std::make_pair(key_value[0],key_value[1]));
-<a name="l00186"></a>00186                 }
-<a name="l00187"></a>00187 
-<a name="l00188"></a>00188                 std::map&lt;std::wstring,std::wstring&gt;::iterator found = 
-<a name="l00189"></a>00189                     res_map.find(L<span class="stringliteral">&quot;PortName&quot;</span>);
-<a name="l00190"></a>00190 
-<a name="l00191"></a>00191                 <span class="keywordflow">if</span>(found == res_map.end())
-<a name="l00192"></a>00192                 {
-<a name="l00193"></a>00193                     <span class="comment">// no port name found.  Try the next one</span>
-<a name="l00194"></a>00194                     <span class="keywordflow">continue</span>;
-<a name="l00195"></a>00195                 }
-<a name="l00196"></a>00196 
-<a name="l00197"></a>00197                 <span class="keywordflow">if</span>(found-&gt;second.compare(L<span class="stringliteral">&quot;Keys&quot;</span>) == 0 ||
-<a name="l00198"></a>00198                    found-&gt;second.compare(L<span class="stringliteral">&quot;Voice Key&quot;</span>) == 0)
-<a name="l00199"></a>00199                 {
-<a name="l00200"></a>00200                     <span class="comment">// found a RB-Series response pad, Lumina system,</span>
-<a name="l00201"></a>00201                     <span class="comment">// or SV-1 Voice Key.</span>
-<a name="l00202"></a>00202                     found = res_map.find(L<span class="stringliteral">&quot;NumberOfLines&quot;</span>);
-<a name="l00203"></a>00203                     <span class="keywordflow">if</span>(found != res_map.end())
-<a name="l00204"></a>00204                     {
-<a name="l00205"></a>00205                         number_of_lines_ = _wtoi(found-&gt;second.c_str());
-<a name="l00206"></a>00206                     }
-<a name="l00207"></a>00207                 
-<a name="l00208"></a>00208                     <span class="comment">// devconfig files have up to 8 key mappings</span>
-<a name="l00209"></a>00209                     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 1; i &lt;=8; ++i)
-<a name="l00210"></a>00210                     {
-<a name="l00211"></a>00211                         <span class="keywordtype">wchar_t</span> key_name[100];
-<a name="l00212"></a>00212                         memset(key_name, 0, <span class="keyword">sizeof</span>(key_name));
-<a name="l00213"></a>00213                         wsprintf(key_name,L<span class="stringliteral">&quot;XidDeviceKeyMap%d&quot;</span>, i);
-<a name="l00214"></a>00214                         
-<a name="l00215"></a>00215                         found = res_map.find(std::wstring(key_name));
-<a name="l00216"></a>00216                         <span class="keywordflow">if</span>(found != res_map.end())
-<a name="l00217"></a>00217                         {
-<a name="l00218"></a>00218                             <span class="keywordtype">int</span> key_num = _wtoi(found-&gt;second.c_str());
-<a name="l00219"></a>00219                             key_map_.insert(std::make_pair(i, key_num));
-<a name="l00220"></a>00220                         }
-<a name="l00221"></a>00221                     }
-<a name="l00222"></a>00222                 }
-<a name="l00223"></a>00223                 <span class="keywordflow">else</span>
-<a name="l00224"></a>00224                 {
-<a name="l00225"></a>00225                     <span class="comment">// no valid port found. Try the next one.</span>
-<a name="l00226"></a>00226                     <span class="keywordflow">continue</span>;
-<a name="l00227"></a>00227                 }
-<a name="l00228"></a>00228             }
-<a name="l00229"></a>00229         }
-<a name="l00230"></a>00230 
-<a name="l00231"></a>00231         <span class="keywordflow">if</span>(!FindNextFile(find_handle, &amp;file_info))
-<a name="l00232"></a>00232             <span class="keywordflow">break</span>;
-<a name="l00233"></a>00233     }
-<a name="l00234"></a>00234 
-<a name="l00235"></a>00235     FindClose(find_handle);
-<a name="l00236"></a>00236 }
-<a name="l00237"></a>00237 
-<a name="l00238"></a><a class="code" href="../../d0/d0b/a00004.html#a8a95e77a64c2bfc29ffbeca237f2d1c1">00238</a> <span class="keywordtype">int</span> <a class="code" href="../../d0/d0b/a00004.html#a8a95e77a64c2bfc29ffbeca237f2d1c1" title="Gets the actual button pressed based on the devconfig key mapping.">cedrus::xid_device_config_t::get_mapped_key</a>(<span class="keywordtype">int</span> key)<span class="keyword"> const</span>
-<a name="l00239"></a>00239 <span class="keyword"></span>{
-<a name="l00240"></a>00240     <span class="keywordflow">if</span>(key_map_.empty())
-<a name="l00241"></a>00241         <span class="keywordflow">return</span> key;
-<a name="l00242"></a>00242 
-<a name="l00243"></a>00243     std::map&lt;int,int&gt;::const_iterator found = 
-<a name="l00244"></a>00244         key_map_.find(key);
-<a name="l00245"></a>00245 
-<a name="l00246"></a>00246     <span class="keywordflow">if</span>(found == key_map_.end())
-<a name="l00247"></a>00247         <span class="keywordflow">return</span> -1;
-<a name="l00248"></a>00248 
-<a name="l00249"></a>00249     <span class="keywordflow">return</span> found-&gt;second;
-<a name="l00250"></a>00250 }
-<a name="l00251"></a>00251 
-<a name="l00252"></a><a class="code" href="../../d0/d0b/a00004.html#ab00a9f39101fa7797fb133b869800485">00252</a> <span class="keywordtype">int</span> <a class="code" href="../../d0/d0b/a00004.html#ab00a9f39101fa7797fb133b869800485" title="Number of response lines (or buttons) a device has.">cedrus::xid_device_config_t::number_of_lines</a>()<span class="keyword"> const</span>
-<a name="l00253"></a>00253 <span class="keyword"></span>{
-<a name="l00254"></a>00254     <span class="keywordflow">return</span> number_of_lines_;
-<a name="l00255"></a>00255 }
-<a name="l00256"></a>00256 
-<a name="l00257"></a><a class="code" href="../../d0/d0b/a00004.html#a6600007aa4b362bc90542e971aed484e">00257</a> <span class="keywordtype">bool</span> <a class="code" href="../../d0/d0b/a00004.html#a6600007aa4b362bc90542e971aed484e" title="Whether or not the device requires an inter-byte delay.">cedrus::xid_device_config_t::needs_interbyte_delay</a>()<span class="keyword"> const</span>
-<a name="l00258"></a>00258 <span class="keyword"></span>{
-<a name="l00259"></a>00259     <span class="keywordflow">return</span> needs_interbyte_delay_;
-<a name="l00260"></a>00260 }
+<a name="l00036"></a>00036     st.<a class="code" href="../../dd/dad/a00005.html#acc4ae1ecd086e13b7dcd735645ca0446" title="Raise digital output lines on the StimTracker device.">raise_lines</a>(255);
+<a name="l00037"></a>00037     
+<a name="l00038"></a>00038     Sleep(1000);
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040     std::cout &lt;&lt; <span class="stringliteral">&quot;Clearing lines&quot;</span> &lt;&lt; std::endl;
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042     st.<a class="code" href="../../dd/dad/a00005.html#a00bbdb171646be42b445e97957a4a233" title="Clear digital output lines on the StimTracker device.">clear_lines</a>(255);
+<a name="l00043"></a>00043     Sleep(1000);
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045     std::cout &lt;&lt; <span class="stringliteral">&quot;Setting pulse duration to 100ms&quot;</span> &lt;&lt; std::endl;
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047     st.<a class="code" href="../../dd/dad/a00005.html#af295bc3b84719e814ef303c1067096b5" title="Set the pulse duration when raise_lines() is called.">set_pulse_duration</a>(100);
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049     Sleep(1000);
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051     std::cout &lt;&lt; <span class="stringliteral">&quot;OOOH!! FLASHY!! (Hit Ctrl-C to exit)&quot;</span> &lt;&lt; std::endl;
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053     <span class="keywordtype">int</span> line = 1;
+<a name="l00054"></a>00054     <span class="keywordflow">while</span>(<span class="keyword">true</span>)
+<a name="l00055"></a>00055     {
+<a name="l00056"></a>00056         st.<a class="code" href="../../dd/dad/a00005.html#acc4ae1ecd086e13b7dcd735645ca0446" title="Raise digital output lines on the StimTracker device.">raise_lines</a>(line);
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058         line = line &lt;&lt; 1;
+<a name="l00059"></a>00059         <span class="keywordflow">if</span>(line &gt; 255)
+<a name="l00060"></a>00060             line = 1;
+<a name="l00061"></a>00061         Sleep(200);
+<a name="l00062"></a>00062     }
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064     <span class="keywordflow">return</span> 0;
+<a name="l00065"></a>00065 }
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

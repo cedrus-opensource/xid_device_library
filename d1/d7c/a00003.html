@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: cedrus::xid_con_t Class Reference</title>
+<title>XID device library: cedrus::port_settings_t Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -21,73 +21,199 @@
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="../../dd/da2/a00019.html">cedrus</a>      </li>
-      <li><a class="el" href="../../d1/d7c/a00003.html">xid_con_t</a>      </li>
+      <li><a class="el" href="../../d0/d33/a00027.html">cedrus</a>      </li>
+      <li><a class="el" href="../../d1/d7c/a00003.html">port_settings_t</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<h1>cedrus::xid_con_t Class Reference</h1>  </div>
+<h1>cedrus::port_settings_t Class Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="cedrus::xid_con_t" -->
-<p>Implementation of communication with an XID device.  
+<!-- doxytag: class="cedrus::port_settings_t" -->
+<p>Handles serial port settings used by the XID devices.  
 <a href="#_details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../df/d86/a00012_source.html">xid_device_driver/xid_con_t.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../dd/d1b/a00015_source.html">xid_device_driver/port_settings_t.h</a>&gt;</code></p>
 
-<p><a href="../../d7/de0/a00022.html">List of all members.</a></p>
+<p><a href="../../d5/d79/a00030.html">List of all members.</a></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">bitparity</a> { <a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738aa8f13df38b308ab75a8fb8d30f5e6fa2">BITPARITY_NONE</a> =  0, 
+<a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738ae902c214bade450500f2d16db711915d">BITPARITY_ODD</a> =  1, 
+<a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738a88d77f98a683a1a141cd586d86311620">BITPARITY_EVEN</a> =  2
+ }</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">stopbits</a> { <a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097afbb135abbf8bbb7ac38bc0c334988900">STOP_BIT_1</a> =  0, 
+<a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097a4ac3cdd12f5768c33b22a113f07afcbb">STOP_BIT_2</a> =  1
+ }</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">bytesize</a> { <a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9a096bf4340436b9e6e7eba8b2b1ddecc0">BYTESIZE_6</a> =  6, 
+<a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9a8fe13919919dcb2ebd3e1390ffc04e36">BYTESIZE_7</a> =  7, 
+<a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9ad0f32ca50b41142986393ae34ca07eb0">BYTESIZE_8</a> =  8, 
+<a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9a1abe83b80f432cbad5ee427b14216fb1">FIRST_BYTESIZE</a> =  BYTESIZE_6
+ }</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375">handshaking</a> { <a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375a1bdf1deb80da548b75465b639c6953e8">HANDSHAKE_NONE</a> =  0, 
+<a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375af36d12f67e1361c604fde76f0c8d6f51">HANDSHAKE_XON_XOFF</a> =  1, 
+<a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375aba30c18301fce43ab7110a7cbcb8aa69">HANDSHAKE_HARDWARE</a> =  2
+ }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#ae7aec605a953355c36b51e0e46a1f740">xid_con_t</a> (const std::wstring &amp;port_name, int port_speed=115200, int delay_ms=1, <a class="el" href="../../d8/d84/a00001.html#a8993bbaeec01141ab44c098b699af0e9">port_settings_t::bytesize</a> byte_size=port_settings_t::BYTESIZE_8, <a class="el" href="../../d8/d84/a00001.html#aa8b4bb15086b54a953a50afbee44b738">port_settings_t::bitparity</a> bit_parity=port_settings_t::BITPARITY_NONE, <a class="el" href="../../d8/d84/a00001.html#ab7758b4e986c348ff876008c169c1097">port_settings_t::stopbits</a> stop_bits=port_settings_t::STOP_BIT_1)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d1/d7c/a00003.html" title="Implementation of communication with an XID device.">xid_con_t</a> constructor  <a href="#ae7aec605a953355c36b51e0e46a1f740"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a4d8a45f4ad0bcd7fb4772350eb6831cc">~xid_con_t</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a242ebe9826899413fb32d5f06350eddd">close</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the device.  <a href="#a242ebe9826899413fb32d5f06350eddd"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#aef3a51f4abc37543a793e14b163640e4">flush_input</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flush the device's input buffer.  <a href="#aef3a51f4abc37543a793e14b163640e4"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a9b83231e58489b6c5d8d50103f5b0569">flush_output</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flush the device's output buffer.  <a href="#a9b83231e58489b6c5d8d50103f5b0569"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a6a9c45b6f70e3b35dc9ff87fae60ce0b">open</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens the COM port for use.  <a href="#a6a9c45b6f70e3b35dc9ff87fae60ce0b"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a80530da71a395fd5bc3b530a842df6dc">read</a> (unsigned char *in_buffer, int bytes_to_read, int &amp;bytes_read)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the device.  <a href="#a80530da71a395fd5bc3b530a842df6dc"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#aea3f3ebc811e14312a8b7e40becffa12">write</a> (unsigned char *const in_buffer, int bytes_to_write, int &amp;bytes_written)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Write data to the device.  <a href="#aea3f3ebc811e14312a8b7e40becffa12"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">key_state</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#acd274eb5c715b78743d44ea1b7444575">check_for_keypress</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the device to see if an event response has been sent.  <a href="#acd274eb5c715b78743d44ea1b7444575"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a44b2af942c9cbd4371598ef3f739b520">remove_current_response</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the current response from the internal buffer.  <a href="#a44b2af942c9cbd4371598ef3f739b520"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a023f1c22ab34933dd10edcebb635e548">get_current_response</a> (int &amp;port, int &amp;key, bool &amp;was_pressed, int &amp;reaction_time)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the last response from the device.  <a href="#a023f1c22ab34933dd10edcebb635e548"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a1aeda72373fbc25657ee3dcad1cc5ad1">get_number_of_keys_down</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of keys currently being held down.  <a href="#a1aeda72373fbc25657ee3dcad1cc5ad1"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a39eeebfdafd2f01e61467f773b85a692">send_xid_command</a> (const char in_command[], int num_bytes, char out_response[], int max_out_response_size, int expected_bytes_rec, int timeout=100, int command_delay=0)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an XID command to the device.  <a href="#a39eeebfdafd2f01e61467f773b85a692"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a423907fe9db860e1ba6a1392023a4853">set_needs_interbyte_delay</a> (bool need_delay=true)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets whether or not the device needs an inter-byte delay.  <a href="#a423907fe9db860e1ba6a1392023a4853"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a70e2124d7b0ef2165d69930d471c9f0c">port_settings_t</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a5ad0cd0b7593e0544c7bf64c6feaf200">port_settings_t</a> (const std::wstring &amp;port_name, int port_speed, <a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">bytesize</a> byte_size=BYTESIZE_8, <a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">bitparity</a> bit_parity=BITPARITY_NONE, <a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">stopbits</a> stop_bits=STOP_BIT_1)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a5237640f8ddf1f4816f4004cbfb1d88c">~port_settings_t</a> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const std::wstring &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#ac7bce145301dbdaa63698e5d78cd0fbd">port_name</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#ac6de5d917e98c7cb10d8b32f53a207c4">baud_rate</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#ad2e2d588033f0ee58da57c8f68c44266">baud_rate</a> (int speed)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">bitparity</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#ad5dbe808611007bed90a6312be70d22b">bit_parity</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#abffc9abbcb709c339620f6986f3090ae">bit_parity</a> (<a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">bitparity</a> parity)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">bytesize</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#ab0c86a1707d86014827bb01a26aba1ac">byte_size</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a517edc13159b9fb3c9c061b0f91f2145">byte_size</a> (<a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">bytesize</a> size)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375">handshaking</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#ae02f1a6625324fcf4377aed6fb95d2e9">handshake</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a60ea8a193cfbedff21ffe35c53b6334b">handshake</a> (<a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375">handshaking</a> shake)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">stopbits</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a9fbc3bbee19917a0f958e84dec83367d">stop_bits</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7c/a00003.html#a2d1920dd64b7050915eff61b32ab853d">stop_bits</a> (<a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">stopbits</a> bits)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>Implementation of communication with an XID device. </p>
-<p>This class implements the nuts and bolts of communicating with an XID device. Inter-byte delays are optionally added if it's communicating with a 4 MHz XID device. It also handles the parsing of the XID protocol 6-byte packats. </p>
+<p>Handles serial port settings used by the XID devices. </p>
+<p>This is an internal class used by <a class="el" href="../../de/d21/a00006.html">xid_con_t</a> and shouldn't be needed by users of the library. </p>
 
-<p>Definition at line <a class="el" href="../../df/d86/a00012_source.html#l00051">51</a> of file <a class="el" href="../../df/d86/a00012_source.html">xid_con_t.h</a>.</p>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ae7aec605a953355c36b51e0e46a1f740"></a><!-- doxytag: member="cedrus::xid_con_t::xid_con_t" ref="ae7aec605a953355c36b51e0e46a1f740" args="(const std::wstring &amp;port_name, int port_speed=115200, int delay_ms=1, port_settings_t::bytesize byte_size=port_settings_t::BYTESIZE_8, port_settings_t::bitparity bit_parity=port_settings_t::BITPARITY_NONE, port_settings_t::stopbits stop_bits=port_settings_t::STOP_BIT_1)" -->
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00046">46</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">port_settings_t.h</a>.</p>
+<hr/><h2>Member Enumeration Documentation</h2>
+<a class="anchor" id="aa8b4bb15086b54a953a50afbee44b738"></a><!-- doxytag: member="cedrus::port_settings_t::bitparity" ref="aa8b4bb15086b54a953a50afbee44b738" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cedrus::xid_con_t::xid_con_t </td>
+          <td class="memname">enum <a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">cedrus::port_settings_t::bitparity</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="aa8b4bb15086b54a953a50afbee44b738aa8f13df38b308ab75a8fb8d30f5e6fa2"></a><!-- doxytag: member="BITPARITY_NONE" ref="aa8b4bb15086b54a953a50afbee44b738aa8f13df38b308ab75a8fb8d30f5e6fa2" args="" -->BITPARITY_NONE</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="aa8b4bb15086b54a953a50afbee44b738ae902c214bade450500f2d16db711915d"></a><!-- doxytag: member="BITPARITY_ODD" ref="aa8b4bb15086b54a953a50afbee44b738ae902c214bade450500f2d16db711915d" args="" -->BITPARITY_ODD</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="aa8b4bb15086b54a953a50afbee44b738a88d77f98a683a1a141cd586d86311620"></a><!-- doxytag: member="BITPARITY_EVEN" ref="aa8b4bb15086b54a953a50afbee44b738a88d77f98a683a1a141cd586d86311620" args="" -->BITPARITY_EVEN</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00049">49</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">port_settings_t.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8993bbaeec01141ab44c098b699af0e9"></a><!-- doxytag: member="cedrus::port_settings_t::bytesize" ref="a8993bbaeec01141ab44c098b699af0e9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">cedrus::port_settings_t::bytesize</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="a8993bbaeec01141ab44c098b699af0e9a096bf4340436b9e6e7eba8b2b1ddecc0"></a><!-- doxytag: member="BYTESIZE_6" ref="a8993bbaeec01141ab44c098b699af0e9a096bf4340436b9e6e7eba8b2b1ddecc0" args="" -->BYTESIZE_6</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a8993bbaeec01141ab44c098b699af0e9a8fe13919919dcb2ebd3e1390ffc04e36"></a><!-- doxytag: member="BYTESIZE_7" ref="a8993bbaeec01141ab44c098b699af0e9a8fe13919919dcb2ebd3e1390ffc04e36" args="" -->BYTESIZE_7</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a8993bbaeec01141ab44c098b699af0e9ad0f32ca50b41142986393ae34ca07eb0"></a><!-- doxytag: member="BYTESIZE_8" ref="a8993bbaeec01141ab44c098b699af0e9ad0f32ca50b41142986393ae34ca07eb0" args="" -->BYTESIZE_8</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a8993bbaeec01141ab44c098b699af0e9a1abe83b80f432cbad5ee427b14216fb1"></a><!-- doxytag: member="FIRST_BYTESIZE" ref="a8993bbaeec01141ab44c098b699af0e9a1abe83b80f432cbad5ee427b14216fb1" args="" -->FIRST_BYTESIZE</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00062">62</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">port_settings_t.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1cec8dfae8abce52d654693f71b7f375"></a><!-- doxytag: member="cedrus::port_settings_t::handshaking" ref="a1cec8dfae8abce52d654693f71b7f375" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375">cedrus::port_settings_t::handshaking</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="a1cec8dfae8abce52d654693f71b7f375a1bdf1deb80da548b75465b639c6953e8"></a><!-- doxytag: member="HANDSHAKE_NONE" ref="a1cec8dfae8abce52d654693f71b7f375a1bdf1deb80da548b75465b639c6953e8" args="" -->HANDSHAKE_NONE</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a1cec8dfae8abce52d654693f71b7f375af36d12f67e1361c604fde76f0c8d6f51"></a><!-- doxytag: member="HANDSHAKE_XON_XOFF" ref="a1cec8dfae8abce52d654693f71b7f375af36d12f67e1361c604fde76f0c8d6f51" args="" -->HANDSHAKE_XON_XOFF</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a1cec8dfae8abce52d654693f71b7f375aba30c18301fce43ab7110a7cbcb8aa69"></a><!-- doxytag: member="HANDSHAKE_HARDWARE" ref="a1cec8dfae8abce52d654693f71b7f375aba30c18301fce43ab7110a7cbcb8aa69" args="" -->HANDSHAKE_HARDWARE</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00071">71</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">port_settings_t.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab7758b4e986c348ff876008c169c1097"></a><!-- doxytag: member="cedrus::port_settings_t::stopbits" ref="ab7758b4e986c348ff876008c169c1097" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">cedrus::port_settings_t::stopbits</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="ab7758b4e986c348ff876008c169c1097afbb135abbf8bbb7ac38bc0c334988900"></a><!-- doxytag: member="STOP_BIT_1" ref="ab7758b4e986c348ff876008c169c1097afbb135abbf8bbb7ac38bc0c334988900" args="" -->STOP_BIT_1</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="ab7758b4e986c348ff876008c169c1097a4ac3cdd12f5768c33b22a113f07afcbb"></a><!-- doxytag: member="STOP_BIT_2" ref="ab7758b4e986c348ff876008c169c1097a4ac3cdd12f5768c33b22a113f07afcbb" args="" -->STOP_BIT_2</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00056">56</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">port_settings_t.h</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a70e2124d7b0ef2165d69930d471c9f0c"></a><!-- doxytag: member="cedrus::port_settings_t::port_settings_t" ref="a70e2124d7b0ef2165d69930d471c9f0c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cedrus::port_settings_t::port_settings_t </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00077">77</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">port_settings_t.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5ad0cd0b7593e0544c7bf64c6feaf200"></a><!-- doxytag: member="cedrus::port_settings_t::port_settings_t" ref="a5ad0cd0b7593e0544c7bf64c6feaf200" args="(const std::wstring &amp;port_name, int port_speed, bytesize byte_size=BYTESIZE_8, bitparity bit_parity=BITPARITY_NONE, stopbits stop_bits=STOP_BIT_1)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cedrus::port_settings_t::port_settings_t </td>
           <td>(</td>
           <td class="paramtype">const std::wstring &amp;&#160;</td>
           <td class="paramname"> <em>port_name</em>, </td>
@@ -96,31 +222,25 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>port_speed</em> = <code>115200</code>, </td>
+          <td class="paramname"> <em>port_speed</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>delay_ms</em> = <code>1</code>, </td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">bytesize</a>&#160;</td>
+          <td class="paramname"> <em>byte_size</em> = <code>BYTESIZE_8</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d8/d84/a00001.html#a8993bbaeec01141ab44c098b699af0e9">port_settings_t::bytesize</a>&#160;</td>
-          <td class="paramname"> <em>byte_size</em> = <code>port_settings_t::BYTESIZE_8</code>, </td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">bitparity</a>&#160;</td>
+          <td class="paramname"> <em>bit_parity</em> = <code>BITPARITY_NONE</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d8/d84/a00001.html#aa8b4bb15086b54a953a50afbee44b738">port_settings_t::bitparity</a>&#160;</td>
-          <td class="paramname"> <em>bit_parity</em> = <code>port_settings_t::BITPARITY_NONE</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d8/d84/a00001.html#ab7758b4e986c348ff876008c169c1097">port_settings_t::stopbits</a>&#160;</td>
-          <td class="paramname"> <em>stop_bits</em> = <code>port_settings_t::STOP_BIT_1</code>&#160;</td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">stopbits</a>&#160;</td>
+          <td class="paramname"> <em>stop_bits</em> = <code>STOP_BIT_1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -131,29 +251,16 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p><a class="el" href="../../d1/d7c/a00003.html" title="Implementation of communication with an XID device.">xid_con_t</a> constructor </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">port_name</td><td>COM port name the device is connected to. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">port_speed</td><td>speed of the port. This defaults to 115200bps </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">delay_ms</td><td>Inter-byte delay time in miliseconds. Defaults to 1ms. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">byte_size</td><td>Byte size used by the device </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">bit_parity</td><td>bit parity of the device. Defaults to none. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">stop_bits</td><td>stop bits of the device. Defaults to 0 </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00035">35</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00035">35</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a4d8a45f4ad0bcd7fb4772350eb6831cc"></a><!-- doxytag: member="cedrus::xid_con_t::~xid_con_t" ref="a4d8a45f4ad0bcd7fb4772350eb6831cc" args="()" -->
+<a class="anchor" id="a5237640f8ddf1f4816f4004cbfb1d88c"></a><!-- doxytag: member="cedrus::port_settings_t::~port_settings_t" ref="a5237640f8ddf1f4816f4004cbfb1d88c" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cedrus::xid_con_t::~xid_con_t </td>
+          <td class="memname">cedrus::port_settings_t::~port_settings_t </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname">&#160;)</td>
@@ -163,401 +270,220 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00080">80</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00051">51</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="acd274eb5c715b78743d44ea1b7444575"></a><!-- doxytag: member="cedrus::xid_con_t::check_for_keypress" ref="acd274eb5c715b78743d44ea1b7444575" args="()" -->
+<a class="anchor" id="ac6de5d917e98c7cb10d8b32f53a207c4"></a><!-- doxytag: member="cedrus::port_settings_t::baud_rate" ref="ac6de5d917e98c7cb10d8b32f53a207c4" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a> cedrus::xid_con_t::check_for_keypress </td>
+          <td class="memname">int cedrus::port_settings_t::baud_rate </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00060">60</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad2e2d588033f0ee58da57c8f68c44266"></a><!-- doxytag: member="cedrus::port_settings_t::baud_rate" ref="ad2e2d588033f0ee58da57c8f68c44266" args="(int speed)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::port_settings_t::baud_rate </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>speed</em>&#160;)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Checks the device to see if an event response has been sent. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>key_state if no event was found, NO_KEY_DETECTED is returned. Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN. </dd></dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00334">334</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00065">65</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a242ebe9826899413fb32d5f06350eddd"></a><!-- doxytag: member="cedrus::xid_con_t::close" ref="a242ebe9826899413fb32d5f06350eddd" args="()" -->
+<a class="anchor" id="ad5dbe808611007bed90a6312be70d22b"></a><!-- doxytag: member="cedrus::port_settings_t::bit_parity" ref="ad5dbe808611007bed90a6312be70d22b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_con_t::close </td>
+          <td class="memname"><a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">cedrus::port_settings_t::bitparity</a> cedrus::port_settings_t::bit_parity </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00070">70</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abffc9abbcb709c339620f6986f3090ae"></a><!-- doxytag: member="cedrus::port_settings_t::bit_parity" ref="abffc9abbcb709c339620f6986f3090ae" args="(bitparity parity)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::port_settings_t::bit_parity </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#aa8b4bb15086b54a953a50afbee44b738">bitparity</a>&#160;</td>
+          <td class="paramname"> <em>parity</em>&#160;)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Closes the device. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if closing the device was successful, or ERROR_CLOSING_PORT if it was unsuccessful. Enum values are defined in <a class="el" href="../../de/d5e/a00007.html">constants.h</a> </dd></dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00086">86</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00075">75</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aef3a51f4abc37543a793e14b163640e4"></a><!-- doxytag: member="cedrus::xid_con_t::flush_input" ref="aef3a51f4abc37543a793e14b163640e4" args="()" -->
+<a class="anchor" id="ab0c86a1707d86014827bb01a26aba1ac"></a><!-- doxytag: member="cedrus::port_settings_t::byte_size" ref="ab0c86a1707d86014827bb01a26aba1ac" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_con_t::flush_input </td>
+          <td class="memname"><a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">cedrus::port_settings_t::bytesize</a> cedrus::port_settings_t::byte_size </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00080">80</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a517edc13159b9fb3c9c061b0f91f2145"></a><!-- doxytag: member="cedrus::port_settings_t::byte_size" ref="a517edc13159b9fb3c9c061b0f91f2145" args="(bytesize size)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::port_settings_t::byte_size </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#a8993bbaeec01141ab44c098b699af0e9">bytesize</a>&#160;</td>
+          <td class="paramname"> <em>size</em>&#160;)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Flush the device's input buffer. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if flushing the device was successful, or ERROR_FLUSHING_PORT if it was unsuccessful. Enum values are defined in <a class="el" href="../../de/d5e/a00007.html">constants.h</a> </dd></dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00095">95</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00085">85</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a9b83231e58489b6c5d8d50103f5b0569"></a><!-- doxytag: member="cedrus::xid_con_t::flush_output" ref="a9b83231e58489b6c5d8d50103f5b0569" args="()" -->
+<a class="anchor" id="a60ea8a193cfbedff21ffe35c53b6334b"></a><!-- doxytag: member="cedrus::port_settings_t::handshake" ref="a60ea8a193cfbedff21ffe35c53b6334b" args="(handshaking shake)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_con_t::flush_output </td>
+          <td class="memname">void cedrus::port_settings_t::handshake </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375">handshaking</a>&#160;</td>
+          <td class="paramname"> <em>shake</em>&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00095">95</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae02f1a6625324fcf4377aed6fb95d2e9"></a><!-- doxytag: member="cedrus::port_settings_t::handshake" ref="ae02f1a6625324fcf4377aed6fb95d2e9" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d1/d7c/a00003.html#a1cec8dfae8abce52d654693f71b7f375">cedrus::port_settings_t::handshaking</a> cedrus::port_settings_t::handshake </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Flush the device's output buffer. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if flushing the device was successful, or ERROR_FLUSHING_PORT if it was unsuccessful. Enum values are defined in <a class="el" href="../../de/d5e/a00007.html">constants.h</a> </dd></dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00107">107</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00090">90</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a023f1c22ab34933dd10edcebb635e548"></a><!-- doxytag: member="cedrus::xid_con_t::get_current_response" ref="a023f1c22ab34933dd10edcebb635e548" args="(int &amp;port, int &amp;key, bool &amp;was_pressed, int &amp;reaction_time)" -->
+<a class="anchor" id="ac7bce145301dbdaa63698e5d78cd0fbd"></a><!-- doxytag: member="cedrus::port_settings_t::port_name" ref="ac7bce145301dbdaa63698e5d78cd0fbd" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void cedrus::xid_con_t::get_current_response </td>
-          <td>(</td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"> <em>port</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"> <em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool &amp;&#160;</td>
-          <td class="paramname"> <em>was_pressed</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"> <em>reaction_time</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Gets the last response from the device. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">port</td><td>device port the response is from. usually 0 </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">key</td><td>Which key was pressed. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">was_pressed</td><td>true if a key was pressed, false otherwise </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">reaction_time</td><td>reaction time read from the internal device timer. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00369">369</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a1aeda72373fbc25657ee3dcad1cc5ad1"></a><!-- doxytag: member="cedrus::xid_con_t::get_number_of_keys_down" ref="a1aeda72373fbc25657ee3dcad1cc5ad1" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cedrus::xid_con_t::get_number_of_keys_down </td>
+          <td class="memname">const std::wstring &amp; cedrus::port_settings_t::port_name </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00055">55</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2d1920dd64b7050915eff61b32ab853d"></a><!-- doxytag: member="cedrus::port_settings_t::stop_bits" ref="a2d1920dd64b7050915eff61b32ab853d" args="(stopbits bits)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::port_settings_t::stop_bits </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">stopbits</a>&#160;</td>
+          <td class="paramname"> <em>bits</em>&#160;)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Number of keys currently being held down. </p>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00390">390</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00105">105</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a6a9c45b6f70e3b35dc9ff87fae60ce0b"></a><!-- doxytag: member="cedrus::xid_con_t::open" ref="a6a9c45b6f70e3b35dc9ff87fae60ce0b" args="()" -->
+<a class="anchor" id="a9fbc3bbee19917a0f958e84dec83367d"></a><!-- doxytag: member="cedrus::port_settings_t::stop_bits" ref="a9fbc3bbee19917a0f958e84dec83367d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_con_t::open </td>
+          <td class="memname"><a class="el" href="../../d1/d7c/a00003.html#ab7758b4e986c348ff876008c169c1097">cedrus::port_settings_t::stopbits</a> cedrus::port_settings_t::stop_bits </td>
           <td>(</td>
           <td class="paramname">&#160;)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Opens the COM port for use. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if opening the device for communication was successful. If the operation was unsuccessful, it can return one of the following: PORT_NOT_AVAILABLE, ERROR_SETTING_UP_PORT, ERROR_FLUSHING_PORT. Enum values are defined in <a class="el" href="../../de/d5e/a00007.html">constants.h</a>. </dd></dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00119">119</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a80530da71a395fd5bc3b530a842df6dc"></a><!-- doxytag: member="cedrus::xid_con_t::read" ref="a80530da71a395fd5bc3b530a842df6dc" args="(unsigned char *in_buffer, int bytes_to_read, int &amp;bytes_read)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cedrus::xid_con_t::read </td>
-          <td>(</td>
-          <td class="paramtype">unsigned char *&#160;</td>
-          <td class="paramname"> <em>in_buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>bytes_to_read</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"> <em>bytes_read</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Read data from the device. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">in_buffer</td><td>character array to be used for reading data from the device into. It is the user's responsibility to ensure bytes_to_read is less than the size of in_buffer </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">bytes_to_read</td><td>specifies the number of bytes to expect to be returned from the device </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">bytes_read</td><td>number of bytes actually read</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>NO_ERR if the read was successful, ERROR_READING_PORT otherwise. </dd></dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00212">212</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a44b2af942c9cbd4371598ef3f739b520"></a><!-- doxytag: member="cedrus::xid_con_t::remove_current_response" ref="a44b2af942c9cbd4371598ef3f739b520" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cedrus::xid_con_t::remove_current_response </td>
-          <td>(</td>
-          <td class="paramname">&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Removes the current response from the internal buffer. </p>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00351">351</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a39eeebfdafd2f01e61467f773b85a692"></a><!-- doxytag: member="cedrus::xid_con_t::send_xid_command" ref="a39eeebfdafd2f01e61467f773b85a692" args="(const char in_command[], int num_bytes, char out_response[], int max_out_response_size, int expected_bytes_rec, int timeout=100, int command_delay=0)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cedrus::xid_con_t::send_xid_command </td>
-          <td>(</td>
-          <td class="paramtype">const char&#160;</td>
-          <td class="paramname"> <em>in_command</em>[], </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>num_bytes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char&#160;</td>
-          <td class="paramname"> <em>out_response</em>[], </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>max_out_response_size</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>expected_bytes_rec</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>timeout</em> = <code>100</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>command_delay</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Send an XID command to the device. </p>
-<p>XID commands are documented at <a href="http://www.cedrus.com/xid/">http://www.cedrus.com/xid/</a></p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">in_command</td><td>command to send to the device </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_bytes</td><td>number of bytes in the command </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">out_response</td><td>response from the device </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">max_out_response_size</td><td>maximum allowed response size </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">expected_bytes_rec</td><td>number of bytes expected </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">timeout</td><td>command timeout. Defaults to 100ms </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">command_delay</td><td>Some devices need an additional delay between receiving a request and sending a response. Set the delay here. It defaults to 0. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00395">395</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a423907fe9db860e1ba6a1392023a4853"></a><!-- doxytag: member="cedrus::xid_con_t::set_needs_interbyte_delay" ref="a423907fe9db860e1ba6a1392023a4853" args="(bool need_delay=true)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cedrus::xid_con_t::set_needs_interbyte_delay </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"> <em>need_delay</em> = <code>true</code>&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Sets whether or not the device needs an inter-byte delay. </p>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00464">464</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aea3f3ebc811e14312a8b7e40becffa12"></a><!-- doxytag: member="cedrus::xid_con_t::write" ref="aea3f3ebc811e14312a8b7e40becffa12" args="(unsigned char *const in_buffer, int bytes_to_write, int &amp;bytes_written)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cedrus::xid_con_t::write </td>
-          <td>(</td>
-          <td class="paramtype">unsigned char *const &#160;</td>
-          <td class="paramname"> <em>in_buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"> <em>bytes_to_write</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"> <em>bytes_written</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Write data to the device. </p>
-<p>If the device is a 4MHz XID unit, an inter-byte delay is used between each byte sent to the device.</p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">in_buffer</td><td>command to be sent to the device </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">bytes_to_write</td><td>number of bytes in the command to be sent </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">bytes_written</td><td>number of bytes written to the device </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="../../da/d45/a00011_source.html#l00233">233</a> of file <a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d2/de7/a00014_source.html#l00100">100</a> of file <a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="../../df/d86/a00012_source.html">xid_con_t.h</a></li>
-<li><a class="el" href="../../da/d45/a00011_source.html">xid_con_t.cpp</a></li>
+<li><a class="el" href="../../dd/d1b/a00015_source.html">port_settings_t.h</a></li>
+<li><a class="el" href="../../d2/de7/a00014_source.html">port_settings_t.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

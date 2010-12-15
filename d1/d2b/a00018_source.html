@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: xid_device_t.h Source File</title>
+<title>XID device library: string_tokenizer.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -20,11 +20,12 @@
   <div class="tabs2">
     <ul class="tablist">
       <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>xid_device_t.h</h1>  </div>
+<h1>string_tokenizer.hpp</h1>  </div>
 </div>
 <div class="contents">
 <a href="../../d1/d2b/a00018.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* Copyright (c) 2010, Cedrus Corporation</span>
@@ -58,96 +59,49 @@
 <a name="l00029"></a>00029 <span class="comment"> * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
 <a name="l00030"></a>00030 <span class="comment"> */</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="preprocessor">#ifndef XID_DEVICE_T_H</span>
-<a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#define XID_DEVICE_T_H</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#ifndef STRING_TOKENIZER_H</span>
+<a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#define STRING_TOKENIZER_H</span>
 <a name="l00034"></a>00034 <span class="preprocessor"></span>
-<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;Windows.h&gt;</span>
-<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;queue&gt;</span>
-<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;string&gt;</span>
-<a name="l00038"></a>00038 <span class="preprocessor">#include &quot;<a class="code" href="../../da/da0/a00009.html">port_settings_t.h</a>&quot;</span>
-<a name="l00039"></a>00039 <span class="preprocessor">#include &quot;<a class="code" href="../../de/d5e/a00007.html">constants.h</a>&quot;</span>
-<a name="l00040"></a>00040 <span class="preprocessor">#include &lt;boost/shared_ptr.hpp&gt;</span>
-<a name="l00041"></a>00041 
-<a name="l00042"></a>00042 <span class="keyword">namespace </span>cedrus
-<a name="l00043"></a>00043 {
-<a name="l00044"></a>00044     <span class="keyword">class </span>xid_con_t;
-<a name="l00045"></a>00045     <span class="keyword">class </span>xid_device_config_t;
-<a name="l00046"></a>00046     
-<a name="l00052"></a><a class="code" href="../../d7/d46/a00002.html">00052</a>     <span class="keyword">struct </span><a class="code" href="../../d7/d46/a00002.html" title="struct to encapsulate a response from an XID device">response</a>
-<a name="l00053"></a>00053     {
-<a name="l00057"></a><a class="code" href="../../d7/d46/a00002.html#aced8e8a45b60ee6b3dc4967d64b92caf">00057</a>         <span class="keywordtype">int</span> <a class="code" href="../../d7/d46/a00002.html#aced8e8a45b60ee6b3dc4967d64b92caf" title="port the response came from.">port</a>; 
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;vector&gt;</span>
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 <span class="keyword">namespace </span>cedrus
+<a name="l00038"></a>00038 {
+<a name="l00048"></a>00048     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> <span class="keywordtype">string</span>_type&gt;
+<a name="l00049"></a><a class="code" href="../../d0/d33/a00027.html#add74c69d3eb65cfe8c0345e372ddb37d">00049</a>     std::vector&lt;string_type&gt; <a class="code" href="../../d0/d33/a00027.html#add74c69d3eb65cfe8c0345e372ddb37d" title="Split a delimited string into a std::vector of strings.">tokenize</a>(
+<a name="l00050"></a>00050         <span class="keyword">const</span> string_type &amp;str, <span class="keyword">const</span> string_type &amp;delimiters)
+<a name="l00051"></a>00051     {
+<a name="l00052"></a>00052         std::vector&lt;string_type&gt; tokens;
+<a name="l00053"></a>00053         string_type::size_type last_pos = 0, pos = 0;
+<a name="l00054"></a>00054         <span class="keywordtype">int</span> count = 0;
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056         <span class="keywordflow">if</span>(str.length() &lt; 1)
+<a name="l00057"></a>00057             <span class="keywordflow">return</span> tokens;
 <a name="l00058"></a>00058 
-<a name="l00062"></a><a class="code" href="../../d7/d46/a00002.html#a7d98543c9f2fea1c1d10df6e90134d72">00062</a>         <span class="keywordtype">int</span> <a class="code" href="../../d7/d46/a00002.html#a7d98543c9f2fea1c1d10df6e90134d72" title="button pressed.">button</a>;
-<a name="l00063"></a>00063 
-<a name="l00067"></a><a class="code" href="../../d7/d46/a00002.html#a4d5b394bc3a04db3389aa6c99a4ca5bc">00067</a>         <span class="keywordtype">bool</span> <a class="code" href="../../d7/d46/a00002.html#a4d5b394bc3a04db3389aa6c99a4ca5bc" title="whether or not a button was pressed">pressed</a>;
-<a name="l00068"></a>00068 
-<a name="l00072"></a><a class="code" href="../../d7/d46/a00002.html#a17a4679d77dad354a5ef1c0eece34a48">00072</a>         <span class="keywordtype">int</span> <a class="code" href="../../d7/d46/a00002.html#a17a4679d77dad354a5ef1c0eece34a48" title="reaction time">reaction_time</a>; 
-<a name="l00073"></a>00073         
-<a name="l00077"></a><a class="code" href="../../d7/d46/a00002.html#abf360fb3a9b07d04d0873a7a97c78e99">00077</a>         <a class="code" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a> <a class="code" href="../../d7/d46/a00002.html#abf360fb3a9b07d04d0873a7a97c78e99" title="key state.">key_state</a>;
-<a name="l00078"></a>00078     };
+<a name="l00059"></a>00059         pos = str.find_first_of(delimiters, last_pos);
+<a name="l00060"></a>00060         <span class="keywordflow">while</span>(string_type::npos != pos || string_type::npos != last_pos)
+<a name="l00061"></a>00061         {
+<a name="l00062"></a>00062             <span class="comment">// found a token, add it to the vector</span>
+<a name="l00063"></a>00063             tokens.push_back(str.substr(last_pos, pos-last_pos));
+<a name="l00064"></a>00064 
+<a name="l00065"></a>00065             <span class="comment">// skip delimiters</span>
+<a name="l00066"></a>00066             last_pos = str.find_first_not_of(delimiters, pos);
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068             <span class="keywordflow">if</span>((string_type::npos != pos) &amp;&amp; (str.substr(pos, last_pos-pos).length() &gt; 1))
+<a name="l00069"></a>00069             {
+<a name="l00070"></a>00070                 count = str.substr(pos, last_pos-pos).length();
+<a name="l00071"></a>00071             }
+<a name="l00072"></a>00072 
+<a name="l00073"></a>00073             pos = str.find_first_of(delimiters, last_pos);
+<a name="l00074"></a>00074         }
+<a name="l00075"></a>00075 
+<a name="l00076"></a>00076         <span class="keywordflow">return</span> tokens;
+<a name="l00077"></a>00077     }
+<a name="l00078"></a>00078 }
 <a name="l00079"></a>00079 
-<a name="l00085"></a><a class="code" href="../../de/d21/a00006.html">00085</a>     <span class="keyword">class </span><a class="code" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a>
-<a name="l00086"></a>00086     {
-<a name="l00087"></a>00087     <span class="keyword">public</span>:
-<a name="l00097"></a>00097         <a class="code" href="../../de/d21/a00006.html#a8ed5e224e1b23bb8fb55a21b008aec45" title="xid_device_t constructor">xid_device_t</a>(
-<a name="l00098"></a>00098             boost::shared_ptr&lt;xid_con_t&gt; xid_con,
-<a name="l00099"></a>00099             <span class="keyword">const</span> std::wstring &amp;devconfig_path = L<span class="stringliteral">&quot;&quot;</span>
-<a name="l00100"></a>00100             );
-<a name="l00101"></a>00101         <span class="keyword">virtual</span> <a class="code" href="../../de/d21/a00006.html#ab2fd5765ef102d489a2e5d1948b5b14c">~xid_device_t</a>(<span class="keywordtype">void</span>);
-<a name="l00102"></a>00102         
-<a name="l00115"></a>00115         <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#a7e854dbd40acca453f6ab1580acc4786" title="Send an XID command to the device.">get_xid_inquiry</a>(
-<a name="l00116"></a>00116             <span class="keyword">const</span> <span class="keywordtype">char</span> in_command[],
-<a name="l00117"></a>00117             <span class="keywordtype">int</span> expected_bytes_rec = 1,
-<a name="l00118"></a>00118             <span class="keywordtype">int</span> timeout = 100,
-<a name="l00119"></a>00119             <span class="keywordtype">int</span> delay = 0);
-<a name="l00120"></a>00120 
-<a name="l00126"></a>00126         <span class="keywordtype">void</span> <a class="code" href="../../de/d21/a00006.html#a62be85b2f35c163ac5c9058202824300" title="Resets the internal device reaction time timer.">reset_rt_timer</a>();
-<a name="l00127"></a>00127 
-<a name="l00134"></a>00134         <span class="keywordtype">void</span> <a class="code" href="../../de/d21/a00006.html#aafce46b9f4bc0e32fd746c3a9dd02376" title="Resets the device&amp;#39;s base timer.">reset_base_timer</a>();
-<a name="l00135"></a>00135 
-<a name="l00139"></a>00139         <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#affe413a1c9d4cb374083e8f7b741f198" title="Returns the time elapsed since the base timer was reset.">query_base_timer</a>();
-<a name="l00140"></a>00140 
-<a name="l00147"></a>00147         <span class="keywordtype">void</span> <a class="code" href="../../de/d21/a00006.html#ad9c88bf434c9d0af291ee932f94e75d2" title="Poll the COM interface for a button press event.">poll_for_response</a>();
-<a name="l00148"></a>00148 
-<a name="l00154"></a>00154         std::size_t <a class="code" href="../../de/d21/a00006.html#a16668a1591d70afcc801649f1fcb673d" title="Number of responses in the response queue.">response_queue_size</a>() <span class="keyword">const</span>;
-<a name="l00155"></a>00155         
-<a name="l00159"></a>00159         <span class="keywordtype">bool</span> <a class="code" href="../../de/d21/a00006.html#ac89a3e503a9adf1c1bb093277555c95d">has_queued_responses</a>() <span class="keyword">const</span>;
-<a name="l00160"></a>00160 
-<a name="l00164"></a>00164         <span class="keywordtype">void</span> <a class="code" href="../../de/d21/a00006.html#a7ead6328ad6b8b7a084bc07c62cd7df7" title="Clears the response queue.">clear_response_queue</a>();
-<a name="l00165"></a>00165 
-<a name="l00169"></a>00169         <a class="code" href="../../d7/d46/a00002.html" title="struct to encapsulate a response from an XID device">response</a> <a class="code" href="../../de/d21/a00006.html#a989c927f6d31ef9f189147c8efdbdfe7" title="Returns the next response in the queue waiting for processing.">get_next_response</a>();
-<a name="l00170"></a>00170 
-<a name="l00176"></a>00176         std::string <a class="code" href="../../de/d21/a00006.html#a3a5c824898d9c7a5158d05c9040fef2b" title="Returns the name of the device.">get_device_name</a>();
-<a name="l00177"></a>00177 
-<a name="l00186"></a>00186         <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#a67973357782301424b829e32ca1a2f77" title="product id of the device.">get_product_id</a>() <span class="keyword">const</span>;
-<a name="l00187"></a>00187         
-<a name="l00199"></a>00199         <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#aaf95cf64581d6d9a3f78de8fa13bd78e" title="model ID of the device.">get_model_id</a>() <span class="keyword">const</span>;
-<a name="l00200"></a>00200 
-<a name="l00206"></a>00206         <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#a96b6f0721f2fb3360b84c92b872ea387" title="Number of buttons the device has.">get_button_count</a>() <span class="keyword">const</span>;
-<a name="l00207"></a>00207 
-<a name="l00214"></a>00214         std::wstring <a class="code" href="../../de/d21/a00006.html#a54a8edc0cec151cd6a7cbd6527087072" title="Prefix used for the device for GUI display purposes.">input_name_prefix</a>() <span class="keyword">const</span>;
-<a name="l00215"></a>00215 
-<a name="l00216"></a>00216     <span class="keyword">private</span>:
-<a name="l00217"></a>00217         <span class="keywordtype">void</span> init_device(<span class="keyword">const</span> std::wstring &amp;devconfig_path);
-<a name="l00218"></a>00218 
-<a name="l00219"></a>00219         boost::shared_ptr&lt;xid_con_t&gt; xid_con_;
-<a name="l00220"></a>00220 
-<a name="l00221"></a>00221         std::queue&lt;response&gt; response_queue_;
-<a name="l00222"></a>00222 
-<a name="l00223"></a>00223         std::string device_name_;
-<a name="l00224"></a>00224 
-<a name="l00225"></a>00225         <span class="keywordtype">int</span> product_id_;
-<a name="l00226"></a>00226         <span class="keywordtype">int</span> model_id_;
-<a name="l00227"></a>00227         <span class="keywordtype">int</span> button_count_;
-<a name="l00228"></a>00228         boost::shared_ptr&lt;cedrus::xid_device_config_t&gt; config_;
-<a name="l00229"></a>00229         std::wstring input_name_prefix_;
-<a name="l00230"></a>00230     };
-<a name="l00231"></a>00231 } <span class="comment">// namespace cedrus</span>
-<a name="l00232"></a>00232 
-<a name="l00233"></a>00233 <span class="preprocessor">#endif // XID_DEVICE_T_H</span>
+<a name="l00080"></a>00080 <span class="preprocessor">#endif // STRING_TOKENIZER</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

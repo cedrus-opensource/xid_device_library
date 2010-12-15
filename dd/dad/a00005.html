@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: cedrus::xid_device_scanner_t Class Reference</title>
+<title>XID device library: cedrus::stim_tracker_t Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -21,93 +21,98 @@
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="../../dd/da2/a00019.html">cedrus</a>      </li>
-      <li><a class="el" href="../../dd/dad/a00005.html">xid_device_scanner_t</a>      </li>
+      <li><a class="el" href="../../d0/d33/a00027.html">cedrus</a>      </li>
+      <li><a class="el" href="../../dd/dad/a00005.html">stim_tracker_t</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<h1>cedrus::xid_device_scanner_t Class Reference</h1>  </div>
+<h1>cedrus::stim_tracker_t Class Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="cedrus::xid_device_scanner_t" -->
-<p><code>#include &lt;<a class="el" href="../../d7/d7a/a00016_source.html">xid_device_scanner_t.h</a>&gt;</code></p>
+<!-- doxytag: class="cedrus::stim_tracker_t" --><!-- doxytag: inherits="cedrus::base_device_t" -->
+<p><code>#include &lt;<a class="el" href="../../d4/d51/a00017_source.html">stim_tracker_t.h</a>&gt;</code></p>
+<!-- startSectionHeader --><div class="dynheader">
+Inheritance diagram for cedrus::stim_tracker_t:<!-- endSectionHeader --></div>
+<!-- startSectionSummary --><!-- endSectionSummary --><!-- startSectionContent --><div class="dyncontent">
+ <div class="center">
+  <img src="../../dd/dad/a00005.png" usemap="#cedrus::stim_tracker_t_map" alt=""/>
+  <map id="cedrus::stim_tracker_t_map" name="cedrus::stim_tracker_t_map">
+<area href="../../d8/d84/a00001.html" alt="cedrus::base_device_t" shape="rect" coords="0,0,139,24"/>
+</map>
+ </div><!-- endSectionContent --></div>
 
-<p><a href="../../dc/de2/a00024.html">List of all members.</a></p>
+<p><a href="../../df/d61/a00031.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/dad/a00005.html#afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60">MAX_PORTS</a> =  255
- }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#ab163d274aebd300cb313f39f2e6e7365">xid_device_scanner_t</a> (void)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a634cb7870c154fadba5c0bf0ce579d93">~xid_device_scanner_t</a> (void)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#ae18504faa4b97cc70b28fd00d9b0d713">detect_valid_xid_devices</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of valid XID devices connected to the computer.  <a href="#ae18504faa4b97cc70b28fd00d9b0d713"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="../../d1/d7c/a00003.html">xid_con_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#ad1952364871ac48b61c0c0a754d11cef">connection_at_index</a> (unsigned int i)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an XID connection object for use by the <a class="el" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a> class.  <a href="#ad1952364871ac48b61c0c0a754d11cef"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#af8c3d37ea9e60fcea006ed85a355d4f1">stim_tracker_t</a> (boost::shared_ptr&lt; <a class="el" href="../../de/d21/a00006.html">xid_con_t</a> &gt; xid_con, const std::wstring &amp;devconfig_path=L&quot;&quot;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../dd/dad/a00005.html">stim_tracker_t</a> constructor  <a href="#af8c3d37ea9e60fcea006ed85a355d4f1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a0f9e51fe7b4d2f89b5d4a0b4f15586e3">~stim_tracker_t</a> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#acc4ae1ecd086e13b7dcd735645ca0446">raise_lines</a> (unsigned int lines_bitmask, bool leave_remaining_lines=false)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Raise digital output lines on the StimTracker device.  <a href="#acc4ae1ecd086e13b7dcd735645ca0446"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#a00bbdb171646be42b445e97957a4a233">clear_lines</a> (unsigned int lines_bitmask, bool leave_remaining_lines=false)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear digital output lines on the StimTracker device.  <a href="#a00bbdb171646be42b445e97957a4a233"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dad/a00005.html#af295bc3b84719e814ef303c1067096b5">set_pulse_duration</a> (unsigned int duration)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the pulse duration when <a class="el" href="../../dd/dad/a00005.html#acc4ae1ecd086e13b7dcd735645ca0446" title="Raise digital output lines on the StimTracker device.">raise_lines()</a> is called.  <a href="#af295bc3b84719e814ef303c1067096b5"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 
-<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00043">43</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">xid_device_scanner_t.h</a>.</p>
-<hr/><h2>Member Enumeration Documentation</h2>
-<a class="anchor" id="afe02f572b51f69dd13cb0c058d54f9a1"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::@13" ref="afe02f572b51f69dd13cb0c058d54f9a1" args="" -->
+<p>Definition at line <a class="el" href="../../d4/d51/a00017_source.html#l00040">40</a> of file <a class="el" href="../../d4/d51/a00017_source.html">stim_tracker_t.h</a>.</p>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="af8c3d37ea9e60fcea006ed85a355d4f1"></a><!-- doxytag: member="cedrus::stim_tracker_t::stim_tracker_t" ref="af8c3d37ea9e60fcea006ed85a355d4f1" args="(boost::shared_ptr&lt; xid_con_t &gt; xid_con, const std::wstring &amp;devconfig_path=L&quot;&quot;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">anonymous enum</td>
+          <td class="memname">cedrus::stim_tracker_t::stim_tracker_t </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="../../de/d21/a00006.html">xid_con_t</a> &gt;&#160;</td>
+          <td class="paramname"> <em>xid_con</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::wstring &amp;&#160;</td>
+          <td class="paramname"> <em>devconfig_path</em> = <code>L&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60"></a><!-- doxytag: member="MAX_PORTS" ref="afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60" args="" -->MAX_PORTS</em>&nbsp;</td><td>
-</td></tr>
-</table>
-</dd>
+
+<p><a class="el" href="../../dd/dad/a00005.html">stim_tracker_t</a> constructor </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">xid_con</td><td><a class="el" href="../../de/d21/a00006.html" title="Implementation of communication with an XID device.">xid_con_t</a> object to use </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">devconfig_path</td><td>path to devconfig files. Defaults to an empty string. If no path is used, very conservative default values are used and reults may not be what you expect. It's highly recommended to use the devconfig files. </td></tr>
+  </table>
+  </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00046">46</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">xid_device_scanner_t.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00004">4</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">stim_tracker_t.cpp</a>.</p>
 
 </div>
 </div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ab163d274aebd300cb313f39f2e6e7365"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::xid_device_scanner_t" ref="ab163d274aebd300cb313f39f2e6e7365" args="(void)" -->
+<a class="anchor" id="a0f9e51fe7b4d2f89b5d4a0b4f15586e3"></a><!-- doxytag: member="cedrus::stim_tracker_t::~stim_tracker_t" ref="a0f9e51fe7b4d2f89b5d4a0b4f15586e3" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cedrus::xid_device_scanner_t::xid_device_scanner_t </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname">&#160;)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00037">37</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a634cb7870c154fadba5c0bf0ce579d93"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::~xid_device_scanner_t" ref="a634cb7870c154fadba5c0bf0ce579d93" args="(void)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">cedrus::xid_device_scanner_t::~xid_device_scanner_t </td>
+          <td class="memname">cedrus::stim_tracker_t::~stim_tracker_t </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname">&#160;)</td>
@@ -117,68 +122,121 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00043">43</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00013">13</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">stim_tracker_t.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ad1952364871ac48b61c0c0a754d11cef"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::connection_at_index" ref="ad1952364871ac48b61c0c0a754d11cef" args="(unsigned int i)" -->
+<a class="anchor" id="a00bbdb171646be42b445e97957a4a233"></a><!-- doxytag: member="cedrus::stim_tracker_t::clear_lines" ref="a00bbdb171646be42b445e97957a4a233" args="(unsigned int lines_bitmask, bool leave_remaining_lines=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">boost::shared_ptr&lt; <a class="el" href="../../d1/d7c/a00003.html">cedrus::xid_con_t</a> &gt; cedrus::xid_device_scanner_t::connection_at_index </td>
+          <td class="memname">void cedrus::stim_tracker_t::clear_lines </td>
           <td>(</td>
           <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"> <em>i</em>&#160;)</td>
+          <td class="paramname"> <em>lines_bitmask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"> <em>leave_remaining_lines</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Returns an XID connection object for use by the <a class="el" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a> class. </p>
-<p>The connection must be opened after retreiving it.</p>
+<p>Clear digital output lines on the StimTracker device. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">i</td><td>index of the device </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">lines_bitmask</td><td>This is a bitmask used to specify the lines to be raised on the device. Each of the 8 bits in the integer specifies a line. If bits 0 and 7 are 1, lines 1 and 8 are raised. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">leave_remaining_lines</td><td>boolean value of whether or not to keep the current line state when applying the new bitmask. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>an xid connection object for use by an instance of <a class="el" href="../../de/d21/a00006.html" title="abstraction of an XID device">xid_device_t</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00154">154</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00025">25</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">stim_tracker_t.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae18504faa4b97cc70b28fd00d9b0d713"></a><!-- doxytag: member="cedrus::xid_device_scanner_t::detect_valid_xid_devices" ref="ae18504faa4b97cc70b28fd00d9b0d713" args="()" -->
+<a class="anchor" id="acc4ae1ecd086e13b7dcd735645ca0446"></a><!-- doxytag: member="cedrus::stim_tracker_t::raise_lines" ref="acc4ae1ecd086e13b7dcd735645ca0446" args="(unsigned int lines_bitmask, bool leave_remaining_lines=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cedrus::xid_device_scanner_t::detect_valid_xid_devices </td>
+          <td class="memname">void cedrus::stim_tracker_t::raise_lines </td>
           <td>(</td>
-          <td class="paramname">&#160;)</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"> <em>lines_bitmask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"> <em>leave_remaining_lines</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Raise digital output lines on the StimTracker device. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">lines_bitmask</td><td>This is a bitmask used to specify the lines to be raised on the device. Each of the 8 bits in the integer specifies a line. If bits 0 and 7 are 1, lines 1 and 8 are raised. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">leave_remaining_lines</td><td>boolean value of whether or not to keep the current line state when applying the new bitmask. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00017">17</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">stim_tracker_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af295bc3b84719e814ef303c1067096b5"></a><!-- doxytag: member="cedrus::stim_tracker_t::set_pulse_duration" ref="af295bc3b84719e814ef303c1067096b5" args="(unsigned int duration)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::stim_tracker_t::set_pulse_duration </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"> <em>duration</em>&#160;)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Returns the number of valid XID devices connected to the computer. </p>
-<p>In the process of scanning for XID devices, this adds each device to the xid_connections_ vector.</p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>number of XID devices detected. </dd></dl>
+<p>Set the pulse duration when <a class="el" href="../../dd/dad/a00005.html#acc4ae1ecd086e13b7dcd735645ca0446" title="Raise digital output lines on the StimTracker device.">raise_lines()</a> is called. </p>
+<p>This is how long the line will be active.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">duration</td><td>Length of time in miliseconds </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Definition at line <a class="el" href="../../dd/d1b/a00015_source.html#l00067">67</a> of file <a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d7/d7a/a00016_source.html#l00033">33</a> of file <a class="el" href="../../d7/d7a/a00016_source.html">stim_tracker_t.cpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="../../d7/d7a/a00016_source.html">xid_device_scanner_t.h</a></li>
-<li><a class="el" href="../../dd/d1b/a00015_source.html">xid_device_scanner_t.cpp</a></li>
+<li><a class="el" href="../../d4/d51/a00017_source.html">stim_tracker_t.h</a></li>
+<li><a class="el" href="../../d7/d7a/a00016_source.html">stim_tracker_t.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: xid_device_scanner_t.h Source File</title>
+<title>XID device library: stim_tracker_t.cpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -20,82 +20,73 @@
   <div class="tabs2">
     <ul class="tablist">
       <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>xid_device_scanner_t.h</h1>  </div>
+<h1>stim_tracker_t.cpp</h1>  </div>
 </div>
 <div class="contents">
-<a href="../../d7/d7a/a00016.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* Copyright (c) 2010, Cedrus Corporation</span>
-<a name="l00002"></a>00002 <span class="comment"> * All rights reserved.</span>
-<a name="l00003"></a>00003 <span class="comment"> *</span>
-<a name="l00004"></a>00004 <span class="comment"> * Redistribution and use in source and binary forms, with or without</span>
-<a name="l00005"></a>00005 <span class="comment"> * modification, are permitted provided that the following conditions are</span>
-<a name="l00006"></a>00006 <span class="comment"> * met:</span>
-<a name="l00007"></a>00007 <span class="comment"> *</span>
-<a name="l00008"></a>00008 <span class="comment"> * Redistributions of source code must retain the above copyright notice,</span>
-<a name="l00009"></a>00009 <span class="comment"> * this list of conditions and the following disclaimer.  </span>
-<a name="l00010"></a>00010 <span class="comment"> *</span>
-<a name="l00011"></a>00011 <span class="comment"> * Redistributions in binary form must reproduce the above copyright</span>
-<a name="l00012"></a>00012 <span class="comment"> * notice, this list of conditions and the following disclaimer in the</span>
-<a name="l00013"></a>00013 <span class="comment"> * documentation and/or other materials provided with the distribution.</span>
-<a name="l00014"></a>00014 <span class="comment"> *</span>
-<a name="l00015"></a>00015 <span class="comment"> * Neither the name of Cedrus Corporation nor the names of its</span>
-<a name="l00016"></a>00016 <span class="comment"> * contributors may be used to endorse or promote products derived from</span>
-<a name="l00017"></a>00017 <span class="comment"> * this software without specific prior written permission.</span>
-<a name="l00018"></a>00018 <span class="comment"> *</span>
-<a name="l00019"></a>00019 <span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</span>
-<a name="l00020"></a>00020 <span class="comment"> * &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT</span>
-<a name="l00021"></a>00021 <span class="comment"> * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR</span>
-<a name="l00022"></a>00022 <span class="comment"> * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT</span>
-<a name="l00023"></a>00023 <span class="comment"> * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</span>
-<a name="l00024"></a>00024 <span class="comment"> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT</span>
-<a name="l00025"></a>00025 <span class="comment"> * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,</span>
-<a name="l00026"></a>00026 <span class="comment"> * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY</span>
-<a name="l00027"></a>00027 <span class="comment"> * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT</span>
-<a name="l00028"></a>00028 <span class="comment"> * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE</span>
-<a name="l00029"></a>00029 <span class="comment"> * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
-<a name="l00030"></a>00030 <span class="comment"> */</span>
-<a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="preprocessor">#ifndef xid_device_scanner_t_H</span>
-<a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#define xid_device_scanner_t_H</span>
-<a name="l00034"></a>00034 <span class="preprocessor"></span>
-<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;vector&gt;</span>
-<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;string&gt;</span>
-<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;boost/shared_ptr.hpp&gt;</span>
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039 <span class="keyword">namespace </span>cedrus
-<a name="l00040"></a>00040 {
-<a name="l00041"></a>00041     <span class="keyword">class </span>xid_con_t;
-<a name="l00042"></a>00042 
-<a name="l00043"></a><a class="code" href="../../dd/dad/a00005.html">00043</a>     <span class="keyword">class </span><a class="code" href="../../dd/dad/a00005.html">xid_device_scanner_t</a>
-<a name="l00044"></a>00044     {
-<a name="l00045"></a>00045     <span class="keyword">public</span>:
-<a name="l00046"></a>00046         <span class="keyword">enum</span>
-<a name="l00047"></a>00047         {
-<a name="l00048"></a><a class="code" href="../../dd/dad/a00005.html#afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60">00048</a>             <a class="code" href="../../dd/dad/a00005.html#afe02f572b51f69dd13cb0c058d54f9a1aaeac5e61e5d8df0151e3933c41981a60">MAX_PORTS</a> = 255
-<a name="l00049"></a>00049         };
+<a href="../../d7/d7a/a00016.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#include &quot;<a class="code" href="../../d4/d51/a00017.html">stim_tracker_t.h</a>&quot;</span>
+<a name="l00002"></a>00002 <span class="preprocessor">#include &quot;<a class="code" href="../../db/db2/a00020.html">xid_con_t.h</a>&quot;</span>
+<a name="l00003"></a>00003 
+<a name="l00004"></a><a class="code" href="../../dd/dad/a00005.html#af8c3d37ea9e60fcea006ed85a355d4f1">00004</a> <a class="code" href="../../dd/dad/a00005.html#af8c3d37ea9e60fcea006ed85a355d4f1" title="stim_tracker_t constructor">cedrus::stim_tracker_t::stim_tracker_t</a>(
+<a name="l00005"></a>00005             boost::shared_ptr&lt;xid_con_t&gt; xid_con,
+<a name="l00006"></a>00006             <span class="keyword">const</span> std::wstring &amp;devconfig_path)
+<a name="l00007"></a>00007     : <a class="code" href="../../d8/d84/a00001.html">base_device_t</a>(xid_con, devconfig_path)
+<a name="l00008"></a>00008 {
+<a name="l00009"></a>00009     <a class="code" href="../../dd/dad/a00005.html#a00bbdb171646be42b445e97957a4a233" title="Clear digital output lines on the StimTracker device.">clear_lines</a>(255);
+<a name="l00010"></a>00010 }
+<a name="l00011"></a>00011 
+<a name="l00012"></a>00012 
+<a name="l00013"></a><a class="code" href="../../dd/dad/a00005.html#a0f9e51fe7b4d2f89b5d4a0b4f15586e3">00013</a> <a class="code" href="../../dd/dad/a00005.html#a0f9e51fe7b4d2f89b5d4a0b4f15586e3">cedrus::stim_tracker_t::~stim_tracker_t</a>(<span class="keywordtype">void</span>)
+<a name="l00014"></a>00014 {
+<a name="l00015"></a>00015 }
+<a name="l00016"></a>00016 
+<a name="l00017"></a><a class="code" href="../../dd/dad/a00005.html#acc4ae1ecd086e13b7dcd735645ca0446">00017</a> <span class="keywordtype">void</span> <a class="code" href="../../dd/dad/a00005.html#acc4ae1ecd086e13b7dcd735645ca0446" title="Raise digital output lines on the StimTracker device.">cedrus::stim_tracker_t::raise_lines</a>(
+<a name="l00018"></a>00018     <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lines_bitmask,
+<a name="l00019"></a>00019     <span class="keywordtype">bool</span> leave_remaining_lines)
+<a name="l00020"></a>00020 {
+<a name="l00021"></a>00021     xid_con_-&gt;set_digital_output_lines(
+<a name="l00022"></a>00022         lines_bitmask, leave_remaining_lines);
+<a name="l00023"></a>00023 }
+<a name="l00024"></a>00024 
+<a name="l00025"></a><a class="code" href="../../dd/dad/a00005.html#a00bbdb171646be42b445e97957a4a233">00025</a> <span class="keywordtype">void</span> <a class="code" href="../../dd/dad/a00005.html#a00bbdb171646be42b445e97957a4a233" title="Clear digital output lines on the StimTracker device.">cedrus::stim_tracker_t::clear_lines</a>(
+<a name="l00026"></a>00026     <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lines_bitmask,
+<a name="l00027"></a>00027     <span class="keywordtype">bool</span> leave_remaining_lines)
+<a name="l00028"></a>00028 {
+<a name="l00029"></a>00029     xid_con_-&gt;clear_digital_output_lines(
+<a name="l00030"></a>00030         lines_bitmask, leave_remaining_lines);
+<a name="l00031"></a>00031 }
+<a name="l00032"></a>00032 
+<a name="l00033"></a><a class="code" href="../../dd/dad/a00005.html#af295bc3b84719e814ef303c1067096b5">00033</a> <span class="keywordtype">void</span> <a class="code" href="../../dd/dad/a00005.html#af295bc3b84719e814ef303c1067096b5" title="Set the pulse duration when raise_lines() is called.">cedrus::stim_tracker_t::set_pulse_duration</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> duration)
+<a name="l00034"></a>00034 {
+<a name="l00035"></a>00035     <span class="keyword">union </span>{
+<a name="l00036"></a>00036         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> as_int;
+<a name="l00037"></a>00037         <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> as_char[8];
+<a name="l00038"></a>00038     } dur;
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040     dur.as_int = duration;
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042     <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> command[10];
+<a name="l00043"></a>00043     command[0] = <span class="charliteral">&#39;m&#39;</span>;
+<a name="l00044"></a>00044     command[1] = <span class="charliteral">&#39;p&#39;</span>;
+<a name="l00045"></a>00045     
+<a name="l00046"></a>00046     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 2; i &lt; 10; ++i)
+<a name="l00047"></a>00047     {
+<a name="l00048"></a>00048         command[i] = dur.as_char[i-2];
+<a name="l00049"></a>00049     }
 <a name="l00050"></a>00050 
-<a name="l00051"></a>00051         <a class="code" href="../../dd/dad/a00005.html#ab163d274aebd300cb313f39f2e6e7365">xid_device_scanner_t</a>(<span class="keywordtype">void</span>);
-<a name="l00052"></a>00052         <span class="keyword">virtual</span> <a class="code" href="../../dd/dad/a00005.html#a634cb7870c154fadba5c0bf0ce579d93">~xid_device_scanner_t</a>(<span class="keywordtype">void</span>);
-<a name="l00053"></a>00053         
-<a name="l00062"></a>00062         <span class="keywordtype">int</span> <a class="code" href="../../dd/dad/a00005.html#ae18504faa4b97cc70b28fd00d9b0d713" title="Returns the number of valid XID devices connected to the computer.">detect_valid_xid_devices</a>();
-<a name="l00063"></a>00063 
-<a name="l00072"></a>00072         boost::shared_ptr&lt;xid_con_t&gt; <a class="code" href="../../dd/dad/a00005.html#ad1952364871ac48b61c0c0a754d11cef" title="Returns an XID connection object for use by the xid_device_t class.">connection_at_index</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i);
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074     <span class="keyword">private</span>:
-<a name="l00080"></a>00080         <span class="keywordtype">void</span> load_available_com_ports();
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082         std::vector&lt;std::wstring&gt; available_com_ports_;
-<a name="l00083"></a>00083         std::vector&lt;boost::shared_ptr&lt;cedrus::xid_con_t&gt; &gt; xid_connections_;
-<a name="l00084"></a>00084     };
-<a name="l00085"></a>00085 } <span class="comment">// namespace cedrus</span>
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087 <span class="preprocessor">#endif // xid_device_scanner_t_H</span>
+<a name="l00051"></a>00051     <span class="keywordtype">int</span> written = 0;
+<a name="l00052"></a>00052     xid_con_-&gt;write(
+<a name="l00053"></a>00053         command,
+<a name="l00054"></a>00054         10,
+<a name="l00055"></a>00055         written);
+<a name="l00056"></a>00056 }
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

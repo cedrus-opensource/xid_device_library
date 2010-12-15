@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: xid_device_t.cpp Source File</title>
+<title>XID device library: stim_tracker_t.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -20,11 +20,12 @@
   <div class="tabs2">
     <ul class="tablist">
       <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>xid_device_t.cpp</h1>  </div>
+<h1>stim_tracker_t.h</h1>  </div>
 </div>
 <div class="contents">
 <a href="../../d4/d51/a00017.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* Copyright (c) 2010, Cedrus Corporation</span>
@@ -58,257 +59,36 @@
 <a name="l00029"></a>00029 <span class="comment"> * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
 <a name="l00030"></a>00030 <span class="comment"> */</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="preprocessor">#include &quot;<a class="code" href="../../d1/d2b/a00018.html">xid_device_t.h</a>&quot;</span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include &quot;<a class="code" href="../../d2/de7/a00014.html">xid_device_config_t.h</a>&quot;</span>
-<a name="l00034"></a>00034 <span class="preprocessor">#include &quot;<a class="code" href="../../df/d86/a00012.html">xid_con_t.h</a>&quot;</span>
-<a name="l00035"></a>00035 <span class="preprocessor">#include &quot;<a class="code" href="../../de/d5e/a00007.html">constants.h</a>&quot;</span>
-<a name="l00036"></a>00036 
-<a name="l00037"></a><a class="code" href="../../de/d21/a00006.html#a8ed5e224e1b23bb8fb55a21b008aec45">00037</a> <a class="code" href="../../de/d21/a00006.html#a8ed5e224e1b23bb8fb55a21b008aec45" title="xid_device_t constructor">cedrus::xid_device_t::xid_device_t</a>(
-<a name="l00038"></a>00038     boost::shared_ptr&lt;xid_con_t&gt; xid_con,
-<a name="l00039"></a>00039     <span class="keyword">const</span> std::wstring &amp;devconfig_path)
-<a name="l00040"></a>00040     : xid_con_(xid_con),
-<a name="l00041"></a>00041       product_id_(-1),
-<a name="l00042"></a>00042       model_id_(0),
-<a name="l00043"></a>00043       button_count_(8),
-<a name="l00044"></a>00044       input_name_prefix_(L<span class="stringliteral">&quot;Button&quot;</span>)
-<a name="l00045"></a>00045 {
-<a name="l00046"></a>00046     init_device(devconfig_path);
-<a name="l00047"></a>00047 }
-<a name="l00048"></a>00048 
-<a name="l00049"></a><a class="code" href="../../de/d21/a00006.html#ab2fd5765ef102d489a2e5d1948b5b14c">00049</a> <a class="code" href="../../de/d21/a00006.html#ab2fd5765ef102d489a2e5d1948b5b14c">cedrus::xid_device_t::~xid_device_t</a>(<span class="keywordtype">void</span>)
-<a name="l00050"></a>00050 {
-<a name="l00051"></a>00051 }
-<a name="l00052"></a>00052 
-<a name="l00053"></a><a class="code" href="../../de/d21/a00006.html#a7e854dbd40acca453f6ab1580acc4786">00053</a> <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#a7e854dbd40acca453f6ab1580acc4786" title="Send an XID command to the device.">cedrus::xid_device_t::get_xid_inquiry</a>(
-<a name="l00054"></a>00054     <span class="keyword">const</span> <span class="keywordtype">char</span> in_command[],
-<a name="l00055"></a>00055     <span class="keywordtype">int</span> expected_bytes_rec,
-<a name="l00056"></a>00056     <span class="keywordtype">int</span> timeout,
-<a name="l00057"></a>00057     <span class="keywordtype">int</span> delay)
-<a name="l00058"></a>00058 {
-<a name="l00059"></a>00059     <span class="keywordtype">int</span> return_value = <a class="code" href="../../dd/da2/a00019.html#ae369718ce77b948622cdf7db1c545450addc35d7b9099081b4a2196ea04856111">INVALID_RETURN_VALUE</a>;
-<a name="l00060"></a>00060     <span class="keywordtype">char</span> return_info[20];
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062     <span class="keywordtype">int</span> bytes_returned = xid_con_-&gt;send_xid_command(
-<a name="l00063"></a>00063         in_command,
-<a name="l00064"></a>00064         0,
-<a name="l00065"></a>00065         return_info,
-<a name="l00066"></a>00066         <span class="keyword">sizeof</span>(return_info),
-<a name="l00067"></a>00067         expected_bytes_rec,
-<a name="l00068"></a>00068         timeout,
-<a name="l00069"></a>00069         delay);
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071     <span class="keywordflow">if</span>(bytes_returned &gt; 0)
-<a name="l00072"></a>00072         return_value = atoi(return_info);
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074     <span class="keywordflow">return</span> return_value;
-<a name="l00075"></a>00075 }
-<a name="l00076"></a>00076 
-<a name="l00077"></a><a class="code" href="../../de/d21/a00006.html#a62be85b2f35c163ac5c9058202824300">00077</a> <span class="keywordtype">void</span> <a class="code" href="../../de/d21/a00006.html#a62be85b2f35c163ac5c9058202824300" title="Resets the internal device reaction time timer.">cedrus::xid_device_t::reset_rt_timer</a>()
-<a name="l00078"></a>00078 {
-<a name="l00079"></a>00079     <span class="keywordtype">char</span> return_info[200];
-<a name="l00080"></a>00080     xid_con_-&gt;send_xid_command(
-<a name="l00081"></a>00081         <span class="stringliteral">&quot;e5&quot;</span>, <span class="comment">// reset rt timer Xid command</span>
-<a name="l00082"></a>00082         2,
-<a name="l00083"></a>00083         return_info,
-<a name="l00084"></a>00084         <span class="keyword">sizeof</span>(return_info),
-<a name="l00085"></a>00085         0);
-<a name="l00086"></a>00086 }
-<a name="l00087"></a>00087 
-<a name="l00088"></a><a class="code" href="../../de/d21/a00006.html#aafce46b9f4bc0e32fd746c3a9dd02376">00088</a> <span class="keywordtype">void</span> <a class="code" href="../../de/d21/a00006.html#aafce46b9f4bc0e32fd746c3a9dd02376" title="Resets the device&amp;#39;s base timer.">cedrus::xid_device_t::reset_base_timer</a>()
-<a name="l00089"></a>00089 {
-<a name="l00090"></a>00090     <span class="keywordtype">char</span> return_info[200];
-<a name="l00091"></a>00091     xid_con_-&gt;send_xid_command(
-<a name="l00092"></a>00092         <span class="stringliteral">&quot;e1&quot;</span>, <span class="comment">// reset base timer Xid command</span>
-<a name="l00093"></a>00093         2,
-<a name="l00094"></a>00094         return_info,
-<a name="l00095"></a>00095         <span class="keyword">sizeof</span>(return_info),
-<a name="l00096"></a>00096         0);
-<a name="l00097"></a>00097 }
-<a name="l00098"></a>00098 
-<a name="l00099"></a><a class="code" href="../../de/d21/a00006.html#affe413a1c9d4cb374083e8f7b741f198">00099</a> <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#affe413a1c9d4cb374083e8f7b741f198" title="Returns the time elapsed since the base timer was reset.">cedrus::xid_device_t::query_base_timer</a>()
-<a name="l00100"></a>00100 {
-<a name="l00101"></a>00101     <span class="keywordtype">char</span> return_info[200];
-<a name="l00102"></a>00102     <span class="keywordtype">int</span> read = xid_con_-&gt;send_xid_command(
-<a name="l00103"></a>00103         <span class="stringliteral">&quot;e3&quot;</span>,
-<a name="l00104"></a>00104         2,
-<a name="l00105"></a>00105         return_info,
-<a name="l00106"></a>00106         <span class="keyword">sizeof</span>(return_info),
-<a name="l00107"></a>00107         6);
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109     <span class="keywordtype">bool</span> valid_response = (read == 6);
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111     <span class="keywordflow">if</span>(valid_response)
-<a name="l00112"></a>00112     {
-<a name="l00113"></a>00113         <span class="keyword">union </span>{
-<a name="l00114"></a>00114             <span class="keywordtype">int</span> as_int;
-<a name="l00115"></a>00115             <span class="keywordtype">char</span> as_char[4];
-<a name="l00116"></a>00116         } rt;
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; 4; ++i)
-<a name="l00119"></a>00119         {
-<a name="l00120"></a>00120             rt.as_char[i] = return_info[2+i];
-<a name="l00121"></a>00121         }
-<a name="l00122"></a>00122         <span class="keywordflow">return</span> rt.as_int;
-<a name="l00123"></a>00123     }
-<a name="l00124"></a>00124 
-<a name="l00125"></a>00125     <span class="keywordflow">return</span> <a class="code" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264a0bffdea260a7517f2ef7a31f35c24412">GENERAL_ERROR</a>;
-<a name="l00126"></a>00126 }
-<a name="l00127"></a>00127 
-<a name="l00128"></a><a class="code" href="../../de/d21/a00006.html#ad9c88bf434c9d0af291ee932f94e75d2">00128</a> <span class="keywordtype">void</span> <a class="code" href="../../de/d21/a00006.html#ad9c88bf434c9d0af291ee932f94e75d2" title="Poll the COM interface for a button press event.">cedrus::xid_device_t::poll_for_response</a>()
-<a name="l00129"></a>00129 {
-<a name="l00130"></a>00130     <a class="code" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a> state = xid_con_-&gt;check_for_keypress();
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132     <span class="keywordflow">if</span>(state != <a class="code" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5a60cd667fc905419b1f3084b186eee132">cedrus::NO_KEY_DETECTED</a>)
-<a name="l00133"></a>00133     {
-<a name="l00134"></a>00134         <span class="keywordtype">int</span> port = -1;
-<a name="l00135"></a>00135         <span class="keywordtype">int</span> key  = -1;
-<a name="l00136"></a>00136         <span class="keywordtype">bool</span> was_pressed = <span class="keyword">false</span>;
-<a name="l00137"></a>00137         <span class="keywordtype">int</span> response_time = -1;
-<a name="l00138"></a>00138 
-<a name="l00139"></a>00139         xid_con_-&gt;get_current_response(port, key, was_pressed, response_time);
-<a name="l00140"></a>00140         
-<a name="l00141"></a>00141         <span class="keywordflow">if</span>(config_)
-<a name="l00142"></a>00142         {
-<a name="l00143"></a>00143             key = config_-&gt;get_mapped_key(key);
-<a name="l00144"></a>00144         }
-<a name="l00145"></a>00145         <span class="keywordflow">else</span>
-<a name="l00146"></a>00146         {
-<a name="l00147"></a>00147             <span class="comment">// RB series response pads respond with a 1 based button index.  </span>
-<a name="l00148"></a>00148             <span class="comment">// Users of the API should expect a 0 based index.  Subtract 1 </span>
-<a name="l00149"></a>00149             <span class="comment">// from the key to give the user the correct button number.</span>
-<a name="l00150"></a>00150             key -= 1;
-<a name="l00151"></a>00151         }
-<a name="l00152"></a>00152 
-<a name="l00153"></a>00153         <a class="code" href="../../d7/d46/a00002.html" title="struct to encapsulate a response from an XID device">response</a> res;
-<a name="l00154"></a>00154         res.<a class="code" href="../../d7/d46/a00002.html#aced8e8a45b60ee6b3dc4967d64b92caf" title="port the response came from.">port</a> = port;
-<a name="l00155"></a>00155         res.<a class="code" href="../../d7/d46/a00002.html#a7d98543c9f2fea1c1d10df6e90134d72" title="button pressed.">button</a> = key;
-<a name="l00156"></a>00156         res.<a class="code" href="../../d7/d46/a00002.html#a4d5b394bc3a04db3389aa6c99a4ca5bc" title="whether or not a button was pressed">pressed</a> = was_pressed;
-<a name="l00157"></a>00157         res.<a class="code" href="../../d7/d46/a00002.html#a17a4679d77dad354a5ef1c0eece34a48" title="reaction time">reaction_time</a> = response_time;
-<a name="l00158"></a>00158         res.<a class="code" href="../../d7/d46/a00002.html#abf360fb3a9b07d04d0873a7a97c78e99" title="key state.">key_state</a> = state;
-<a name="l00159"></a>00159  
-<a name="l00160"></a>00160         response_queue_.push(res);
-<a name="l00161"></a>00161     }
-<a name="l00162"></a>00162 }
-<a name="l00163"></a>00163 
-<a name="l00164"></a><a class="code" href="../../de/d21/a00006.html#a16668a1591d70afcc801649f1fcb673d">00164</a> std::size_t <a class="code" href="../../de/d21/a00006.html#a16668a1591d70afcc801649f1fcb673d" title="Number of responses in the response queue.">cedrus::xid_device_t::response_queue_size</a>()<span class="keyword"> const</span>
-<a name="l00165"></a>00165 <span class="keyword"></span>{
-<a name="l00166"></a>00166     <span class="keywordflow">return</span> response_queue_.size();
-<a name="l00167"></a>00167 }
-<a name="l00168"></a>00168 
-<a name="l00169"></a><a class="code" href="../../de/d21/a00006.html#ac89a3e503a9adf1c1bb093277555c95d">00169</a> <span class="keywordtype">bool</span> <a class="code" href="../../de/d21/a00006.html#ac89a3e503a9adf1c1bb093277555c95d">cedrus::xid_device_t::has_queued_responses</a>()<span class="keyword"> const</span>
-<a name="l00170"></a>00170 <span class="keyword"></span>{
-<a name="l00171"></a>00171     <span class="keywordflow">return</span> !response_queue_.empty();
-<a name="l00172"></a>00172 }
-<a name="l00173"></a>00173 
-<a name="l00174"></a><a class="code" href="../../de/d21/a00006.html#a7ead6328ad6b8b7a084bc07c62cd7df7">00174</a> <span class="keywordtype">void</span> <a class="code" href="../../de/d21/a00006.html#a7ead6328ad6b8b7a084bc07c62cd7df7" title="Clears the response queue.">cedrus::xid_device_t::clear_response_queue</a>()
-<a name="l00175"></a>00175 {
-<a name="l00176"></a>00176     <span class="keywordflow">while</span>(response_queue_.size() &gt; 0)
-<a name="l00177"></a>00177     {
-<a name="l00178"></a>00178         response_queue_.pop();
-<a name="l00179"></a>00179     }
-<a name="l00180"></a>00180 }
-<a name="l00181"></a>00181 
-<a name="l00182"></a><a class="code" href="../../de/d21/a00006.html#a989c927f6d31ef9f189147c8efdbdfe7">00182</a> <a class="code" href="../../d7/d46/a00002.html" title="struct to encapsulate a response from an XID device">cedrus::response</a> <a class="code" href="../../de/d21/a00006.html#a989c927f6d31ef9f189147c8efdbdfe7" title="Returns the next response in the queue waiting for processing.">cedrus::xid_device_t::get_next_response</a>()
-<a name="l00183"></a>00183 {
-<a name="l00184"></a>00184     <a class="code" href="../../d7/d46/a00002.html" title="struct to encapsulate a response from an XID device">response</a> res = response_queue_.front();
-<a name="l00185"></a>00185     response_queue_.pop();
-<a name="l00186"></a>00186     <span class="keywordflow">return</span> res;
-<a name="l00187"></a>00187 }
-<a name="l00188"></a>00188 
-<a name="l00189"></a><a class="code" href="../../de/d21/a00006.html#a3a5c824898d9c7a5158d05c9040fef2b">00189</a> std::string <a class="code" href="../../de/d21/a00006.html#a3a5c824898d9c7a5158d05c9040fef2b" title="Returns the name of the device.">cedrus::xid_device_t::get_device_name</a>()
-<a name="l00190"></a>00190 {
-<a name="l00191"></a>00191     <span class="keywordflow">return</span> device_name_;
-<a name="l00192"></a>00192 }
-<a name="l00193"></a>00193 
-<a name="l00194"></a><a class="code" href="../../de/d21/a00006.html#a67973357782301424b829e32ca1a2f77">00194</a> <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#a67973357782301424b829e32ca1a2f77" title="product id of the device.">cedrus::xid_device_t::get_product_id</a>()<span class="keyword"> const</span>
-<a name="l00195"></a>00195 <span class="keyword"></span>{
-<a name="l00196"></a>00196     <span class="keywordflow">return</span> product_id_;
-<a name="l00197"></a>00197 }
-<a name="l00198"></a>00198 
-<a name="l00199"></a><a class="code" href="../../de/d21/a00006.html#aaf95cf64581d6d9a3f78de8fa13bd78e">00199</a> <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#aaf95cf64581d6d9a3f78de8fa13bd78e" title="model ID of the device.">cedrus::xid_device_t::get_model_id</a>()<span class="keyword"> const</span>
-<a name="l00200"></a>00200 <span class="keyword"></span>{
-<a name="l00201"></a>00201     <span class="keywordflow">return</span> model_id_;
-<a name="l00202"></a>00202 }
-<a name="l00203"></a>00203 
-<a name="l00204"></a><a class="code" href="../../de/d21/a00006.html#a96b6f0721f2fb3360b84c92b872ea387">00204</a> <span class="keywordtype">int</span> <a class="code" href="../../de/d21/a00006.html#a96b6f0721f2fb3360b84c92b872ea387" title="Number of buttons the device has.">cedrus::xid_device_t::get_button_count</a>()<span class="keyword"> const</span>
-<a name="l00205"></a>00205 <span class="keyword"></span>{
-<a name="l00206"></a>00206     <span class="keywordflow">if</span>(config_)
-<a name="l00207"></a>00207         <span class="keywordflow">return</span> config_-&gt;number_of_lines();
-<a name="l00208"></a>00208     <span class="keywordflow">else</span>
-<a name="l00209"></a>00209         <span class="keywordflow">return</span> 8;
-<a name="l00210"></a>00210 }
-<a name="l00211"></a>00211 
-<a name="l00212"></a>00212 <span class="keywordtype">void</span> cedrus::xid_device_t::init_device(<span class="keyword">const</span> std::wstring &amp;devconfig_path)
-<a name="l00213"></a>00213 {
-<a name="l00214"></a>00214     product_id_ = get_xid_inquiry(<span class="stringliteral">&quot;_d2&quot;</span>,1,100,100);
-<a name="l00215"></a>00215 
-<a name="l00216"></a>00216     <span class="keywordflow">switch</span>(product_id_)
-<a name="l00217"></a>00217     {
-<a name="l00218"></a>00218     <span class="keywordflow">case</span> 0:
-<a name="l00219"></a>00219         device_name_ = <span class="stringliteral">&quot;Cedrus Lumina LP-400 Response Pad System&quot;</span>;
-<a name="l00220"></a>00220         input_name_prefix_ = L<span class="stringliteral">&quot;Button&quot;</span>;
-<a name="l00221"></a>00221         <span class="keywordflow">break</span>;
-<a name="l00222"></a>00222     <span class="keywordflow">case</span> 1:
-<a name="l00223"></a>00223         device_name_ = <span class="stringliteral">&quot;Cedrus SV-1 Voice Key&quot;</span>;
-<a name="l00224"></a>00224         input_name_prefix_ = L<span class="stringliteral">&quot;Voice Response&quot;</span>;
-<a name="l00225"></a>00225         <span class="keywordflow">break</span>;
-<a name="l00226"></a>00226     <span class="keywordflow">case</span> 2:
-<a name="l00227"></a>00227         {
-<a name="l00228"></a>00228             model_id_ = get_xid_inquiry(<span class="stringliteral">&quot;_d3&quot;</span>, 1, 100, 100);
-<a name="l00229"></a>00229             input_name_prefix_ = L<span class="stringliteral">&quot;Button&quot;</span>;
-<a name="l00230"></a>00230             <span class="keywordflow">switch</span>(model_id_)
-<a name="l00231"></a>00231             {
-<a name="l00232"></a>00232             <span class="keywordflow">case</span> 1:
-<a name="l00233"></a>00233                 device_name_ = <span class="stringliteral">&quot;Cedrus RB-530&quot;</span>;
-<a name="l00234"></a>00234                 <span class="keywordflow">break</span>;
-<a name="l00235"></a>00235             <span class="keywordflow">case</span> 2:
-<a name="l00236"></a>00236                 device_name_ = <span class="stringliteral">&quot;Cedrus RB-730&quot;</span>;
-<a name="l00237"></a>00237                 <span class="keywordflow">break</span>;
-<a name="l00238"></a>00238             <span class="keywordflow">case</span> 3:
-<a name="l00239"></a>00239                 device_name_ = <span class="stringliteral">&quot;Cedrus RB-830&quot;</span>;
-<a name="l00240"></a>00240                 <span class="keywordflow">break</span>;
-<a name="l00241"></a>00241             <span class="keywordflow">case</span> 4:
-<a name="l00242"></a>00242                 device_name_ = <span class="stringliteral">&quot;Cedrus RB-834&quot;</span>;
-<a name="l00243"></a>00243                 <span class="keywordflow">break</span>;
-<a name="l00244"></a>00244             <span class="keywordflow">case</span> -99:
-<a name="l00245"></a>00245                 device_name_ = <span class="stringliteral">&quot;Invalid XID Device&quot;</span>;
-<a name="l00246"></a>00246                 <span class="keywordflow">break</span>;
-<a name="l00247"></a>00247             <span class="keywordflow">default</span>:
-<a name="l00248"></a>00248                 device_name_ = <span class="stringliteral">&quot;Unknown Cedrus RB Series Device&quot;</span>;
-<a name="l00249"></a>00249             }
-<a name="l00250"></a>00250             <span class="keywordflow">break</span>;
-<a name="l00251"></a>00251         }
-<a name="l00252"></a>00252     <span class="keywordflow">case</span> -99:
-<a name="l00253"></a>00253         device_name_ = <span class="stringliteral">&quot;Invalid XID Device&quot;</span>;
-<a name="l00254"></a>00254         input_name_prefix_ = L<span class="stringliteral">&quot;Button&quot;</span>;
-<a name="l00255"></a>00255         <span class="keywordflow">break</span>;
-<a name="l00256"></a>00256     <span class="keywordflow">default</span>:
-<a name="l00257"></a>00257         device_name_ = <span class="stringliteral">&quot;Unknown XID device&quot;</span>;
-<a name="l00258"></a>00258         input_name_prefix_ = L<span class="stringliteral">&quot;Button&quot;</span>;
-<a name="l00259"></a>00259         <span class="keywordflow">break</span>;
-<a name="l00260"></a>00260     }
-<a name="l00261"></a>00261 
-<a name="l00262"></a>00262     <span class="keywordflow">if</span>(!devconfig_path.empty())
-<a name="l00263"></a>00263     {
-<a name="l00264"></a>00264         config_ = <a class="code" href="../../d0/d0b/a00004.html#a76748d0cee4b3d925b7c46c99186d456" title="Returns a device configuration object.">xid_device_config_t::config_for_device</a>(
-<a name="l00265"></a>00265           product_id_, model_id_, devconfig_path);
-<a name="l00266"></a>00266 
-<a name="l00267"></a>00267         xid_con_-&gt;set_needs_interbyte_delay(
-<a name="l00268"></a>00268             config_-&gt;needs_interbyte_delay());
-<a name="l00269"></a>00269     }
-<a name="l00270"></a>00270     <span class="keywordflow">else</span>
-<a name="l00271"></a>00271     {
-<a name="l00272"></a>00272         xid_con_-&gt;set_needs_interbyte_delay(<span class="keyword">true</span>);
-<a name="l00273"></a>00273     }
-<a name="l00274"></a>00274 }
-<a name="l00275"></a>00275 
-<a name="l00276"></a><a class="code" href="../../de/d21/a00006.html#a54a8edc0cec151cd6a7cbd6527087072">00276</a> std::wstring <a class="code" href="../../de/d21/a00006.html#a54a8edc0cec151cd6a7cbd6527087072" title="Prefix used for the device for GUI display purposes.">cedrus::xid_device_t::input_name_prefix</a>()<span class="keyword"> const</span>
-<a name="l00277"></a>00277 <span class="keyword"></span>{
-<a name="l00278"></a>00278     <span class="keywordflow">return</span> input_name_prefix_;
-<a name="l00279"></a>00279 }
+<a name="l00032"></a>00032 <span class="preprocessor">#ifndef STIM_TRACKER_T_H</span>
+<a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#define STIM_TRACKER_T_H</span>
+<a name="l00034"></a>00034 <span class="preprocessor"></span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &quot;<a class="code" href="../../da/d45/a00011.html">base_device_t.h</a>&quot;</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;boost/shared_ptr.hpp&gt;</span>
+<a name="l00037"></a>00037 
+<a name="l00038"></a>00038 <span class="keyword">namespace </span>cedrus
+<a name="l00039"></a>00039 {
+<a name="l00040"></a><a class="code" href="../../dd/dad/a00005.html">00040</a>     <span class="keyword">class </span><a class="code" href="../../dd/dad/a00005.html">stim_tracker_t</a> : <span class="keyword">public</span> <a class="code" href="../../d8/d84/a00001.html">base_device_t</a>
+<a name="l00041"></a>00041     {
+<a name="l00042"></a>00042     <span class="keyword">public</span>:
+<a name="l00052"></a>00052         <a class="code" href="../../dd/dad/a00005.html#af8c3d37ea9e60fcea006ed85a355d4f1" title="stim_tracker_t constructor">stim_tracker_t</a>(
+<a name="l00053"></a>00053             boost::shared_ptr&lt;xid_con_t&gt; xid_con,
+<a name="l00054"></a>00054             <span class="keyword">const</span> std::wstring &amp;devconfig_path = L<span class="stringliteral">&quot;&quot;</span>);
+<a name="l00055"></a>00055         <span class="keyword">virtual</span> <a class="code" href="../../dd/dad/a00005.html#a0f9e51fe7b4d2f89b5d4a0b4f15586e3">~stim_tracker_t</a>(<span class="keywordtype">void</span>);
+<a name="l00056"></a>00056 
+<a name="l00066"></a>00066         <span class="keywordtype">void</span> <a class="code" href="../../dd/dad/a00005.html#acc4ae1ecd086e13b7dcd735645ca0446" title="Raise digital output lines on the StimTracker device.">raise_lines</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lines_bitmask,
+<a name="l00067"></a>00067             <span class="keywordtype">bool</span> leave_remaining_lines = <span class="keyword">false</span>);
+<a name="l00068"></a>00068 
+<a name="l00078"></a>00078         <span class="keywordtype">void</span> <a class="code" href="../../dd/dad/a00005.html#a00bbdb171646be42b445e97957a4a233" title="Clear digital output lines on the StimTracker device.">clear_lines</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> lines_bitmask,
+<a name="l00079"></a>00079             <span class="keywordtype">bool</span> leave_remaining_lines = <span class="keyword">false</span>);
+<a name="l00080"></a>00080 
+<a name="l00087"></a>00087         <span class="keywordtype">void</span> <a class="code" href="../../dd/dad/a00005.html#af295bc3b84719e814ef303c1067096b5" title="Set the pulse duration when raise_lines() is called.">set_pulse_duration</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> duration);
+<a name="l00088"></a>00088     };
+<a name="l00089"></a>00089 } <span class="comment">// namespace cedrus</span>
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

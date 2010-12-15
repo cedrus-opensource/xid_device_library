@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: port_settings_t.h File Reference</title>
+<title>XID device library: cedrus::xid_device_t Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -13,38 +13,280 @@
     <ul class="tablist">
       <li><a href="../../index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="../../namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="../../annotated.html"><span>Classes</span></a></li>
-      <li class="current"><a href="../../files.html"><span>Files</span></a></li>
+      <li class="current"><a href="../../annotated.html"><span>Classes</span></a></li>
+      <li><a href="../../files.html"><span>Files</span></a></li>
     </ul>
   </div>
   <div class="tabs2">
     <ul class="tablist">
-      <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath">
+    <ul>
+      <li><a class="el" href="../../d0/d33/a00027.html">cedrus</a>      </li>
+      <li><a class="el" href="../../da/da0/a00009.html">xid_device_t</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<h1>port_settings_t.h File Reference</h1>  </div>
+<h1>cedrus::xid_device_t Class Reference</h1>  </div>
 </div>
 <div class="contents">
-<code>#include &lt;string&gt;</code><br/>
+<!-- doxytag: class="cedrus::xid_device_t" --><!-- doxytag: inherits="cedrus::base_device_t" -->
+<p>abstraction of an XID device  
+<a href="#_details">More...</a></p>
 
-<p><a href="../../da/da0/a00009_source.html">Go to the source code of this file.</a></p>
+<p><code>#include &lt;<a class="el" href="../../d6/d5b/a00026_source.html">xid_device_driver/xid_device_t.h</a>&gt;</code></p>
+<!-- startSectionHeader --><div class="dynheader">
+Inheritance diagram for cedrus::xid_device_t:<!-- endSectionHeader --></div>
+<!-- startSectionSummary --><!-- endSectionSummary --><!-- startSectionContent --><div class="dyncontent">
+ <div class="center">
+  <img src="../../da/da0/a00009.png" usemap="#cedrus::xid_device_t_map" alt=""/>
+  <map id="cedrus::xid_device_t_map" name="cedrus::xid_device_t_map">
+<area href="../../d8/d84/a00001.html" alt="cedrus::base_device_t" shape="rect" coords="0,0,139,24"/>
+</map>
+ </div><!-- endSectionContent --></div>
+
+<p><a href="../../de/d8c/a00036.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d84/a00001.html">cedrus::port_settings_t</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles serial port settings used by the XID devices.  <a href="../../d8/d84/a00001.html#_details">More...</a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da2/a00019.html">cedrus</a></td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#a8ed5e224e1b23bb8fb55a21b008aec45">xid_device_t</a> (boost::shared_ptr&lt; <a class="el" href="../../de/d21/a00006.html">xid_con_t</a> &gt; xid_con, const std::wstring &amp;devconfig_path=L&quot;&quot;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../da/da0/a00009.html" title="abstraction of an XID device">xid_device_t</a> constructor  <a href="#a8ed5e224e1b23bb8fb55a21b008aec45"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#ab2fd5765ef102d489a2e5d1948b5b14c">~xid_device_t</a> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#ad9c88bf434c9d0af291ee932f94e75d2">poll_for_response</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Poll the COM interface for a button press event.  <a href="#ad9c88bf434c9d0af291ee932f94e75d2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#a16668a1591d70afcc801649f1fcb673d">response_queue_size</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of responses in the response queue.  <a href="#a16668a1591d70afcc801649f1fcb673d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#ac89a3e503a9adf1c1bb093277555c95d">has_queued_responses</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#a7ead6328ad6b8b7a084bc07c62cd7df7">clear_response_queue</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the response queue.  <a href="#a7ead6328ad6b8b7a084bc07c62cd7df7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/d0b/a00004.html">response</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#a989c927f6d31ef9f189147c8efdbdfe7">get_next_response</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next response in the queue waiting for processing.  <a href="#a989c927f6d31ef9f189147c8efdbdfe7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#a96b6f0721f2fb3360b84c92b872ea387">get_button_count</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of buttons the device has.  <a href="#a96b6f0721f2fb3360b84c92b872ea387"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da0/a00009.html#a54a8edc0cec151cd6a7cbd6527087072">input_name_prefix</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prefix used for the device for GUI display purposes.  <a href="#a54a8edc0cec151cd6a7cbd6527087072"></a><br/></td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>abstraction of an XID device </p>
+
+<p>Definition at line <a class="el" href="../../d6/d5b/a00026_source.html#l00087">87</a> of file <a class="el" href="../../d6/d5b/a00026_source.html">xid_device_t.h</a>.</p>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a8ed5e224e1b23bb8fb55a21b008aec45"></a><!-- doxytag: member="cedrus::xid_device_t::xid_device_t" ref="a8ed5e224e1b23bb8fb55a21b008aec45" args="(boost::shared_ptr&lt; xid_con_t &gt; xid_con, const std::wstring &amp;devconfig_path=L&quot;&quot;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cedrus::xid_device_t::xid_device_t </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="../../de/d21/a00006.html">xid_con_t</a> &gt;&#160;</td>
+          <td class="paramname"> <em>xid_con</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::wstring &amp;&#160;</td>
+          <td class="paramname"> <em>devconfig_path</em> = <code>L&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<div class="memdoc">
+
+<p><a class="el" href="../../da/da0/a00009.html" title="abstraction of an XID device">xid_device_t</a> constructor </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">xid_con</td><td><a class="el" href="../../de/d21/a00006.html" title="Implementation of communication with an XID device.">xid_con_t</a> object to use </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">devconfig_path</td><td>path to devconfig files. Defaults to an empty string. If no path is used, very conservative default values are used and results may not be what you expect. It's highly reccommended to use the devconfig files. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00037">37</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab2fd5765ef102d489a2e5d1948b5b14c"></a><!-- doxytag: member="cedrus::xid_device_t::~xid_device_t" ref="ab2fd5765ef102d489a2e5d1948b5b14c" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cedrus::xid_device_t::~xid_device_t </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname">&#160;)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00047">47</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a7ead6328ad6b8b7a084bc07c62cd7df7"></a><!-- doxytag: member="cedrus::xid_device_t::clear_response_queue" ref="a7ead6328ad6b8b7a084bc07c62cd7df7" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::xid_device_t::clear_response_queue </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Clears the response queue. </p>
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00105">105</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a96b6f0721f2fb3360b84c92b872ea387"></a><!-- doxytag: member="cedrus::xid_device_t::get_button_count" ref="a96b6f0721f2fb3360b84c92b872ea387" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cedrus::xid_device_t::get_button_count </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of buttons the device has. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>number of buttons </dd></dl>
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00051">51</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a989c927f6d31ef9f189147c8efdbdfe7"></a><!-- doxytag: member="cedrus::xid_device_t::get_next_response" ref="a989c927f6d31ef9f189147c8efdbdfe7" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/d0b/a00004.html">cedrus::response</a> cedrus::xid_device_t::get_next_response </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns the next response in the queue waiting for processing. </p>
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00113">113</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac89a3e503a9adf1c1bb093277555c95d"></a><!-- doxytag: member="cedrus::xid_device_t::has_queued_responses" ref="ac89a3e503a9adf1c1bb093277555c95d" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cedrus::xid_device_t::has_queued_responses </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>true if there are queued responses </dd></dl>
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00100">100</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a54a8edc0cec151cd6a7cbd6527087072"></a><!-- doxytag: member="cedrus::xid_device_t::input_name_prefix" ref="a54a8edc0cec151cd6a7cbd6527087072" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::wstring cedrus::xid_device_t::input_name_prefix </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Prefix used for the device for GUI display purposes. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>"Button" for Lumina, RB-series pads, and unknown devices. "Voice Response" for SV-1 Voice Key systems. </dd></dl>
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00120">120</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad9c88bf434c9d0af291ee932f94e75d2"></a><!-- doxytag: member="cedrus::xid_device_t::poll_for_response" ref="ad9c88bf434c9d0af291ee932f94e75d2" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cedrus::xid_device_t::poll_for_response </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Poll the COM interface for a button press event. </p>
+<p>If there is a button press event, it is placed into an internal response queue. </p>
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00059">59</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a16668a1591d70afcc801649f1fcb673d"></a><!-- doxytag: member="cedrus::xid_device_t::response_queue_size" ref="a16668a1591d70afcc801649f1fcb673d" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t cedrus::xid_device_t::response_queue_size </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of responses in the response queue. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>number of responses pending processing. </dd></dl>
+
+<p>Definition at line <a class="el" href="../../d3/dfe/a00025_source.html#l00095">95</a> of file <a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li><a class="el" href="../../d6/d5b/a00026_source.html">xid_device_t.h</a></li>
+<li><a class="el" href="../../d3/dfe/a00025_source.html">xid_device_t.cpp</a></li>
+</ul>
+</div>
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

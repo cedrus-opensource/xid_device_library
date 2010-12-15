@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: constants.h File Reference</title>
+<title>XID device library: cedrus::xid_device_config_t Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -13,83 +13,225 @@
     <ul class="tablist">
       <li><a href="../../index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="../../namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="../../annotated.html"><span>Classes</span></a></li>
-      <li class="current"><a href="../../files.html"><span>Files</span></a></li>
+      <li class="current"><a href="../../annotated.html"><span>Classes</span></a></li>
+      <li><a href="../../files.html"><span>Files</span></a></li>
     </ul>
   </div>
   <div class="tabs2">
     <ul class="tablist">
-      <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath">
+    <ul>
+      <li><a class="el" href="../../d0/d33/a00027.html">cedrus</a>      </li>
+      <li><a class="el" href="../../de/d5e/a00007.html">xid_device_config_t</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
   <div class="headertitle">
-<h1>constants.h File Reference</h1>  </div>
+<h1>cedrus::xid_device_config_t Class Reference</h1>  </div>
 </div>
 <div class="contents">
+<!-- doxytag: class="cedrus::xid_device_config_t" -->
+<p>device configuration class  
+<a href="#_details">More...</a></p>
 
-<p><a href="../../de/d5e/a00007_source.html">Go to the source code of this file.</a></p>
+<p><code>#include &lt;<a class="el" href="../../d7/de0/a00022_source.html">xid_device_driver/xid_device_config.h</a>&gt;</code></p>
+
+<p><a href="../../d0/dc0/a00033.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da2/a00019.html">cedrus</a></td></tr>
-<tr><td colspan="2"><h2><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br/>
-&#160;&#160;<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264ad388a380a30c161b3a5add85bf0936a0">cedrus::NO_ERR</a> =  0, 
-<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264a5a4ff3f8494a3dbe7713590137db281e">cedrus::UNDEFINED</a> =  -1, 
-<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264a78e8acba7f967651f2be549dd0e5784d">cedrus::PORT_NOT_AVAILABLE</a> =  -2, 
-<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264a7ff9d25b0b27cc9e9f817dbd28f4c81d">cedrus::ERROR_SETTING_UP_PORT</a> =  -3, 
-<br/>
-&#160;&#160;<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264a8b261ec71b4a3d8d8eca0f82230a8c00">cedrus::ERROR_FLUSHING_PORT</a> =  -4, 
-<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264af10ce18c8feb84a4308a7ac2ed954272">cedrus::ERROR_READING_PORT</a> =  -5, 
-<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264a87c973d7694bc85ef22afad7dbac7ae2">cedrus::ERROR_WRITING_TO_PORT</a> =  -6, 
-<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264ab4cf4a161fbe6096cde05a51eb5c5183">cedrus::ERROR_CLOSING_PORT</a> =  -7, 
-<br/>
-&#160;&#160;<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264a0bffdea260a7517f2ef7a31f35c24412">cedrus::GENERAL_ERROR</a> =  -10, 
-<a class="el" href="../../dd/da2/a00019.html#a8ab3bb6e52d1924677f82ec6b6dcd264a35f96f1a4cac3d0d57442cd8bd912469">cedrus::PORT_OPENED_BUT_ABORTED</a> =  -11
-<br/>
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/da2/a00019.html#a763cc6b4cb81b84c96d47400ad045ee1a18056ea701cdbdfcb957a3c6c20fec16">cedrus::UNKNOWN_MODEL_ID</a> =  0
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/da2/a00019.html#afda71436605da986088fff608c03bc15a43b2083d5d4cc255ae8186919206545a">cedrus::ANY_MODEL_ID</a> =  -2
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/da2/a00019.html#a219922c91aa810d7ca92cd8434a69251a28db58b162d8221e1ab85b6b41151bfa">cedrus::NO_XID_DEVICE_FOUND</a> =  -1
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/da2/a00019.html#ae369718ce77b948622cdf7db1c545450addc35d7b9099081b4a2196ea04856111">cedrus::INVALID_RETURN_VALUE</a> =  -99
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br/>
-&#160;&#160;<a class="el" href="../../dd/da2/a00019.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cafe012340077a571c30ac5a4872d59a3e">cedrus::RB530</a> =  1, 
-<a class="el" href="../../dd/da2/a00019.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca55a9d1c0ea04cd2b82a1b6bdea9142c1">cedrus::RB730</a> =  2, 
-<a class="el" href="../../dd/da2/a00019.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cad4e35aca962fe0ddc48fe9383218f6ec">cedrus::RB830</a> =  3, 
-<a class="el" href="../../dd/da2/a00019.html#ae84ddd3b9cd7bd7ed3a921a37c86be5cae67a239b4692684c06bfd00252f388f8">cedrus::RB834</a> =  4, 
-<br/>
-&#160;&#160;<a class="el" href="../../dd/da2/a00019.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca77d37f357270ff8b5f6a7e336614be32">cedrus::RB630</a> =  5, 
-<a class="el" href="../../dd/da2/a00019.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca6174716dc665cafa3a631948598e1adf">cedrus::SV1</a> =  21, 
-<a class="el" href="../../dd/da2/a00019.html#ae84ddd3b9cd7bd7ed3a921a37c86be5ca3eea1b9ca56d51425f65d99ea74fa60e">cedrus::LUMINA</a> =  31
-<br/>
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/da2/a00019.html#af04ccd9cb09ee6e8efab1c9fd45c2254acf2f1744d40f301e9931081644a49921">cedrus::XID_ID_LUMINA</a> =  0, 
-<a class="el" href="../../dd/da2/a00019.html#af04ccd9cb09ee6e8efab1c9fd45c2254aa64771a47bd221ae5ce84b8ef5a6bfb5">cedrus::XID_ID_SV1</a> =  1, 
-<a class="el" href="../../dd/da2/a00019.html#af04ccd9cb09ee6e8efab1c9fd45c2254a5d0d864519d3436acbeb4835aff744be">cedrus::XID_ID_RB</a> =  2
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/da2/a00019.html#a293b68f3518e144cf7bcc7157ace38feafde98086ed597d9ced4f069592e6430f">cedrus::AD_NO_PROMPTS</a> =  0x01, 
-<a class="el" href="../../dd/da2/a00019.html#a293b68f3518e144cf7bcc7157ace38fea20d6fc3fe85242f2e61700b23a20d132">cedrus::AD_ASK_BEFORE_CONVERTING</a> =  0x02, 
-<a class="el" href="../../dd/da2/a00019.html#a293b68f3518e144cf7bcc7157ace38fea575c5d8ec1485372f10e2998b74e3dd0">cedrus::AD_CONVERSION_IRREVERSIBLE</a> =  0x04
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="../../dd/da2/a00019.html#a3744a7d3bf67b7cde7fbe28d6dbac885a60531af8cab079ba955429e90a4489ce">cedrus::XID_MODE</a> =  '0'
- }</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5">cedrus::key_state</a> { <a class="el" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5a60cd667fc905419b1f3084b186eee132">cedrus::NO_KEY_DETECTED</a> =  0, 
-<a class="el" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5a6a609a963d5e73eed8a1fabcf427fccf">cedrus::FOUND_KEY_DOWN</a> =  1, 
-<a class="el" href="../../dd/da2/a00019.html#a49c65e3689b7dc6dcd28dcbb86eab9c5ae0e8add5e7ad034a0a95324459244441">cedrus::FOUND_KEY_UP</a> =  2
- }</td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5e/a00007.html#a9ba83788efe0ef79e48f2f806c08eaa2">~xid_device_config_t</a> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5e/a00007.html#a8a95e77a64c2bfc29ffbeca237f2d1c1">get_mapped_key</a> (int key) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the actual button pressed based on the devconfig key mapping.  <a href="#a8a95e77a64c2bfc29ffbeca237f2d1c1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5e/a00007.html#ab00a9f39101fa7797fb133b869800485">number_of_lines</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of response lines (or buttons) a device has.  <a href="#ab00a9f39101fa7797fb133b869800485"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5e/a00007.html#a6600007aa4b362bc90542e971aed484e">needs_interbyte_delay</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether or not the device requires an inter-byte delay.  <a href="#a6600007aa4b362bc90542e971aed484e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5e/a00007.html#af8bb2a483057c1a560b58bf1cc544c70">digital_out_prefix</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The digital output prefix.  <a href="#af8bb2a483057c1a560b58bf1cc544c70"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static boost::shared_ptr<br class="typebreak"/>
+&lt; <a class="el" href="../../de/d5e/a00007.html">xid_device_config_t</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5e/a00007.html#a76748d0cee4b3d925b7c46c99186d456">config_for_device</a> (int product_id, int model_id, const std::wstring &amp;devconfig_location)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a device configuration object.  <a href="#a76748d0cee4b3d925b7c46c99186d456"></a><br/></td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>device configuration class </p>
+
+<p>Definition at line <a class="el" href="../../d7/de0/a00022_source.html#l00046">46</a> of file <a class="el" href="../../d7/de0/a00022_source.html">xid_device_config_t.h</a>.</p>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a9ba83788efe0ef79e48f2f806c08eaa2"></a><!-- doxytag: member="cedrus::xid_device_config_t::~xid_device_config_t" ref="a9ba83788efe0ef79e48f2f806c08eaa2" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cedrus::xid_device_config_t::~xid_device_config_t </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname">&#160;)</td>
+          <td></td>
+        </tr>
+      </table>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="../../de/d11/a00021_source.html#l00076">76</a> of file <a class="el" href="../../de/d11/a00021_source.html">xid_device_config_t.cpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a76748d0cee4b3d925b7c46c99186d456"></a><!-- doxytag: member="cedrus::xid_device_config_t::config_for_device" ref="a76748d0cee4b3d925b7c46c99186d456" args="(int product_id, int model_id, const std::wstring &amp;devconfig_location)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="../../de/d5e/a00007.html">cedrus::xid_device_config_t</a> &gt; cedrus::xid_device_config_t::config_for_device </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>product_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>model_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::wstring &amp;&#160;</td>
+          <td class="paramname"> <em>devconfig_location</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns a device configuration object. </p>
+<p>This class reads the .devconfig files distributed with this library. The user must specify the runtime path to the devconfig files otherwise very conservative defaults are used. Button counts on the device may not match up with reality and button ordering may be different than expected.</p>
+<p>If the path passed into this function is empty, an invalid boost::shared_ptr will be returned.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">product_id</td><td>product id of the XID device </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">model_id</td><td>Used with RB-series devices. 0 otherwise. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">devconfig_location</td><td>Path to the devconfig files. See the constructor of CedrusXidDeviceEnumerator for an example of looking up the path to the devconfig files.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>a device configuration object </dd></dl>
+
+<p>Definition at line <a class="el" href="../../de/d11/a00021_source.html#l00039">39</a> of file <a class="el" href="../../de/d11/a00021_source.html">xid_device_config_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af8bb2a483057c1a560b58bf1cc544c70"></a><!-- doxytag: member="cedrus::xid_device_config_t::digital_out_prefix" ref="af8bb2a483057c1a560b58bf1cc544c70" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char cedrus::xid_device_config_t::digital_out_prefix </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>The digital output prefix. </p>
+
+<p>Definition at line <a class="el" href="../../de/d11/a00021_source.html#l00286">286</a> of file <a class="el" href="../../de/d11/a00021_source.html">xid_device_config_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8a95e77a64c2bfc29ffbeca237f2d1c1"></a><!-- doxytag: member="cedrus::xid_device_config_t::get_mapped_key" ref="a8a95e77a64c2bfc29ffbeca237f2d1c1" args="(int key) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cedrus::xid_device_config_t::get_mapped_key </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"> <em>key</em>&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the actual button pressed based on the devconfig key mapping. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">key</td><td>key reported by the response pad </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>the mapped key number based on the .devconfig file. </dd></dl>
+
+<p>Definition at line <a class="el" href="../../de/d11/a00021_source.html#l00262">262</a> of file <a class="el" href="../../de/d11/a00021_source.html">xid_device_config_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6600007aa4b362bc90542e971aed484e"></a><!-- doxytag: member="cedrus::xid_device_config_t::needs_interbyte_delay" ref="a6600007aa4b362bc90542e971aed484e" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cedrus::xid_device_config_t::needs_interbyte_delay </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Whether or not the device requires an inter-byte delay. </p>
+
+<p>Definition at line <a class="el" href="../../de/d11/a00021_source.html#l00281">281</a> of file <a class="el" href="../../de/d11/a00021_source.html">xid_device_config_t.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab00a9f39101fa7797fb133b869800485"></a><!-- doxytag: member="cedrus::xid_device_config_t::number_of_lines" ref="ab00a9f39101fa7797fb133b869800485" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cedrus::xid_device_config_t::number_of_lines </td>
+          <td>(</td>
+          <td class="paramname">&#160;)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of response lines (or buttons) a device has. </p>
+
+<p>Definition at line <a class="el" href="../../de/d11/a00021_source.html#l00276">276</a> of file <a class="el" href="../../de/d11/a00021_source.html">xid_device_config_t.cpp</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li><a class="el" href="../../d7/de0/a00022_source.html">xid_device_config_t.h</a></li>
+<li><a class="el" href="../../de/d11/a00021_source.html">xid_device_config_t.cpp</a></li>
+</ul>
+</div>
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>

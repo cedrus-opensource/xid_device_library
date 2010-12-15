@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>XID device library: xid_device_t.h File Reference</title>
+<title>XID device library: string_tokenizer.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -20,38 +20,33 @@
   <div class="tabs2">
     <ul class="tablist">
       <li><a href="../../files.html"><span>File&#160;List</span></a></li>
+      <li><a href="../../globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<h1>xid_device_t.h File Reference</h1>  </div>
+<h1>string_tokenizer.hpp File Reference</h1>  </div>
 </div>
 <div class="contents">
-<code>#include &lt;Windows.h&gt;</code><br/>
-<code>#include &lt;queue&gt;</code><br/>
-<code>#include &lt;string&gt;</code><br/>
-<code>#include &quot;<a class="el" href="../../da/da0/a00009_source.html">port_settings_t.h</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="../../de/d5e/a00007_source.html">constants.h</a>&quot;</code><br/>
-<code>#include &lt;boost/shared_ptr.hpp&gt;</code><br/>
+<code>#include &lt;vector&gt;</code><br/>
 
 <p><a href="../../d1/d2b/a00018_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d46/a00002.html">cedrus::response</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">struct to encapsulate a response from an XID device  <a href="../../d7/d46/a00002.html#_details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d21/a00006.html">cedrus::xid_device_t</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">abstraction of an XID device  <a href="../../de/d21/a00006.html#_details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da2/a00019.html">cedrus</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d33/a00027.html">cedrus</a></td></tr>
+<tr><td colspan="2"><h2><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename string_type &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; string_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d0/d33/a00027.html#add74c69d3eb65cfe8c0345e372ddb37d">cedrus::tokenize</a> (const string_type &amp;str, const string_type &amp;delimiters)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Split a delimited string into a std::vector of strings.  <a href="#add74c69d3eb65cfe8c0345e372ddb37d"></a><br/></td></tr>
 </table>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Oct 28 2010 14:59:58 for XID device library by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Dec 15 2010 13:17:12 for XID device library by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.7.2 </small></address>
 </body>
