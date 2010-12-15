@@ -68,12 +68,12 @@ cedrus::xid_con_t::xid_con_t(
     for(int i = 0; i < INPUT_BUFFER_SIZE; ++i)
     {
         input_buffer_[i] = '\0';
-
-        set_lines_cmd_[0] = 'a';
-        set_lines_cmd_[1] = 'h';
-        set_lines_cmd_[2] = '\0';
-        set_lines_cmd_[3] = '\0';
     }
+
+    set_lines_cmd_[0] = 'a';
+    set_lines_cmd_[1] = 'h';
+    set_lines_cmd_[2] = '\0';
+    set_lines_cmd_[3] = '\0';
 }
 
 

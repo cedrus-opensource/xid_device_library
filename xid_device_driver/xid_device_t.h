@@ -77,96 +77,18 @@ namespace cedrus
         cedrus::key_state key_state;
     };
 
-    /**
-     * @class xid_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
-     *
-     * @brief abstraction of an XID device
-     */
-    class xid_device_t
+    class base_device_t
     {
     public:
         /**
-         * xid_device_t constructor
-         *
-         * @param[in] xid_con xid_con_t object to use
-         * @param[in] devconfig_path path to devconfig files.  Defaults to an
-         * empty string.  If no path is used, very conservative default values
-         * are used and results may not be what you expect.  It's highly
-         * reccommended to use the devconfig files.
-         */
-        xid_device_t(
+          * @class base_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
+          *
+          * @brief base class for Cedrus devices.
+          */
+        base_device_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::wstring &devconfig_path = L""
-            );
-        virtual ~xid_device_t(void);
-        
-        /**
-         * Send an XID command to the device
-         *
-         * @param[in] in_command command to send to the device.  Commands are
-         * detailed at http://www.cedrus.com/xid/
-         * @param[in] expected_bytes_rec expected number of bytes to receive
-         * @param[in] timeout time in miliseconds the device should respond in
-         * @param[in] delay some devices need an additional delay between
-         * receiving a command and issuing a response. Defaults to 0
-         * 
-         * @returns an integer value of the response
-         */
-        int get_xid_inquiry(
-            const char in_command[],
-            int expected_bytes_rec = 1,
-            int timeout = 100,
-            int delay = 0);
-
-        /**
-         * Resets the internal device reaction time timer.
-         * 
-         * This should be called when a stimulus is presented
-         */
-        void reset_rt_timer();
-
-        /**
-         * Resets the device's base timer
-         *
-         * This should be called when the device is initialized or an experiment
-         * starts
-         */
-        void reset_base_timer();
-
-        /**
-         * Returns the time elapsed since the base timer was reset
-         */
-        int query_base_timer();
-
-        /**
-         * Poll the COM interface for a button press event.
-         *
-         * If there is a button press event, it is placed into an internal
-         * response queue.  
-         */
-        void poll_for_response();
-
-        /**
-         * Number of responses in the response queue.
-         *
-         * @returns number of responses pending processing.
-         */
-        std::size_t response_queue_size() const;
-        
-        /**
-         * @returns true if there are queued responses
-         */
-        bool has_queued_responses() const;
-
-        /**
-         * Clears the response queue
-         */
-        void clear_response_queue();
-
-        /**
-         * Returns the next response in the queue waiting for processing
-         */
-        response get_next_response();
+            const std::wstring &devconfig_path = L"");
+        virtual ~base_device_t();
 
         /**
          * Returns the name of the device
@@ -199,6 +121,111 @@ namespace cedrus
         int get_model_id() const;
 
         /**
+         * Resets the internal device reaction time timer.
+         * 
+         * This should be called when a stimulus is presented
+         */
+        void reset_rt_timer();
+
+        /**
+         * Resets the device's base timer
+         *
+         * This should be called when the device is initialized or an experiment
+         * starts
+         */
+        void reset_base_timer();
+
+        /**
+         * Returns the time elapsed since the base timer was reset
+         */
+        int query_base_timer();
+
+        /**
+         * Send a command to the device
+         *
+         * @param[in] in_command command to send to the device.  Commands are
+         * detailed at http://www.cedrus.com/xid/
+         * @param[in] expected_bytes_rec expected number of bytes to receive
+         * @param[in] timeout time in miliseconds the device should respond in
+         * @param[in] delay some devices need an additional delay between
+         * receiving a command and issuing a response. Defaults to 0
+         * 
+         * @returns an integer value of the response
+         */
+        int get_inquiry(
+            const char in_command[],
+            int expected_bytes_rec = 1,
+            int timeout = 100,
+            int delay = 0);
+
+    protected:
+        boost::shared_ptr<xid_con_t> xid_con_;
+        boost::shared_ptr<cedrus::xid_device_config_t> config_;
+
+    private:
+        void init_device(const std::wstring &devconfig_path);
+        std::string device_name_;
+        int product_id_;
+        int model_id_;
+
+    };
+
+    /**
+     * @class xid_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
+     *
+     * @brief abstraction of an XID device
+     */
+    class xid_device_t : public base_device_t
+    {
+    public:
+        /**
+         * xid_device_t constructor
+         *
+         * @param[in] xid_con xid_con_t object to use
+         * @param[in] devconfig_path path to devconfig files.  Defaults to an
+         * empty string.  If no path is used, very conservative default values
+         * are used and results may not be what you expect.  It's highly
+         * reccommended to use the devconfig files.
+         */
+        xid_device_t(
+            boost::shared_ptr<xid_con_t> xid_con,
+            const std::wstring &devconfig_path = L""
+            );
+        virtual ~xid_device_t(void);
+        
+
+
+        /**
+         * Poll the COM interface for a button press event.
+         *
+         * If there is a button press event, it is placed into an internal
+         * response queue.  
+         */
+        void poll_for_response();
+
+        /**
+         * Number of responses in the response queue.
+         *
+         * @returns number of responses pending processing.
+         */
+        std::size_t response_queue_size() const;
+        
+        /**
+         * @returns true if there are queued responses
+         */
+        bool has_queued_responses() const;
+
+        /**
+         * Clears the response queue
+         */
+        void clear_response_queue();
+
+        /**
+         * Returns the next response in the queue waiting for processing
+         */
+        response get_next_response();
+
+        /**
          * Number of buttons the device has
          *
          * @returns number of buttons
@@ -214,18 +241,10 @@ namespace cedrus
         std::wstring input_name_prefix() const;
 
     private:
-        void init_device(const std::wstring &devconfig_path);
-
-        boost::shared_ptr<xid_con_t> xid_con_;
-
+        void init_response_device();
         std::queue<response> response_queue_;
 
-        std::string device_name_;
-
-        int product_id_;
-        int model_id_;
         int button_count_;
-        boost::shared_ptr<cedrus::xid_device_config_t> config_;
         std::wstring input_name_prefix_;
     };
 } // namespace cedrus

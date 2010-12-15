@@ -110,9 +110,12 @@ void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
             0,
             full_file_path.c_str());
 
-        if(xid_product_id == product_id &&
-           xid_model_id == model_id)
+        if(xid_product_id == product_id)
         {
+            // if this is an RB device, make sure the model IDs match
+            if(product_id == 2 && xid_model_id != model_id)
+                continue;
+            
             // we've found the configuration for this device
 
             // does this device need an interbyte delay?
