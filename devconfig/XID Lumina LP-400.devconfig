@@ -25,7 +25,7 @@ IoLinesBaseNumber = 1
 
 [Port1]
 PortName = Keys
-NumberOfLines = 4
+NumberOfLines = 5
 BitFormat = Parallel
 DefaultIoDirection = Input
 IoDirectionChangeablePerGroup = No

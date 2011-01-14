@@ -59,16 +59,23 @@ void CCedrusXidResponseDevice::set_button_names()
 
     std::wstring prefix = xid_device_->input_name_prefix();
 
-    for(unsigned int i = 0; i < button_count_; ++i)
+    if(button_count_ == 1)
     {
-        if(button_count_ == 1)
+        button_names_.push_back(prefix);
+    }
+    else
+    {
+        for(unsigned int i = 0; i < button_count_; ++i)
         {
-            button_names_.push_back(prefix);
-        }
-        else
-        {
-            button_names_.push_back(
-                prefix + L" " + to_wstr(i+1));
+            if(xid_device_->get_product_id() == 0 && i == 4) {
+                button_names_.push_back(
+                    L"Trigger");
+            }
+            else
+            {
+                button_names_.push_back(
+                    prefix + L" " + to_wstr(i+1));
+            }
         }
     }
 }
