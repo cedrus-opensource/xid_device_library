@@ -62,6 +62,7 @@ class ATL_NO_VTABLE CCedrusXidDeviceEnumerator :
 {
 public:
     CCedrusXidDeviceEnumerator();
+    ~CCedrusXidDeviceEnumerator();
 
     DECLARE_PROTECT_FINAL_CONSTRUCT()
 

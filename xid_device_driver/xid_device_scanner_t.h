@@ -50,7 +50,9 @@ namespace cedrus
 
         xid_device_scanner_t(void);
         virtual ~xid_device_scanner_t(void);
-        
+
+        void drop_every_connection();
+
         /**
          * Returns the number of valid XID devices connected to the computer
          *

@@ -24,8 +24,7 @@ int main(int argc, char** argv)
         scanner.stimtracker_connection_at_index(0);
     con->open();
 
-    stim_tracker_t st(con,
-        L"C:\\Users\\grant.CEDRUS\\Development\\PresentationDriver\\devconfig\\");
+    stim_tracker_t st(con);
 
     std::cout << st.get_device_name() << std::endl;
 

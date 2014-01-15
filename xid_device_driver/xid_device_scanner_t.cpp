@@ -64,6 +64,18 @@ void cedrus::xid_device_scanner_t::load_available_com_ports()
     }
 }
 
+void cedrus::xid_device_scanner_t::drop_every_connection()
+{
+    for (unsigned int i = 0; i < rb_connections_.size(); i++)
+        rb_connections_[i]->close();
+    
+    for (unsigned int i = 0; i < st_connections_.size(); i++)
+        st_connections_[i]->close();
+
+    rb_connections_.clear();
+    st_connections_.clear();
+}
+
 int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
 {
     load_available_com_ports();

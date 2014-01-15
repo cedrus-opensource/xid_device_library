@@ -63,6 +63,11 @@ CCedrusXidDeviceEnumerator::CCedrusXidDeviceEnumerator()
     devices_.resize(port_info_.rb_device_count());
 }
 
+CCedrusXidDeviceEnumerator::~CCedrusXidDeviceEnumerator()
+{
+    port_info_.drop_every_connection();
+}
+
 STDMETHODIMP CCedrusXidDeviceEnumerator::getDeviceCount(unsigned long *count)
 {
     *count = devices_.size();
@@ -117,6 +122,7 @@ STDMETHODIMP CCedrusXidDeviceEnumerator::getDevice(
             else
             {
                 *device = devices_[index].get();
+                // The assumption is that Presentation will call Release on this when the time comes.
                 (*device)->AddRef();
             }
         }
