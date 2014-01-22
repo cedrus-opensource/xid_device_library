@@ -1,6 +1,6 @@
-#include "xid_device_scanner_t.h"
-#include "xid_con_t.h"
-#include "stim_tracker_t.h"
+#include "../xid_device_driver/xid_device_scanner_t.h"
+#include "../xid_device_driver/xid_con_t.h"
+#include "../xid_device_driver/stim_tracker_t.h"
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 

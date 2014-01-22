@@ -1,0 +1,43 @@
+import CedrusBoost
+import CedrusSConsDefaultEnvironments
+import CedrusSConsHelperFunctions
+
+import os
+
+env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
+env['BOOST_VERSION'] = '1_49'
+env['CEDRUS_SCONSCRIPT_PROJECT_NAME'] = 'st_tester'
+
+env['BUILD_TYPE'] = 'dbg'
+env['WX_VERSION'] = ''
+env['CEDRUS_COMPLETE_THIRD_PARTY_STAGING'] = ''
+
+env.AppendUnique( CPPFLAGS = '')
+
+env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLine( env )
+
+boost = CedrusBoost.CedrusBoostSettings(env)
+
+project_target_name = 'st_tester'
+
+inputs = [ './main.cpp' ]
+defines = []
+include_path = []
+cxxflags = []
+frameworks = []
+lib_dependencies = ['xid_device_driver']
+lib_path = []
+linkflags = [ '/SUBSYSTEM:CONSOLE',  '/VERSION:1.0', '/MANIFEST', '/INCREMENTAL', ]
+
+CedrusSConsHelperFunctions.DeclareSConsSimpleProgramBuild(
+    env,
+    project_target_name,
+    inputs,
+    defines,
+    include_path,
+    cxxflags,
+    frameworks,
+    lib_dependencies,
+    lib_path,
+    linkflags
+)
