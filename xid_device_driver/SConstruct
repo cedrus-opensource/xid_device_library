@@ -13,7 +13,7 @@ env['BOOST_VERSION'] = '1_49'
 # superlab does something to read this from the command-line. so this should NOT be hard-coded:
 env['BUILD_TYPE'] = 'dbg'
 
-env['WX_VERSION'] = ''# '2.9'  # make this NOT EVEN NECESSARY?
+env['WX_VERSION'] = '2.9'# '2.9'  # make this NOT EVEN NECESSARY?
 
 # necessary.  seems like it MUST come AFTER setting the BOOST_VERSION and CEDRUS_SCONSCRIPT_PROJECT_NAME
 env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLine( env )
