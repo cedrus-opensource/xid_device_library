@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+import CedrusBoost
+import CedrusSConsDefaultEnvironments
+import CedrusSConsHelperFunctions
+from CedrusBoost import CedrusBoostSettings
+
+import os
+import sys
+
+
+env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
+
+env[ 'THE_CEDRUS_SUPERLAB_BUILD' ] = True
+
+projects = [
+    'SConscript.xid_device_driver',
+    'SConscript.st_tester',
+]
+
+env.Replace(
+    CEDRUS_LISTING_OF_BUILD_SCONSCRIPTS = projects,
+    TARGET_ARCH='x86'
+)
+
+# set boost and wx versions
+env['BOOST_VERSION'] = '1_49'
+
+env['WX_VERSION'] = '2.9'
+
+# windows doesn't have a . in the version string for wxwidgets, so remove it
+env['WIN_WX_VERSION'] = env['WX_VERSION'].replace('.','')
+
+total_complete_staging = []
+
+boostSetup = CedrusBoostSettings(env)
+total_complete_staging += boostSetup.publish_all_libs_to_staging()
+
+env['CEDRUS_COMPLETE_THIRD_PARTY_STAGING'] = total_complete_staging
+
+def BuildEnvironmentSConscripts(masterConfig):
+
+    for c in masterConfig['CEDRUS_LISTING_OF_BUILD_SCONSCRIPTS']:
+        # Clone the environment so components can't interfere with each other
+        ec = masterConfig.Clone()
+
+        # The component is a SConscript file.
+        c_script = ec.File(c)
+        c_dir = c_script.dir # c_dir is important for the scripts in COMMON (not here side-by-side in our scons dir)
+
+        variant_dir_string = '$OBJ_ROOT/' + str(c_dir)
+
+        if sys.platform == 'win32' and str(c_dir) != '.':
+            variant_dir_string = '$OBJ_ROOT/Cmv_dir_win32/dir_' + str(c_script.name) + '/'
+
+        #print ec.subst( variant_dir_string )
+        ec['CEDRUS_CHOSEN_VARIANT_DIR'] = variant_dir_string
+
+        ec.SConscript(c_script,
+                      variant_dir=variant_dir_string,
+                      exports={'env': ec},   # this is why each SConscript has a line like: Import('env')
+                      duplicate=0 # Sometimes I find it helpful to COMMENT THIS OUT for diagnosing scons issues
+                      )
+
+env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLine( env )
+
+print 'Name of selected build environment: ' + str(env['BUILD_TYPE_DESCRIPTION'])
+BuildEnvironmentSConscripts(env)

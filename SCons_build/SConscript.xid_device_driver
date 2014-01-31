@@ -1,0 +1,54 @@
+import CedrusBoost
+import CedrusSConsDefaultEnvironments
+import CedrusSConsHelperFunctions
+
+import os
+import sys
+
+Import('env')
+
+# this line is a keeper:
+boost = CedrusBoost.CedrusBoostSettings(env)
+boost.need_boost_filesystem()
+boost.need_boost_system()
+
+project_target_name = 'xid_device_driver'
+
+PATH_TO_FILES = os.getcwd() + '/../../../../xid_device_driver/'
+inputs = [
+PATH_TO_FILES + 'base_device_t.cpp', 
+PATH_TO_FILES + 'port_settings_t.cpp', 
+PATH_TO_FILES + 'stim_tracker_t.cpp',
+PATH_TO_FILES + 'xid_con_t.cpp', 
+PATH_TO_FILES + 'xid_device_config_t.cpp', 
+PATH_TO_FILES + 'xid_device_scanner_t.cpp', 
+PATH_TO_FILES + 'xid_device_t.cpp',
+]
+
+defines = []
+include_path = []
+cxxflags = []
+frameworks = []
+lib_dependencies = []
+lib_path = []
+# can these go inside a helper?
+linkflags = []
+
+if sys.platform == 'win32':
+	linkflags = [ '/SUBSYSTEM:WINDOWS',  '/VERSION:4.5', '/MANIFEST', '/INCREMENTAL', ]
+	
+elif sys.platform == 'darwin':
+	frameworks = ['CoreFoundation', 'IOKit']
+
+CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
+    env,
+    project_target_name,
+    inputs,
+    defines,
+    include_path,
+    cxxflags,
+    frameworks,
+    lib_dependencies,
+    lib_path,
+    linkflags
+)
