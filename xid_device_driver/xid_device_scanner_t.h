@@ -36,18 +36,15 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
+#include "XidDriverImpExpDefs.h"
+
 namespace cedrus
 {
     class xid_con_t;
 
-    class xid_device_scanner_t
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t
     {
     public:
-        enum
-        {
-            MAX_PORTS = 255
-        };
-
         xid_device_scanner_t(void);
         virtual ~xid_device_scanner_t(void);
 
@@ -89,7 +86,7 @@ namespace cedrus
         */
         void load_available_com_ports();
 
-        std::vector<std::wstring> available_com_ports_;
+        std::vector<std::string> available_com_ports_;
         std::vector<boost::shared_ptr<cedrus::xid_con_t> > rb_connections_;
         std::vector<boost::shared_ptr<cedrus::xid_con_t> > st_connections_;
     };

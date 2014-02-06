@@ -36,10 +36,10 @@
 
 cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
-    const std::wstring &devconfig_path)
+    const std::string &devconfig_path)
     : base_device_t(xid_con, devconfig_path),
       button_count_(8),
-      input_name_prefix_(L"Button")
+      input_name_prefix_("Button")
 {
     init_response_device();
 }
@@ -117,7 +117,7 @@ cedrus::response cedrus::xid_device_t::get_next_response()
     return res;
 }
 
-std::wstring cedrus::xid_device_t::input_name_prefix() const
+std::string cedrus::xid_device_t::input_name_prefix() const
 {
     return input_name_prefix_;
 }
@@ -128,12 +128,12 @@ void cedrus::xid_device_t::init_response_device()
     {
     case 1:
         {
-            input_name_prefix_ = L"Voice Response";
+            input_name_prefix_ = "Voice Response";
             break;
         }
     default:
         {
-            input_name_prefix_ = L"Button";
+            input_name_prefix_ = "Button";
             break;
         }
     }

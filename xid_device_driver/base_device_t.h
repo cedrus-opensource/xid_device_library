@@ -34,12 +34,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "XidDriverImpExpDefs.h"
+
 namespace cedrus
 {
     class xid_con_t;
     class xid_device_config_t;
 
-    class base_device_t
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT base_device_t
     {
     public:
         /**
@@ -49,7 +51,7 @@ namespace cedrus
           */
         base_device_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::wstring &devconfig_path = L"");
+            const std::string &devconfig_path = L"");
         virtual ~base_device_t();
 
         /**
@@ -125,7 +127,7 @@ namespace cedrus
         boost::shared_ptr<cedrus::xid_device_config_t> config_;
 
     private:
-        void init_device(const std::wstring &devconfig_path);
+        void init_device(const std::string &devconfig_path);
         std::string device_name_;
         int product_id_;
         int model_id_;

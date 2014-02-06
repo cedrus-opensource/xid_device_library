@@ -37,7 +37,7 @@
 
 cedrus::base_device_t::base_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
-    const std::wstring &devconfig_path)
+    const std::string &devconfig_path)
     : xid_con_(xid_con),
       product_id_(-1),
       model_id_(0)
@@ -100,7 +100,7 @@ int cedrus::base_device_t::query_base_timer()
     return GENERAL_ERROR;
 }
 
-void cedrus::base_device_t::init_device(const std::wstring &devconfig_path)
+void cedrus::base_device_t::init_device(const std::string &devconfig_path)
 {
     product_id_ = get_inquiry("_d2",1,100,100);
 

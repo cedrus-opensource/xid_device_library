@@ -36,6 +36,8 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
+#include "XidDriverImpExpDefs.h"
+
 namespace cedrus
 {
     /**
@@ -43,7 +45,7 @@ namespace cedrus
      *
      * @brief device configuration class
      */
-    class xid_device_config_t
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_config_t
     {
     public:
         /**
@@ -67,7 +69,7 @@ namespace cedrus
          * @returns a device configuration object
          */
         static boost::shared_ptr<xid_device_config_t> config_for_device(
-            int product_id, int model_id, const std::wstring &devconfig_location);
+            int product_id, int model_id, const std::string &devconfig_location);
 
         ~xid_device_config_t(void);
 
@@ -95,10 +97,10 @@ namespace cedrus
         char digital_out_prefix() const;
 
     private:
-        xid_device_config_t(const std::wstring &devconfig_location);
+        xid_device_config_t(const std::string &devconfig_location);
         void load_devconfig(int product_id, int model_id);
 
-        std::wstring config_file_location_;
+        std::string config_file_location_;
         bool needs_interbyte_delay_;
         int number_of_lines_;
         char digital_out_prefix_;

@@ -32,12 +32,13 @@
 #ifndef STIM_TRACKER_T_H
 #define STIM_TRACKER_T_H
 
+#include "XidDriverImpExpDefs.h"
 #include "base_device_t.h"
 #include <boost/shared_ptr.hpp>
 
 namespace cedrus
 {
-    class stim_tracker_t : public base_device_t
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT stim_tracker_t : public base_device_t
     {
     public:
         /**
@@ -51,7 +52,7 @@ namespace cedrus
          */
         stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::wstring &devconfig_path = L"");
+            const std::string &devconfig_path = "");
         virtual ~stim_tracker_t(void);
 
         /**

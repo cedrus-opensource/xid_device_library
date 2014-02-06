@@ -77,7 +77,7 @@ namespace cedrus
         port_settings_t() {}
 
         port_settings_t(
-            const std::wstring &port_name,
+            const std::string &port_name,
             int port_speed,
             bytesize byte_size = BYTESIZE_8,
             bitparity bit_parity = BITPARITY_NONE,
@@ -85,7 +85,7 @@ namespace cedrus
 
         virtual ~port_settings_t(void);
 
-        const std::wstring& port_name() const;
+        const std::string& port_name() const;
         
         int baud_rate() const;
         void baud_rate(int speed);
@@ -103,7 +103,7 @@ namespace cedrus
         void stop_bits(stopbits bits);
         
     private:
-        std::wstring port_name_;
+        std::string port_name_;
         int baud_rate_;
         bytesize byte_size_;
         bitparity bit_parity_;

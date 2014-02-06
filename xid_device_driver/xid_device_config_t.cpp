@@ -30,16 +30,18 @@
  */
 
 #include "xid_device_config_t.h"
-#include <Windows.h>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/exceptions.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp> 
 #include <iostream>
-
-#include "string_tokenizer.hpp"
 
 boost::shared_ptr<cedrus::xid_device_config_t>
     cedrus::xid_device_config_t::config_for_device(
         int product_id,
         int model_id,
-        const std::wstring &devconfig_location)
+        const std::string &devconfig_location)
 {
     boost::shared_ptr<xid_device_config_t> devconfig;
     
@@ -64,7 +66,7 @@ boost::shared_ptr<cedrus::xid_device_config_t>
 }
 
 cedrus::xid_device_config_t::xid_device_config_t(
-    const std::wstring &config_file_location)
+    const std::string &config_file_location)
     : config_file_location_(config_file_location),
       needs_interbyte_delay_(true),
       number_of_lines_(8),
@@ -79,167 +81,101 @@ cedrus::xid_device_config_t::~xid_device_config_t(void)
 
 void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
 {
-    std::wstring search_mask = config_file_location_ + L"*.devconfig";
-    WIN32_FIND_DATA file_info;
-    HANDLE find_handle = FindFirstFile(
-        search_mask.c_str(),
-        &file_info);
+    //std::string search_mask = config_file_location_ + L"*.devconfig";
 
-    while(find_handle)
+    boost::filesystem::path targetDir(config_file_location_);
+	boost::filesystem::directory_iterator it(targetDir), eod;
+	std::vector< std::string > devconfigs;
+
+	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
+	{ 
+	    if( is_regular_file(p) && p.extension() == ".devconfig" )
+			devconfigs.push_back( p.string() );
+	}
+
+    BOOST_FOREACH(std::string const config, devconfigs)
     {
-        long device_id = -1;
+	    boost::property_tree::ptree pt;
+		boost::property_tree::ini_parser::read_ini(config, pt);
+
         std::string device_name;
         long xid_product_id = -1;
         long xid_model_id = -1;
         std::string digital_output_command;
-        std::wstring ignored_ports;
+        std::string ignored_ports;
 
-        wchar_t result[1024];
+		xid_product_id = pt.get<long>("DeviceInfo.XidProductID");
+		xid_model_id = pt.get<long>("DeviceInfo.XidModelID");
 
-        std::wstring full_file_path = config_file_location_ +
-            file_info.cFileName;
-
-        xid_product_id = GetPrivateProfileInt(
-            L"DeviceInfo",
-            L"XidProductID",
-            0,
-            full_file_path.c_str());
-
-        xid_model_id = GetPrivateProfileInt(
-            L"DeviceInfo",
-            L"XidModelID",
-            0,
-            full_file_path.c_str());
-
-        if(xid_product_id == product_id)
+		if(xid_product_id == product_id)
         {
             // if this is an RB device, make sure the model IDs match
             if(product_id == 2 && xid_model_id != model_id)
-            {
-                if(!FindNextFile(find_handle, &file_info))
-                    break;
                 continue;
-            }
-            
-            // we've found the configuration for this device
 
             // does this device need an interbyte delay?
-            if(GetPrivateProfileString(
-                L"DeviceOptions",
-                L"XidNeedsInterByteDelay",
-                L"No",
-                result,
-                sizeof(result),
-                full_file_path.c_str()) != 0)
-            {
-                std::wstring byte_delay(result);
-                
-                if(byte_delay.compare(L"Yes") == 0)
-                {
-                    needs_interbyte_delay_ = true;
-                }
-            }
+            std::string byte_delay = pt.get("DeviceOptions.XidNeedsInterByteDelay", "not_found");
+            
+            if(byte_delay.compare("No") == 0)
+                needs_interbyte_delay_ = false;
 
             // get the digital output prefix
-            if(GetPrivateProfileString(
-                L"DeviceOptions",
-                L"XidDigitalOutputCommand",
-                L"a",
-                result,
-                sizeof(result),
-                full_file_path.c_str()) != 0)
-            {
-                std::wstring response(result);
-                std::string std_response;
-                std_response.assign(response.begin(), response.end());
+            std::string std_response = pt.get("DeviceOptions.XidDigitalOutputCommand", "not_found");
+            if(std_response != "not_found")
                 digital_out_prefix_ = std_response[0];
-            }
             
-            wchar_t port_str[255];
+            char port_str[255];
             
             // xid devices support up to 255 ports.  In reality, usually only
             // 2 or 3 are used
             for(int i = 0; i <= 255; ++i)
             {
-                wsprintf(port_str, L"Port%d", i);
+                snprintf(port_str, sizeof(port_str), "Port%d", i);
 
-                int return_size = GetPrivateProfileSection(
-                    port_str,
-                    result,
-                    sizeof(result),
-                    full_file_path.c_str());
-                if(return_size == 0)
-                {
-                    // section not found.  This should be impossible to get to.
-                    continue;
+                try {
+                    pt.get_child(port_str);
+                }
+                catch ( boost::property_tree::ptree_error ) {
+                    continue; // The device doesn't support this port
                 }
 
-                // The result of GetPrivateProfileSection() is a an array of
-                // NULL delimited strings.  Here we create a response std::string
-                // with the contents of the result[] array with nulls replaced
-                // by commas for easier tokenizing.
-                std::wstring res_str;
-                res_str.reserve(return_size);
-                for(int j = 0; j < return_size; ++j)
+                std::map<std::string, std::string> res_map;
+                BOOST_FOREACH( boost::property_tree::ptree::value_type &v, pt.get_child(port_str) )
                 {
-                    if(result[j] != 0)
-                    {
-                        res_str.append(1, result[j]);
-                    }
-                    else
-                    {
-                        if(j != (return_size-1))
-                            res_str.append(1, L',');
-                    }
+	                res_map.insert(std::make_pair(v.first.data(),v.second.data()));
                 }
 
-                // Tokenize the result into Key=Value strings.
-                std::vector<std::wstring> key_value_pairs =
-                    cedrus::tokenize<std::wstring>(res_str,L",");
-                
-                // turn the Key=Value strings into a std::map
-                std::map<std::wstring, std::wstring> res_map;
-                for(std::vector<std::wstring>::iterator iter = key_value_pairs.begin();
-                    iter != key_value_pairs.end(); ++iter)
-                {
-                    std::vector<std::wstring> key_value = 
-                        cedrus::tokenize<std::wstring>(*iter, L"=");
-
-                    res_map.insert(std::make_pair(key_value[0],key_value[1]));
-                }
-
-                std::map<std::wstring,std::wstring>::iterator found = 
-                    res_map.find(L"PortName");
+                std::map<std::string,std::string>::iterator found = 
+                    res_map.find("PortName");
 
                 if(found == res_map.end())
                 {
-                    // no port name found.  Try the next one
+                    // no port name found. Try the next one
                     continue;
                 }
 
-                if(found->second.compare(L"Keys") == 0 ||
-                   found->second.compare(L"Voice Key") == 0 ||
-                   found->second.compare(L"Event Marker") == 0)
+                if(found->second.compare("Keys") == 0 ||
+                   found->second.compare("Voice Key") == 0 ||
+                   found->second.compare("Event Marker") == 0)
                 {
                     // found a RB-Series response pad, Lumina system,
                     // SV-1 Voice Key, or StimTracker.
-                    found = res_map.find(L"NumberOfLines");
+                    found = res_map.find("NumberOfLines");
                     if(found != res_map.end())
                     {
-                        number_of_lines_ = _wtoi(found->second.c_str());
+                        number_of_lines_ = atoi(found->second.c_str());
                     }
                 
                     // devconfig files have up to 8 key mappings
                     for(int i = 1; i <=8; ++i)
                     {
-                        wchar_t key_name[100];
-                        memset(key_name, 0, sizeof(key_name));
-                        wsprintf(key_name,L"XidDeviceKeyMap%d", i);
+                        char key_name[100];
+                        snprintf(key_name, sizeof(key_name), "XidDeviceKeyMap%d", i);
                         
-                        found = res_map.find(std::wstring(key_name));
+                        found = res_map.find(std::string(key_name));
                         if(found != res_map.end())
                         {
-                            int key_num = _wtoi(found->second.c_str());
+                            int key_num = atoi(found->second.c_str());
                             key_map_.insert(std::make_pair(i, key_num));
                         }
                     }
@@ -251,12 +187,7 @@ void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
                 }
             }
         }
-
-        if(!FindNextFile(find_handle, &file_info))
-            break;
-    }
-
-    FindClose(find_handle);
+	}
 }
 
 int cedrus::xid_device_config_t::get_mapped_key(int key) const

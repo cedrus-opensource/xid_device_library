@@ -33,7 +33,7 @@
 
 
 cedrus::port_settings_t::port_settings_t(
-    const std::wstring &port_name,
+    const std::string &port_name,
     int port_speed,
     bytesize byte_size,
     bitparity bit_parity,
@@ -52,7 +52,7 @@ cedrus::port_settings_t::~port_settings_t(void)
 {
 }
 
-const std::wstring& cedrus::port_settings_t::port_name() const
+const std::string& cedrus::port_settings_t::port_name() const
 {
     return port_name_;
 }

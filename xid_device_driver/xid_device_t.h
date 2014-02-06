@@ -32,13 +32,14 @@
 #ifndef XID_DEVICE_T_H
 #define XID_DEVICE_T_H
 
-#include <Windows.h>
 #include <queue>
 #include <string>
 #include "port_settings_t.h"
 #include "constants.h"
 #include <boost/shared_ptr.hpp>
 #include "base_device_t.h"
+
+#include "XidDriverImpExpDefs.h"
 
 namespace cedrus
 {
@@ -84,7 +85,7 @@ namespace cedrus
      *
      * @brief abstraction of an XID device
      */
-    class xid_device_t : public base_device_t
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_t : public base_device_t
     {
     public:
         /**
@@ -98,7 +99,7 @@ namespace cedrus
          */
         xid_device_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::wstring &devconfig_path = L""
+            const std::string &devconfig_path = ""
             );
         virtual ~xid_device_t(void);
         
@@ -147,14 +148,14 @@ namespace cedrus
          * @returns "Button" for Lumina, RB-series pads, and unknown devices.
          * "Voice Response" for SV-1 Voice Key systems.
          */
-        std::wstring input_name_prefix() const;
+        std::string input_name_prefix() const;
 
     private:
         void init_response_device();
         std::queue<response> response_queue_;
 
         int button_count_;
-        std::wstring input_name_prefix_;
+        std::string input_name_prefix_;
     };
 } // namespace cedrus
 

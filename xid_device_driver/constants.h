@@ -103,6 +103,11 @@ namespace cedrus
         FOUND_KEY_DOWN = 1,
         FOUND_KEY_UP = 2
     };
+    
+    enum
+    {
+        MAX_PORTS = 255
+    };
 
 } // namespace cedrus
 

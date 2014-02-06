@@ -34,7 +34,9 @@
 
 #include "port_settings_t.h"
 #include "constants.h"
-#include <Windows.h>
+
+#include <boost/shared_ptr.hpp>
+#include "XidDriverImpExpDefs.h"
 
 namespace cedrus
 {
@@ -48,7 +50,7 @@ namespace cedrus
      * communicating with a 4 MHz XID device.  It also handles the parsing
      * of the XID protocol 6-byte packats.
      */
-    class xid_con_t
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_con_t
     {
     public:
         
@@ -63,14 +65,14 @@ namespace cedrus
          * @param[in] stop_bits stop bits of the device. Defaults to 0
          */
         xid_con_t(
-            const std::wstring &port_name,
-            int port_speed = 115200,
-            int delay_ms = 1,
-            port_settings_t::bytesize byte_size = port_settings_t::BYTESIZE_8,
-            port_settings_t::bitparity bit_parity = port_settings_t::BITPARITY_NONE,
-            port_settings_t::stopbits stop_bits = port_settings_t::STOP_BIT_1
-            );
-
+                  const std::string &port_name,
+                  int port_speed = 115200,
+                  int delay_ms = 1,
+                  port_settings_t::bytesize byte_size = port_settings_t::BYTESIZE_8,
+                  port_settings_t::bitparity bit_parity = port_settings_t::BITPARITY_NONE,
+                  port_settings_t::stopbits stop_bits = port_settings_t::STOP_BIT_1
+                  );
+        
         virtual ~xid_con_t();
 
         /**
@@ -236,19 +238,22 @@ namespace cedrus
             bool leave_remaining_lines = false);
 
     private:
+
+    	enum { OS_FILE_ERROR = -1 };
         int setup_com_port();
-        void setup_dcb(DCB &dcb) const;
-        void setup_timeouts(COMMTIMEOUTS &ct) const;
+        //void setup_dcb(DCB &dcb) const;
+        //void setup_timeouts(COMMTIMEOUTS &ct) const;
 
         key_state xid_input_found();
+        unsigned long GetTickCount();
 
         port_settings_t port_settings_;
         int in_buffer_size_;
         int out_buffer_size_;
         int model_id_;
-        wchar_t port_name_[40];
-        HANDLE device_id_;
-        
+        char port_name_[40];
+        //HANDLE device_id_;
+      
         int delay_;
 
         enum {INPUT_BUFFER_SIZE = 1000};
@@ -273,6 +278,12 @@ namespace cedrus
         char set_lines_cmd_[4];
 
         bool needs_interbyte_delay_;
+
+        struct DarwinConnPimpl;
+        boost::shared_ptr<DarwinConnPimpl> m_darwinPimpl;
+
+        struct WindowsConnPimpl;
+        boost::shared_ptr<WindowsConnPimpl> m_winPimpl;
     };
 } // namespace cedrus
 

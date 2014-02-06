@@ -3,7 +3,7 @@
 
 cedrus::stim_tracker_t::stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::wstring &devconfig_path)
+            const std::string &devconfig_path)
     : base_device_t(xid_con, devconfig_path)
 {
     clear_lines(255);

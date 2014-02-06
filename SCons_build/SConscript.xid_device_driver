@@ -25,6 +25,12 @@ PATH_TO_FILES + 'xid_device_scanner_t.cpp',
 PATH_TO_FILES + 'xid_device_t.cpp',
 ]
 
+if sys.platform == 'win32':
+	inputs += [PATH_TO_FILES + 'xid_con_t_win.cpp'] 
+
+elif sys.platform == 'darwin':
+	inputs += [PATH_TO_FILES + 'xid_con_t_mac.cpp'] 
+
 defines = []
 include_path = []
 cxxflags = []

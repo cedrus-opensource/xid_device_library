@@ -32,13 +32,22 @@
 #include "xid_device_scanner_t.h"
 #include "xid_con_t.h"
 
+
 #include <boost/shared_ptr.hpp>
+
+#ifdef __APPLE__
+#   include "xid_device_scanner_helper_mac.h"
+#elif defined(_WIN32)
+#   include "xid_device_scanner_helper_win.h"
+#endif
+
+enum { OS_FILE_ERROR = -1,
+    NO_FILE_SELECTED = 0};
 
 cedrus::xid_device_scanner_t::xid_device_scanner_t(void)
 {
     load_available_com_ports();
 }
-
 
 cedrus::xid_device_scanner_t::~xid_device_scanner_t(void)
 {
@@ -46,22 +55,7 @@ cedrus::xid_device_scanner_t::~xid_device_scanner_t(void)
 
 void cedrus::xid_device_scanner_t::load_available_com_ports()
 {
-    available_com_ports_.clear();
-    for(int i=1; i < MAX_PORTS; ++i)
-    {
-        wchar_t port_name[10];
-        wsprintf(port_name, L"COM%d", i);
-
-        cedrus::xid_con_t conn(port_name);
-
-        int status = conn.open();
-        
-        if(status == NO_ERR)
-        {
-            conn.close();
-            available_com_ports_.push_back(port_name);
-        }
-    }
+    load_com_ports_platform_specific( &available_com_ports_ );
 }
 
 void cedrus::xid_device_scanner_t::drop_every_connection()
@@ -84,7 +78,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
     st_connections_.clear();
     int devices = 0;
 
-    for(std::vector<std::wstring>::iterator iter = available_com_ports_.begin(),
+    for(std::vector<std::string>::iterator iter = available_com_ports_.begin(),
                                               end = available_com_ports_.end();
         iter != end; ++iter)
     {

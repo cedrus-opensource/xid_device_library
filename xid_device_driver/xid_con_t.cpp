@@ -32,249 +32,20 @@
 #include "xid_con_t.h"
 #include "constants.h"
 
-cedrus::xid_con_t::xid_con_t(
-    const std::wstring &port_name,
-    int port_speed,
-    int delay_ms,
-    port_settings_t::bytesize byte_size,
-    port_settings_t::bitparity bit_parity,
-    port_settings_t::stopbits stop_bits
-    )
-    : in_buffer_size_(2048),
-      out_buffer_size_(2048),
-      model_id_(0),
-      device_id_(NULL),
-      delay_(delay_ms),
-      bytes_in_buffer_(0),
-      invalid_port_bits_(0x0C),
-      timer_rate_(1),
-      first_valid_xid_packet_(INVALID_PACKET_INDEX),
-      num_keys_down_(0),
-      last_resp_port_(-1),
-      last_resp_key_(-1),
-      last_resp_pressed_(false),
-      last_resp_rt_(-1),
-      lines_state_(0),
-      needs_interbyte_delay_(true)
-
-{
-    wsprintf(port_name_, L"\\\\.\\%s", port_name.c_str());
-    port_settings_ = port_settings_t(port_name_, 
-                                     port_speed,
-                                     byte_size,
-                                     bit_parity,
-                                     stop_bits);
-
-    for(int i = 0; i < INPUT_BUFFER_SIZE; ++i)
-    {
-        input_buffer_[i] = '\0';
-    }
-
-    set_lines_cmd_[0] = 'a';
-    set_lines_cmd_[1] = 'h';
-    set_lines_cmd_[2] = '\0';
-    set_lines_cmd_[3] = '\0';
-}
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <paths.h>
+#include <sysexits.h>
+#include <sys/param.h>
+#include <sys/select.h>
+#include <sys/time.h>
 
 
-cedrus::xid_con_t::~xid_con_t(void)
-{
-    if(device_id_ != 0)
-        close();
-}
-
-int cedrus::xid_con_t::close()
-{
-    if(CloseHandle(device_id_) == 0)
-        return ERROR_CLOSING_PORT;
-
-    device_id_ = 0;
-    return NO_ERR;
-}
-
-int cedrus::xid_con_t::flush_input()
-{
-    int status = NO_ERR;
-
-    if(PurgeComm(device_id_, PURGE_RXABORT|PURGE_RXCLEAR) == 0)
-    {
-        status = ERROR_FLUSHING_PORT;
-    }
-
-    return status;
-}
-
-int cedrus::xid_con_t::flush_output()
-{
-    int status = NO_ERR;
-
-    if(PurgeComm(device_id_, PURGE_TXABORT|PURGE_TXCLEAR) == 0)
-    {
-        status = ERROR_FLUSHING_PORT;
-    }
-
-    return status;
-}
-
-int cedrus::xid_con_t::open()
-{
-    int status = NO_ERR;
-
-    device_id_ = CreateFile(
-        port_name_,
-        GENERIC_READ|GENERIC_WRITE,
-        0,
-        NULL,
-        OPEN_EXISTING,
-        0,
-        0);
-
-    if(device_id_ == INVALID_HANDLE_VALUE)
-    {
-        device_id_ = 0;
-        status = PORT_NOT_AVAILABLE;
-    }
-    else
-    {
-        status = setup_com_port();
-        PurgeComm(device_id_,
-            PURGE_RXCLEAR|PURGE_TXCLEAR|PURGE_RXABORT|PURGE_TXABORT);
-    }
-
-    return status;
-}
-
-int cedrus::xid_con_t::setup_com_port()
-{
-    DCB dcb;
-    int status = NO_ERR;
-
-    if(SetupComm(device_id_, in_buffer_size_, out_buffer_size_) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
-        return status;
-    }
-
-    if(GetCommState(device_id_, &dcb) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
-        return status;
-    }
-
-    setup_dcb(dcb);
-
-    if(SetCommState(device_id_, &dcb) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
-        return status;
-    }
-
-    COMMTIMEOUTS ct;
-    if(GetCommTimeouts(device_id_, &ct) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
-        return status;
-    }
-
-    setup_timeouts(ct);
-    
-    if(SetCommTimeouts(device_id_, &ct) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
-        return status;
-    }
-
-    status = flush_input();
-    if(status == NO_ERR)
-        status = flush_output();
-
-    return status;
-}
-
-void cedrus::xid_con_t::setup_dcb(DCB &dcb) const
-{
-    dcb.BaudRate = port_settings_.baud_rate();
-    dcb.ByteSize = static_cast<BYTE>(port_settings_.byte_size());
-    dcb.Parity   = static_cast<BYTE>(port_settings_.bit_parity());
-    dcb.StopBits = static_cast<BYTE>(port_settings_.stop_bits());
-    dcb.fBinary  = 1;
-}
-
-void cedrus::xid_con_t::setup_timeouts(COMMTIMEOUTS &ct) const
-{
-    ct.ReadIntervalTimeout         = MAXDWORD;
-    ct.ReadTotalTimeoutConstant    = 0;
-    ct.ReadTotalTimeoutMultiplier  = 0;
-    ct.WriteTotalTimeoutConstant   = 0;
-    ct.WriteTotalTimeoutMultiplier = 500;
-}
-
-int cedrus::xid_con_t::read(
-    unsigned char *in_buffer,
-    int bytes_to_read,
-    int &bytes_read)
-{
-    DWORD read = 0;
-        
-    int status = NO_ERR;
-
-    if(ReadFile(device_id_, in_buffer, bytes_to_read, &read, NULL) == 0)
-    {
-        status = ERROR_READING_PORT;
-    }
-    else
-    {
-        bytes_read = read;
-    }
-    
-    return status;
-}
-
-int cedrus::xid_con_t::write(
-    unsigned char * const in_buffer,
-    int bytes_to_write,
-    int &bytes_written)
-{
-    unsigned char *p = in_buffer;
-    int status = NO_ERR;
-    DWORD written = 0;
-    
-    if(needs_interbyte_delay_)
-    {
-        for(int i = 0; i < bytes_to_write && status == NO_ERR; ++i)
-        {
-            DWORD  byte_count;
-            if(WriteFile(device_id_, p, 1, &byte_count, NULL) == 0)
-            {
-                status = ERROR_WRITING_TO_PORT;
-                break;
-            }
-            
-            written += byte_count;
-
-            if(written == bytes_to_write)
-                break;
-
-            Sleep(delay_);
-
-            ++p;
-        }
-        bytes_written = written;
-    }
-    else
-    {
-        if(WriteFile(device_id_, p, bytes_to_write, &written, NULL) == 0)
-        {
-            status = ERROR_WRITING_TO_PORT;
-        }
-        else
-        {
-            bytes_written = written;
-        }
-    }
-
-    return status;
-}
+#include <boost/timer.hpp>
+#include "boost/date_time/posix_time/posix_time.hpp"
 
 cedrus::key_state cedrus::xid_con_t::xid_input_found()
 {
@@ -392,73 +163,12 @@ int cedrus::xid_con_t::get_number_of_keys_down()
     return num_keys_down_;
 }
 
-int cedrus::xid_con_t::send_xid_command(
-    const char in_command[],
-    int num_bytes,
-    char out_response[],
-    int max_out_response_size,
-    int expected_bytes_rec,
-    int timeout,
-    int command_delay)
+unsigned long cedrus::xid_con_t::GetTickCount()
 {
-    if(out_response != NULL)
-    {
-        memset(out_response, 0x00, max_out_response_size);
-    }
+    boost::posix_time::ptime time_microseconds = boost::posix_time::microsec_clock::local_time();
+    unsigned long milliseconds = time_microseconds.time_of_day().total_milliseconds();
 
-    if(num_bytes == 0)
-    {
-        num_bytes = strlen(in_command);
-    }
-
-    int bytes_written = 0;
-    write((unsigned char*)in_command, num_bytes, bytes_written);
-
-    unsigned char in_buff[64];
-    memset(in_buff, 0x00, sizeof(in_buff));
-    int bytes_read = 0;
-    int bytes_stored = 0;
-
-    // sometimes sending a command needs a delay because the 4MHz processors
-    // in the response pads need a little time to process the command and 
-    // send a response.
-    if(command_delay > 0)
-        Sleep(command_delay);
-
-    DWORD current_time;
-    DWORD start_time = GetTickCount();
-    DWORD end_time = start_time + timeout;
-
-    int status = 0;
-    do
-    {
-        if(needs_interbyte_delay_)
-            Sleep(delay_);
-
-        status = read(
-            in_buff, sizeof(in_buff), bytes_read);
-
-        if(status != NO_ERR)
-            break;
-
-        if(bytes_read >= 1)
-        {
-            for(int i = 0; (i<bytes_read) && (bytes_stored < max_out_response_size);
-                ++i)
-            {
-                out_response[bytes_stored] = in_buff[i];
-                bytes_stored++;
-            }
-        }
-        current_time = GetTickCount();
-    } while (current_time < end_time &&
-             bytes_stored < max_out_response_size &&
-             bytes_stored < expected_bytes_rec);
-
-    if(out_response != NULL)
-        out_response[bytes_stored] = '\0';
-
-    return bytes_stored;
+    return milliseconds;
 }
 
 void cedrus::xid_con_t::set_needs_interbyte_delay(bool needs_delay)
@@ -475,7 +185,7 @@ void cedrus::xid_con_t::set_digital_output_lines(
     unsigned int lines,
     bool leave_remaining_lines)
 {
-    if(lines < 0 || lines > 255)
+    if(lines > 255)
         return;
 
     int bytes_written;
@@ -500,7 +210,7 @@ void cedrus::xid_con_t::clear_digital_output_lines(
     unsigned int lines,
     bool leave_remaining_lines)
 {
-    if(lines < 0 || lines > 255)
+    if(lines > 255)
         return;
 
     int bytes_written;
