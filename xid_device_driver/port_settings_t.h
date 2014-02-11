@@ -34,6 +34,8 @@
 
 #include <string>
 
+#include "XidDriverImpExpDefs.h"
+
 namespace cedrus
 {
     /**
@@ -85,22 +87,22 @@ namespace cedrus
 
         virtual ~port_settings_t(void);
 
-        const std::string& port_name() const;
+        const CEDRUS_XIDDRIVER_IMPORTEXPORT std::string& port_name() const;
         
-        int baud_rate() const;
-        void baud_rate(int speed);
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT baud_rate() const;
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT baud_rate(int speed);
 
-        bitparity bit_parity() const;
-        void bit_parity(bitparity parity);
+        bitparity CEDRUS_XIDDRIVER_IMPORTEXPORT bit_parity() const;
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT bit_parity(bitparity parity);
 
-        bytesize byte_size() const;
-        void byte_size(bytesize size);
+        bytesize CEDRUS_XIDDRIVER_IMPORTEXPORT byte_size() const;
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT byte_size(bytesize size);
 
-        handshaking handshake() const;
-        void handshake(handshaking shake);
+        handshaking CEDRUS_XIDDRIVER_IMPORTEXPORT handshake() const;
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT handshake(handshaking shake);
 
-        stopbits stop_bits() const;
-        void stop_bits(stopbits bits);
+        stopbits CEDRUS_XIDDRIVER_IMPORTEXPORT stop_bits() const;
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT stop_bits(stopbits bits);
         
     private:
         std::string port_name_;

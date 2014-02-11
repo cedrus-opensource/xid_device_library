@@ -41,7 +41,7 @@ namespace cedrus
     class xid_con_t;
     class xid_device_config_t;
 
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT base_device_t
+    class base_device_t
     {
     public:
         /**
@@ -51,7 +51,7 @@ namespace cedrus
           */
         base_device_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::string &devconfig_path = L"");
+            const std::string &devconfig_path = "");
         virtual ~base_device_t();
 
         /**
@@ -59,7 +59,7 @@ namespace cedrus
          *
          * @returns name of the device
          */
-        std::string get_device_name();
+        std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_name();
 
         /**
          * product id of the device.
@@ -69,7 +69,7 @@ namespace cedrus
          * 1: SV-1 voice key system
          * 2: RB series response pad.
          */
-        int get_product_id() const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_id() const;
         
         /**
          * model ID of the device.
@@ -82,14 +82,14 @@ namespace cedrus
          * 3: RB-830
          * 4: RB-834
          */
-        int get_model_id() const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_model_id() const;
 
         /**
          * Resets the internal device reaction time timer.
          * 
          * This should be called when a stimulus is presented
          */
-        void reset_rt_timer();
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT reset_rt_timer();
 
         /**
          * Resets the device's base timer
@@ -97,12 +97,12 @@ namespace cedrus
          * This should be called when the device is initialized or an experiment
          * starts
          */
-        void reset_base_timer();
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT reset_base_timer();
 
         /**
          * Returns the time elapsed since the base timer was reset
          */
-        int query_base_timer();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT query_base_timer();
 
         /**
          * Send a command to the device
@@ -116,7 +116,7 @@ namespace cedrus
          * 
          * @returns an integer value of the response
          */
-        int get_inquiry(
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_inquiry(
             const char in_command[],
             int expected_bytes_rec = 1,
             int timeout = 100,

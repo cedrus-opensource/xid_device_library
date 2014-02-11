@@ -3,9 +3,10 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 #include <boost/shared_ptr.hpp>
 
-#include <xid_con_t.h>
+#include "xid_con_t.h"
 #include "constants.h"
 
 namespace cedrus
@@ -16,8 +17,10 @@ namespace cedrus
 
         for(int i=1; i < MAX_PORTS; ++i)
         {
-            char port_name[10];
-            snprintf( port_name, sizeof(port_name), "COM%d", i );
+            std::string port_name;
+            std::ostringstream s;
+            s << "COM" << i;
+            port_name = s.str().c_str();
 
             cedrus::xid_con_t conn(port_name);
 

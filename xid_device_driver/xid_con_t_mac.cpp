@@ -67,13 +67,8 @@ cedrus::xid_con_t::xid_con_t(
     port_settings_t::bitparity bit_parity,
     port_settings_t::stopbits stop_bits
     )
-    : in_buffer_size_(2048),
-      out_buffer_size_(2048),
-      model_id_(0),
-      delay_(delay_ms),
+    : delay_(delay_ms),
       bytes_in_buffer_(0),
-      invalid_port_bits_(0x0C),
-      timer_rate_(1),
       first_valid_xid_packet_(INVALID_PACKET_INDEX),
       num_keys_down_(0),
       last_resp_port_(-1),
@@ -359,26 +354,6 @@ int cedrus::xid_con_t::setup_com_port()
 
 	return status;
 }
-
-/*
-void cedrus::xid_con_t::setup_dcb(DCB &dcb) const
-{
-    dcb.BaudRate = port_settings_.baud_rate();
-    dcb.ByteSize = static_cast<BYTE>(port_settings_.byte_size());
-    dcb.Parity   = static_cast<BYTE>(port_settings_.bit_parity());
-    dcb.StopBits = static_cast<BYTE>(port_settings_.stop_bits());
-    dcb.fBinary  = 1;
-}
-
-void cedrus::xid_con_t::setup_timeouts(COMMTIMEOUTS &ct) const
-{
-    ct.ReadIntervalTimeout         = MAXDWORD;
-    ct.ReadTotalTimeoutConstant    = 0;
-    ct.ReadTotalTimeoutMultiplier  = 0;
-    ct.WriteTotalTimeoutConstant   = 0;
-    ct.WriteTotalTimeoutMultiplier = 500;
-}
-*/
 
 int cedrus::xid_con_t::read(
     unsigned char *in_buffer,

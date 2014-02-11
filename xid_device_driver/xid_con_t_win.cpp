@@ -1,53 +1,83 @@
 /* Copyright (c) 2010, Cedrus Corporation
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
- *
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * Neither the name of Cedrus Corporation nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are
+* met:
+*
+* Redistributions of source code must retain the above copyright notice,
+* this list of conditions and the following disclaimer.  
+*
+* Redistributions in binary form must reproduce the above copyright
+* notice, this list of conditions and the following disclaimer in the
+* documentation and/or other materials provided with the distribution.
+*
+* Neither the name of Cedrus Corporation nor the names of its
+* contributors may be used to endorse or promote products derived from
+* this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+* HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+* DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+* THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 #include "xid_con_t.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <sstream>
+
+#include <windows.h>
+
 #include "constants.h"
 
+struct cedrus::xid_con_t::WindowsConnPimpl
+{
+    WindowsConnPimpl()
+        : device_id_ ( NULL )
+    {}
+
+    void setup_dcb(DCB &dcb, port_settings_t port_settings) const
+    {
+        dcb.BaudRate = port_settings.baud_rate();
+        dcb.ByteSize = static_cast<BYTE>(port_settings.byte_size());
+        dcb.Parity   = static_cast<BYTE>(port_settings.bit_parity());
+        dcb.StopBits = static_cast<BYTE>(port_settings.stop_bits());
+        dcb.fBinary  = 1;
+    }
+
+    void setup_timeouts(COMMTIMEOUTS &ct) const
+    {
+        ct.ReadIntervalTimeout         = MAXDWORD;
+        ct.ReadTotalTimeoutConstant    = 0;
+        ct.ReadTotalTimeoutMultiplier  = 0;
+        ct.WriteTotalTimeoutConstant   = 0;
+        ct.WriteTotalTimeoutMultiplier = 500;
+    }
+
+    HANDLE device_id_;
+};
+
 cedrus::xid_con_t::xid_con_t(
-    const std::wstring &port_name,
+    const std::string &port_name,
     int port_speed,
     int delay_ms,
     port_settings_t::bytesize byte_size,
     port_settings_t::bitparity bit_parity,
     port_settings_t::stopbits stop_bits
     )
-    : in_buffer_size_(2048),
-      out_buffer_size_(2048),
-      model_id_(0),
-      device_id_(NULL),
-      delay_(delay_ms),
+    : delay_(delay_ms),
       bytes_in_buffer_(0),
-      invalid_port_bits_(0x0C),
-      timer_rate_(1),
       first_valid_xid_packet_(INVALID_PACKET_INDEX),
       num_keys_down_(0),
       last_resp_port_(-1),
@@ -55,15 +85,18 @@ cedrus::xid_con_t::xid_con_t(
       last_resp_pressed_(false),
       last_resp_rt_(-1),
       lines_state_(0),
-      needs_interbyte_delay_(true)
-
+      needs_interbyte_delay_(true),
+      m_winPimpl( new WindowsConnPimpl )
 {
-    wsprintf(port_name_, L"\\\\.\\%s", port_name.c_str());
+    std::ostringstream s;
+    s << "\\\\.\\" << port_name;
+    port_name_ = s.str().c_str();
+
     port_settings_ = port_settings_t(port_name_, 
-                                     port_speed,
-                                     byte_size,
-                                     bit_parity,
-                                     stop_bits);
+        port_speed,
+        byte_size,
+        bit_parity,
+        stop_bits);
 
     for(int i = 0; i < INPUT_BUFFER_SIZE; ++i)
     {
@@ -79,16 +112,16 @@ cedrus::xid_con_t::xid_con_t(
 
 cedrus::xid_con_t::~xid_con_t(void)
 {
-    if(device_id_ != 0)
+    if(m_winPimpl->device_id_ != 0)
         close();
 }
 
 int cedrus::xid_con_t::close()
 {
-    if(CloseHandle(device_id_) == 0)
+    if(CloseHandle(m_winPimpl->device_id_) == 0)
         return ERROR_CLOSING_PORT;
 
-    device_id_ = 0;
+    m_winPimpl->device_id_ = 0;
     return NO_ERR;
 }
 
@@ -96,7 +129,7 @@ int cedrus::xid_con_t::flush_input()
 {
     int status = NO_ERR;
 
-    if(PurgeComm(device_id_, PURGE_RXABORT|PURGE_RXCLEAR) == 0)
+    if(PurgeComm(m_winPimpl->device_id_, PURGE_RXABORT|PURGE_RXCLEAR) == 0)
     {
         status = ERROR_FLUSHING_PORT;
     }
@@ -108,7 +141,7 @@ int cedrus::xid_con_t::flush_output()
 {
     int status = NO_ERR;
 
-    if(PurgeComm(device_id_, PURGE_TXABORT|PURGE_TXCLEAR) == 0)
+    if(PurgeComm(m_winPimpl->device_id_, PURGE_TXABORT|PURGE_TXCLEAR) == 0)
     {
         status = ERROR_FLUSHING_PORT;
     }
@@ -120,8 +153,11 @@ int cedrus::xid_con_t::open()
 {
     int status = NO_ERR;
 
-    device_id_ = CreateFile(
-        port_name_,
+    std::wstring name( port_name_.begin(), port_name_.end() );
+    const wchar_t* wchar_name = name.c_str();
+
+    m_winPimpl->device_id_ = CreateFile(
+        wchar_name,
         GENERIC_READ|GENERIC_WRITE,
         0,
         NULL,
@@ -129,15 +165,15 @@ int cedrus::xid_con_t::open()
         0,
         0);
 
-    if(device_id_ == INVALID_HANDLE_VALUE)
+    if(m_winPimpl->device_id_ == INVALID_HANDLE_VALUE)
     {
-        device_id_ = 0;
+        m_winPimpl->device_id_ = 0;
         status = PORT_NOT_AVAILABLE;
     }
     else
     {
         status = setup_com_port();
-        PurgeComm(device_id_,
+        PurgeComm(m_winPimpl->device_id_,
             PURGE_RXCLEAR|PURGE_TXCLEAR|PURGE_RXABORT|PURGE_TXABORT);
     }
 
@@ -149,36 +185,36 @@ int cedrus::xid_con_t::setup_com_port()
     DCB dcb;
     int status = NO_ERR;
 
-    if(SetupComm(device_id_, in_buffer_size_, out_buffer_size_) == 0)
+    if(SetupComm(m_winPimpl->device_id_, IN_BUFFER_SIZE, OUT_BUFFER_SIZE) == 0)
     {
         status = ERROR_SETTING_UP_PORT;
         return status;
     }
 
-    if(GetCommState(device_id_, &dcb) == 0)
+    if(GetCommState(m_winPimpl->device_id_, &dcb) == 0)
     {
         status = ERROR_SETTING_UP_PORT;
         return status;
     }
 
-    setup_dcb(dcb);
+    m_winPimpl->setup_dcb(dcb, port_settings_);
 
-    if(SetCommState(device_id_, &dcb) == 0)
+    if(SetCommState(m_winPimpl->device_id_, &dcb) == 0)
     {
         status = ERROR_SETTING_UP_PORT;
         return status;
     }
 
     COMMTIMEOUTS ct;
-    if(GetCommTimeouts(device_id_, &ct) == 0)
+    if(GetCommTimeouts(m_winPimpl->device_id_, &ct) == 0)
     {
         status = ERROR_SETTING_UP_PORT;
         return status;
     }
 
-    setup_timeouts(ct);
-    
-    if(SetCommTimeouts(device_id_, &ct) == 0)
+    m_winPimpl->setup_timeouts(ct);
+
+    if(SetCommTimeouts(m_winPimpl->device_id_, &ct) == 0)
     {
         status = ERROR_SETTING_UP_PORT;
         return status;
@@ -191,34 +227,16 @@ int cedrus::xid_con_t::setup_com_port()
     return status;
 }
 
-void cedrus::xid_con_t::setup_dcb(DCB &dcb) const
-{
-    dcb.BaudRate = port_settings_.baud_rate();
-    dcb.ByteSize = static_cast<BYTE>(port_settings_.byte_size());
-    dcb.Parity   = static_cast<BYTE>(port_settings_.bit_parity());
-    dcb.StopBits = static_cast<BYTE>(port_settings_.stop_bits());
-    dcb.fBinary  = 1;
-}
-
-void cedrus::xid_con_t::setup_timeouts(COMMTIMEOUTS &ct) const
-{
-    ct.ReadIntervalTimeout         = MAXDWORD;
-    ct.ReadTotalTimeoutConstant    = 0;
-    ct.ReadTotalTimeoutMultiplier  = 0;
-    ct.WriteTotalTimeoutConstant   = 0;
-    ct.WriteTotalTimeoutMultiplier = 500;
-}
-
 int cedrus::xid_con_t::read(
     unsigned char *in_buffer,
     int bytes_to_read,
     int &bytes_read)
 {
     DWORD read = 0;
-        
+
     int status = NO_ERR;
 
-    if(ReadFile(device_id_, in_buffer, bytes_to_read, &read, NULL) == 0)
+    if(ReadFile(m_winPimpl->device_id_, in_buffer, bytes_to_read, &read, NULL) == 0)
     {
         status = ERROR_READING_PORT;
     }
@@ -226,7 +244,7 @@ int cedrus::xid_con_t::read(
     {
         bytes_read = read;
     }
-    
+
     return status;
 }
 
@@ -238,18 +256,18 @@ int cedrus::xid_con_t::write(
     unsigned char *p = in_buffer;
     int status = NO_ERR;
     DWORD written = 0;
-    
+
     if(needs_interbyte_delay_)
     {
         for(int i = 0; i < bytes_to_write && status == NO_ERR; ++i)
         {
             DWORD  byte_count;
-            if(WriteFile(device_id_, p, 1, &byte_count, NULL) == 0)
+            if(WriteFile(m_winPimpl->device_id_, p, 1, &byte_count, NULL) == 0)
             {
                 status = ERROR_WRITING_TO_PORT;
                 break;
             }
-            
+
             written += byte_count;
 
             if(written == bytes_to_write)
@@ -263,7 +281,7 @@ int cedrus::xid_con_t::write(
     }
     else
     {
-        if(WriteFile(device_id_, p, bytes_to_write, &written, NULL) == 0)
+        if(WriteFile(m_winPimpl->device_id_, p, bytes_to_write, &written, NULL) == 0)
         {
             status = ERROR_WRITING_TO_PORT;
         }
@@ -276,121 +294,6 @@ int cedrus::xid_con_t::write(
     return status;
 }
 
-cedrus::key_state cedrus::xid_con_t::xid_input_found()
-{
-    key_state input_found = NO_KEY_DETECTED;
-
-    if(bytes_in_buffer_ >= 6)
-    {
-        const int last_byte_index = bytes_in_buffer_ - XID_PACKET_SIZE;
-
-        for(int i = 0; i <= last_byte_index; ++i)
-        {
-            if(input_buffer_[i] == 'k' &&
-               (input_buffer_[i+1] & invalid_port_bits_) == 0 &&
-               input_buffer_[i+5] == '\0')
-            {
-                // found a valid XID packet
-                first_valid_xid_packet_ = i;
-                last_resp_pressed_ = (
-                    input_buffer_[first_valid_xid_packet_+1] & KEY_RELEASE_BITMASK) ==
-                    KEY_RELEASE_BITMASK;
-                last_resp_port_ = 
-                    input_buffer_[first_valid_xid_packet_+1] & 0x0F;
-
-                last_resp_key_ = (
-                    input_buffer_[first_valid_xid_packet_+1] & 0xE0) >> 5;
-
-                if(last_resp_key_ == 0)
-                    last_resp_key_ = 8;
-                
-                // get reaction time
-                union {
-                    int as_int;
-                    char as_char[4];
-                } rt;
-
-                for(int n = 0; n < 4; ++n)
-                {
-                    rt.as_char[n] = input_buffer_[first_valid_xid_packet_+2+n];
-                }
-                
-                last_resp_rt_ = rt.as_int;
-
-                input_found = static_cast<key_state>(
-                    FOUND_KEY_DOWN + !last_resp_pressed_);
-
-                if(input_found == FOUND_KEY_DOWN)
-                    num_keys_down_++;
-                else
-                    num_keys_down_--;
-            }
-        }
-    }
-    
-    return input_found;
-}
-
-cedrus::key_state cedrus::xid_con_t::check_for_keypress()
-{
-    int bytes_read = 0;
-    int status = NO_ERR; 
-    key_state response_found = NO_KEY_DETECTED;
-
-    status = read(&input_buffer_[bytes_in_buffer_], 6, bytes_read);
-
-    if(bytes_read > 0)
-    {
-        bytes_in_buffer_ += bytes_read;
-        response_found = xid_input_found();
-    }
-
-    return response_found;
-}
-
-void cedrus::xid_con_t::remove_current_response()
-{
-    if(first_valid_xid_packet_ != INVALID_PACKET_INDEX)
-    {
-        unsigned char *dest_char = input_buffer_;
-        unsigned char *src_char  = &input_buffer_[first_valid_xid_packet_];
-        int num_bytes = bytes_in_buffer_ - first_valid_xid_packet_;
-
-        for(int i = 0; i < num_bytes; ++i, ++dest_char, ++src_char)
-        {
-            dest_char = src_char;
-        }
-
-        bytes_in_buffer_ -= num_bytes;
-        first_valid_xid_packet_ = INVALID_PACKET_INDEX;
-    }
-}
-
-void cedrus::xid_con_t::get_current_response(
-    int &port, int &key, bool &was_pressed, int &reaction_time)
-{
-    if(first_valid_xid_packet_ != INVALID_PACKET_INDEX)
-    {
-        port = last_resp_port_;
-        key  = last_resp_key_;
-        was_pressed = last_resp_pressed_;
-        reaction_time = last_resp_rt_;
-
-        remove_current_response();
-    }
-    else
-    {
-        port = -1;
-        key  = -1;
-        was_pressed = false;
-        reaction_time = -1;
-    }
-}
-
-int cedrus::xid_con_t::get_number_of_keys_down()
-{
-    return num_keys_down_;
-}
 
 int cedrus::xid_con_t::send_xid_command(
     const char in_command[],
@@ -461,63 +364,3 @@ int cedrus::xid_con_t::send_xid_command(
     return bytes_stored;
 }
 
-void cedrus::xid_con_t::set_needs_interbyte_delay(bool needs_delay)
-{
-    needs_interbyte_delay_ = needs_delay;
-}
-
-void cedrus::xid_con_t::set_digital_out_prefix(char prefix)
-{
-    set_lines_cmd_[0] = prefix;
-}
-
-void cedrus::xid_con_t::set_digital_output_lines(
-    unsigned int lines,
-    bool leave_remaining_lines)
-{
-    if(lines < 0 || lines > 255)
-        return;
-
-    int bytes_written;
-
-    if(leave_remaining_lines)
-        lines |= lines_state_;
-
-    if(set_lines_cmd_[0] == 'a')
-    {
-        set_lines_cmd_[2] = ~lines;
-    }
-    else
-    {
-        set_lines_cmd_[2] = lines;
-    }
-
-    write((unsigned char*)set_lines_cmd_, 4, bytes_written);
-    lines_state_ = lines;
-}
-
-void cedrus::xid_con_t::clear_digital_output_lines(
-    unsigned int lines,
-    bool leave_remaining_lines)
-{
-    if(lines < 0 || lines > 255)
-        return;
-
-    int bytes_written;
-    lines = ~lines;
-
-    if(leave_remaining_lines)
-        lines = lines & lines_state_;
-
-    if(set_lines_cmd_[0] == 'a')
-    {
-        set_lines_cmd_[2] = ~lines;
-    }
-    else
-    {
-        set_lines_cmd_[2] = lines;
-    }
-
-    write((unsigned char*)set_lines_cmd_, 4, bytes_written);
-    lines_state_ = lines;
-}

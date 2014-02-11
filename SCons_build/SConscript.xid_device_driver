@@ -31,7 +31,7 @@ if sys.platform == 'win32':
 elif sys.platform == 'darwin':
 	inputs += [PATH_TO_FILES + 'xid_con_t_mac.cpp'] 
 
-defines = []
+defines = [ 'CEDRUS_XID_MAKEDLL' ]
 include_path = []
 cxxflags = []
 frameworks = []

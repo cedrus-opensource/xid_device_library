@@ -50,10 +50,16 @@ namespace cedrus
      * communicating with a 4 MHz XID device.  It also handles the parsing
      * of the XID protocol 6-byte packats.
      */
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_con_t
+    class xid_con_t
     {
     public:
-        
+        enum
+        {
+	    INVALID_PORT_BITS = 0x0C,
+            IN_BUFFER_SIZE = 2048,
+            OUT_BUFFER_SIZE = 2048
+        };
+
         /**
          * xid_con_t constructor
          *
@@ -64,7 +70,7 @@ namespace cedrus
          * @param[in] bit_parity bit parity of the device.  Defaults to none.
          * @param[in] stop_bits stop bits of the device. Defaults to 0
          */
-        xid_con_t(
+        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_con_t(
                   const std::string &port_name,
                   int port_speed = 115200,
                   int delay_ms = 1,
@@ -82,7 +88,7 @@ namespace cedrus
          * ERROR_CLOSING_PORT if it was unsuccessful. Enum values are defined
          * in constants.h
          */ 
-        int close();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT close();
 
         /**
          * Flush the device's input buffer.
@@ -91,7 +97,7 @@ namespace cedrus
          * ERROR_FLUSHING_PORT if it was unsuccessful.  Enum values are defined
          * in constants.h
          */
-        int flush_input();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT flush_input();
 
         /**
          * Flush the device's output buffer.
@@ -100,7 +106,7 @@ namespace cedrus
          * ERROR_FLUSHING_PORT if it was unsuccessful.  Enum values are defined
          * in constants.h
          */
-        int flush_output();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT flush_output();
 
         /**
          * Opens the COM port for use.
@@ -110,7 +116,7 @@ namespace cedrus
          * the following:  PORT_NOT_AVAILABLE, ERROR_SETTING_UP_PORT,
          * ERROR_FLUSHING_PORT.  Enum values are defined in constants.h.
          */
-        int open();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT open();
 
         /**
          * Read data from the device.
@@ -124,7 +130,7 @@ namespace cedrus
          *
          * @returns NO_ERR if the read was successful, ERROR_READING_PORT otherwise.
          */
-        int read(
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT read(
             unsigned char *in_buffer,
             int bytes_to_read,
             int &bytes_read);
@@ -139,7 +145,7 @@ namespace cedrus
          * @param[in] bytes_to_write number of bytes in the command to be sent
          * @param[out] bytes_written number of bytes written to the device
          */
-        int write(
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT write(
             unsigned char * const in_buffer,
             int bytes_to_write,
             int &bytes_written);
@@ -150,12 +156,12 @@ namespace cedrus
          * @returns key_state if no event was found, NO_KEY_DETECTED is returned.
          * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
          */
-        key_state check_for_keypress();
+        CEDRUS_XIDDRIVER_IMPORTEXPORT key_state check_for_keypress();
 
         /**
          * Removes the current response from the internal buffer
          */
-        void remove_current_response();
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT remove_current_response();
 
         /**
          * Gets the last response from the device
@@ -166,13 +172,13 @@ namespace cedrus
          * @param[out] reaction_time reaction time read from the internal
          * device timer.
          */
-        void get_current_response(
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT get_current_response(
             int &port, int &key, bool &was_pressed, int &reaction_time);
 
         /**
          * Number of keys currently being held down
          */
-        int get_number_of_keys_down();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_number_of_keys_down();
 
         /**
          * Send an XID command to the device.
@@ -189,7 +195,7 @@ namespace cedrus
          * between receiving a request and sending a response. Set the delay
          * here.  It defaults to 0.
          */
-        int send_xid_command(
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT send_xid_command(
             const char in_command[],
             int num_bytes,
             char out_response[],
@@ -201,7 +207,7 @@ namespace cedrus
         /**
          * Sets whether or not the device needs an inter-byte delay.
          */
-        void set_needs_interbyte_delay(bool need_delay = true);
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_needs_interbyte_delay(bool need_delay = true);
 
         /**
          * Sets the digital output prefix
@@ -209,7 +215,7 @@ namespace cedrus
          * @param[in] prefix A single character.  This should be 'a' for XID
          * response devices, or 'm' for StimTracker devices.
          */
-        void set_digital_out_prefix(char prefix);
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_digital_out_prefix(char prefix);
 
         /**
          * Raise digital output lines on the StimTracker device.
@@ -220,7 +226,7 @@ namespace cedrus
          * @param[in] leave_remaining_lines boolean value of whether or not to
          * keep the current line state when applying the new bitmask.
          */
-        void set_digital_output_lines(
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_digital_output_lines(
             unsigned int lines,
             bool leave_remaining_lines = false);
 
@@ -233,26 +239,19 @@ namespace cedrus
          * @param[in] leave_remaining_lines boolean value of whether or not to
          * keep the current line state when applying the new bitmask.
          */ 
-        void clear_digital_output_lines(
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_digital_output_lines(
             unsigned int lines,
             bool leave_remaining_lines = false);
 
     private:
-
     	enum { OS_FILE_ERROR = -1 };
         int setup_com_port();
-        //void setup_dcb(DCB &dcb) const;
-        //void setup_timeouts(COMMTIMEOUTS &ct) const;
 
         key_state xid_input_found();
         unsigned long GetTickCount();
 
         port_settings_t port_settings_;
-        int in_buffer_size_;
-        int out_buffer_size_;
-        int model_id_;
-        char port_name_[40];
-        //HANDLE device_id_;
+        std::string port_name_;
       
         int delay_;
 
@@ -263,9 +262,6 @@ namespace cedrus
         
         int bytes_in_buffer_;
         unsigned char input_buffer_[INPUT_BUFFER_SIZE];
-        unsigned char invalid_port_bits_;
-
-        const double timer_rate_;
 
         int first_valid_xid_packet_;
         int num_keys_down_;

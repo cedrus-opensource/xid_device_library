@@ -37,6 +37,8 @@
 #include <boost/foreach.hpp> 
 #include <iostream>
 
+#include <sstream>
+
 boost::shared_ptr<cedrus::xid_device_config_t>
     cedrus::xid_device_config_t::config_for_device(
         int product_id,
@@ -123,14 +125,16 @@ void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
             std::string std_response = pt.get("DeviceOptions.XidDigitalOutputCommand", "not_found");
             if(std_response != "not_found")
                 digital_out_prefix_ = std_response[0];
-            
-            char port_str[255];
+
+            std::string port_str;
             
             // xid devices support up to 255 ports.  In reality, usually only
             // 2 or 3 are used
             for(int i = 0; i <= 255; ++i)
             {
-                snprintf(port_str, sizeof(port_str), "Port%d", i);
+                std::ostringstream s;
+                s << "Port" << i;
+                port_str = s.str().c_str();
 
                 try {
                     pt.get_child(port_str);
@@ -169,8 +173,11 @@ void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
                     // devconfig files have up to 8 key mappings
                     for(int i = 1; i <=8; ++i)
                     {
-                        char key_name[100];
-                        snprintf(key_name, sizeof(key_name), "XidDeviceKeyMap%d", i);
+                        std::string key_name;
+
+                        std::ostringstream s2;
+                        s2 << "XidDeviceKeyMap" << i;
+                        key_name = s2.str().c_str();
                         
                         found = res_map.find(std::string(key_name));
                         if(found != res_map.end())

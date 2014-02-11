@@ -45,7 +45,7 @@ namespace cedrus
      *
      * @brief device configuration class
      */
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_config_t
+    class xid_device_config_t
     {
     public:
         /**
@@ -79,22 +79,22 @@ namespace cedrus
          * @param[in] key key reported by the response pad
          * @returns the mapped key number based on the .devconfig file.
          */
-        int get_mapped_key(int key) const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_mapped_key(int key) const;
         
         /**
          * Number of response lines (or buttons) a device has
          */
-        int number_of_lines() const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT number_of_lines() const;
 
         /**
          * Whether or not the device requires an inter-byte delay
          */
-        bool needs_interbyte_delay() const;
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT needs_interbyte_delay() const;
 
         /**
          * The digital output prefix
          */ 
-        char digital_out_prefix() const;
+        char CEDRUS_XIDDRIVER_IMPORTEXPORT digital_out_prefix() const;
 
     private:
         xid_device_config_t(const std::string &devconfig_location);

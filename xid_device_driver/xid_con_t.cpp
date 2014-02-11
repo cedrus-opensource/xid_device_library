@@ -34,15 +34,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <paths.h>
-#include <sysexits.h>
-#include <sys/param.h>
-#include <sys/select.h>
-#include <sys/time.h>
-
 
 #include <boost/timer.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
@@ -58,7 +51,7 @@ cedrus::key_state cedrus::xid_con_t::xid_input_found()
         for(int i = 0; i <= last_byte_index; ++i)
         {
             if(input_buffer_[i] == 'k' &&
-               (input_buffer_[i+1] & invalid_port_bits_) == 0 &&
+               (input_buffer_[i+1] & INVALID_PORT_BITS) == 0 &&
                input_buffer_[i+5] == '\0')
             {
                 // found a valid XID packet

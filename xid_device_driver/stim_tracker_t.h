@@ -38,7 +38,7 @@
 
 namespace cedrus
 {
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT stim_tracker_t : public base_device_t
+    class stim_tracker_t : public base_device_t
     {
     public:
         /**
@@ -50,10 +50,10 @@ namespace cedrus
          * are used and reults may not be what you expect.  It's highly
          * recommended to use the devconfig files.
          */
-        stim_tracker_t(
+        CEDRUS_XIDDRIVER_IMPORTEXPORT stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
             const std::string &devconfig_path = "");
-        virtual ~stim_tracker_t(void);
+        virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~stim_tracker_t(void);
 
         /**
          * Raise digital output lines on the StimTracker device.
@@ -64,7 +64,7 @@ namespace cedrus
          * @param[in] leave_remaining_lines boolean value of whether or not to
          * keep the current line state when applying the new bitmask.
          */
-        void raise_lines(unsigned int lines_bitmask,
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false);
 
         /**
@@ -76,7 +76,7 @@ namespace cedrus
          * @param[in] leave_remaining_lines boolean value of whether or not to
          * keep the current line state when applying the new bitmask.
          */ 
-        void clear_lines(unsigned int lines_bitmask,
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false);
 
         /**
@@ -85,7 +85,7 @@ namespace cedrus
          * 
          * @param[in] duration Length of time in miliseconds
          */
-        void set_pulse_duration(unsigned int duration);
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_pulse_duration(unsigned int duration);
     };
 } // namespace cedrus
 

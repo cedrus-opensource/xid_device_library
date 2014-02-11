@@ -42,13 +42,13 @@ namespace cedrus
 {
     class xid_con_t;
 
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t
+    class xid_device_scanner_t
     {
     public:
-        xid_device_scanner_t(void);
-        virtual ~xid_device_scanner_t(void);
+        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t(void);
+        virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_scanner_t(void);
 
-        void drop_every_connection();
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_every_connection();
 
         /**
          * Returns the number of valid XID devices connected to the computer
@@ -58,7 +58,7 @@ namespace cedrus
          *
          * @returns number of XID devices detected.
          */
-        int detect_valid_xid_devices();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices();
 
         /**
          * Returns an XID connection object for use by the xid_device_t class.
@@ -71,12 +71,12 @@ namespace cedrus
          * @param[in] i index of the device
          * @returns an xid connection object for use by an instance of xid_device_t.
          */
-        boost::shared_ptr<xid_con_t> response_device_connection_at_index(unsigned int i);
+        boost::shared_ptr<xid_con_t> CEDRUS_XIDDRIVER_IMPORTEXPORT response_device_connection_at_index(unsigned int i);
 
-        boost::shared_ptr<xid_con_t> stimtracker_connection_at_index(unsigned int i);
+        boost::shared_ptr<xid_con_t> CEDRUS_XIDDRIVER_IMPORTEXPORT stimtracker_connection_at_index(unsigned int i);
 
-        int rb_device_count() const;
-        int st_device_count() const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT rb_device_count() const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT st_device_count() const;
 
     private:
         /**

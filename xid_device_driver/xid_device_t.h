@@ -85,7 +85,7 @@ namespace cedrus
      *
      * @brief abstraction of an XID device
      */
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_t : public base_device_t
+    class xid_device_t : public base_device_t
     {
     public:
         /**
@@ -97,11 +97,11 @@ namespace cedrus
          * are used and results may not be what you expect.  It's highly
          * reccommended to use the devconfig files.
          */
-        xid_device_t(
+        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_t(
             boost::shared_ptr<xid_con_t> xid_con,
             const std::string &devconfig_path = ""
             );
-        virtual ~xid_device_t(void);
+        virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_t(void);
         
 
 
@@ -111,36 +111,36 @@ namespace cedrus
          * If there is a button press event, it is placed into an internal
          * response queue.  
          */
-        void poll_for_response();
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT poll_for_response();
 
         /**
          * Number of responses in the response queue.
          *
          * @returns number of responses pending processing.
          */
-        std::size_t response_queue_size() const;
+        std::size_t CEDRUS_XIDDRIVER_IMPORTEXPORT response_queue_size() const;
         
         /**
          * @returns true if there are queued responses
          */
-        bool has_queued_responses() const;
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses() const;
 
         /**
          * Clears the response queue
          */
-        void clear_response_queue();
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_response_queue();
 
         /**
          * Returns the next response in the queue waiting for processing
          */
-        response get_next_response();
+        response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
 
         /**
          * Number of buttons the device has
          *
          * @returns number of buttons
          */
-        int get_button_count() const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_button_count() const;
 
         /**
          * Prefix used for the device for GUI display purposes
@@ -148,7 +148,7 @@ namespace cedrus
          * @returns "Button" for Lumina, RB-series pads, and unknown devices.
          * "Voice Response" for SV-1 Voice Key systems.
          */
-        std::string input_name_prefix() const;
+        std::string CEDRUS_XIDDRIVER_IMPORTEXPORT input_name_prefix() const;
 
     private:
         void init_response_device();
