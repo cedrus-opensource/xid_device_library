@@ -1,0 +1,3 @@
+[submodule "scons_helpers"]
+	path = scons_helpers
+	url = git@github.com:cedrus-opensource/scons_helpers.git
