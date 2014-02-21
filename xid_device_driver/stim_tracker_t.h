@@ -52,32 +52,8 @@ namespace cedrus
          */
         CEDRUS_XIDDRIVER_IMPORTEXPORT stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::string &devconfig_path = "");
+            boost::shared_ptr<xid_device_config_t> dev_config);
         virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~stim_tracker_t(void);
-
-        /**
-         * Raise digital output lines on the StimTracker device.
-         * 
-         * @param[in] lines_bitmask This is a bitmask used to specify the lines
-         * to be raised on the device. Each of the 8 bits in the integer
-         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
-         * @param[in] leave_remaining_lines boolean value of whether or not to
-         * keep the current line state when applying the new bitmask.
-         */
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
-            bool leave_remaining_lines = false);
-
-        /**
-         * Clear digital output lines on the StimTracker device.
-         *
-         * @param[in] lines_bitmask This is a bitmask used to specify the lines
-         * to be raised on the device. Each of the 8 bits in the integer
-         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
-         * @param[in] leave_remaining_lines boolean value of whether or not to
-         * keep the current line state when applying the new bitmask.
-         */ 
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines(unsigned int lines_bitmask,
-            bool leave_remaining_lines = false);
 
         /**
          * Set the pulse duration when raise_lines() is called.  This is how 

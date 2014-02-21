@@ -51,7 +51,7 @@ namespace cedrus
           */
         base_device_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::string &devconfig_path = "");
+            boost::shared_ptr<xid_device_config_t> dev_config);
         virtual ~base_device_t();
 
         /**
@@ -104,34 +104,40 @@ namespace cedrus
          */
         int CEDRUS_XIDDRIVER_IMPORTEXPORT query_base_timer();
 
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT open_connection();
+
         /**
-         * Send a command to the device
-         *
-         * @param[in] in_command command to send to the device.  Commands are
-         * detailed at http://www.cedrus.com/xid/
-         * @param[in] expected_bytes_rec expected number of bytes to receive
-         * @param[in] timeout time in miliseconds the device should respond in
-         * @param[in] delay some devices need an additional delay between
-         * receiving a command and issuing a response. Defaults to 0
+         * Raise digital output lines on the StimTracker device.
          * 
-         * @returns an integer value of the response
+         * @param[in] lines_bitmask This is a bitmask used to specify the lines
+         * to be raised on the device. Each of the 8 bits in the integer
+         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
+         * @param[in] leave_remaining_lines boolean value of whether or not to
+         * keep the current line state when applying the new bitmask.
          */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_inquiry(
-            const char in_command[],
-            int expected_bytes_rec = 1,
-            int timeout = 100,
-            int delay = 0);
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
+            bool leave_remaining_lines = false);
+
+        /**
+         * Clear digital output lines on the StimTracker device.
+         *
+         * @param[in] lines_bitmask This is a bitmask used to specify the lines
+         * to be raised on the device. Each of the 8 bits in the integer
+         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
+         * @param[in] leave_remaining_lines boolean value of whether or not to
+         * keep the current line state when applying the new bitmask.
+         */ 
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines(unsigned int lines_bitmask,
+            bool leave_remaining_lines = false);
+
 
     protected:
         boost::shared_ptr<xid_con_t> xid_con_;
         boost::shared_ptr<cedrus::xid_device_config_t> config_;
 
     private:
-        void init_device(const std::string &devconfig_path);
-        std::string device_name_;
-        int product_id_;
-        int model_id_;
-
+        void init_device();
     };
 
 } // namespace cedrus

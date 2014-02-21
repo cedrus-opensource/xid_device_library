@@ -99,7 +99,7 @@ namespace cedrus
          */
         CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::string &devconfig_path = ""
+            boost::shared_ptr<xid_device_config_t> dev_config
             );
         virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_t(void);
         

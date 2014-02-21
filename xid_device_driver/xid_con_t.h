@@ -243,12 +243,28 @@ namespace cedrus
             unsigned int lines,
             bool leave_remaining_lines = false);
 
+        void get_product_and_model_id( int &product_id, int &model_id );
+
     private:
     	enum { OS_FILE_ERROR = -1 };
         int setup_com_port();
 
         key_state xid_input_found();
         unsigned long GetTickCount();
+
+        /**
+         * Send a command to the device
+         *
+         * @param[in] in_command command to send to the device.  Commands are
+         * detailed at http://www.cedrus.com/xid/
+         * @param[in] expected_bytes_rec expected number of bytes to receive
+         * @param[in] timeout time in miliseconds the device should respond in
+         * @param[in] delay some devices need an additional delay between
+         * receiving a command and issuing a response. Defaults to 0
+         * 
+         * @returns an integer value of the response
+         */
+        int get_inquiry(const char in_command[], int expected_bytes_rec = 1, int timeout = 100, int delay = 0);
 
         port_settings_t port_settings_;
         std::string port_name_;

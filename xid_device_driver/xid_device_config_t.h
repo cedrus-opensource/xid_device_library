@@ -34,7 +34,9 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include <boost/shared_ptr.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 #include "XidDriverImpExpDefs.h"
 
@@ -68,8 +70,7 @@ namespace cedrus
          *
          * @returns a device configuration object
          */
-        static boost::shared_ptr<xid_device_config_t> config_for_device(
-            int product_id, int model_id, const std::string &devconfig_location);
+        static boost::shared_ptr<xid_device_config_t> config_for_device(boost::property_tree::ptree * pt);
 
         ~xid_device_config_t(void);
 
@@ -96,15 +97,59 @@ namespace cedrus
          */ 
         char CEDRUS_XIDDRIVER_IMPORTEXPORT digital_out_prefix() const;
 
-    private:
-        xid_device_config_t(const std::string &devconfig_location);
-        void load_devconfig(int product_id, int model_id);
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT is_port_on_ignore_list( std::string port_name ) const;
 
-        std::string config_file_location_;
+        /**
+         * Returns the name of the device
+         *
+         * @returns name of the device
+         */
+        std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_name();
+
+        /**
+         * product id of the device.
+         * 
+         * @returns product id
+         * 0: Lumina LP-400 response pad system
+         * 1: SV-1 voice key system
+         * 2: RB series response pad.
+         */
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_id() const;
+
+        /**
+         * model ID of the device.
+         * 
+         * This is generally only valid on RB series response pads.
+         *
+         * @returns model id of the device
+         * 1: RB-530
+         * 2: RB-730
+         * 3: RB-830
+         * 4: RB-834
+         */
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_model_id() const;
+
+        /**
+         * Resets the internal device reaction time timer.
+         * 
+         * This should be called when a stimulus is presented
+         */
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT reset_rt_timer();
+
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT does_config_match_ids( int device_id, int model_id ) const;
+
+
+    private:
+        xid_device_config_t(boost::property_tree::ptree * pt);
+
         bool needs_interbyte_delay_;
         int number_of_lines_;
         char digital_out_prefix_;
+        std::string device_name_;
+        int product_id_;
+        int model_id_;
 
+		std::vector<std::string> ports_to_ignore_;
         std::map<int,int> key_map_;
     };
 } // namespace cedrus

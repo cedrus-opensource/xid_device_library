@@ -3,8 +3,8 @@
 
 cedrus::stim_tracker_t::stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            const std::string &devconfig_path)
-    : base_device_t(xid_con, devconfig_path)
+            boost::shared_ptr<xid_device_config_t> dev_config)
+    : base_device_t(xid_con, dev_config)
 {
     clear_lines(255);
 }
@@ -12,22 +12,6 @@ cedrus::stim_tracker_t::stim_tracker_t(
 
 cedrus::stim_tracker_t::~stim_tracker_t(void)
 {
-}
-
-void cedrus::stim_tracker_t::raise_lines(
-    unsigned int lines_bitmask,
-    bool leave_remaining_lines)
-{
-    xid_con_->set_digital_output_lines(
-        lines_bitmask, leave_remaining_lines);
-}
-
-void cedrus::stim_tracker_t::clear_lines(
-    unsigned int lines_bitmask,
-    bool leave_remaining_lines)
-{
-    xid_con_->clear_digital_output_lines(
-        lines_bitmask, leave_remaining_lines);
 }
 
 void cedrus::stim_tracker_t::set_pulse_duration(unsigned int duration)

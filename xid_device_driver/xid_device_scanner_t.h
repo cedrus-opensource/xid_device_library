@@ -32,6 +32,7 @@
 #ifndef xid_device_scanner_t_H
 #define xid_device_scanner_t_H
 
+#include <map>
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -41,6 +42,8 @@
 namespace cedrus
 {
     class xid_con_t;
+    class xid_device_t;
+    class stim_tracker_t;
 
     class xid_device_scanner_t
     {
@@ -58,7 +61,7 @@ namespace cedrus
          *
          * @returns number of XID devices detected.
          */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(const std::string &config_file_location);
 
         /**
          * Returns an XID connection object for use by the xid_device_t class.
@@ -71,9 +74,9 @@ namespace cedrus
          * @param[in] i index of the device
          * @returns an xid connection object for use by an instance of xid_device_t.
          */
-        boost::shared_ptr<xid_con_t> CEDRUS_XIDDRIVER_IMPORTEXPORT response_device_connection_at_index(unsigned int i);
+        boost::shared_ptr<xid_device_t> CEDRUS_XIDDRIVER_IMPORTEXPORT response_device_connection_at_index(unsigned int i);
 
-        boost::shared_ptr<xid_con_t> CEDRUS_XIDDRIVER_IMPORTEXPORT stimtracker_connection_at_index(unsigned int i);
+        boost::shared_ptr<stim_tracker_t> CEDRUS_XIDDRIVER_IMPORTEXPORT stimtracker_connection_at_index(unsigned int i);
 
         int CEDRUS_XIDDRIVER_IMPORTEXPORT rb_device_count() const;
         int CEDRUS_XIDDRIVER_IMPORTEXPORT st_device_count() const;
@@ -87,8 +90,8 @@ namespace cedrus
         void load_available_com_ports();
 
         std::vector<std::string> available_com_ports_;
-        std::vector<boost::shared_ptr<cedrus::xid_con_t> > rb_connections_;
-        std::vector<boost::shared_ptr<cedrus::xid_con_t> > st_connections_;
+        std::vector<boost::shared_ptr<cedrus::xid_device_t> > rb_devices_;
+        std::vector<boost::shared_ptr<cedrus::stim_tracker_t> > st_devices_;
     };
 } // namespace cedrus
 

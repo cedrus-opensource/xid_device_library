@@ -41,12 +41,7 @@
 #include <boost/timer.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
 
-
-/*
-#if win
-define LowLevelPortWin
-LowLevelPortMac
-*/
+#include <iostream>
 
 struct cedrus::xid_con_t::DarwinConnPimpl
 {
@@ -67,7 +62,8 @@ cedrus::xid_con_t::xid_con_t(
     port_settings_t::bitparity bit_parity,
     port_settings_t::stopbits stop_bits
     )
-    : delay_(delay_ms),
+    : port_name_ (port_name),
+      delay_(delay_ms),
       bytes_in_buffer_(0),
       first_valid_xid_packet_(INVALID_PACKET_INDEX),
       num_keys_down_(0),
@@ -79,8 +75,6 @@ cedrus::xid_con_t::xid_con_t(
       needs_interbyte_delay_(true),
       m_darwinPimpl( new DarwinConnPimpl )
 {
-    snprintf(port_name_, 40, "%s", port_name.c_str() );
-
     port_settings_ = port_settings_t(port_name_, 
                                      port_speed,
                                      byte_size,
@@ -142,7 +136,7 @@ int cedrus::xid_con_t::open()
 {
     int status = NO_ERR;
 
-    m_darwinPimpl->m_FileDescriptor = ::open(port_name_, O_RDWR | O_NOCTTY /*| O_NONBLOCK | O_FSYNC*/ );
+    m_darwinPimpl->m_FileDescriptor = ::open(port_name_.c_str(), O_RDWR | O_NOCTTY /*| O_NONBLOCK | O_FSYNC*/ );
 
     if(m_darwinPimpl->m_FileDescriptor == -1)
     {
@@ -376,8 +370,6 @@ int cedrus::xid_con_t::write(
     int bytes_to_write,
     int &bytes_written)
 {
-	//helper_thing.write(
-
     unsigned char *p = in_buffer;
     int status = NO_ERR;
     int written = 0;
@@ -468,8 +460,7 @@ int cedrus::xid_con_t::send_xid_command(
 
         if(bytes_read >= 1)
         {
-            for(int i = 0; (i<bytes_read) && (bytes_stored < max_out_response_size);
-                ++i)
+            for(int i = 0; (i<bytes_read) && (bytes_stored < max_out_response_size); ++i)
             {
                 out_response[bytes_stored] = in_buff[i];
                 bytes_stored++;

@@ -5,71 +5,81 @@
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 
-#include <windows.h>
+#ifdef __APPLE__
+#   include <unistd.h>
+#   define GetCurrentDir getcwd
+#   define sleep_func usleep
+#   define sleep_inc 1000
+#elif defined(_WIN32)
+#   include <direct.h>
+#   define GetCurrentDir _getcwd
+#   define sleep_func Sleep
+#   define sleep_inc 1
+#endif
 
 using namespace cedrus;
 
 int main(int argc, char** argv)
 {
     xid_device_scanner_t scanner;
-    scanner.detect_valid_xid_devices();
+    char cCurrentPath[FILENAME_MAX];
+    
+    GetCurrentDir(cCurrentPath, sizeof(cCurrentPath));
+    scanner.detect_valid_xid_devices(std::string(cCurrentPath) + "/../../../../devconfig");
     if(scanner.st_device_count() == 0)
     {
-        std::cout << "No StimTracker found" << std::endl;
+        std::cout << "No devices found" << std::endl;
         return 1;
     }
-    else
-    {
-        std::cout << "StimTracker found!" << std::endl;
-    }
 
-    boost::shared_ptr<xid_con_t> con = 
-        scanner.stimtracker_connection_at_index(0);
-    con->open();
+    boost::shared_ptr<stim_tracker_t> st = scanner.stimtracker_connection_at_index(0);
+    st->open_connection();
 
-    boost::shared_ptr<xid_con_t> con_rb = 
-    scanner.response_device_connection_at_index(0);
-    con_rb->open();
+    for (int i = 0; i < scanner.rb_device_count(); i++)
+        scanner.response_device_connection_at_index(i)->open_connection();
 
-    stim_tracker_t st(con);
-    xid_device_t rb(con_rb);
+    std::cout << st->get_device_name() << std::endl;
 
-    std::cout << st.get_device_name() << std::endl;
-    std::cout << rb.get_device_name() << std::endl;
+    for (int i = 0; i < scanner.rb_device_count(); i++)
+        std::cout << scanner.response_device_connection_at_index(i)->get_device_name() << std::endl;
 
-    st.set_pulse_duration(UINT_MAX);
+    st->set_pulse_duration(UINT_MAX);
 
     std::cout << "Raising all lines" << std::endl;
 
-    st.raise_lines(255);
-    con_rb->set_digital_output_lines(255);
-
-    Sleep(1000);
+    st->raise_lines(255);
+    for (int i = 0; i < scanner.rb_device_count(); i++)
+        scanner.response_device_connection_at_index(i)->raise_lines(255);
+ 
+    sleep_func(1000*sleep_inc);
 
     std::cout << "Clearing lines" << std::endl;
 
-    st.clear_lines(255);
-    con_rb->clear_digital_output_lines(255);
-    Sleep(1000);
+    st->clear_lines(255);
+    for (int i = 0; i < scanner.rb_device_count(); i++)
+        scanner.response_device_connection_at_index(i)->clear_lines(255);
+
+    sleep_func(1000*sleep_inc);
 
     std::cout << "Setting pulse duration to 100ms" << std::endl;
 
-    st.set_pulse_duration(100);
+    st->set_pulse_duration(100);
 
-    Sleep(1000);
+    sleep_func(1000*sleep_inc);
 
     std::cout << "OOOH!! FLASHY!! (Hit Ctrl-C to exit)" << std::endl;
 
     int line = 1;
     while(true)
     {
-        st.raise_lines(line);
-        con_rb->set_digital_output_lines(line);
+        st->raise_lines(line);
+        for (int i = 0; i < scanner.rb_device_count(); i++)
+            scanner.response_device_connection_at_index(i)->raise_lines(line);
 
         line = line << 1;
         if(line > 255)
             line = 1;
-        Sleep(200);
+        sleep_func(200*sleep_inc);
     }
 
     return 0;

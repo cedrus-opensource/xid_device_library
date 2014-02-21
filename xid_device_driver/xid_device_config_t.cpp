@@ -30,171 +30,91 @@
  */
 
 #include "xid_device_config_t.h"
+#include "constants.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/exceptions.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp> 
 #include <iostream>
 
 #include <sstream>
 
-boost::shared_ptr<cedrus::xid_device_config_t>
-    cedrus::xid_device_config_t::config_for_device(
-        int product_id,
-        int model_id,
-        const std::string &devconfig_location)
+boost::shared_ptr<cedrus::xid_device_config_t> cedrus::xid_device_config_t::config_for_device(
+        boost::property_tree::ptree * pt )
 {
     boost::shared_ptr<xid_device_config_t> devconfig;
     
-    if(product_id == -99 || model_id == -99)
-    {
-        // invalid product or model id
-        return devconfig;
-    }
-
-    if(devconfig_location.empty())
-    {
-        // no path to devconfig files.  Won't be able to load them so return
-        // an invalid
-        return devconfig;
-    }
-
-    devconfig.reset(new xid_device_config_t(devconfig_location));
-    
-    devconfig->load_devconfig(product_id, model_id);
+    devconfig.reset(new xid_device_config_t(pt));
 
     return devconfig;
 }
 
-cedrus::xid_device_config_t::xid_device_config_t(
-    const std::string &config_file_location)
-    : config_file_location_(config_file_location),
-      needs_interbyte_delay_(true),
+cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * pt )
+    : needs_interbyte_delay_(true),
       number_of_lines_(8),
       digital_out_prefix_('a')
 {
-}
+    std::string digital_output_command;
 
+    device_name_ = pt->get<std::string>("DeviceInfo.DeviceName");
+    product_id_ = pt->get<long>("DeviceInfo.XidProductID");
+    model_id_ = pt->get<long>("DeviceInfo.XidModelID");
+
+    std::string regex_string(",");
+    std::string ports_string = pt->get("DeviceOptions.XidIgnoreSerialPorts", "not_found");
+    
+    boost::split(ports_to_ignore_,ports_string,boost::is_any_of(regex_string));
+    
+    // does this device need an interbyte delay?
+    std::string byte_delay = pt->get("DeviceOptions.XidNeedsInterByteDelay", "not_found");
+    
+    if(byte_delay.compare("No") == 0)
+        needs_interbyte_delay_ = false;
+    
+    // get the digital output prefix
+    std::string std_response = pt->get("DeviceOptions.XidDigitalOutputCommand", "not_found");
+    if(std_response != "not_found")
+        digital_out_prefix_ = std_response[0];
+
+    std::string port_str;
+    
+    // xid devices support up to 255 ports.  In reality, usually only
+    // 2 or 3 are used
+    for(int i = 0; i <= 255; ++i)
+    {
+        std::ostringstream s;
+        s << "Port" << i;
+        port_str = s.str().c_str();
+
+        try {
+            pt->get_child(port_str);
+        }
+        catch ( boost::property_tree::ptree_error ) {
+            continue; // The device doesn't support this port
+        }
+
+        if ( pt->get(port_str+".UseableAsResponse", "not_found") == "Yes" )
+        {
+            number_of_lines_ = pt->get(port_str+".NumberOfLines", -1);
+            
+            // devconfig files have up to 8 key mappings
+            for(int i = 1; i <=8; ++i)
+            {
+                std::ostringstream s2;
+                s2 << "XidDeviceKeyMap" << i;
+                std::string key_name = s2.str().c_str();
+                
+                int key_num = pt->get(port_str+key_name, -1);
+                key_map_.insert(std::make_pair(i, key_num));
+            }
+        }
+    }
+}
 
 cedrus::xid_device_config_t::~xid_device_config_t(void)
 {
-}
-
-void cedrus::xid_device_config_t::load_devconfig(int product_id, int model_id)
-{
-    //std::string search_mask = config_file_location_ + L"*.devconfig";
-
-    boost::filesystem::path targetDir(config_file_location_);
-	boost::filesystem::directory_iterator it(targetDir), eod;
-	std::vector< std::string > devconfigs;
-
-	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
-	{ 
-	    if( is_regular_file(p) && p.extension() == ".devconfig" )
-			devconfigs.push_back( p.string() );
-	}
-
-    BOOST_FOREACH(std::string const config, devconfigs)
-    {
-	    boost::property_tree::ptree pt;
-		boost::property_tree::ini_parser::read_ini(config, pt);
-
-        std::string device_name;
-        long xid_product_id = -1;
-        long xid_model_id = -1;
-        std::string digital_output_command;
-        std::string ignored_ports;
-
-		xid_product_id = pt.get<long>("DeviceInfo.XidProductID");
-		xid_model_id = pt.get<long>("DeviceInfo.XidModelID");
-
-		if(xid_product_id == product_id)
-        {
-            // if this is an RB device, make sure the model IDs match
-            if(product_id == 2 && xid_model_id != model_id)
-                continue;
-
-            // does this device need an interbyte delay?
-            std::string byte_delay = pt.get("DeviceOptions.XidNeedsInterByteDelay", "not_found");
-            
-            if(byte_delay.compare("No") == 0)
-                needs_interbyte_delay_ = false;
-
-            // get the digital output prefix
-            std::string std_response = pt.get("DeviceOptions.XidDigitalOutputCommand", "not_found");
-            if(std_response != "not_found")
-                digital_out_prefix_ = std_response[0];
-
-            std::string port_str;
-            
-            // xid devices support up to 255 ports.  In reality, usually only
-            // 2 or 3 are used
-            for(int i = 0; i <= 255; ++i)
-            {
-                std::ostringstream s;
-                s << "Port" << i;
-                port_str = s.str().c_str();
-
-                try {
-                    pt.get_child(port_str);
-                }
-                catch ( boost::property_tree::ptree_error ) {
-                    continue; // The device doesn't support this port
-                }
-
-                std::map<std::string, std::string> res_map;
-                BOOST_FOREACH( boost::property_tree::ptree::value_type &v, pt.get_child(port_str) )
-                {
-	                res_map.insert(std::make_pair(v.first.data(),v.second.data()));
-                }
-
-                std::map<std::string,std::string>::iterator found = 
-                    res_map.find("PortName");
-
-                if(found == res_map.end())
-                {
-                    // no port name found. Try the next one
-                    continue;
-                }
-
-                if(found->second.compare("Keys") == 0 ||
-                   found->second.compare("Voice Key") == 0 ||
-                   found->second.compare("Event Marker") == 0)
-                {
-                    // found a RB-Series response pad, Lumina system,
-                    // SV-1 Voice Key, or StimTracker.
-                    found = res_map.find("NumberOfLines");
-                    if(found != res_map.end())
-                    {
-                        number_of_lines_ = atoi(found->second.c_str());
-                    }
-                
-                    // devconfig files have up to 8 key mappings
-                    for(int i = 1; i <=8; ++i)
-                    {
-                        std::string key_name;
-
-                        std::ostringstream s2;
-                        s2 << "XidDeviceKeyMap" << i;
-                        key_name = s2.str().c_str();
-                        
-                        found = res_map.find(std::string(key_name));
-                        if(found != res_map.end())
-                        {
-                            int key_num = atoi(found->second.c_str());
-                            key_map_.insert(std::make_pair(i, key_num));
-                        }
-                    }
-                }
-                else
-                {
-                    // no valid port found. Try the next one.
-                    continue;
-                }
-            }
-        }
-	}
 }
 
 int cedrus::xid_device_config_t::get_mapped_key(int key) const
@@ -224,4 +144,43 @@ bool cedrus::xid_device_config_t::needs_interbyte_delay() const
 char cedrus::xid_device_config_t::digital_out_prefix() const
 {
     return digital_out_prefix_;
+}
+
+bool cedrus::xid_device_config_t::is_port_on_ignore_list( std::string port_name) const
+{
+    return std::find(ports_to_ignore_.begin(), ports_to_ignore_.end(), port_name) != ports_to_ignore_.end();
+}
+
+std::string cedrus::xid_device_config_t::get_device_name()
+{
+    return device_name_;
+}
+
+int cedrus::xid_device_config_t::get_product_id() const
+{
+    return product_id_;
+}
+
+int cedrus::xid_device_config_t::get_model_id() const
+{
+    return model_id_;
+}
+
+bool cedrus::xid_device_config_t::does_config_match_ids( int device_id, int model_id ) const
+{
+    bool doesMatch = false;
+    if ( product_id_ == device_id )
+    {
+        //HEY CHECK THESE REAL QUICK WITH DIFFERENT DEVICES. THIS IS FRAGILE AND BAD, SEE IF THE
+        //MODEL IDS WE GET FROM NON-RBS MAKE SENSE.
+        if ( product_id_ == XID_ID_RB )
+        {
+            if ( model_id_ == model_id )
+                doesMatch = true;
+        }
+        else
+            doesMatch = true;
+    }
+
+    return doesMatch;
 }

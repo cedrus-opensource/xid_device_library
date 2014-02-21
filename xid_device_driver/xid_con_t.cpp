@@ -224,3 +224,39 @@ void cedrus::xid_con_t::clear_digital_output_lines(
     write((unsigned char*)set_lines_cmd_, 4, bytes_written);
     lines_state_ = lines;
 }
+
+void cedrus::xid_con_t::get_product_and_model_id( int &product_id, int &model_id )
+{
+    product_id = get_inquiry("_d2",1,100,100);
+    model_id = get_inquiry("_d3", 1, 100, 100);
+}
+
+int cedrus::xid_con_t::get_inquiry(const char in_command[],
+                                                  int expected_bytes_rec,
+                                                  int timeout,
+                                                  int delay)
+{
+    int return_value = INVALID_RETURN_VALUE;
+    char return_info[20];
+    int last_byte = expected_bytes_rec -1;
+
+    int bytes_returned = send_xid_command(in_command,
+                                          0,
+                                          return_info,
+                                          sizeof(return_info),
+                                          expected_bytes_rec,
+                                          timeout,
+                                          delay);
+
+    if(bytes_returned > 0)
+    {
+        return_value = atoi(return_info);
+        
+        if(return_value == 0 && return_info[0] >= 'A')
+        {
+            return_value = return_info[last_byte];
+        }
+    }
+
+    return return_value;
+}

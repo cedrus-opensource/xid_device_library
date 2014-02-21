@@ -30,10 +30,23 @@
  */
 
 #include "xid_device_scanner_t.h"
+#include "xid_device_config_t.h"
 #include "xid_con_t.h"
+#include "xid_device_t.h"
+#include "stim_tracker_t.h"
 
+#include <iostream>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/foreach.hpp>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/exceptions.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
+
+#include <sstream>
 
 #ifdef __APPLE__
 #   include "xid_device_scanner_helper_mac.h"
@@ -60,51 +73,82 @@ void cedrus::xid_device_scanner_t::load_available_com_ports()
 
 void cedrus::xid_device_scanner_t::drop_every_connection()
 {
-    for (unsigned int i = 0; i < rb_connections_.size(); i++)
-        rb_connections_[i]->close();
+    for (unsigned int i = 0; i < rb_devices_.size(); i++)
+        rb_devices_[i]->close_connection();
     
-    for (unsigned int i = 0; i < st_connections_.size(); i++)
-        st_connections_[i]->close();
+    for (unsigned int i = 0; i < st_devices_.size(); i++)
+        st_devices_[i]->close_connection();
 
-    rb_connections_.clear();
-    st_connections_.clear();
+    rb_devices_.clear();
+    st_devices_.clear();
 }
 
-int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
+int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &config_file_location)
 {
+    int devices = 0; //the return value
+    boost::filesystem::path targetDir(config_file_location);
+	boost::filesystem::directory_iterator it(targetDir), eod;
+
+    // This will contain every devconfig we can find.
+    std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > master_config_list;
+
     load_available_com_ports();
 
-    rb_connections_.clear();
-    st_connections_.clear();
-    int devices = 0;
+    rb_devices_.clear();
+    st_devices_.clear();
+    
+	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
+	{ 
+	    if( is_regular_file(p) && p.extension() == ".devconfig" )
+        {
+            boost::property_tree::ptree pt;
+            boost::property_tree::ini_parser::read_ini(p.string(), pt);
+
+            master_config_list.push_back(cedrus::xid_device_config_t::config_for_device(&pt));
+        }
+	}
 
     for(std::vector<std::string>::iterator iter = available_com_ports_.begin(),
-                                              end = available_com_ports_.end();
+        end = available_com_ports_.end();
         iter != end; ++iter)
     {
+        std::vector<boost::shared_ptr< cedrus::xid_device_config_t> > config_candidates;
+
+        // If a config is for a device that can potentially be on this port, it's a candidate. This step
+        // is important because "dry" port scans are very time consuming!
+        BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, master_config_list)
+        {
+            if ( !config->is_port_on_ignore_list( *iter ) )
+                config_candidates.push_back(config);
+        }
+
+        if ( config_candidates.empty() )
+            continue;
+
         bool device_found = false;
         const int baud_rate[] = { 115200, 19200, 9600, 57600, 38400 };
         const int num_bauds   = sizeof(baud_rate)/sizeof(int);
         
+        // Here we're going to actually connect to a port and send it some signals. Our aim here is to
+        // get an XID device's product/device and model IDs.
         for(int i = 0; i < num_bauds && !device_found; ++i)
         {
-            boost::shared_ptr<cedrus::xid_con_t> xid_con(
-                new xid_con_t(*iter, baud_rate[i]));
+            boost::shared_ptr<cedrus::xid_con_t> xid_con(new xid_con_t(*iter, baud_rate[i]));
 
             if(xid_con->open() == NO_ERR)
             {
                 char return_info[200];
                 xid_con->flush_input();
                 xid_con->flush_output();
-                xid_con->send_xid_command(
-                    "_c1",
-                    0,
-                    return_info,
-                    sizeof(return_info),
-                    5,
-                    1000,
-                    100);
 
+                xid_con->send_xid_command("_c1",
+                                          0,
+                                          return_info,
+                                          sizeof(return_info),
+                                          5,
+                                          1000,
+                                          100);
+                
                 std::string info;
                 if(return_info[0] == NULL)
                 {
@@ -120,50 +164,59 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
                     }
                 }
                 else
-                {
                     info = std::string(return_info);
-                }
                 
-                if(strstr(info.c_str(), "_xid"))
+                if( strstr(info.c_str(), "_xid") )
                 {
-                    // found an XID device
-                    ++devices;
-
+                    // Found an XID device, see if it's one of the candidates. If not, panic.
                     device_found = true;
+                    int product_id;
+                    int model_id;
 
-                    if(strcmp(info.c_str(), "_xid0") != 0)
+                    //What device is it? Get product/model ID, find the corresponding config
+                    xid_con->get_product_and_model_id(product_id, model_id);
+
+                    BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, config_candidates)
                     {
-                        // device is not in XID mode.  Currently this library
-                        // only supports XID mode so we issue command 'c10' to
-                        // set the device into XID mode
-                        char empty_return[10];
-                        xid_con->send_xid_command(
-                            "c10",
-                            0,
-                            empty_return,
-                            sizeof(empty_return),
-                            0);
+                        if ( config->does_config_match_ids(product_id, model_id) )
+                        {
+                            ++devices;
 
-                        xid_con->flush_input();
-                        xid_con->flush_output();
-                    }
+                            if(strcmp(info.c_str(), "_xid0") != 0)
+                            {
+                                // device is not in XID mode.  Currently this library
+                                // only supports XID mode so we issue command 'c10' to
+                                // set the device into XID mode
+                                char empty_return[10];
+                                xid_con->send_xid_command("c10",
+                                                          0,
+                                                          empty_return,
+                                                          sizeof(empty_return),
+                                                          0);
+                                
+                                xid_con->flush_input();
+                                xid_con->flush_output();
+                            }
 
-                    char dev_type[10];
-                    xid_con->send_xid_command(
-                        "_d2",
-                        0,
-                        dev_type,
-                        sizeof(dev_type),
-                        1,
-                        1000);
+                            char dev_type[10];
+                            xid_con->send_xid_command("_d2",
+                                                      0,
+                                                      dev_type,
+                                                      sizeof(dev_type),
+                                                      1,
+                                                      1000);
 
-                    if(dev_type[0] == 'S')
-                    {
-                        st_connections_.push_back(xid_con);
-                    }
-                    else
-                    {
-                        rb_connections_.push_back(xid_con);
+                            if(dev_type[0] == 'S')
+                            {
+                                boost::shared_ptr<cedrus::stim_tracker_t> stim_tracker (new stim_tracker_t(xid_con, config));
+                                st_devices_.push_back(stim_tracker);
+                            }
+                            else
+                            {
+                                boost::shared_ptr<cedrus::xid_device_t> rb_device (new xid_device_t(xid_con, config));
+                                rb_devices_.push_back(rb_device);
+                            }
+                        }
                     }
                 }
             }
@@ -171,34 +224,33 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices()
             xid_con->close();
         }
     }
-
     return devices;
 }
 
-boost::shared_ptr<cedrus::xid_con_t> 
+boost::shared_ptr<cedrus::xid_device_t> 
 cedrus::xid_device_scanner_t::response_device_connection_at_index(unsigned int i)
 {
-    if(i >= rb_connections_.size())
-        return boost::shared_ptr<xid_con_t>();
+    if(i >= rb_devices_.size())
+        return boost::shared_ptr<xid_device_t>();
 
-    return rb_connections_[i];
+    return rb_devices_[i];
 }
 
-boost::shared_ptr<cedrus::xid_con_t>
+boost::shared_ptr<cedrus::stim_tracker_t>
 cedrus::xid_device_scanner_t::stimtracker_connection_at_index(unsigned int i)
 {
-    if( i > st_connections_.size())
-        return boost::shared_ptr<xid_con_t>();
+    if( i > st_devices_.size())
+        return boost::shared_ptr<stim_tracker_t>();
 
-    return st_connections_[i];
+    return st_devices_[i];
 }
 
 int cedrus::xid_device_scanner_t::rb_device_count() const
 {
-    return rb_connections_.size();
+    return rb_devices_.size();
 }
 
 int cedrus::xid_device_scanner_t::st_device_count() const
 {
-    return st_connections_.size();
+    return st_devices_.size();
 }

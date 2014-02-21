@@ -36,8 +36,8 @@
 
 cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
-    const std::string &devconfig_path)
-    : base_device_t(xid_con, devconfig_path),
+    boost::shared_ptr<xid_device_config_t> dev_config)
+    : base_device_t(xid_con, dev_config),
       button_count_(8),
       input_name_prefix_("Button")
 {

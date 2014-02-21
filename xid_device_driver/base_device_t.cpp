@@ -37,12 +37,12 @@
 
 cedrus::base_device_t::base_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
-    const std::string &devconfig_path)
+    boost::shared_ptr<xid_device_config_t> dev_config)
     : xid_con_(xid_con),
-      product_id_(-1),
-      model_id_(0)
+      config_(dev_config)
 {
-    init_device(devconfig_path);
+    xid_con_->set_needs_interbyte_delay(config_->needs_interbyte_delay());
+    xid_con_->set_digital_out_prefix(config_->digital_out_prefix());
 }
 
 cedrus::base_device_t::~base_device_t()
@@ -100,117 +100,37 @@ int cedrus::base_device_t::query_base_timer()
     return GENERAL_ERROR;
 }
 
-void cedrus::base_device_t::init_device(const std::string &devconfig_path)
-{
-    product_id_ = get_inquiry("_d2",1,100,100);
-
-    switch(product_id_)
-    {
-    case 0:
-        device_name_ = "Cedrus Lumina LP-400 Response Pad System";
-        break;
-    case 1:
-        device_name_ = "Cedrus SV-1 Voice Key";
-        break;
-    case 2:
-        {
-            model_id_ = get_inquiry("_d3", 1, 100, 100);
-            switch(model_id_)
-            {
-            case 1:
-                device_name_ = "Cedrus RB-530";
-                break;
-            case 2:
-                device_name_ = "Cedrus RB-730";
-                break;
-            case 3:
-                device_name_ = "Cedrus RB-830";
-                break;
-            case 4:
-                device_name_ = "Cedrus RB-834";
-                break;
-            case -99:
-                device_name_ = "Invalid XID Device";
-                break;
-            default:
-                device_name_ = "Unknown Cedrus RB Series Device";
-            }
-            break;
-        }
-    case 83:
-        device_name_ = "Cedrus StimTracker";
-        break;
-    case -99:
-        device_name_ = "Invalid XID Device";
-        break;
-    default:
-        device_name_ = "Unknown XID device";
-        break;
-    }
-
-    if(!devconfig_path.empty())
-    {
-        config_ = xid_device_config_t::config_for_device(
-          product_id_, model_id_, devconfig_path);
-
-        xid_con_->set_needs_interbyte_delay(
-            config_->needs_interbyte_delay());
-
-        xid_con_->set_digital_out_prefix(
-            config_->digital_out_prefix());
-    }
-    else
-    {
-        xid_con_->set_needs_interbyte_delay(true);
-        if(product_id_ == 83)
-            xid_con_->set_digital_out_prefix('m');
-    }
-}
-
-int cedrus::base_device_t::get_inquiry(
-    const char in_command[],
-    int expected_bytes_rec,
-    int timeout,
-    int delay)
-{
-    int return_value = INVALID_RETURN_VALUE;
-    char return_info[20];
-    int last_byte = expected_bytes_rec -1;
-
-    int bytes_returned = xid_con_->send_xid_command(
-        in_command,
-        0,
-        return_info,
-        sizeof(return_info),
-        expected_bytes_rec,
-        timeout,
-        delay);
-
-    if(bytes_returned > 0)
-    {
-        return_value = atoi(return_info);
-
-        if(return_value == 0 && return_info[0] >= 'A')
-        {
-            return_value = return_info[last_byte];
-        }
-    }
-
-    return return_value;
-}
-
 std::string cedrus::base_device_t::get_device_name()
 {
-    return device_name_;
+    return config_->get_device_name();
 }
 
 int cedrus::base_device_t::get_product_id() const
 {
-    return product_id_;
+    return config_->get_product_id();
 }
 
 int cedrus::base_device_t::get_model_id() const
 {
-    return model_id_;
+    return config_->get_model_id();
 }
 
+int cedrus::base_device_t::close_connection()
+{
+    return xid_con_->close();
+}
+
+int cedrus::base_device_t::open_connection()
+{
+    return xid_con_->open();
+}
+
+void cedrus::base_device_t::raise_lines( unsigned int lines_bitmask, bool leave_remaining_lines)
+{
+    xid_con_->set_digital_output_lines(lines_bitmask, leave_remaining_lines);
+}
+
+void cedrus::base_device_t::clear_lines(unsigned int lines_bitmask, bool leave_remaining_lines)
+{
+    xid_con_->clear_digital_output_lines(lines_bitmask, leave_remaining_lines);
+}
