@@ -13,8 +13,7 @@ boost = CedrusBoost.CedrusBoostSettings(env)
 
 project_target_name = 'st_tester'
 
-PATH_TO_FILES = os.getcwd() + '/../../../../st_tester/'
-inputs = [ PATH_TO_FILES + 'main.cpp', ]
+inputs = [ 'st_test/main.cpp', ]
 defines = []
 include_path = []
 cxxflags = []

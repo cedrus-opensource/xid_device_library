@@ -16,22 +16,21 @@ boost.need_boost_system()
 
 project_target_name = 'xid_device_driver'
 
-PATH_TO_FILES = os.getcwd() + '/../../../../xid_device_driver/'
 inputs = [
-PATH_TO_FILES + 'base_device_t.cpp',
-PATH_TO_FILES + 'port_settings_t.cpp',
-PATH_TO_FILES + 'stim_tracker_t.cpp',
-PATH_TO_FILES + 'xid_con_t.cpp',
-PATH_TO_FILES + 'xid_device_config_t.cpp',
-PATH_TO_FILES + 'xid_device_scanner_t.cpp',
-PATH_TO_FILES + 'xid_device_t.cpp',
+    'xid_device_driver/base_device_t.cpp',
+    'xid_device_driver/port_settings_t.cpp',
+    'xid_device_driver/stim_tracker_t.cpp',
+    'xid_device_driver/xid_con_t.cpp',
+    'xid_device_driver/xid_device_config_t.cpp',
+    'xid_device_driver/xid_device_scanner_t.cpp',
+    'xid_device_driver/xid_device_t.cpp',
 ]
 
 if sys.platform == 'win32':
-    inputs += [PATH_TO_FILES + 'xid_con_t_win.cpp']
+    inputs += [ 'xid_device_driver/xid_con_t_win.cpp']
 
 elif sys.platform == 'darwin':
-    inputs += [PATH_TO_FILES + 'xid_con_t_mac.cpp']
+    inputs += [ 'xid_device_driver/xid_con_t_mac.cpp']
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
 include_path = []

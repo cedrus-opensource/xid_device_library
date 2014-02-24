@@ -20,6 +20,17 @@ env.Replace(
     TARGET_ARCH='x86'
 )
 
+env[ 'CURRENT_CEDRUS_REPO_ROOT' ] = sys.path[0] + '/../'
+print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
+
+# this next line makes it so that the 'inputs' collection in any of
+# our SConscript files ('inputs' is the second argument to things like
+# env.SharedLibrary) can contain source files from *EITHER*
+# 'Licenser/src/' *OR* 'Common/src/' *OR BOTH*.  Put another way:
+# without this next line, Licenser SConscript files might not
+# successfully be able to pull in source files from 'Common/src/'.
+env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
+
 # set boost and wx versions
 env['BOOST_VERSION'] = '1_49'
 
