@@ -36,6 +36,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <IOKit/serial/ioss.h>
 #include <termios.h>
 
 #include <boost/timer.hpp>
