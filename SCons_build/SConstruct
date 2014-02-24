@@ -10,8 +10,6 @@ import sys
 
 env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
 
-env[ 'THE_CEDRUS_SUPERLAB_BUILD' ] = True
-
 projects = [
     'SConscript.xid_device_driver',
     'SConscript.st_tester',
