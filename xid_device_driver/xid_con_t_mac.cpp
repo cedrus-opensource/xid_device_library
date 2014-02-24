@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -48,7 +48,7 @@ struct cedrus::xid_con_t::DarwinConnPimpl
     DarwinConnPimpl()
     : m_FileDescriptor ( 0 )
     {}
-    
+
     int m_FileDescriptor;
     termios m_OptionsOriginal;
     termios	m_OptionsCurrent;
@@ -75,7 +75,7 @@ cedrus::xid_con_t::xid_con_t(
       needs_interbyte_delay_(true),
       m_darwinPimpl( new DarwinConnPimpl )
 {
-    port_settings_ = port_settings_t(port_name_, 
+    port_settings_ = port_settings_t(port_name_,
                                      port_speed,
                                      byte_size,
                                      bit_parity,
@@ -167,13 +167,13 @@ int cedrus::xid_con_t::setup_com_port()
 
 	if ( status == NO_ERR )
 	{
-		// Get the current options and save them so we can restore the 
+		// Get the current options and save them so we can restore the
 		// default settings later.
 		if (tcgetattr(m_darwinPimpl->m_FileDescriptor, &(m_darwinPimpl->m_OptionsOriginal)) == OS_FILE_ERROR)
 			status = ERROR_SETTING_UP_PORT;
 		else
 		{
-			// The serial port attributes such as timeouts and baud rate are set by 
+			// The serial port attributes such as timeouts and baud rate are set by
 			// modifying the termios structure and then calling tcsetattr to
 			// cause the changes to take effect. Note that the
 			// changes will not take effect without the tcsetattr() call.
@@ -182,12 +182,12 @@ int cedrus::xid_con_t::setup_com_port()
 			m_darwinPimpl->m_OptionsCurrent = m_darwinPimpl->m_OptionsOriginal;
 		}
 	}
-	
+
 	if ( status == NO_ERR )
 	{
-		// Set raw input (non-canonical) mode, with reads blocking until either 
+		// Set raw input (non-canonical) mode, with reads blocking until either
 		// a single character has been received or a one second timeout expires.
-		// See tcsetattr(4) ("man 4 tcsetattr") and termios(4) ("man 4 termios") 
+		// See tcsetattr(4) ("man 4 tcsetattr") and termios(4) ("man 4 termios")
 		// for details.
 
 		cfmakeraw(&(m_darwinPimpl->m_OptionsCurrent));
@@ -221,7 +221,7 @@ int cedrus::xid_con_t::setup_com_port()
 				break;
 
 			default:
-				break;				
+				break;
 		}
 
 		flags &= ~( PARENB | PARODD );
@@ -240,7 +240,7 @@ int cedrus::xid_con_t::setup_com_port()
 				break;
 
 			default:
-				break;				
+				break;
 		}
 
 		// The baud rate, word length, and handshake options can be set as follows:
@@ -269,7 +269,7 @@ int cedrus::xid_con_t::setup_com_port()
 		else
 			flags &= ~CSTOPB;
 
-		cfsetspeed(&(m_darwinPimpl->m_OptionsCurrent), port_settings_.baud_rate());  
+		cfsetspeed(&(m_darwinPimpl->m_OptionsCurrent), port_settings_.baud_rate());
 		m_darwinPimpl->m_OptionsCurrent.c_cflag = ( flags );
 
 		// Cause the new options to take effect immediately.
@@ -287,19 +287,19 @@ int cedrus::xid_con_t::setup_com_port()
 		{
 			// To set the modem handshake lines, use the following ioctls.
 			// See tty(4) ("man 4 tty") and ioctl(2) ("man 2 ioctl") for details.
-			if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCSDTR) == OS_FILE_ERROR) 
+			if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCSDTR) == OS_FILE_ERROR)
 				status = ERROR_SETTING_UP_PORT;
 		}
 
 		if ( status == NO_ERR )
 		{
 			// Clear Data Terminal Ready (DTR)
-			if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCCDTR) == OS_FILE_ERROR) 
+			if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCCDTR) == OS_FILE_ERROR)
 				status = ERROR_SETTING_UP_PORT;
 		}
 
 		unsigned long handshake = 0;
-		
+
 		if ( status == NO_ERR )
 		{
 			handshake = TIOCM_DTR | TIOCM_DSR | TIOCM_RTS | TIOCM_CTS;
@@ -318,8 +318,8 @@ int cedrus::xid_con_t::setup_com_port()
 				status = ERROR_SETTING_UP_PORT;
 		}
 	} // handshaking
-	
-	// :whschultz:20070507 
+
+	// :whschultz:20070507
 	// Found Apple documentation stating how to set the read latency on a standard serial port.
 	// http://developer.apple.com/samplecode/SerialPortSample/listing2.html
     // http://developer.apple.com/library/mac/samplecode/SerialPortSample/index.html
@@ -361,7 +361,7 @@ int cedrus::xid_con_t::read(
         status = ERROR_READING_PORT;
     else
         bytes_read = read;
-    
+
     return status;
 }
 
@@ -373,7 +373,7 @@ int cedrus::xid_con_t::write(
     unsigned char *p = in_buffer;
     int status = NO_ERR;
     int written = 0;
-    
+
     if(needs_interbyte_delay_)
     {
         for(int i = 0; i < bytes_to_write && status == NO_ERR; ++i)
@@ -384,7 +384,7 @@ int cedrus::xid_con_t::write(
                 status = ERROR_WRITING_TO_PORT;
                 break;
             }
-            
+
             written += byte_count;
 
             if(written == bytes_to_write)
@@ -438,7 +438,7 @@ int cedrus::xid_con_t::send_xid_command(
     int bytes_stored = 0;
 
     // sometimes sending a command needs a delay because the 4MHz processors
-    // in the response pads need a little time to process the command and 
+    // in the response pads need a little time to process the command and
     // send a response.
     if(command_delay > 0)
         usleep(command_delay*1000);
