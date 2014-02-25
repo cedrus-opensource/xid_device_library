@@ -16,21 +16,26 @@ boost.need_boost_system()
 
 project_target_name = 'xid_device_driver'
 
+prefix = ''
+
+if env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
+    prefix = env[ 'CURRENT_CEDRUS_REPO_ROOT' ] + '/xid_device_library/'
+
 inputs = [
-    'xid_device_driver/base_device_t.cpp',
-    'xid_device_driver/port_settings_t.cpp',
-    'xid_device_driver/stim_tracker_t.cpp',
-    'xid_device_driver/xid_con_t.cpp',
-    'xid_device_driver/xid_device_config_t.cpp',
-    'xid_device_driver/xid_device_scanner_t.cpp',
-    'xid_device_driver/xid_device_t.cpp',
+    prefix + 'xid_device_driver/base_device_t.cpp',
+    prefix + 'xid_device_driver/port_settings_t.cpp',
+    prefix + 'xid_device_driver/stim_tracker_t.cpp',
+    prefix + 'xid_device_driver/xid_con_t.cpp',
+    prefix + 'xid_device_driver/xid_device_config_t.cpp',
+    prefix + 'xid_device_driver/xid_device_scanner_t.cpp',
+    prefix + 'xid_device_driver/xid_device_t.cpp',
 ]
 
 if sys.platform == 'win32':
-    inputs += [ 'xid_device_driver/xid_con_t_win.cpp']
+    inputs += [ prefix + 'xid_device_driver/xid_con_t_win.cpp']
 
 elif sys.platform == 'darwin':
-    inputs += [ 'xid_device_driver/xid_con_t_mac.cpp']
+    inputs += [ prefix + 'xid_device_driver/xid_con_t_mac.cpp']
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
 include_path = []
