@@ -32,12 +32,12 @@
 // CedrusXidDeviceEnumerator.h : Declaration of the CCedrusXidDeviceEnumerator
 
 #pragma once
-#include "CedrusXidDriver_i.h"
+#include "CedrusXidDriver.h"
 #include "resource.h"       // main symbols
 #include "com_ptr.h"
 #include <vector>
 #include <string>
-#include "xid_device_scanner_t.h"
+#include "../xid_device_driver/xid_device_scanner_t.h"
 
 using namespace ATL;
 

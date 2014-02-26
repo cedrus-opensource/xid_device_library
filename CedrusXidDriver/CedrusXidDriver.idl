@@ -6,7 +6,7 @@
 
 import "oaidl.idl";
 import "ocidl.idl";
-import "ResponseExtension.idl";
+import "../PresentationSDK/ResponseExtension/interfaces/ResponseExtension.idl";
 
 [
     object,

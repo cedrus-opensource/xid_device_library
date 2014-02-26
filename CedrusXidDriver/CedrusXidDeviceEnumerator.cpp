@@ -34,9 +34,8 @@
 #include "stdafx.h"
 #include "CedrusXidDeviceEnumerator.h"
 #include "CedrusXidResponseDevice.h"
-#include "xid_device_scanner_t.h"
-#include "xid_con_t.h"
-#include "xid_device_t.h"
+#include "../xid_device_driver/xid_device_scanner_t.h"
+#include "../xid_device_driver/xid_device_t.h"
 #include <boost/shared_ptr.hpp>
 
 using namespace public_nbs;
@@ -59,7 +58,7 @@ CCedrusXidDeviceEnumerator::CCedrusXidDeviceEnumerator()
             devconfig_location_.erase(pos);
         }
     }
-    port_info_.detect_valid_xid_devices();
+    port_info_.detect_valid_xid_devices(std::string(devconfig_location_.begin(), devconfig_location_.end()));
     devices_.resize(port_info_.rb_device_count());
 }
 
@@ -102,13 +101,9 @@ STDMETHODIMP CCedrusXidDeviceEnumerator::getDevice(
 
                 if(dev)
                 {
-                    boost::shared_ptr<cedrus::xid_con_t> xid_con = 
+                    boost::shared_ptr<cedrus::xid_device_t> xid_device = 
                         port_info_.response_device_connection_at_index(index);
-                    xid_con->open();
-
-                    boost::shared_ptr<cedrus::xid_device_t> xid_device(
-                        new cedrus::xid_device_t(xid_con,
-                                                 devconfig_location_));
+                    xid_device->open_connection();
 
                     dev->set_xid_device(xid_device);
                 }

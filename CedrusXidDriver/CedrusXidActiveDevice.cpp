@@ -33,7 +33,7 @@
 
 #include "stdafx.h"
 #include "CedrusXidActiveDevice.h"
-#include "xid_device_t.h"
+#include "../xid_device_driver/xid_device_t.h"
 
 // CCedrusXidActiveDevice
 

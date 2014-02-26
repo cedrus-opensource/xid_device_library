@@ -34,7 +34,7 @@
 #include "stdafx.h"
 #include "CedrusXidResponseDevice.h"
 #include "CedrusXidActiveDevice.h"
-#include "xid_device_t.h"
+#include "../xid_device_driver/xid_device_t.h"
 #include "string_utilities.h"
 #include "com_ptr.h"
 
@@ -57,7 +57,8 @@ void CCedrusXidResponseDevice::set_button_names()
         return;
     }
 
-    std::wstring prefix = xid_device_->input_name_prefix();
+    std::string temp = xid_device_->input_name_prefix();
+    std::wstring prefix (temp.begin(), temp.end()) ;
 
     if(button_count_ == 1)
     {
@@ -74,7 +75,7 @@ void CCedrusXidResponseDevice::set_button_names()
             else
             {
                 button_names_.push_back(
-                    prefix + L" " + to_wstr(i+1));
+                    prefix + L" " + public_nbs::to_wstr(i+1));
             }
         }
     }
@@ -162,7 +163,7 @@ STDMETHODIMP CCedrusXidResponseDevice::acquire(
 
     try
     {
-        COM_ptr<IActiveResponseDevice> active_device;
+        public_nbs::COM_ptr<IActiveResponseDevice> active_device;
         active_device = active_device.create(
             CLSID_CedrusXidActiveDevice, IID_IActiveResponseDevice);
 

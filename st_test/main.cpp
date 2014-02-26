@@ -11,6 +11,7 @@
 #   define sleep_func usleep
 #   define sleep_inc 1000
 #elif defined(_WIN32)
+#   include <windows.h>
 #   include <direct.h>
 #   define GetCurrentDir _getcwd
 #   define sleep_func Sleep

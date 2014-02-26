@@ -1,0 +1,82 @@
+import CedrusBoost
+import CedrusSConsDefaultEnvironments
+import CedrusSConsHelperFunctions
+
+import os
+import sys
+
+Import('env')
+
+boost = CedrusBoost.CedrusBoostSettings(env)
+
+project_target_name = 'CedrusXidDriver'
+
+PATH_TO_FILES = 'CedrusXidDriver/'
+inputs = [
+PATH_TO_FILES + 'CedrusXidActiveDevice.cpp',
+PATH_TO_FILES + 'CedrusXidDeviceEnumerator.cpp',
+PATH_TO_FILES + 'CedrusXidDriver.cpp',
+PATH_TO_FILES + 'CedrusXidDriver.def',
+PATH_TO_FILES + 'CedrusXidResponseDevice.cpp',
+PATH_TO_FILES + 'dllmain.cpp', 
+PATH_TO_FILES + 'gui_console.cpp', 
+PATH_TO_FILES + 'stdafx.cpp', 
+'PresentationSDK/public_src/string_utilities.cpp',
+'PresentationSDK/public_src/com_initializer.cpp',
+]
+defines = [
+'_AFXDLL',
+'_ATL_DLL',
+'WIN32',
+'_WINDOWS',
+'_DEBUG',
+#'_USRDLL',
+'_WINDLL'
+]
+include_path = [
+'PresentationSDK/ResponseExtension/interfaces',
+'PresentationSDK/public_src'
+]
+cxxflags = []
+frameworks = []
+lib_dependencies = ['xid_device_driver']
+lib_path = []
+linkflags = []
+
+env['MIDLCOMSTR'] = ''
+env['MIDLFLAGS'] = '/robust'
+env.TypeLibrary(source="CedrusXidDriver/CedrusXidDriver.idl")
+
+resfile = env.RES('CedrusXidDriver/CedrusXidDriver.rc')
+
+if sys.platform == 'win32':
+    linkflags = [ '/SUBSYSTEM:CONSOLE',  '/VERSION:1.0', '/MANIFEST', '/INCREMENTAL', ]
+
+    env.Object(
+        [
+        'CedrusXidDriver/CedrusXidDriver_i.c', 
+        'PresentationSDK/ResponseExtension/interfaces/ResponseExtension_i.c',
+        ],
+        SHCCCOMSTR='' , CEDRUS_SCONSCRIPT_PROJECT_NAME='CedrusXidDriver', PCH='', PCHSTOP='', CPPFLAGS=''
+        );
+    CedrusXidDriver_i_obj = os.path.normpath(env.subst(os.getcwd()+'/CedrusXidDriver/CedrusXidDriver_i_CedrusXidDriver_.object'))
+    ResponseExtension_i_obj = os.path.normpath(env.subst(os.getcwd()+'/PresentationSDK/ResponseExtension/interfaces/ResponseExtension_i_CedrusXidDriver_.object' ))
+
+    linkflags += [ CedrusXidDriver_i_obj ]
+    linkflags += [ ResponseExtension_i_obj ]
+
+staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
+    env,
+    project_target_name,
+    inputs,
+    defines,
+    include_path,
+    cxxflags,
+    frameworks,
+    lib_dependencies,
+    lib_path,
+    linkflags
+)
+
+env.Depends( staged_binary, CedrusXidDriver_i_obj )
+env.Depends( staged_binary, ResponseExtension_i_obj )
