@@ -19,7 +19,7 @@ project_target_name = 'xid_device_driver'
 prefix = ''
 
 if env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
-    prefix = env[ 'CURRENT_CEDRUS_REPO_ROOT' ] + '/xid_device_library/'
+    prefix = '$OBJ_ROOT/xid_device_library/'
 
 inputs = [
     prefix + 'xid_device_driver/base_device_t.cpp',
