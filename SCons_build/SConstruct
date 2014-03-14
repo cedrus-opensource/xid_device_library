@@ -15,8 +15,6 @@ projects = [
     'SConscript.st_tester',
 ]
 
-if sys.platform == 'win32':
-    projects += ['SConscript.CedrusXidDriver']
 
 env.Replace(
     CEDRUS_LISTING_OF_BUILD_SCONSCRIPTS = projects,

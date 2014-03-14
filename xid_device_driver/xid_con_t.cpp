@@ -159,7 +159,7 @@ int cedrus::xid_con_t::get_number_of_keys_down()
 unsigned long cedrus::xid_con_t::GetTickCount()
 {
     boost::posix_time::ptime time_microseconds = boost::posix_time::microsec_clock::local_time();
-    unsigned long milliseconds = time_microseconds.time_of_day().total_milliseconds();
+    unsigned long milliseconds = static_cast<unsigned long>(time_microseconds.time_of_day().total_milliseconds());
 
     return milliseconds;
 }
