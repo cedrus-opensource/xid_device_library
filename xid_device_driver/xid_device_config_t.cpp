@@ -103,7 +103,7 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
             for(int i = 1; i <=8; ++i)
             {
                 std::ostringstream s2;
-                s2 << "XidDeviceKeyMap" << i;
+                s2 << ".XidDeviceKeyMap" << i;
                 std::string key_name = s2.str().c_str();
                 
                 int key_num = pt->get(port_str+key_name, -1);
