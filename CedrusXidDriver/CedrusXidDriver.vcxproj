@@ -45,6 +45,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSdkDir)lib;$(FrameworkSDKDir)</LibraryPath>
+    <ReferencePath>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -80,11 +82,12 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\CedrusXidDriver.def</ModuleDefinitionFile>
-      <AdditionalDependencies>Winmm.lib;mfcs100ud.lib;comsvcs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;mfcs100ud.lib;comsvcs.lib;xid_device_driver.lib%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <RegisterOutput>true</RegisterOutput>
+      <RegisterOutput>false</RegisterOutput>
       <IgnoreSpecificDefaultLibraries>mfcs100ud.lib</IgnoreSpecificDefaultLibraries>
       <PerUserRedirection>true</PerUserRedirection>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)/lib;%(AdditionalLibraryDirectories);$(ProjectDir)\..\SCons_build\scons-out\dbg\staging</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,13 +120,14 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\CedrusXidDriver.def</ModuleDefinitionFile>
-      <AdditionalDependencies>Winmm.lib;mfcs100u.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Winmm.lib;mfcs100u.lib;%(AdditionalDependencies);xid_device_driver.lib</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <RegisterOutput>true</RegisterOutput>
+      <RegisterOutput>false</RegisterOutput>
       <IgnoreSpecificDefaultLibraries>mfcs100u.lib</IgnoreSpecificDefaultLibraries>
       <PerUserRedirection>true</PerUserRedirection>
+      <AdditionalLibraryDirectories>$(BOOST_ROOT)/lib;%(AdditionalLibraryDirectories);$(ProjectDir)\..\SCons_build\scons-out\opt\staging</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

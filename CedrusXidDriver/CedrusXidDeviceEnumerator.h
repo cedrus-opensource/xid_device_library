@@ -32,7 +32,7 @@
 // CedrusXidDeviceEnumerator.h : Declaration of the CCedrusXidDeviceEnumerator
 
 #pragma once
-#include "CedrusXidDriver.h"
+#include "CedrusXidDriver_i.h"
 #include "resource.h"       // main symbols
 #include "com_ptr.h"
 #include <vector>
@@ -62,7 +62,6 @@ class ATL_NO_VTABLE CCedrusXidDeviceEnumerator :
 {
 public:
     CCedrusXidDeviceEnumerator();
-    ~CCedrusXidDeviceEnumerator();
 
     DECLARE_PROTECT_FINAL_CONSTRUCT()
 

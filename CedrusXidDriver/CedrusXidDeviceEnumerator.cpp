@@ -62,11 +62,6 @@ CCedrusXidDeviceEnumerator::CCedrusXidDeviceEnumerator()
     devices_.resize(port_info_.rb_device_count());
 }
 
-CCedrusXidDeviceEnumerator::~CCedrusXidDeviceEnumerator()
-{
-    port_info_.drop_every_connection();
-}
-
 STDMETHODIMP CCedrusXidDeviceEnumerator::getDeviceCount(unsigned long *count)
 {
     *count = devices_.size();

@@ -32,7 +32,7 @@
 // CedrusXidActiveDevice.h : Declaration of the CCedrusXidActiveDevice
 
 #pragma once
-#include "CedrusXidDriver.h"
+#include "CedrusXidDriver_i.h"
 #include "resource.h"       // main symbols
 #include <string>
 #include <vector>

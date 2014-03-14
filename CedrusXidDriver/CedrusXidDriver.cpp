@@ -38,7 +38,7 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "CedrusXidDriver.h"
+#include "CedrusXidDriver_i.h"
 #include "dllmain.h"
 
 
