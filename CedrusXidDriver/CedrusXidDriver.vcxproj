@@ -59,6 +59,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\xid_device_driver;$(SolutionDir)\PresentationSDK\ResponseExtension\interfaces;$(SolutionDir)\PresentationSDK\public_src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -197,11 +198,6 @@
   </ItemGroup>
   <ItemGroup>
     <Midl Include="CedrusXidDriver.idl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\xid_device_driver\xid_device_driver.vcxproj">
-      <Project>{baf4ca27-af62-4173-b9a7-aac18f90318b}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
