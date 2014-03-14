@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+
+  <Product Name='Cedrus XID Response Extension for Presentation' Id='A1F1DCE7-8D50-46B2-9537-145F77D07D9C' UpgradeCode='D4F4A809-E719-4D95-AE25-B0256A1CA8F0'
+    Language='1033' Codepage='1252' Version='1.0.1' Manufacturer='Cedrus Corporation'>
+
+    <Package Id='*' Keywords='Installer' Description="Cedrus XID Response Extension for Presentation Installer"
+      Manufacturer='Cedrus Corporation' InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+	  
+	<Upgrade Id='D4F4A809-E719-4D95-AE25-B0256A1CA8F0'>
+      <UpgradeVersion OnlyDetect='yes' Property='SELFFOUND'
+        Minimum='1.0.1' IncludeMinimum='yes'
+		Maximum='1.0.1' IncludeMaximum='yes' />
+      <UpgradeVersion OnlyDetect='yes' Property='NEWERFOUND'
+        Minimum='1.0.1' IncludeMinimum='no' />
+    </Upgrade>
+	
+	<CustomAction Id='AlreadyUpdated' Error='[ProductName] is already installed.' />
+    <CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed.' />
+	
+	<InstallExecuteSequence>
+		<Custom Action='AlreadyUpdated' After='FindRelatedProducts'>SELFFOUND</Custom>
+		<Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERFOUND</Custom>
+	</InstallExecuteSequence>
+	  
+	<Media Id='1' Cabinet='cxep_installer.cab' EmbedCab='yes' />
+
+	<Directory Id='TARGETDIR' Name='SourceDir'>
+		<Directory Id='ProgramFilesFolder' Name='PFiles'>
+			<Directory Id='CXEP_DIR' Name='Cedrus XID Response Extension for Presentation'>
+				<Component Id='CedrusXidDriver' Guid='1E7E33AB-7340-4A2A-97D2-265A92C9A596'>
+					<File Id='COPYING' Name='COPYING' DiskId='1' Source='..\COPYING' KeyPath='yes'/>
+					<File Id='XID_RB_530' Name='XID RB-530.devconfig' DiskId='1' Source='..\devconfig\XID RB-530.devconfig'/>
+					<File Id='XID_RB_730' Name='XID RB-730.devconfig' DiskId='1' Source='..\devconfig\XID RB-730.devconfig'/>
+					<File Id='XID_RB_830' Name='XID RB-830.devconfig' DiskId='1' Source='..\devconfig\XID RB-830.devconfig'/>
+					<File Id='XID_RB_834' Name='XID RB-834.devconfig' DiskId='1' Source='..\devconfig\XID RB-834.devconfig'/>
+					<File Id='XID_Lumina_LP_400' Name='XID Lumina LP-400.devconfig' DiskId='1' Source='..\devconfig\XID Lumina LP-400.devconfig'/>
+					<File Id='XID_StimTracker_ST_100' Name='XID StimTracker ST-100.devconfig' DiskId='1' Source='..\devconfig\XID StimTracker ST-100.devconfig'/>
+					<File Id='XID_SV_1' Name='XID SV-1.devconfig' DiskId='1' Source='..\devconfig\XID SV-1.devconfig'/>
+				</Component>
+			</Directory>
+		</Directory>
+    </Directory>
+	
+	<Feature Id='Complete' Level='1'>
+      <ComponentGroupRef Id='dlls_to_include' />
+	  <ComponentRef Id='CedrusXidDriver' />
+    </Feature>
+
+	<UI Id="WixUI_InstallDirCustom">
+	
+		<Dialog Id="CustomWelcomeDlg" Width="370" Height="270" Title="!(loc.WelcomeDlg_Title)">
+			<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" >
+				<Publish Property="WixUI_InstallMode" Value="Update">Installed AND PATCH</Publish>
+			</Control>
+			<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+				<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+			</Control>
+			<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="!(loc.WelcomeDlgBitmap)" />
+			<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.WixUIBack)" />
+			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+			<Control Id="Description" Type="Text" X="135" Y="80" Width="220" Height="60" Transparent="yes" NoPrefix="yes" Text="Copyright 2014 Cedrus Corporation. All rights reserved. Licensed for use, redistribution and modification under the BSD License. See the COPYING file in the installation destination for the full license." >
+				<Condition Action="show">NOT Installed OR NOT PATCH</Condition>
+				<Condition Action="hide">Installed AND PATCH</Condition>
+			</Control>
+			<Control Id="PatchDescription" Type="Text" X="135" Y="80" Width="220" Height="60" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeUpdateDlgDescriptionUpdate)" >
+				<Condition Action="show">Installed AND PATCH</Condition>
+				<Condition Action="hide">NOT Installed OR NOT PATCH</Condition>
+			</Control>
+			<Control Id="Title" Type="Text" X="135" Y="20" Width="220" Height="60" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeDlgTitle)" />
+		</Dialog>
+		
+		<InstallUISequence>
+			<Show Dialog="CustomWelcomeDlg" Before="ProgressDlg" Overridable="yes">NOT Installed OR PATCH</Show>
+		</InstallUISequence>
+		
+		<TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+		<TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+		<TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+		<Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+		<Property Id="WixUI_Mode" Value="InstallDir" />
+
+		<DialogRef Id="CustomWelcomeDlg" />
+		<DialogRef Id="BrowseDlg" />
+		<DialogRef Id="DiskCostDlg" />
+		<DialogRef Id="ErrorDlg" />
+		<DialogRef Id="FatalError" />
+		<DialogRef Id="FilesInUse" />
+		<DialogRef Id="MsiRMFilesInUse" />
+		<DialogRef Id="PrepareDlg" />
+		<DialogRef Id="ProgressDlg" />
+		<DialogRef Id="ResumeDlg" />
+		<DialogRef Id="UserExit" />
+		
+		<Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="3">1</Publish>
+		<Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4"><![CDATA[WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+
+		<Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+		<Publish Dialog="CustomWelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg">NOT Installed</Publish>
+		<Publish Dialog="CustomWelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
+
+		<Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="CustomWelcomeDlg">1</Publish>
+		<Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+		<Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+		<Publish Dialog="InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+		<Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+		<Publish Dialog="InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+		<Publish Dialog="InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+		
+		<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="1">NOT Installed</Publish>
+		<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="2">Installed AND NOT PATCH</Publish>
+		<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomWelcomeDlg" Order="2">Installed AND PATCH</Publish>
+
+		<Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+
+		<Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+		<Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+		<Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+
+		<Property Id="ARPNOMODIFY" Value="1" />
+	</UI>
+	
+	<UIRef Id="WixUI_Common" />
+
+	<Property Id="WIXUI_INSTALLDIR" Value="CXEP_DIR" />
+	<UIRef Id="WixUI_InstallDirCustom" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+	
+   </Product>
+</Wix>
