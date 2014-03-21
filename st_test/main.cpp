@@ -50,8 +50,8 @@ int main(int argc, char** argv)
     boost::shared_ptr<stim_tracker_t> st;
     if(scanner.st_device_count() > 0)
     {
-        std::cout << "Found a " << st->get_device_name() << std::endl;
         st = scanner.stimtracker_connection_at_index(0);
+        std::cout << "Found a " << st->get_device_name() << std::endl;
         st->open_connection();
     }
     else
