@@ -115,6 +115,11 @@ int cedrus::base_device_t::get_model_id() const
     return config_->get_model_id();
 }
 
+int cedrus::base_device_t::number_of_lines() const
+{
+    return config_->number_of_lines();
+}
+
 int cedrus::base_device_t::close_connection()
 {
     return xid_con_->close();

@@ -84,6 +84,8 @@ namespace cedrus
          */
         int CEDRUS_XIDDRIVER_IMPORTEXPORT get_model_id() const;
 
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT number_of_lines() const;
+
         /**
          * Resets the internal device reaction time timer.
          * 
