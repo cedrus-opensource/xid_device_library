@@ -61,6 +61,10 @@ namespace cedrus
          */
         std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_name();
 
+        std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_internal_product_name ();
+
+        std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_firmware_version ();
+
         /**
          * product id of the device.
          * 

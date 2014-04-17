@@ -33,7 +33,7 @@
 #include "xid_device_config_t.h"
 #include "xid_con_t.h"
 #include "constants.h"
-
+#include <sstream>
 
 cedrus::base_device_t::base_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
@@ -47,7 +47,6 @@ cedrus::base_device_t::base_device_t(
 
 cedrus::base_device_t::~base_device_t()
 {}
-
 
 void cedrus::base_device_t::reset_rt_timer()
 {
@@ -98,6 +97,43 @@ int cedrus::base_device_t::query_base_timer()
     }
 
     return GENERAL_ERROR;
+}
+
+std::string cedrus::base_device_t::get_internal_product_name()
+{
+    char return_info[200];
+    xid_con_->send_xid_command(
+        "_d1",
+        0,
+        return_info,
+        sizeof(return_info),
+        100);
+    return std::string(return_info);
+}
+
+std::string cedrus::base_device_t::get_firmware_version()
+{
+    char major_return[200];
+    char minor_return[200];
+
+    xid_con_->send_xid_command(
+        "_d4",
+        0,
+        major_return,
+        sizeof(major_return),
+        100);
+
+    xid_con_->send_xid_command(
+        "_d5",
+        0,
+        minor_return,
+        sizeof(minor_return),
+        100);
+
+    std::ostringstream s;
+    s << "Major: " << major_return << " Minor: " << minor_return;
+
+    return s.str();
 }
 
 std::string cedrus::base_device_t::get_device_name()
