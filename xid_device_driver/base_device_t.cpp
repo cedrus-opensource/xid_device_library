@@ -111,10 +111,10 @@ std::string cedrus::base_device_t::get_internal_product_name()
     return std::string(return_info);
 }
 
-std::string cedrus::base_device_t::get_firmware_version()
+void cedrus::base_device_t::get_firmware_version( int &major, int &minor )
 {
-    char major_return[200];
-    char minor_return[200];
+    char major_return[2];
+    char minor_return[2];
 
     xid_con_->send_xid_command(
         "_d4",
@@ -130,10 +130,8 @@ std::string cedrus::base_device_t::get_firmware_version()
         sizeof(minor_return),
         100);
 
-    std::ostringstream s;
-    s << "Major: " << major_return << " Minor: " << minor_return;
-
-    return s.str();
+    major = major_return[0]-'0';
+    minor = minor_return[0]-'0';
 }
 
 std::string cedrus::base_device_t::get_device_name()
