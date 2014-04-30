@@ -33,6 +33,7 @@
 #include "xid_device_config_t.h"
 #include "xid_con_t.h"
 #include "constants.h"
+#include <sstream>
 
 cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
@@ -138,3 +139,29 @@ void cedrus::xid_device_t::init_response_device()
         }
     }
 }
+
+std::string cedrus::xid_device_t::get_accessory_connector_mode( void ) const
+{
+    char return_info[200];
+    xid_con_->send_xid_command(
+        "_a1",
+        0,
+        return_info,
+        sizeof(return_info),
+        100);
+    return std::string(return_info);
+}
+
+void cedrus::xid_device_t::set_accessory_connector_mode( int mode ) const
+{
+    char return_info[200];
+	std::ostringstream s;
+    s << "a1" << mode;
+    xid_con_->send_xid_command(
+        s.str().c_str(),
+        0,
+        return_info,
+        sizeof(return_info),
+        100);
+}
+
