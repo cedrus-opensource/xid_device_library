@@ -260,3 +260,13 @@ int cedrus::xid_con_t::get_inquiry(const char in_command[],
 
     return return_value;
 }
+
+int cedrus::xid_con_t::get_baud_rate ( void ) const
+{
+    return port_settings_.baud_rate();
+}
+
+void cedrus::xid_con_t::set_baud_rate ( int rate )
+{
+    port_settings_.baud_rate(rate);
+}

@@ -150,9 +150,11 @@ namespace cedrus
          */
         std::string CEDRUS_XIDDRIVER_IMPORTEXPORT input_name_prefix() const;
 
-    std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode() const;
+    int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode() const;
 
     void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode ) const;
+
+    void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_baud_rate( int rate ) const;
 
     private:
         void init_response_device();

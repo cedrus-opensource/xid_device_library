@@ -140,21 +140,21 @@ void cedrus::xid_device_t::init_response_device()
     }
 }
 
-std::string cedrus::xid_device_t::get_accessory_connector_mode( void ) const
+int cedrus::xid_device_t::get_accessory_connector_mode( void ) const
 {
-    char return_info[200];
+    char return_info[4];
     xid_con_->send_xid_command(
         "_a1",
         0,
         return_info,
         sizeof(return_info),
         100);
-    return std::string(return_info);
+    return return_info[3]-'0';
 }
 
 void cedrus::xid_device_t::set_accessory_connector_mode( int mode ) const
 {
-    char return_info[200];
+    char return_info[4];
 	std::ostringstream s;
     s << "a1" << mode;
     xid_con_->send_xid_command(
@@ -165,3 +165,18 @@ void cedrus::xid_device_t::set_accessory_connector_mode( int mode ) const
         100);
 }
 
+void cedrus::xid_device_t::set_device_baud_rate( int rate ) const
+{
+    char change_baud_cmd[4];
+    change_baud_cmd[0] = 'f';
+    change_baud_cmd[1] = '1';
+    change_baud_cmd[2] = rate;
+    change_baud_cmd[3] = '\0';
+    char return_info[200];
+    xid_con_->send_xid_command(
+        change_baud_cmd,
+        0,
+        return_info,
+        sizeof(return_info),
+        100);
+}

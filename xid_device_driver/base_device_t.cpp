@@ -173,3 +173,13 @@ void cedrus::base_device_t::clear_lines(unsigned int lines_bitmask, bool leave_r
 {
     xid_con_->clear_digital_output_lines(lines_bitmask, leave_remaining_lines);
 }
+
+int cedrus::base_device_t::get_baud_rate ( void ) const
+{
+    return xid_con_->get_baud_rate();
+}
+
+void cedrus::base_device_t::set_baud_rate ( int rate )
+{
+    xid_con_->set_baud_rate(rate);
+}

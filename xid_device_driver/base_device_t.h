@@ -137,6 +137,9 @@ namespace cedrus
         void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false);
 
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate () const;
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate ( int rate );
 
     protected:
         boost::shared_ptr<xid_con_t> xid_con_;

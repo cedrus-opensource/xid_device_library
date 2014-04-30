@@ -245,6 +245,10 @@ namespace cedrus
 
         void get_product_and_model_id( int &product_id, int &model_id );
 
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate () const;
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate ( int rate );
+
     private:
     	enum { OS_FILE_ERROR = -1 };
         int setup_com_port();
