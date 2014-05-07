@@ -50,24 +50,14 @@ cedrus::base_device_t::~base_device_t()
 
 void cedrus::base_device_t::reset_rt_timer()
 {
-    char return_info[200];
-    xid_con_->send_xid_command(
-        "e5", // reset rt timer Xid command
-        2,
-        return_info,
-        sizeof(return_info),
-        0);
+    int bytes_written;
+    xid_con_->write((unsigned char*)"e5", 2, bytes_written);
 }
 
 void cedrus::base_device_t::reset_base_timer()
 {
-    char return_info[200];
-    xid_con_->send_xid_command(
-        "e1", // reset base timer Xid command
-        2,
-        return_info,
-        sizeof(return_info),
-        0);
+    int bytes_written;
+    xid_con_->write((unsigned char*)"e1", 2, bytes_written);
 }
 
 int cedrus::base_device_t::query_base_timer()
@@ -75,10 +65,8 @@ int cedrus::base_device_t::query_base_timer()
     char return_info[200];
     int read = xid_con_->send_xid_command(
         "e3",
-        2,
         return_info,
-        sizeof(return_info),
-        6);
+        sizeof(return_info));
 
     bool valid_response = (read == 6);
 
@@ -104,10 +92,8 @@ std::string cedrus::base_device_t::get_internal_product_name()
     char return_info[200];
     xid_con_->send_xid_command(
         "_d1",
-        0,
         return_info,
-        sizeof(return_info),
-        100);
+        sizeof(return_info));
     return std::string(return_info);
 }
 
@@ -118,17 +104,13 @@ void cedrus::base_device_t::get_firmware_version( int &major, int &minor )
 
     xid_con_->send_xid_command(
         "_d4",
-        0,
         major_return,
-        sizeof(major_return),
-        100);
+        sizeof(major_return));
 
     xid_con_->send_xid_command(
         "_d5",
-        0,
         minor_return,
-        sizeof(minor_return),
-        100);
+        sizeof(minor_return));
 
     major = major_return[0]-'0';
     minor = minor_return[0]-'0';
@@ -177,9 +159,4 @@ void cedrus::base_device_t::clear_lines(unsigned int lines_bitmask, bool leave_r
 int cedrus::base_device_t::get_baud_rate ( void ) const
 {
     return xid_con_->get_baud_rate();
-}
-
-void cedrus::base_device_t::set_baud_rate ( int rate )
-{
-    xid_con_->set_baud_rate(rate);
 }

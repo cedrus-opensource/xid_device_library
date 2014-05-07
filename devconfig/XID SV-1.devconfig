@@ -1,7 +1,7 @@
 [DeviceInfo]
 DeviceID = 3021
 DeviceName = SV-1 Voice Key
-XidProductID = 1
+XidProductID = 49
 XidModelID = 0
 
 [DeviceOptions]

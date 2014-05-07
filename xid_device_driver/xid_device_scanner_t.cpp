@@ -59,7 +59,6 @@ enum { OS_FILE_ERROR = -1,
 
 cedrus::xid_device_scanner_t::xid_device_scanner_t(void)
 {
-    load_available_com_ports();
 }
 
 cedrus::xid_device_scanner_t::~xid_device_scanner_t(void)
@@ -83,7 +82,7 @@ void cedrus::xid_device_scanner_t::drop_every_connection()
     st_devices_.clear();
 }
 
-int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &config_file_location)
+int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &config_file_location, boost::function< void ( std::string ) > reportFunction)
 {
     int devices = 0; //the return value
     boost::filesystem::path targetDir(config_file_location);
@@ -93,17 +92,15 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
     std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > master_config_list;
 
     load_available_com_ports();
-
     rb_devices_.clear();
     st_devices_.clear();
-    
+
 	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
 	{ 
 	    if( is_regular_file(p) && p.extension() == ".devconfig" )
         {
             boost::property_tree::ptree pt;
             boost::property_tree::ini_parser::read_ini(p.string(), pt);
-
             master_config_list.push_back(cedrus::xid_device_config_t::config_for_device(&pt));
         }
 	}
@@ -128,7 +125,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
         bool device_found = false;
         const int baud_rate[] = { 115200, 19200, 9600, 57600, 38400 };
         const int num_bauds   = sizeof(baud_rate)/sizeof(int);
-        
+
         // Here we're going to actually connect to a port and send it some signals. Our aim here is to
         // get an XID device's product/device and model IDs.
         for(int i = 0; i < num_bauds && !device_found; ++i)
@@ -142,19 +139,17 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                 xid_con->flush_output();
 
                 xid_con->send_xid_command("_c1",
-                                          0,
                                           return_info,
                                           sizeof(return_info),
-                                          5,
                                           1000,
                                           100);
-                
+
                 std::string info;
                 if(return_info[0] == NULL)
                 {
                     // there's a possibility that the device is in E-Prime mode.
                     // Go through the buffer and discard NULL characters, and
-                    // only keep the non NULL characters.
+                    // only keep the non NULL characters. Also, flush everything.
                     for(int j = 0; j < sizeof(return_info); ++j)
                     {
                         if(return_info[j] != NULL)
@@ -162,14 +157,28 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                             info.append(&return_info[j], 1);
                         }
                     }
+                    xid_con->flush_input();
+                    xid_con->flush_output();
                 }
                 else
                     info = std::string(return_info);
-                
+
                 if( strstr(info.c_str(), "_xid") )
                 {
-                    // Found an XID device, see if it's one of the candidates. If not, panic.
                     device_found = true;
+                    bool mode_changed = false;
+
+                    if(strcmp(info.c_str(), "_xid0") != 0)
+                    {
+                        // Force the device into XID mode if it isn't. This is an XID library.
+                        int bytes_written;
+                        xid_con->write((unsigned char*)"c10", 3, bytes_written);
+
+                        xid_con->flush_input();
+                        xid_con->flush_output();
+                        mode_changed = true;
+                    }
+
                     int product_id;
                     int model_id;
 
@@ -181,30 +190,11 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                         if ( config->does_config_match_ids(product_id, model_id) )
                         {
                             ++devices;
-
-                            if(strcmp(info.c_str(), "_xid0") != 0)
-                            {
-                                // device is not in XID mode.  Currently this library
-                                // only supports XID mode so we issue command 'c10' to
-                                // set the device into XID mode
-                                char empty_return[10];
-                                xid_con->send_xid_command("c10",
-                                                          0,
-                                                          empty_return,
-                                                          sizeof(empty_return),
-                                                          0);
-                                
-                                xid_con->flush_input();
-                                xid_con->flush_output();
-                            }
+                            if ( mode_changed )
+                                reportFunction( config->get_device_name() );
 
                             char dev_type[10];
-                            xid_con->send_xid_command("_d2",
-                                                      0,
-                                                      dev_type,
-                                                      sizeof(dev_type),
-                                                      1,
-                                                      1000);
+                            xid_con->send_xid_command("_d2", dev_type, sizeof(dev_type), 1000);
 
                             if(dev_type[0] == 'S')
                             {
@@ -220,7 +210,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                     }
                 }
             }
-            
+
             xid_con->close();
         }
     }

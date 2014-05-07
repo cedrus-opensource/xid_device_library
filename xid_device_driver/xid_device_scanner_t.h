@@ -36,6 +36,7 @@
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 
 #include "XidDriverImpExpDefs.h"
 
@@ -61,7 +62,7 @@ namespace cedrus
          *
          * @returns number of XID devices detected.
          */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(const std::string &config_file_location);
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(const std::string &config_file_location, boost::function< void ( std::string ) > reportFunction = NULL);
 
         /**
          * Returns an XID connection object for use by the xid_device_t class.

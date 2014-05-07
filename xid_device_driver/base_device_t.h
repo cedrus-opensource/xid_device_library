@@ -139,8 +139,6 @@ namespace cedrus
 
         int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate () const;
 
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate ( int rate );
-
     protected:
         boost::shared_ptr<xid_con_t> xid_con_;
         boost::shared_ptr<cedrus::xid_device_config_t> config_;

@@ -197,10 +197,8 @@ namespace cedrus
          */
         int CEDRUS_XIDDRIVER_IMPORTEXPORT send_xid_command(
             const char in_command[],
-            int num_bytes,
             char out_response[],
             int max_out_response_size,
-            int expected_bytes_rec,
             int timeout = 100,
             int command_delay = 0);
 
@@ -242,6 +240,8 @@ namespace cedrus
         void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_digital_output_lines(
             unsigned int lines,
             bool leave_remaining_lines = false);
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_baud_rate( int rate );
 
         void get_product_and_model_id( int &product_id, int &model_id );
 

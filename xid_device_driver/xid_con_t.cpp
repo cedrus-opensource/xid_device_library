@@ -40,6 +40,17 @@
 #include <boost/timer.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
 
+#ifdef __APPLE__
+#   define SLEEP_FUNC usleep
+#   define SLEEP_INC 1000
+#   define OS_DEPENDENT_LONG unsigned long
+#elif defined(_WIN32)
+#   include <windows.h>
+#   define SLEEP_FUNC Sleep
+#   define SLEEP_INC 1
+#   define OS_DEPENDENT_LONG DWORD
+#endif
+
 cedrus::key_state cedrus::xid_con_t::xid_input_found()
 {
     key_state input_found = NO_KEY_DETECTED;
@@ -71,11 +82,12 @@ cedrus::key_state cedrus::xid_con_t::xid_input_found()
                 // get reaction time
                 union {
                     int as_int;
-                    char as_char[4];
+                    char as_char[4];// what if it were a 64 bit int? would this still work?
                 } rt;
 
                 for(int n = 0; n < 4; ++n)
                 {
+                    // would this work on PPC? due to flipped endianness?
                     rt.as_char[n] = input_buffer_[first_valid_xid_packet_+2+n];
                 }
                 
@@ -225,10 +237,55 @@ void cedrus::xid_con_t::clear_digital_output_lines(
     lines_state_ = lines;
 }
 
+void cedrus::xid_con_t::set_device_baud_rate( int rate )
+{
+    int bytes_written;
+    char change_baud_cmd[3];
+    change_baud_cmd[0] = 'f';
+    change_baud_cmd[1] = '1';
+    change_baud_cmd[2] = rate;
+
+    write((unsigned char*)change_baud_cmd, 3, bytes_written);
+
+    switch ( rate )
+    {
+        case 0:
+            set_baud_rate(9600);
+            break;
+        case 1:
+            set_baud_rate(19200);
+            break;
+        case 2:
+            set_baud_rate(38400);
+            break;
+        case 3:
+            set_baud_rate(57600);
+            break;
+        case 4:
+            set_baud_rate(115200);
+            break;
+        default:
+            break;
+    }
+}
+
 void cedrus::xid_con_t::get_product_and_model_id( int &product_id, int &model_id )
 {
-    product_id = get_inquiry("_d2",1,100,100);
-    model_id = get_inquiry("_d3", 1, 100, 100);
+    char product_id_return[2];
+    char model_id_return[2];
+
+    send_xid_command(
+        "_d2",
+        product_id_return,
+        sizeof(product_id_return));
+
+    send_xid_command(
+        "_d3",
+        model_id_return,
+        sizeof(model_id_return));
+
+    product_id = (int)(product_id_return[0]);
+    model_id = (int)(model_id_return[0]);
 }
 
 int cedrus::xid_con_t::get_inquiry(const char in_command[],
@@ -241,10 +298,8 @@ int cedrus::xid_con_t::get_inquiry(const char in_command[],
     int last_byte = expected_bytes_rec -1;
 
     int bytes_returned = send_xid_command(in_command,
-                                          0,
                                           return_info,
                                           sizeof(return_info),
-                                          expected_bytes_rec,
                                           timeout,
                                           delay);
 
@@ -269,4 +324,72 @@ int cedrus::xid_con_t::get_baud_rate ( void ) const
 void cedrus::xid_con_t::set_baud_rate ( int rate )
 {
     port_settings_.baud_rate(rate);
+}
+
+int cedrus::xid_con_t::send_xid_command(
+    const char in_command[],
+    char out_response[],
+    int max_out_response_size,
+    int timeout,
+    int command_delay)
+{
+    if(out_response != NULL)
+    {
+        memset(out_response, 0x00, max_out_response_size);
+    }
+
+    int bytes_written = 0;
+    write((unsigned char*)in_command, strlen(in_command), bytes_written);
+
+    unsigned char in_buff[64];
+    memset(in_buff, 0x00, sizeof(in_buff));
+    int bytes_read = 0;
+    int bytes_stored = 0;
+
+    // sometimes sending a command needs a delay because the 4MHz processors
+    // in the response pads need a little time to process the command and 
+    // send a response.
+    if(command_delay > 0)
+        SLEEP_FUNC(command_delay*SLEEP_INC);
+
+    OS_DEPENDENT_LONG current_time;
+    OS_DEPENDENT_LONG start_time = GetTickCount();
+    OS_DEPENDENT_LONG end_time = start_time + timeout;
+
+    int status = 0;
+    do
+    {
+        if(needs_interbyte_delay_)
+            SLEEP_FUNC(delay_*SLEEP_INC);
+
+        status = read(in_buff, sizeof(in_buff), bytes_read);
+
+        if(status != NO_ERR)
+            break;
+
+        if(bytes_read >= 1)
+        {
+            for(int i = 0; (i<bytes_read) && (bytes_stored < max_out_response_size-1); ++i)
+            {
+                out_response[bytes_stored] = in_buff[i];
+                bytes_stored++;
+            }
+        }
+        current_time = GetTickCount();
+    } while (current_time < end_time &&
+             bytes_stored < max_out_response_size);
+
+    if(out_response != NULL)
+    {
+        if (bytes_stored >= max_out_response_size )
+        {
+            assert(!"refusing to write a zero into a location one past the end of char array");
+        }
+        else
+        {
+            out_response[bytes_stored] = '\0';
+        }
+    }
+
+    return bytes_stored;
 }

@@ -1,8 +1,8 @@
 [DeviceInfo]
 DeviceID = 3001
 DeviceName = RB-530
-XidProductID = 2
-XidModelID = 1
+XidProductID = 50
+XidModelID = 49
 
 [DeviceOptions]
 # This is a USB device.  There's no reason to check these other common ports.  Add any ports you don't want to check.

@@ -145,38 +145,32 @@ int cedrus::xid_device_t::get_accessory_connector_mode( void ) const
     char return_info[4];
     xid_con_->send_xid_command(
         "_a1",
-        0,
         return_info,
-        sizeof(return_info),
-        100);
+        sizeof(return_info));
+
     return return_info[3]-'0';
 }
 
 void cedrus::xid_device_t::set_accessory_connector_mode( int mode ) const
 {
-    char return_info[4];
-	std::ostringstream s;
+    int bytes_written;
+    std::ostringstream s;
     s << "a1" << mode;
-    xid_con_->send_xid_command(
-        s.str().c_str(),
-        0,
-        return_info,
-        sizeof(return_info),
-        100);
+
+    xid_con_->write((unsigned char*)s.str().c_str(), s.str().length(), bytes_written);
 }
 
 void cedrus::xid_device_t::set_device_baud_rate( int rate ) const
 {
-    char change_baud_cmd[4];
-    change_baud_cmd[0] = 'f';
-    change_baud_cmd[1] = '1';
-    change_baud_cmd[2] = rate;
-    change_baud_cmd[3] = '\0';
-    char return_info[200];
-    xid_con_->send_xid_command(
-        change_baud_cmd,
-        0,
-        return_info,
-        sizeof(return_info),
-        100);
+    xid_con_->set_device_baud_rate(rate);
 }
+
+void cedrus::xid_device_t::set_device_mode( int protocol ) const
+{
+    std::ostringstream s;
+    s << "c1" << protocol;
+    int bytes_written;
+
+    xid_con_->write((unsigned char*)s.str().c_str(), s.str().length(), bytes_written);
+}
+

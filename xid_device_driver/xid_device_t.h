@@ -156,6 +156,8 @@ namespace cedrus
 
     void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_baud_rate( int rate ) const;
 
+    void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_mode( int protocol ) const;
+
     private:
         void init_response_device();
         std::queue<response> response_queue_;
