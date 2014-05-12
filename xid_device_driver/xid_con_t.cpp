@@ -168,7 +168,7 @@ int cedrus::xid_con_t::get_number_of_keys_down()
     return num_keys_down_;
 }
 
-unsigned long cedrus::xid_con_t::GetTickCount()
+unsigned long cedrus::xid_con_t::GetTickCount() const
 {
     boost::posix_time::ptime time_microseconds = boost::posix_time::microsec_clock::local_time();
     unsigned long milliseconds = static_cast<unsigned long>(time_microseconds.time_of_day().total_milliseconds());
@@ -237,6 +237,15 @@ void cedrus::xid_con_t::clear_digital_output_lines(
     lines_state_ = lines;
 }
 
+void cedrus::xid_con_t::set_device_mode( int protocol )
+{
+    std::ostringstream s;
+    s << "c1" << protocol;
+    int bytes_written;
+
+    write((unsigned char*)s.str().c_str(), s.str().length(), bytes_written);
+}
+
 void cedrus::xid_con_t::set_device_baud_rate( int rate )
 {
     int bytes_written;
@@ -269,7 +278,7 @@ void cedrus::xid_con_t::set_device_baud_rate( int rate )
     }
 }
 
-void cedrus::xid_con_t::get_product_and_model_id( int &product_id, int &model_id )
+void cedrus::xid_con_t::get_product_and_model_id( int &product_id, int &model_id ) const
 {
     char product_id_return[2];
     char model_id_return[2];
@@ -331,7 +340,7 @@ int cedrus::xid_con_t::send_xid_command(
     char out_response[],
     int max_out_response_size,
     int timeout,
-    int command_delay)
+    int command_delay) const
 {
     if(out_response != NULL)
     {

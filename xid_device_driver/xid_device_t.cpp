@@ -167,10 +167,6 @@ void cedrus::xid_device_t::set_device_baud_rate( int rate ) const
 
 void cedrus::xid_device_t::set_device_mode( int protocol ) const
 {
-    std::ostringstream s;
-    s << "c1" << protocol;
-    int bytes_written;
-
-    xid_con_->write((unsigned char*)s.str().c_str(), s.str().length(), bytes_written);
+    xid_con_->set_device_mode(protocol);
 }
 

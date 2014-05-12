@@ -1,9 +1,9 @@
 [DeviceInfo]
-DeviceID = 3004
-MajorFirmwareVersion = 1
-DeviceName = RB-834
+DeviceID = 3002
+MajorFirmwareVersion = 2
+DeviceName = RB-740
 XidProductID = 50
-XidModelID = 52
+XidModelID = 50
 
 [DeviceOptions]
 # This is a USB device.  There's no reason to check these other common ports.  Add any ports you don't want to check.
@@ -14,21 +14,8 @@ XidClockRate = 1.0
 XidDigitalOutputCommand = a
 
 [Port0]
-PortName = Accessory Connector
-NumberOfLines = 6
-BitFormat = Parallel
-DefaultIoDirection = Output
-IoDirectionChangeablePerGroup = Yes
-IoDirectionChangeablePerLine = Yes
-UseableAsDigitalOutput = No
-UseableAsResponse = No
-DebouncingTime = 0
-IoLinesPrefix = AC
-IoLinesBaseNumber = 1
-
-[Port1]
 PortName = Keys
-NumberOfLines = 8
+NumberOfLines = 7
 BitFormat = Parallel
 DefaultIoDirection = Input
 IoDirectionChangeablePerGroup = No
@@ -44,3 +31,26 @@ XidDeviceKeyMap6 = 5
 XidDeviceKeyMap7 = 6
 XidDeviceKeyMap8 = 7
 
+[Port1]
+PortName = Accessory Connector
+NumberOfLines = 6
+BitFormat = Parallel
+DefaultIoDirection = Output
+IoDirectionChangeablePerGroup = Yes
+IoDirectionChangeablePerLine = Yes
+UseableAsDigitalOutput = No
+UseableAsResponse = No
+DebouncingTime = 0
+IoLinesPrefix = AC
+IoLinesBaseNumber = 1
+
+[Port2]
+PortName = LightSensor
+NumberOfLines = 7
+BitFormat = Parallel
+DefaultIoDirection = Input
+IoDirectionChangeablePerGroup = No
+IoDirectionChangeablePerLine = No
+UseableAsDigitalOutput = No
+UseableAsResponse = Yes
+XidDeviceKeyMap1 = 2

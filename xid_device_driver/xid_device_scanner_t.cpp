@@ -171,8 +171,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                     if(strcmp(info.c_str(), "_xid0") != 0)
                     {
                         // Force the device into XID mode if it isn't. This is an XID library.
-                        int bytes_written;
-                        xid_con->write((unsigned char*)"c10", 3, bytes_written);
+                        xid_con->set_device_mode(0);
 
                         xid_con->flush_input();
                         xid_con->flush_output();
@@ -181,13 +180,21 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
 
                     int product_id;
                     int model_id;
+                    char major_return[2];
+
+                    xid_con->send_xid_command(
+                            "_d4",
+                            major_return,
+                            sizeof(major_return));
+
+                    int major_firmware_version = major_return[0]-'0';
 
                     //What device is it? Get product/model ID, find the corresponding config
                     xid_con->get_product_and_model_id(product_id, model_id);
 
                     BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, config_candidates)
                     {
-                        if ( config->does_config_match_ids(product_id, model_id) )
+                        if ( config->does_config_match_device(product_id, model_id, major_firmware_version) )
                         {
                             ++devices;
                             if ( mode_changed )

@@ -1,8 +1,9 @@
 [DeviceInfo]
 DeviceID = 3003
+MajorFirmwareVersion = 1
 DeviceName = RB-830
-XidProductID = 2
-XidModelID = 3
+XidProductID = 50
+XidModelID = 51
 
 [DeviceOptions]
 # This is a USB device.  There's no reason to check these other common ports.  Add any ports you don't want to check.
@@ -15,21 +16,7 @@ XidClockRate = .99857664 #avg
 # As of Oct 2010, only the initial char of the string XidDigitalOutputCommand is used.
 XidDigitalOutputCommand = a
 
-
 [Port0]
-PortName = Accessory Connector
-NumberOfLines = 6
-BitFormat = Parallel
-DefaultIoDirection = Output
-IoDirectionChangeablePerGroup = Yes
-IoDirectionChangeablePerLine = Yes
-UseableAsDigitalOutput = No
-UseableAsResponse = No
-DebouncingTime = 0
-IoLinesPrefix = AC
-IoLinesBaseNumber = 1
-
-[Port1]
 PortName = Keys
 NumberOfLines = 8
 BitFormat = Parallel
@@ -47,3 +34,15 @@ XidDeviceKeyMap6 = 6
 XidDeviceKeyMap7 = 0
 XidDeviceKeyMap8 = 7
 
+[Port1]
+PortName = Accessory Connector
+NumberOfLines = 6
+BitFormat = Parallel
+DefaultIoDirection = Output
+IoDirectionChangeablePerGroup = Yes
+IoDirectionChangeablePerLine = Yes
+UseableAsDigitalOutput = No
+UseableAsResponse = No
+DebouncingTime = 0
+IoLinesPrefix = AC
+IoLinesBaseNumber = 1

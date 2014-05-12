@@ -136,7 +136,7 @@ namespace cedrus
          */
         void CEDRUS_XIDDRIVER_IMPORTEXPORT reset_rt_timer();
 
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT does_config_match_ids( int device_id, int model_id ) const;
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT does_config_match_device( int device_id, int model_id, int major_firmware_ver )  const;
 
 
     private:
@@ -146,6 +146,7 @@ namespace cedrus
         int number_of_lines_;
         char digital_out_prefix_;
         std::string device_name_;
+        int major_firmware_ver_;
         int product_id_;
         int model_id_;
 

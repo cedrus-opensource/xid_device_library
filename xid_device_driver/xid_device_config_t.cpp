@@ -58,6 +58,7 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
 {
     std::string digital_output_command;
 
+    major_firmware_ver_ = pt->get<long>("DeviceInfo.MajorFirmwareVersion");
     device_name_ = pt->get<std::string>("DeviceInfo.DeviceName");
     product_id_ = pt->get<long>("DeviceInfo.XidProductID");
     model_id_ = pt->get<long>("DeviceInfo.XidModelID");
@@ -166,13 +167,11 @@ int cedrus::xid_device_config_t::get_model_id() const
     return model_id_;
 }
 
-bool cedrus::xid_device_config_t::does_config_match_ids( int device_id, int model_id ) const
+bool cedrus::xid_device_config_t::does_config_match_device( int device_id, int model_id, int major_firmware_ver ) const
 {
     bool doesMatch = false;
-    if ( product_id_ == device_id )
+    if ( product_id_ == device_id && major_firmware_ver_ == major_firmware_ver)
     {
-        //HEY CHECK THESE REAL QUICK WITH DIFFERENT DEVICES. THIS IS FRAGILE AND BAD, SEE IF THE
-        //MODEL IDS WE GET FROM NON-RBS MAKE SENSE.
         if ( product_id_ == XID_ID_RB )
         {
             if ( model_id_ == model_id )

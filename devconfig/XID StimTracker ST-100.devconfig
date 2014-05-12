@@ -1,7 +1,6 @@
 [DeviceInfo]
 DeviceID = 3051
-# DeviceName is the string that will show up in the drop-down choice control labeled "Device:"
-# (Note: the DeviceName will be pre-prended with the manufacturer name.)
+MajorFirmwareVersion = 1
 DeviceName = StimTracker ST-100
 # 83 is the integer value of the char 'S'
 XidProductID = 83
@@ -31,4 +30,3 @@ UseableAsResponse = No
 DebouncingTime = 0
 IoLinesPrefix = EM
 IoLinesBaseNumber = 0
-

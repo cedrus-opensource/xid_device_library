@@ -97,23 +97,28 @@ std::string cedrus::base_device_t::get_internal_product_name()
     return std::string(return_info);
 }
 
-void cedrus::base_device_t::get_firmware_version( int &major, int &minor )
+int cedrus::base_device_t::get_major_firmware_version( void )
 {
     char major_return[2];
-    char minor_return[2];
 
     xid_con_->send_xid_command(
         "_d4",
         major_return,
         sizeof(major_return));
 
+    return major_return[0]-'0';
+}
+
+int cedrus::base_device_t::get_minor_firmware_version( void )
+{
+    char minor_return[2];
+
     xid_con_->send_xid_command(
         "_d5",
         minor_return,
         sizeof(minor_return));
 
-    major = major_return[0]-'0';
-    minor = minor_return[0]-'0';
+    return minor_return[0]-'0';
 }
 
 std::string cedrus::base_device_t::get_device_name()

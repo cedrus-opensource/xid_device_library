@@ -69,20 +69,19 @@ namespace cedrus
 
     enum
     {
-        RB530  =  1,
-        RB730  =  2,
-        RB830  =  3,
-        RB834  =  4,
-        RB630  =  5,
+        RB530  =  49,
+        RB730  =  50,
+        RB830  =  51,
+        RB834  =  52,
         SV1    = 21,
         LUMINA = 31
     };
     
     enum
     {
-        XID_ID_LUMINA = 0,
-        XID_ID_SV1    = 1,
-        XID_ID_RB     = 2
+        XID_ID_LUMINA = 48,
+        XID_ID_SV1    = 49,
+        XID_ID_RB     = 50
     };
     
     enum

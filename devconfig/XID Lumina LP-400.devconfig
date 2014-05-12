@@ -1,5 +1,6 @@
 [DeviceInfo]
 DeviceID = 3031
+MajorFirmwareVersion = 1
 DeviceName = Lumina LP-400
 XidProductID = 48
 XidModelID = 0
@@ -11,19 +12,6 @@ XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySeria
 XidDigitalOutputCommand = a
 
 [Port0]
-PortName = Accessory Connector
-NumberOfLines = 6
-BitFormat = Parallel
-DefaultIoDirection = Output
-IoDirectionChangeablePerGroup = Yes
-IoDirectionChangeablePerLine = Yes
-UseableAsDigitalOutput = No
-UseableAsResponse = No
-DebouncingTime = 0
-IoLinesPrefix = AC
-IoLinesBaseNumber = 1
-
-[Port1]
 PortName = Keys
 NumberOfLines = 5
 BitFormat = Parallel
@@ -38,4 +26,15 @@ XidDeviceKeyMap3 = 2
 XidDeviceKeyMap4 = 3
 XidDeviceKeyMap5 = 4
 
-
+[Port1]
+PortName = Accessory Connector
+NumberOfLines = 6
+BitFormat = Parallel
+DefaultIoDirection = Output
+IoDirectionChangeablePerGroup = Yes
+IoDirectionChangeablePerLine = Yes
+UseableAsDigitalOutput = No
+UseableAsResponse = No
+DebouncingTime = 0
+IoLinesPrefix = AC
+IoLinesBaseNumber = 1

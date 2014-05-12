@@ -230,7 +230,7 @@ int cedrus::xid_con_t::setup_com_port()
 int cedrus::xid_con_t::read(
     unsigned char *in_buffer,
     int bytes_to_read,
-    int &bytes_read)
+    int &bytes_read) const
 {
     DWORD read = 0;
 
@@ -251,7 +251,7 @@ int cedrus::xid_con_t::read(
 int cedrus::xid_con_t::write(
     unsigned char * const in_buffer,
     int bytes_to_write,
-    int &bytes_written)
+    int &bytes_written) const
 {
     unsigned char *p = in_buffer;
     int status = NO_ERR;

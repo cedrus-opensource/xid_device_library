@@ -1,5 +1,6 @@
 [DeviceInfo]
 DeviceID = 3002
+MajorFirmwareVersion = 1
 DeviceName = RB-730
 XidProductID = 50
 XidModelID = 50
@@ -12,21 +13,7 @@ XidClockRate = 1.0
 # As of Oct 2010, only the initial char of the string XidDigitalOutputCommand is used.
 XidDigitalOutputCommand = a
 
-
 [Port0]
-PortName = Accessory Connector
-NumberOfLines = 6
-BitFormat = Parallel
-DefaultIoDirection = Output
-IoDirectionChangeablePerGroup = Yes
-IoDirectionChangeablePerLine = Yes
-UseableAsDigitalOutput = No
-UseableAsResponse = No
-DebouncingTime = 0
-IoLinesPrefix = AC
-IoLinesBaseNumber = 1
-
-[Port1]
 PortName = Keys
 NumberOfLines = 7
 BitFormat = Parallel
@@ -44,3 +31,15 @@ XidDeviceKeyMap6 = 5
 XidDeviceKeyMap7 = 6
 XidDeviceKeyMap8 = 7
 
+[Port1]
+PortName = Accessory Connector
+NumberOfLines = 6
+BitFormat = Parallel
+DefaultIoDirection = Output
+IoDirectionChangeablePerGroup = Yes
+IoDirectionChangeablePerLine = Yes
+UseableAsDigitalOutput = No
+UseableAsResponse = No
+DebouncingTime = 0
+IoLinesPrefix = AC
+IoLinesBaseNumber = 1

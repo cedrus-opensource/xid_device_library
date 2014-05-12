@@ -1,5 +1,6 @@
 [DeviceInfo]
 DeviceID = 3021
+MajorFirmwareVersion = 1
 DeviceName = SV-1 Voice Key
 XidProductID = 49
 XidModelID = 0
@@ -10,7 +11,9 @@ XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySeria
 # As of Oct 2010, only the initial char of the string XidDigitalOutputCommand is used.
 XidDigitalOutputCommand = a
 
-[Port0]
+# The SV-1 doesn't use port 0
+
+[Port1]
 PortName = Accessory Connector
 NumberOfLines = 6
 BitFormat = Parallel
@@ -40,4 +43,3 @@ XidDeviceKeyMap5 = -1
 XidDeviceKeyMap6 = -1
 XidDeviceKeyMap7 = -1
 XidDeviceKeyMap8 = -1
-
