@@ -67,6 +67,14 @@ namespace cedrus
 
         int CEDRUS_XIDDRIVER_IMPORTEXPORT get_minor_firmware_version();
 
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_outpost_model() const;
+
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_hardware_generation() const;
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_light_sensor_threshold( int threshold ) const;
+
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_light_sensor_threshold() const;
+
         /**
          * product id of the device.
          * 

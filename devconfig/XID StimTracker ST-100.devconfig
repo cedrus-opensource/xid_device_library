@@ -1,6 +1,6 @@
 [DeviceInfo]
 DeviceID = 3051
-MajorFirmwareVersion = 1
+MajorFirmwareVersion = 0
 DeviceName = StimTracker ST-100
 # 83 is the integer value of the char 'S'
 XidProductID = 83

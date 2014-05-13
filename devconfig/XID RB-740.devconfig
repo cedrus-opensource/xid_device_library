@@ -44,7 +44,7 @@ DebouncingTime = 0
 IoLinesPrefix = AC
 IoLinesBaseNumber = 1
 
-[Port2]
+[Port2] # THIS OVERLAPS WITH VOICE KEY ON SV-1
 PortName = LightSensor
 NumberOfLines = 7
 BitFormat = Parallel

@@ -121,6 +121,54 @@ int cedrus::base_device_t::get_minor_firmware_version( void )
     return minor_return[0]-'0';
 }
 
+int cedrus::base_device_t::get_outpost_model( void ) const
+{
+    char outpost_return[2];
+
+    xid_con_->send_xid_command(
+        "_d6",
+        outpost_return,
+        sizeof(outpost_return));
+
+    return outpost_return[0]-'0';
+}
+
+int cedrus::base_device_t::get_hardware_generation( void ) const
+{
+    char gen_return[2];
+
+    xid_con_->send_xid_command(
+        "_d7",
+        gen_return,
+        sizeof(gen_return));
+
+    return gen_return[0]-'0';
+}
+
+void cedrus::base_device_t::set_light_sensor_threshold( int threshold ) const
+{
+    int bytes_written;
+    char change_threshold_cmd[3];
+    change_threshold_cmd[0] = 'l';
+    change_threshold_cmd[1] = 't';
+    change_threshold_cmd[2] = threshold;
+
+    xid_con_->write((unsigned char*)change_threshold_cmd, 3, bytes_written);
+}
+
+int cedrus::base_device_t::get_light_sensor_threshold( void ) const
+{
+    char threshold_return[5];
+
+    xid_con_->send_xid_command(
+        "_lt",
+        threshold_return,
+        sizeof(threshold_return));
+
+    unsigned char return_val = (unsigned char)(threshold_return[3]);
+    return (int)(return_val);
+}
+
 std::string cedrus::base_device_t::get_device_name()
 {
     return config_->get_device_name();
