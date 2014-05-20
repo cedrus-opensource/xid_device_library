@@ -53,6 +53,21 @@
 
 cedrus::key_state cedrus::xid_con_t::xid_input_found()
 {
+    // Wisdom from Hisham, circa Aug 13, 2005. Point C is especially relevant.
+    //
+    // First, we try to determine if we have a valid packet. Our options
+    // are limited; here what we look for:
+    //
+    // a. The first byte must be the letter 'k'
+    //
+    // b. Bits 0-3 of the second byte indicate the port number.  Lumina
+    //    and RB-x30 models use only bits 0 and 1; SV-1 uses only bits
+    //    1 and 2.  We check that the two remaining bits are zero.
+    //
+    // c. The remaining four bytes provide the reaction time.  Here, we'll
+    //    assume that the RT will never exceed 4.66 hours :-) and verify
+    //    that the last byte is set to 0.
+
     key_state input_found = NO_KEY_DETECTED;
 
     if(bytes_in_buffer_ >= 6)
