@@ -32,7 +32,6 @@
 #ifndef XID_CON_T_H
 #define XID_CON_T_H
 
-#include "port_settings_t.h"
 #include "constants.h"
 
 #include <boost/shared_ptr.hpp>
@@ -60,6 +59,35 @@ namespace cedrus
             OUT_BUFFER_SIZE = 2048
         };
 
+        enum bitparity
+        {
+            BITPARITY_NONE = 0,
+            BITPARITY_ODD  = 1,
+            BITPARITY_EVEN = 2
+        };
+
+        enum stopbits
+        {
+            STOP_BIT_1 = 0,
+            STOP_BIT_2 = 1
+        };
+
+        enum bytesize
+        {
+            BYTESIZE_6 = 6,
+            BYTESIZE_7 = 7,
+            BYTESIZE_8 = 8,
+
+            FIRST_BYTESIZE = BYTESIZE_6
+        };
+
+        enum handshaking
+        {
+            HANDSHAKE_NONE     = 0,
+            HANDSHAKE_XON_XOFF = 1,
+            HANDSHAKE_HARDWARE = 2,
+        };
+
         /**
          * xid_con_t constructor
          *
@@ -74,9 +102,9 @@ namespace cedrus
                   const std::string &port_name,
                   int port_speed = 115200,
                   int delay_ms = 1,
-                  port_settings_t::bytesize byte_size = port_settings_t::BYTESIZE_8,
-                  port_settings_t::bitparity bit_parity = port_settings_t::BITPARITY_NONE,
-                  port_settings_t::stopbits stop_bits = port_settings_t::STOP_BIT_1
+                  bytesize byte_size = BYTESIZE_8,
+                  bitparity bit_parity = BITPARITY_NONE,
+                  stopbits stop_bits = STOP_BIT_1
                   );
         
         virtual ~xid_con_t();
@@ -148,35 +176,6 @@ namespace cedrus
             int &bytes_written) const;
 
         /**
-         * Checks the device to see if an event response has been sent.
-         * 
-         * @returns key_state if no event was found, NO_KEY_DETECTED is returned.
-         * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
-         */
-        key_state check_for_keypress();
-
-        /**
-         * Removes the current response from the internal buffer
-         */
-        void remove_current_response();
-
-        /**
-         * Gets the last response from the device
-         *
-         * @param[out] port device port the response is from.  usually 0
-         * @param[out] key Which key was pressed.
-         * @param[out] was_pressed true if a key was pressed, false otherwise
-         * @param[out] reaction_time reaction time read from the internal
-         * device timer.
-         */
-        void get_current_response(int &port, int &key, bool &was_pressed, int &reaction_time);
-
-        /**
-         * Number of keys currently being held down
-         */
-        int get_number_of_keys_down();
-
-        /**
          * Send an XID command to the device.
          *
          * XID commands are documented at http://www.cedrus.com/xid/
@@ -201,94 +200,24 @@ namespace cedrus
          */
         void set_needs_interbyte_delay(bool need_delay = true);
 
-        /**
-         * Sets the digital output prefix
-         * 
-         * @param[in] prefix A single character.  This should be 'a' for XID
-         * response devices, or 'm' for StimTracker devices.
-         */
-        void set_digital_out_prefix(char prefix);
-
-        /**
-         * Raise digital output lines on the StimTracker device.
-         * 
-         * @param[in] lines This is a bitmask used to specify the lines
-         * to be raised on the device. Each of the 8 bits in the integer
-         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
-         * @param[in] leave_remaining_lines boolean value of whether or not to
-         * keep the current line state when applying the new bitmask.
-         */
-        void set_digital_output_lines(
-            unsigned int lines,
-            bool leave_remaining_lines = false);
-
-        /**
-         * Clear digital output lines on the StimTracker device.
-         *
-         * @param[in] lines This is a bitmask used to specify the lines
-         * to be raised on the device. Each of the 8 bits in the integer
-         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
-         * @param[in] leave_remaining_lines boolean value of whether or not to
-         * keep the current line state when applying the new bitmask.
-         */ 
-        void clear_digital_output_lines(
-            unsigned int lines,
-            bool leave_remaining_lines = false);
-
-        void set_device_mode( int protocol );
-
-        void set_device_baud_rate( int rate );
-
-        void get_product_and_model_id( int &product_id, int &model_id ) const;
-
         int get_baud_rate () const;
 
         void set_baud_rate ( int rate );
 
     private:
     	enum { OS_FILE_ERROR = -1 };
-        int setup_com_port();
 
-        key_state xid_input_found();
+        int setup_com_port();
         unsigned long GetTickCount() const;
 
-        /**
-         * Send a command to the device
-         *
-         * @param[in] in_command command to send to the device.  Commands are
-         * detailed at http://www.cedrus.com/xid/
-         * @param[in] expected_bytes_rec expected number of bytes to receive
-         * @param[in] timeout time in miliseconds the device should respond in
-         * @param[in] delay some devices need an additional delay between
-         * receiving a command and issuing a response. Defaults to 0
-         * 
-         * @returns an integer value of the response
-         */
-        int get_inquiry(const char in_command[], int expected_bytes_rec = 1, int timeout = 100, int delay = 0);
-
-        port_settings_t port_settings_;
+        int baud_rate_;
+        bytesize byte_size_;
+        bitparity bit_parity_;
+        stopbits stop_bits_;
+        handshaking handshaking_;
         std::string port_name_;
       
         int delay_;
-
-        enum {INPUT_BUFFER_SIZE = 1000};
-        enum {XID_PACKET_SIZE = 6};
-        enum {INVALID_PACKET_INDEX = -1};
-        enum {KEY_RELEASE_BITMASK = 0x10};
-        
-        int bytes_in_buffer_;
-        unsigned char input_buffer_[INPUT_BUFFER_SIZE];
-
-        int first_valid_xid_packet_;
-        int num_keys_down_;
-        int last_resp_port_;
-        int last_resp_key_;
-        bool last_resp_pressed_;
-        int last_resp_rt_;
-
-        char lines_state_;
-        char set_lines_cmd_[4];
-
         bool needs_interbyte_delay_;
 
         struct DarwinConnPimpl;

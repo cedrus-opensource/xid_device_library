@@ -72,7 +72,7 @@ namespace cedrus
          */
         static boost::shared_ptr<xid_device_config_t> config_for_device(boost::property_tree::ptree * pt);
 
-        ~xid_device_config_t(void);
+        CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_config_t(void);
 
         /**
          * Gets the actual button pressed based on the devconfig key mapping

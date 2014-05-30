@@ -43,6 +43,7 @@
 namespace cedrus
 {
     class xid_con_t;
+    class base_device_t;
     class xid_device_t;
     class stim_tracker_t;
 
@@ -75,12 +76,9 @@ namespace cedrus
          * @param[in] i index of the device
          * @returns an xid connection object for use by an instance of xid_device_t.
          */
-        boost::shared_ptr<xid_device_t> CEDRUS_XIDDRIVER_IMPORTEXPORT response_device_connection_at_index(unsigned int i);
+        boost::shared_ptr<base_device_t> CEDRUS_XIDDRIVER_IMPORTEXPORT device_connection_at_index(unsigned int i);
 
-        boost::shared_ptr<stim_tracker_t> CEDRUS_XIDDRIVER_IMPORTEXPORT stimtracker_connection_at_index(unsigned int i);
-
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT rb_device_count() const;
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT st_device_count() const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT device_count() const;
 
     private:
         /**
@@ -91,8 +89,7 @@ namespace cedrus
         void load_available_com_ports();
 
         std::vector<std::string> available_com_ports_;
-        std::vector<boost::shared_ptr<cedrus::xid_device_t> > rb_devices_;
-        std::vector<boost::shared_ptr<cedrus::stim_tracker_t> > st_devices_;
+        std::vector<boost::shared_ptr<cedrus::base_device_t> > devices_;
     };
 } // namespace cedrus
 

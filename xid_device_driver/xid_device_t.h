@@ -32,54 +32,17 @@
 #ifndef XID_DEVICE_T_H
 #define XID_DEVICE_T_H
 
-#include <queue>
-#include <string>
-#include "port_settings_t.h"
 #include "constants.h"
-#include <boost/shared_ptr.hpp>
 #include "base_device_t.h"
+#include "response_mgr.h"
 
 #include "XidDriverImpExpDefs.h"
+#include <boost/shared_ptr.hpp>
+#include <string>
+#include <queue>
 
 namespace cedrus
 {
-    class xid_con_t;
-    class xid_device_config_t;
-    
-    /**
-     * @class response
-     * 
-     * @brief struct to encapsulate a response from an XID device
-     */
-    struct response
-    {
-        /** 
-         * port the response came from. Usualy 0 
-         */
-        int port; 
-
-        /** 
-         *button pressed. This is a 0 based index 
-         */
-        int button;
-
-        /** 
-         * whether or not a button was pressed 
-         */
-        bool pressed;
-
-        /** 
-         * reaction time 
-         */
-        int reaction_time; 
-        
-        /** 
-         * key state. NO_KEY_DETECTED, FOUND_KEY_UP, or FOUND_KEY_DOWN 
-         */
-        cedrus::key_state key_state;
-    };
-
-
     /**
      * @class xid_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
      *
@@ -102,68 +65,39 @@ namespace cedrus
             boost::shared_ptr<xid_device_config_t> dev_config
             );
         virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_t(void);
-        
 
-
-        /**
-         * Poll the COM interface for a button press event.
-         *
-         * If there is a button press event, it is placed into an internal
-         * response queue.  
-         */
         void CEDRUS_XIDDRIVER_IMPORTEXPORT poll_for_response();
 
-        /**
-         * Number of responses in the response queue.
-         *
-         * @returns number of responses pending processing.
-         */
-        std::size_t CEDRUS_XIDDRIVER_IMPORTEXPORT response_queue_size() const;
-        
-        /**
-         * @returns true if there are queued responses
-         */
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses() const;
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses();
 
-        /**
-         * Clears the response queue
-         */
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_response_queue();
+        cedrus::response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
 
-        /**
-         * Returns the next response in the queue waiting for processing
-         */
-        response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode();
 
-        /**
-         * Number of buttons the device has
-         *
-         * @returns number of buttons
-         */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_button_count() const;
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
 
-        /**
-         * Prefix used for the device for GUI display purposes
-         *
-         * @returns "Button" for Lumina, RB-series pads, and unknown devices.
-         * "Voice Response" for SV-1 Voice Key systems.
-         */
-        std::string CEDRUS_XIDDRIVER_IMPORTEXPORT input_name_prefix() const;
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_mode( int protocol );
 
-    int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode() const;
-
-    void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode ) const;
-
-    void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_baud_rate( int rate ) const;
-
-    void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_mode( int protocol ) const;
+        virtual xid_device_config_t CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT open_connection();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate();
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate( int rate );
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_and_model_id( int &product_id, int &model_id );
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_major_firmware_version();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_minor_firmware_version();
+        virtual std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_internal_product_name();
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
+            bool leave_remaining_lines = false);
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines();
 
     private:
-        void init_response_device();
-        std::queue<response> response_queue_;
+        char lines_state_;
 
-        int button_count_;
-        std::string input_name_prefix_;
+    protected:
+        boost::shared_ptr<xid_con_t> xid_con_;
+        boost::shared_ptr<cedrus::xid_device_config_t> config_;
+        boost::shared_ptr<cedrus::response_mgr> m_response_mgr;
     };
 } // namespace cedrus
 

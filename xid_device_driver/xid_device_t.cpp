@@ -30,143 +30,111 @@
  */
 
 #include "xid_device_t.h"
-#include "xid_device_config_t.h"
-#include "xid_con_t.h"
-#include "constants.h"
-#include <sstream>
 
 cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
     boost::shared_ptr<xid_device_config_t> dev_config)
-    : base_device_t(xid_con, dev_config),
-      button_count_(8),
-      input_name_prefix_("Button")
+    : xid_con_(xid_con),
+      config_(dev_config)
 {
-    init_response_device();
+    clear_lines();
+    xid_con_->set_needs_interbyte_delay(config_->needs_interbyte_delay());
 }
 
 cedrus::xid_device_t::~xid_device_t(void)
 {
 }
 
-int cedrus::xid_device_t::get_button_count() const
-{
-    if(config_)
-        return config_->number_of_lines();
-    else
-        return 8;
-}
-
 void cedrus::xid_device_t::poll_for_response()
 {
-    cedrus::key_state state = xid_con_->check_for_keypress();
-
-    if(state != cedrus::NO_KEY_DETECTED)
-    {
-        int port = -1;
-        int key  = -1;
-        bool was_pressed = false;
-        int response_time = -1;
-
-        xid_con_->get_current_response(port, key, was_pressed, response_time);
-        
-        if(config_)
-        {
-            key = config_->get_mapped_key(key);
-        }
-        else
-        {
-            // RB series response pads respond with a 1 based button index.  
-            // Users of the API should expect a 0 based index.  Subtract 1 
-            // from the key to give the user the correct button number.
-            key -= 1;
-        }
-
-        response res;
-        res.port = port;
-        res.button = key;
-        res.pressed = was_pressed;
-        res.reaction_time = response_time;
-        res.key_state = state;
- 
-        response_queue_.push(res);
-    }
+    m_response_mgr->check_for_keypress(xid_con_, config_);
 }
 
-std::size_t cedrus::xid_device_t::response_queue_size() const
+bool cedrus::xid_device_t::has_queued_responses()
 {
-    return response_queue_.size();
-}
-
-bool cedrus::xid_device_t::has_queued_responses() const
-{
-    return !response_queue_.empty();
-}
-
-void cedrus::xid_device_t::clear_response_queue()
-{
-    while(response_queue_.size() > 0)
-    {
-        response_queue_.pop();
-    }
+    return m_response_mgr->has_queued_responses();
 }
 
 cedrus::response cedrus::xid_device_t::get_next_response()
 {
-    response res = response_queue_.front();
-    response_queue_.pop();
-    return res;
+    return m_response_mgr->get_next_response();
 }
 
-std::string cedrus::xid_device_t::input_name_prefix() const
+int cedrus::xid_device_t::get_accessory_connector_mode( void )
 {
-    return input_name_prefix_;
+    return xid_glossary::get_accessory_connector_mode(xid_con_);
 }
 
-void cedrus::xid_device_t::init_response_device()
+void cedrus::xid_device_t::set_accessory_connector_mode( int mode )
 {
-    switch(get_product_id())
-    {
-    case 1:
-        {
-            input_name_prefix_ = "Voice Response";
-            break;
-        }
-    default:
-        {
-            input_name_prefix_ = "Button";
-            break;
-        }
-    }
+    xid_glossary::set_accessory_connector_mode(xid_con_, mode);
 }
 
-int cedrus::xid_device_t::get_accessory_connector_mode( void ) const
+void cedrus::xid_device_t::set_device_mode( int protocol )
 {
-    char return_info[4];
-    xid_con_->send_xid_command(
-        "_a1",
-        return_info,
-        sizeof(return_info));
-
-    return return_info[3]-'0';
+    xid_glossary::set_device_mode(xid_con_, protocol);
 }
 
-void cedrus::xid_device_t::set_accessory_connector_mode( int mode ) const
+cedrus::xid_device_config_t cedrus::xid_device_t::get_device_config( void )
 {
-    int bytes_written;
-    std::ostringstream s;
-    s << "a1" << mode;
-
-    xid_con_->write((unsigned char*)s.str().c_str(), s.str().length(), bytes_written);
+    return *config_;
 }
 
-void cedrus::xid_device_t::set_device_baud_rate( int rate ) const
+int cedrus::xid_device_t::close_connection( void )
 {
-    xid_con_->set_device_baud_rate(rate);
+    return xid_con_->close();
 }
 
-void cedrus::xid_device_t::set_device_mode( int protocol ) const
+int cedrus::xid_device_t::open_connection( void )
 {
-    xid_con_->set_device_mode(protocol);
+    return xid_con_->open();
 }
 
+int cedrus::xid_device_t::get_baud_rate( void )
+{
+    return xid_con_->get_baud_rate();
+}
+
+void cedrus::xid_device_t::set_baud_rate( int rate )
+{
+    xid_con_->set_baud_rate(rate);
+    xid_glossary::set_device_baud_rate(xid_con_, rate);
+}
+
+void cedrus::xid_device_t::get_product_and_model_id( int &product_id, int &model_id )
+{
+    xid_glossary::get_product_and_model_id(xid_con_, product_id, model_id);
+}
+
+int cedrus::xid_device_t::get_major_firmware_version( void )
+{
+    return xid_glossary::get_major_firmware_version(xid_con_);
+}
+
+int cedrus::xid_device_t::get_minor_firmware_version( void )
+{
+    return xid_glossary::get_minor_firmware_version(xid_con_);
+}
+
+std::string cedrus::xid_device_t::get_internal_product_name( void )
+{
+    return xid_glossary::get_internal_product_name(xid_con_);
+}
+
+void cedrus::xid_device_t::raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines)
+{
+    unsigned int output_lines = lines_bitmask;
+
+    if(leave_remaining_lines)
+        output_lines |= lines_state_;
+
+    xid_glossary::set_digital_output_lines_xid(xid_con_, output_lines);
+
+    lines_state_ = output_lines;
+}
+
+void cedrus::xid_device_t::clear_lines( void )
+{
+    xid_glossary::set_digital_output_lines_xid(xid_con_, 0);
+    lines_state_ = 0;
+}

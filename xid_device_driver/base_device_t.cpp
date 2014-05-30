@@ -30,186 +30,81 @@
  */
 
 #include "base_device_t.h"
-#include "xid_device_config_t.h"
+
 #include "xid_con_t.h"
 #include "constants.h"
 #include <sstream>
 
-cedrus::base_device_t::base_device_t(
-    boost::shared_ptr<xid_con_t> xid_con,
-    boost::shared_ptr<xid_device_config_t> dev_config)
-    : xid_con_(xid_con),
-      config_(dev_config)
-{
-    xid_con_->set_needs_interbyte_delay(config_->needs_interbyte_delay());
-    xid_con_->set_digital_out_prefix(config_->digital_out_prefix());
-}
 
 cedrus::base_device_t::~base_device_t()
 {}
 
-void cedrus::base_device_t::reset_rt_timer()
+int cedrus::base_device_t::get_outpost_model( void )
 {
-    int bytes_written;
-    xid_con_->write((unsigned char*)"e5", 2, bytes_written);
+    return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::reset_base_timer()
+int cedrus::base_device_t::get_hardware_generation( void )
 {
-    int bytes_written;
-    xid_con_->write((unsigned char*)"e1", 2, bytes_written);
+    return INVALID_RETURN_VALUE;
+}
+
+void cedrus::base_device_t::set_light_sensor_threshold( int threshold )
+{
+    // nothing
+}
+
+int cedrus::base_device_t::get_light_sensor_threshold()
+{
+    return INVALID_RETURN_VALUE;
+}
+
+void cedrus::base_device_t::reset_rt_timer( void )
+{
+    // nothing
+}
+
+void cedrus::base_device_t::reset_base_timer( void )
+{
+    // nothing
 }
 
 int cedrus::base_device_t::query_base_timer()
 {
-    char return_info[200];
-    int read = xid_con_->send_xid_command(
-        "e3",
-        return_info,
-        sizeof(return_info));
-
-    bool valid_response = (read == 6);
-
-    if(valid_response)
-    {
-        union {
-            int as_int;
-            char as_char[4];
-        } rt;
-
-        for(int i = 0; i < 4; ++i)
-        {
-            rt.as_char[i] = return_info[2+i];
-        }
-        return rt.as_int;
-    }
-
-    return GENERAL_ERROR;
+    return INVALID_RETURN_VALUE;
 }
 
-std::string cedrus::base_device_t::get_internal_product_name()
+void cedrus::base_device_t::set_pulse_duration(unsigned int duration)
 {
-    char return_info[200];
-    xid_con_->send_xid_command(
-        "_d1",
-        return_info,
-        sizeof(return_info));
-    return std::string(return_info);
+    // nothing
 }
 
-int cedrus::base_device_t::get_major_firmware_version( void )
+void cedrus::base_device_t::poll_for_response()
 {
-    char major_return[2];
-
-    xid_con_->send_xid_command(
-        "_d4",
-        major_return,
-        sizeof(major_return));
-
-    return major_return[0]-'0';
+    // nothing
 }
 
-int cedrus::base_device_t::get_minor_firmware_version( void )
+bool cedrus::base_device_t::has_queued_responses()
 {
-    char minor_return[2];
-
-    xid_con_->send_xid_command(
-        "_d5",
-        minor_return,
-        sizeof(minor_return));
-
-    return minor_return[0]-'0';
+    return INVALID_RETURN_VALUE;
 }
 
-int cedrus::base_device_t::get_outpost_model( void ) const
+cedrus::response cedrus::base_device_t::get_next_response()
 {
-    char outpost_return[2];
-
-    xid_con_->send_xid_command(
-        "_d6",
-        outpost_return,
-        sizeof(outpost_return));
-
-    return outpost_return[0]-'0';
+    return cedrus::response();
 }
 
-int cedrus::base_device_t::get_hardware_generation( void ) const
+int cedrus::base_device_t::get_accessory_connector_mode( void )
 {
-    char gen_return[2];
-
-    xid_con_->send_xid_command(
-        "_d7",
-        gen_return,
-        sizeof(gen_return));
-
-    return gen_return[0]-'0';
+    return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_light_sensor_threshold( int threshold ) const
+void cedrus::base_device_t::set_accessory_connector_mode( int mode )
 {
-    int bytes_written;
-    char change_threshold_cmd[3];
-    change_threshold_cmd[0] = 'l';
-    change_threshold_cmd[1] = 't';
-    change_threshold_cmd[2] = threshold;
-
-    xid_con_->write((unsigned char*)change_threshold_cmd, 3, bytes_written);
+    // nothing
 }
 
-int cedrus::base_device_t::get_light_sensor_threshold( void ) const
+void cedrus::base_device_t::set_device_mode( int protocol )
 {
-    char threshold_return[5];
-
-    xid_con_->send_xid_command(
-        "_lt",
-        threshold_return,
-        sizeof(threshold_return));
-
-    unsigned char return_val = (unsigned char)(threshold_return[3]);
-    return (int)(return_val);
-}
-
-std::string cedrus::base_device_t::get_device_name()
-{
-    return config_->get_device_name();
-}
-
-int cedrus::base_device_t::get_product_id() const
-{
-    return config_->get_product_id();
-}
-
-int cedrus::base_device_t::get_model_id() const
-{
-    return config_->get_model_id();
-}
-
-int cedrus::base_device_t::number_of_lines() const
-{
-    return config_->number_of_lines();
-}
-
-int cedrus::base_device_t::close_connection()
-{
-    return xid_con_->close();
-}
-
-int cedrus::base_device_t::open_connection()
-{
-    return xid_con_->open();
-}
-
-void cedrus::base_device_t::raise_lines( unsigned int lines_bitmask, bool leave_remaining_lines)
-{
-    xid_con_->set_digital_output_lines(lines_bitmask, leave_remaining_lines);
-}
-
-void cedrus::base_device_t::clear_lines(unsigned int lines_bitmask, bool leave_remaining_lines)
-{
-    xid_con_->clear_digital_output_lines(lines_bitmask, leave_remaining_lines);
-}
-
-int cedrus::base_device_t::get_baud_rate ( void ) const
-{
-    return xid_con_->get_baud_rate();
+    // nothing
 }

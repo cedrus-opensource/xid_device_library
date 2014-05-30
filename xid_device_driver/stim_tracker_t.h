@@ -62,6 +62,26 @@ namespace cedrus
          * @param[in] duration Length of time in miliseconds
          */
         void CEDRUS_XIDDRIVER_IMPORTEXPORT set_pulse_duration(unsigned int duration);
+
+        virtual xid_device_config_t CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT open_connection();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate();
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate( int rate );
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_and_model_id( int &product_id, int &model_id );
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_major_firmware_version();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_minor_firmware_version();
+        virtual std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_internal_product_name();
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
+            bool leave_remaining_lines = false);
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines();
+
+    private:
+        char lines_state_;
+
+    protected:
+        boost::shared_ptr<xid_con_t> xid_con_;
+        boost::shared_ptr<cedrus::xid_device_config_t> config_;
     };
 } // namespace cedrus
 

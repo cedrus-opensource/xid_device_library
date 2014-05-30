@@ -47,12 +47,16 @@ struct cedrus::xid_con_t::WindowsConnPimpl
         : device_id_ ( NULL )
     {}
 
-    void setup_dcb(DCB &dcb, port_settings_t port_settings) const
+    void setup_dcb(DCB &dcb, 
+        int baud_rate,
+        bytesize byte_size,
+        bitparity bit_parity,
+        stopbits stop_bits) const
     {
-        dcb.BaudRate = port_settings.baud_rate();
-        dcb.ByteSize = static_cast<BYTE>(port_settings.byte_size());
-        dcb.Parity   = static_cast<BYTE>(port_settings.bit_parity());
-        dcb.StopBits = static_cast<BYTE>(port_settings.stop_bits());
+        dcb.BaudRate = baud_rate;
+        dcb.ByteSize = static_cast<BYTE>(byte_size);
+        dcb.Parity   = static_cast<BYTE>(bit_parity);
+        dcb.StopBits = static_cast<BYTE>(stop_bits);
         dcb.fBinary  = 1;
     }
 
@@ -72,41 +76,23 @@ cedrus::xid_con_t::xid_con_t(
     const std::string &port_name,
     int port_speed,
     int delay_ms,
-    port_settings_t::bytesize byte_size,
-    port_settings_t::bitparity bit_parity,
-    port_settings_t::stopbits stop_bits
+    bytesize byte_size,
+    bitparity bit_parity,
+    stopbits stop_bits
     )
-    : delay_(delay_ms),
-      bytes_in_buffer_(0),
-      first_valid_xid_packet_(INVALID_PACKET_INDEX),
-      num_keys_down_(0),
-      last_resp_port_(-1),
-      last_resp_key_(-1),
-      last_resp_pressed_(false),
-      last_resp_rt_(-1),
-      lines_state_(0),
+    : baud_rate_(port_speed),
+      byte_size_(byte_size),
+      bit_parity_(bit_parity),
+      stop_bits_(stop_bits),
+      handshaking_(HANDSHAKE_NONE),
+      port_name_(port_name),
+      delay_(delay_ms),
       needs_interbyte_delay_(true),
       m_winPimpl( new WindowsConnPimpl )
 {
     std::ostringstream s;
     s << "\\\\.\\" << port_name;
     port_name_ = s.str().c_str();
-
-    port_settings_ = port_settings_t(port_name_, 
-        port_speed,
-        byte_size,
-        bit_parity,
-        stop_bits);
-
-    for(int i = 0; i < INPUT_BUFFER_SIZE; ++i)
-    {
-        input_buffer_[i] = '\0';
-    }
-
-    set_lines_cmd_[0] = 'a';
-    set_lines_cmd_[1] = 'h';
-    set_lines_cmd_[2] = '\0';
-    set_lines_cmd_[3] = '\0';
 }
 
 
@@ -197,7 +183,7 @@ int cedrus::xid_con_t::setup_com_port()
         return status;
     }
 
-    m_winPimpl->setup_dcb(dcb, port_settings_);
+    m_winPimpl->setup_dcb(dcb, baud_rate_, byte_size_, bit_parity_, stop_bits_);
 
     if(SetCommState(m_winPimpl->device_id_, &dcb) == 0)
     {
