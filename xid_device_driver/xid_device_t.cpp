@@ -35,7 +35,8 @@ cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
     boost::shared_ptr<xid_device_config_t> dev_config)
     : xid_con_(xid_con),
-      config_(dev_config)
+      config_(dev_config),
+      m_response_mgr(new response_mgr())
 {
     clear_lines();
     xid_con_->set_needs_interbyte_delay(config_->needs_interbyte_delay());
@@ -43,6 +44,11 @@ cedrus::xid_device_t::xid_device_t(
 
 cedrus::xid_device_t::~xid_device_t(void)
 {
+}
+
+void cedrus::xid_device_t::reset_rt_timer( void )
+{
+    xid_glossary::reset_rt_timer(xid_con_);
 }
 
 void cedrus::xid_device_t::poll_for_response()

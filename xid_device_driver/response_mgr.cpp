@@ -111,17 +111,7 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_
 
     if(response_found != cedrus::NO_KEY_DETECTED)
     {
-        if(dev_config)
-        {
-            res.key = dev_config->get_mapped_key(res.key);
-        }
-        else
-        {
-            // RB series response pads respond with a 1 based button index.  
-            // Users of the API should expect a 0 based index.  Subtract 1 
-            // from the key to give the user the correct button number.
-            res.key -= 1;
-        }
+        res.key = dev_config->get_mapped_key(res.key);
  
         response_queue_.push(res);
     }

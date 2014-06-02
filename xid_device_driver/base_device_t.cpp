@@ -86,7 +86,7 @@ void cedrus::base_device_t::poll_for_response()
 
 bool cedrus::base_device_t::has_queued_responses()
 {
-    return INVALID_RETURN_VALUE;
+    return false;
 }
 
 cedrus::response cedrus::base_device_t::get_next_response()

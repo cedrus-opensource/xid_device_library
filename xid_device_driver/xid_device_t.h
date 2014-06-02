@@ -60,36 +60,38 @@ namespace cedrus
          * are used and results may not be what you expect.  It's highly
          * reccommended to use the devconfig files.
          */
-        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_t(
+        xid_device_t(
             boost::shared_ptr<xid_con_t> xid_con,
             boost::shared_ptr<xid_device_config_t> dev_config
             );
-        virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_t(void);
+        virtual ~xid_device_t(void);
 
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT poll_for_response();
+        virtual void reset_rt_timer();
 
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses();
+        void poll_for_response();
 
-        cedrus::response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
+        bool has_queued_responses();
 
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode();
+        cedrus::response get_next_response();
 
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
+        int get_accessory_connector_mode();
 
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_mode( int protocol );
+        void set_accessory_connector_mode( int mode );
 
-        virtual xid_device_config_t CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config();
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT open_connection();
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection();
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate();
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate( int rate );
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_and_model_id( int &product_id, int &model_id );
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_major_firmware_version();
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_minor_firmware_version();
-        virtual std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_internal_product_name();
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
+        void set_device_mode( int protocol );
+
+        virtual xid_device_config_t get_device_config();
+        virtual int open_connection();
+        virtual int close_connection();
+        virtual int get_baud_rate();
+        virtual void set_baud_rate( int rate );
+        virtual void get_product_and_model_id( int &product_id, int &model_id );
+        virtual int get_major_firmware_version();
+        virtual int get_minor_firmware_version();
+        virtual std::string get_internal_product_name();
+        virtual void raise_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false);
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines();
+        virtual void clear_lines();
 
     private:
         char lines_state_;
