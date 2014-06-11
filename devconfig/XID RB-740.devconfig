@@ -38,19 +38,19 @@ BitFormat = Parallel
 DefaultIoDirection = Output
 IoDirectionChangeablePerGroup = Yes
 IoDirectionChangeablePerLine = Yes
-UseableAsDigitalOutput = No
+UseableAsDigitalOutput = Yes
 UseableAsResponse = No
 DebouncingTime = 0
 IoLinesPrefix = AC
 IoLinesBaseNumber = 1
 
 [Port2] # THIS OVERLAPS WITH VOICE KEY ON SV-1
-PortName = LightSensor
-NumberOfLines = 7
+PortName = Light Sensor
+NumberOfLines = 1
 BitFormat = Parallel
 DefaultIoDirection = Input
 IoDirectionChangeablePerGroup = No
 IoDirectionChangeablePerLine = No
 UseableAsDigitalOutput = No
 UseableAsResponse = Yes
-XidDeviceKeyMap1 = 2
+XidDeviceKeyMap3 = 0

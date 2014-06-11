@@ -109,9 +109,9 @@ namespace cedrus
 
         int get_number_of_keys_down();
 
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses() const;
+        bool has_queued_responses() const;
 
-        response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
+        response get_next_response();
 
     private:
     	enum { OS_FILE_ERROR = -1 };

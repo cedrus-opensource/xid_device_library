@@ -42,6 +42,27 @@
 
 namespace cedrus
 {
+    struct device_port
+    {
+        device_port():
+            port_name(""),
+            usable_as_dig_out(false),
+            port_number(-1),
+            number_of_lines(-1)
+        {}
+
+        bool usable_as_response()
+        {
+            return !key_map.empty();
+        };
+
+        std::string port_name;
+        bool usable_as_dig_out;
+        int port_number;
+        int number_of_lines;
+        std::map<int,int> key_map;
+    };
+
     /**
      * @class xid_device_config_t xid_device_config_t.h "xid_device_driver/xid_device_config.h"
      *
@@ -80,12 +101,7 @@ namespace cedrus
          * @param[in] key key reported by the response pad
          * @returns the mapped key number based on the .devconfig file.
          */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_mapped_key(int key) const;
-        
-        /**
-         * Number of response lines (or buttons) a device has
-         */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT number_of_lines() const;
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_mapped_key(int port, int key) const;
 
         /**
          * Whether or not the device requires an inter-byte delay
@@ -129,6 +145,10 @@ namespace cedrus
          */
         int CEDRUS_XIDDRIVER_IMPORTEXPORT get_model_id() const;
 
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_num_lines_on_port(int port) const;
+
+        std::vector<device_port> CEDRUS_XIDDRIVER_IMPORTEXPORT get_vector_of_ports() const;
+
         /**
          * Resets the internal device reaction time timer.
          * 
@@ -139,19 +159,19 @@ namespace cedrus
         bool CEDRUS_XIDDRIVER_IMPORTEXPORT does_config_match_device( int device_id, int model_id, int major_firmware_ver )  const;
 
 
-    private:
+    public:
         xid_device_config_t(boost::property_tree::ptree * pt);
 
         bool needs_interbyte_delay_;
-        int number_of_lines_;
+        
         char digital_out_prefix_;
         std::string device_name_;
         int major_firmware_ver_;
         int product_id_;
         int model_id_;
 
-		std::vector<std::string> ports_to_ignore_;
-        std::map<int,int> key_map_;
+        std::map<int,device_port> m_device_ports;
+        std::vector<std::string> ports_to_ignore_;
     };
 } // namespace cedrus
 

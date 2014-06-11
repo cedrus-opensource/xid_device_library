@@ -50,10 +50,10 @@ namespace cedrus
          * are used and reults may not be what you expect.  It's highly
          * recommended to use the devconfig files.
          */
-        CEDRUS_XIDDRIVER_IMPORTEXPORT stim_tracker_t(
+        stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
             boost::shared_ptr<xid_device_config_t> dev_config);
-        virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~stim_tracker_t(void);
+        virtual ~stim_tracker_t(void);
 
         /**
          * Set the pulse duration when raise_lines() is called.  This is how 
@@ -61,20 +61,20 @@ namespace cedrus
          * 
          * @param[in] duration Length of time in miliseconds
          */
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT set_pulse_duration(unsigned int duration);
+        void set_pulse_duration(unsigned int duration);
 
-        virtual xid_device_config_t CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config();
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT open_connection();
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection();
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate();
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate( int rate );
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_and_model_id( int &product_id, int &model_id );
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_major_firmware_version();
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_minor_firmware_version();
-        virtual std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_internal_product_name();
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
+        virtual xid_device_config_t get_device_config();
+        virtual int open_connection();
+        virtual int close_connection();
+        virtual int get_baud_rate();
+        virtual void set_baud_rate( int rate );
+        virtual void get_product_and_model_id( int &product_id, int &model_id );
+        virtual int get_major_firmware_version();
+        virtual int get_minor_firmware_version();
+        virtual std::string get_internal_product_name();
+        virtual void raise_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false);
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines();
+        virtual void clear_lines();
 
     private:
         char lines_state_;

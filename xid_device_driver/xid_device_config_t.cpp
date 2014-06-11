@@ -53,7 +53,6 @@ boost::shared_ptr<cedrus::xid_device_config_t> cedrus::xid_device_config_t::conf
 
 cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * pt )
     : needs_interbyte_delay_(true),
-      number_of_lines_(8),
       digital_out_prefix_('a')
 {
     std::string digital_output_command;
@@ -79,13 +78,13 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
     if(std_response != "not_found")
         digital_out_prefix_ = std_response[0];
 
-    std::string port_str;
-    
     // xid devices support up to 255 ports.  In reality, usually only
     // 2 or 3 are used
     for(int i = 0; i <= 255; ++i)
     {
+        std::string port_str;
         std::ostringstream s;
+        device_port port;
         s << "Port" << i;
         port_str = s.str().c_str();
 
@@ -96,21 +95,26 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
             continue; // The device doesn't support this port
         }
 
+        port.port_name = pt->get(port_str+".PortName", "not_found");
+        port.port_number = i;
+        port.usable_as_dig_out = ( pt->get(port_str+".UseableAsDigitalOutput", "not_found") == "Yes" );
+        port.number_of_lines = pt->get(port_str+".NumberOfLines", -1);
+
         if ( pt->get(port_str+".UseableAsResponse", "not_found") == "Yes" )
         {
-            number_of_lines_ = pt->get(port_str+".NumberOfLines", -1);
-            
             // devconfig files have up to 8 key mappings
-            for(int i = 1; i <=8; ++i)
+            for(int j = 1; j <=8; ++j)
             {
                 std::ostringstream s2;
-                s2 << ".XidDeviceKeyMap" << i;
+                s2 << ".XidDeviceKeyMap" << j;
                 std::string key_name = s2.str().c_str();
                 
                 int key_num = pt->get(port_str+key_name, -1);
-                key_map_.insert(std::make_pair(i, key_num));
+                port.key_map.insert(std::make_pair(j, key_num));
             }
         }
+
+        m_device_ports.insert(std::make_pair(i, port));
     }
 }
 
@@ -118,23 +122,52 @@ cedrus::xid_device_config_t::~xid_device_config_t(void)
 {
 }
 
-int cedrus::xid_device_config_t::get_mapped_key(int key) const
+int cedrus::xid_device_config_t::get_mapped_key(int port, int key) const
 {
-    if(key_map_.empty())
-        return key;
+    std::map<int,device_port>::const_iterator port_found = m_device_ports.find(port);
 
-    std::map<int,int>::const_iterator found = 
-        key_map_.find(key);
-
-    if(found == key_map_.end())
+    // The device doesn't have this port, should never happen.
+    if( port_found == m_device_ports.end() )
         return -1;
 
-    return found->second;
+    // Port exists, but has no key mappings,
+    // which means it's not a response port. Something is very wrong!
+    if( port_found->second.key_map.empty() )
+        return key;
+
+    std::map<int,int>::const_iterator key_found = port_found->second.key_map.find(key);
+
+    // We have the port, it has key mappings, but not for this key.
+    if(key_found == port_found->second.key_map.end())
+        return -1;
+
+    return key_found->second;
 }
 
-int cedrus::xid_device_config_t::number_of_lines() const
+int cedrus::xid_device_config_t::get_num_lines_on_port(int port) const
 {
-    return number_of_lines_;
+    int num_lines = -1;
+    std::map<int,device_port>::const_iterator port_found = m_device_ports.find(port);
+
+    if( port_found != m_device_ports.end() )
+        num_lines = port_found->second.number_of_lines;
+
+    return num_lines;
+}
+
+std::vector<cedrus::device_port> cedrus::xid_device_config_t::get_vector_of_ports() const
+{
+    std::vector<device_port> vector_of_ports;
+
+    std::map<int,device_port>::const_iterator port = m_device_ports.begin();
+
+    while( port != m_device_ports.end() )
+    {
+        vector_of_ports.push_back(port->second);
+        port++;
+    }
+
+    return vector_of_ports;
 }
 
 bool cedrus::xid_device_config_t::needs_interbyte_delay() const

@@ -24,7 +24,6 @@ NumberOfLines = 8
 BitFormat = Parallel
 DefaultIoDirection = Output
 IoDirectionChangeablePerGroup = No
-IoDirectionChangeablePerLine = No
 UseableAsDigitalOutput = Yes
 UseableAsResponse = No
 DebouncingTime = 0

@@ -111,7 +111,7 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_
 
     if(response_found != cedrus::NO_KEY_DETECTED)
     {
-        res.key = dev_config->get_mapped_key(res.key);
+        res.key = dev_config->get_mapped_key(res.port, res.key);
  
         response_queue_.push(res);
     }
@@ -119,17 +119,17 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_
 
 void cedrus::response_mgr::remove_last_response_from_buffer()
 {
-        unsigned char *dest_char = input_buffer_;
-        unsigned char *src_char  = &input_buffer_[first_valid_xid_packet_];
-        int num_bytes = bytes_in_buffer_ - first_valid_xid_packet_;
+    unsigned char *dest_char = input_buffer_;
+    unsigned char *src_char  = &input_buffer_[first_valid_xid_packet_];
+    int num_bytes = bytes_in_buffer_ - first_valid_xid_packet_;
 
-        for(int i = 0; i < num_bytes; ++i, ++dest_char, ++src_char)
-        {
-            dest_char = src_char;
-        }
+    for(int i = 0; i < num_bytes; ++i, ++dest_char, ++src_char)
+    {
+        dest_char = src_char;
+    }
 
-        bytes_in_buffer_ -= num_bytes;
-        first_valid_xid_packet_ = INVALID_PACKET_INDEX;
+    bytes_in_buffer_ -= num_bytes;
+    first_valid_xid_packet_ = INVALID_PACKET_INDEX;
 }
 
 int cedrus::response_mgr::get_number_of_keys_down()
