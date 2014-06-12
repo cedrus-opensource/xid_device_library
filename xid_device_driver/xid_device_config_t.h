@@ -46,7 +46,6 @@ namespace cedrus
     {
         device_port():
             port_name(""),
-            usable_as_dig_out(false),
             port_number(-1),
             number_of_lines(-1)
         {}
@@ -57,7 +56,6 @@ namespace cedrus
         };
 
         std::string port_name;
-        bool usable_as_dig_out;
         int port_number;
         int number_of_lines;
         std::map<int,int> key_map;
@@ -163,14 +161,13 @@ namespace cedrus
         xid_device_config_t(boost::property_tree::ptree * pt);
 
         bool needs_interbyte_delay_;
-        
-        char digital_out_prefix_;
+
         std::string device_name_;
         int major_firmware_ver_;
         int product_id_;
         int model_id_;
 
-        std::map<int,device_port> m_device_ports;
+        std::map<int, device_port> m_device_ports;
         std::vector<std::string> ports_to_ignore_;
     };
 } // namespace cedrus

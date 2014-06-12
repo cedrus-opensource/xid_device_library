@@ -52,8 +52,7 @@ boost::shared_ptr<cedrus::xid_device_config_t> cedrus::xid_device_config_t::conf
 }
 
 cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * pt )
-    : needs_interbyte_delay_(true),
-      digital_out_prefix_('a')
+    : needs_interbyte_delay_(true)
 {
     std::string digital_output_command;
 
@@ -72,11 +71,6 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
     
     if(byte_delay.compare("No") == 0)
         needs_interbyte_delay_ = false;
-    
-    // get the digital output prefix
-    std::string std_response = pt->get("DeviceOptions.XidDigitalOutputCommand", "not_found");
-    if(std_response != "not_found")
-        digital_out_prefix_ = std_response[0];
 
     // xid devices support up to 255 ports.  In reality, usually only
     // 2 or 3 are used
@@ -84,7 +78,6 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
     {
         std::string port_str;
         std::ostringstream s;
-        device_port port;
         s << "Port" << i;
         port_str = s.str().c_str();
 
@@ -95,9 +88,9 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
             continue; // The device doesn't support this port
         }
 
+        device_port port;
         port.port_name = pt->get(port_str+".PortName", "not_found");
         port.port_number = i;
-        port.usable_as_dig_out = ( pt->get(port_str+".UseableAsDigitalOutput", "not_found") == "Yes" );
         port.number_of_lines = pt->get(port_str+".NumberOfLines", -1);
 
         if ( pt->get(port_str+".UseableAsResponse", "not_found") == "Yes" )
@@ -173,11 +166,6 @@ std::vector<cedrus::device_port> cedrus::xid_device_config_t::get_vector_of_port
 bool cedrus::xid_device_config_t::needs_interbyte_delay() const
 {
     return needs_interbyte_delay_;
-}
-
-char cedrus::xid_device_config_t::digital_out_prefix() const
-{
-    return digital_out_prefix_;
 }
 
 bool cedrus::xid_device_config_t::is_port_on_ignore_list( std::string port_name) const
