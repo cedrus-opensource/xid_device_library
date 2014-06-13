@@ -71,7 +71,26 @@ int cedrus::xid_con_t::get_baud_rate ( void ) const
 
 void cedrus::xid_con_t::set_baud_rate ( int rate )
 {
-    baud_rate_ = rate;
+    switch ( rate )
+    {
+        case 0:
+            baud_rate_ = 9600;
+            break;
+        case 1:
+            baud_rate_ = 19200;
+            break;
+        case 2:
+            baud_rate_ = 38400;
+            break;
+        case 3:
+            baud_rate_ = 57600;
+            break;
+        case 4:
+            baud_rate_ = 115200;
+            break;
+        default:
+            break;
+    }
 }
 
 int cedrus::xid_con_t::send_xid_command(
