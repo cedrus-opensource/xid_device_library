@@ -59,38 +59,20 @@ cedrus::xid_con_t::xid_con_t(
     const std::string &port_name,
     int port_speed,
     int delay_ms,
-    port_settings_t::bytesize byte_size,
-    port_settings_t::bitparity bit_parity,
-    port_settings_t::stopbits stop_bits
+    bytesize byte_size,
+    bitparity bit_parity,
+    stopbits stop_bits
     )
-    : port_name_ (port_name),
+    : baud_rate_(port_speed),
+      byte_size_(byte_size),
+      bit_parity_(bit_parity),
+      stop_bits_(stop_bits),
+      handshaking_(HANDSHAKE_NONE),
+      port_name_(port_name),
       delay_(delay_ms),
-      bytes_in_buffer_(0),
-      first_valid_xid_packet_(INVALID_PACKET_INDEX),
-      num_keys_down_(0),
-      last_resp_port_(-1),
-      last_resp_key_(-1),
-      last_resp_pressed_(false),
-      last_resp_rt_(-1),
-      lines_state_(0),
       needs_interbyte_delay_(true),
       m_darwinPimpl( new DarwinConnPimpl )
 {
-    port_settings_ = port_settings_t(port_name_,
-                                     port_speed,
-                                     byte_size,
-                                     bit_parity,
-                                     stop_bits);
-
-    for(int i = 0; i < INPUT_BUFFER_SIZE; ++i)
-    {
-        input_buffer_[i] = '\0';
-    }
-
-    set_lines_cmd_[0] = 'a';
-    set_lines_cmd_[1] = 'h';
-    set_lines_cmd_[2] = '\0';
-    set_lines_cmd_[3] = '\0';
 }
 
 
@@ -206,17 +188,17 @@ int cedrus::xid_con_t::setup_com_port()
 
 		flags |= ( CREAD | HUPCL | CLOCAL );
 
-		switch ( port_settings_.handshake() )
+		switch ( handshaking_ )
 		{
-			case port_settings_t::HANDSHAKE_XON_XOFF:
+			case HANDSHAKE_XON_XOFF:
 				m_darwinPimpl->m_OptionsCurrent.c_iflag |= ( IXON | IXOFF | IXANY );
 				break;
 
-			case port_settings_t::HANDSHAKE_HARDWARE:
+			case HANDSHAKE_HARDWARE:
 				flags |= CRTSCTS;	// CTS and RTS flow control of output
 				break;
 
-			case port_settings_t::HANDSHAKE_NONE:
+			case HANDSHAKE_NONE:
 				m_darwinPimpl->m_OptionsCurrent.c_iflag &= ~( IXON | IXOFF | IXANY );
 				flags &= ~ CRTSCTS;
 				break;
@@ -227,17 +209,17 @@ int cedrus::xid_con_t::setup_com_port()
 
 		flags &= ~( PARENB | PARODD );
 		m_darwinPimpl->m_OptionsCurrent.c_iflag &= ~( INPCK | ISTRIP );
-		switch ( port_settings_.bit_parity() )
+		switch ( bit_parity_ )
 		{
-			case port_settings_t::BITPARITY_ODD:
+			case BITPARITY_ODD:
 				m_darwinPimpl->m_OptionsCurrent.c_iflag |= INPCK | ISTRIP;
 				flags |= PARODD; // this sets the parity to odd -- even is the default
-			case port_settings_t::BITPARITY_EVEN:
+			case BITPARITY_EVEN:
 				m_darwinPimpl->m_OptionsCurrent.c_iflag |= INPCK;
 				flags |= PARENB; // this enables parity
 				break;
 
-			case port_settings_t::BITPARITY_NONE:
+			case BITPARITY_NONE:
 				break;
 
 			default:
@@ -247,17 +229,17 @@ int cedrus::xid_con_t::setup_com_port()
 		// The baud rate, word length, and handshake options can be set as follows:
 
 		flags &= ~CSIZE;
-		switch ( port_settings_.byte_size() )
+		switch ( byte_size_ )
 		{
-			case port_settings_t::BYTESIZE_6:
+			case BYTESIZE_6:
 				flags |= CS6;
 				break;
 
-			case port_settings_t::BYTESIZE_7:
+			case BYTESIZE_7:
 				flags |= CS7;
 				break;
 
-			case port_settings_t::BYTESIZE_8:
+			case BYTESIZE_8:
 				flags |= CS8;
 				break;
 
@@ -265,12 +247,12 @@ int cedrus::xid_con_t::setup_com_port()
 				break;
 		}
 
-		if ( port_settings_.stop_bits() == port_settings_t::STOP_BIT_2 )
+		if ( stop_bits_ == STOP_BIT_2 )
 			flags |= CSTOPB;
 		else
 			flags &= ~CSTOPB;
 
-		cfsetspeed(&(m_darwinPimpl->m_OptionsCurrent), port_settings_.baud_rate());
+		cfsetspeed(&(m_darwinPimpl->m_OptionsCurrent), baud_rate_);
 		m_darwinPimpl->m_OptionsCurrent.c_cflag = ( flags );
 
 		// Cause the new options to take effect immediately.
@@ -281,7 +263,7 @@ int cedrus::xid_con_t::setup_com_port()
 			status = ERROR_SETTING_UP_PORT;
 	}
 
-	if ( port_settings_.handshake() == port_settings_t::HANDSHAKE_HARDWARE )
+	if ( handshaking_ == HANDSHAKE_HARDWARE )
 	{
 
 		if ( status == NO_ERR )
