@@ -82,8 +82,17 @@ void cedrus::xid_device_scanner_t::drop_every_connection()
 int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &config_file_location, boost::function< void ( std::string ) > reportFunction)
 {
     int devices = 0; //the return value
+
+    try {
+        boost::filesystem::path targetDir(config_file_location);
+        boost::filesystem::directory_iterator it(targetDir), eod;
+    }
+    catch ( boost::filesystem::filesystem_error ) {
+        return -1; // Error retrieving devconfigs
+    }
+
     boost::filesystem::path targetDir(config_file_location);
-	boost::filesystem::directory_iterator it(targetDir), eod;
+    boost::filesystem::directory_iterator it(targetDir), eod;
 
     // This will contain every devconfig we can find.
     std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > master_config_list;
