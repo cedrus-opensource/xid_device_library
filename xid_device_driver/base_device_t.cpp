@@ -49,6 +49,16 @@ int cedrus::base_device_t::get_hardware_generation( void )
     return INVALID_RETURN_VALUE;
 }
 
+int cedrus::base_device_t::get_light_sensor_mode( void )
+{
+    return INVALID_RETURN_VALUE;
+}
+
+void cedrus::base_device_t::set_light_sensor_mode(  int mode )
+{
+    // nothing
+}
+
 void cedrus::base_device_t::set_light_sensor_threshold( int threshold )
 {
     // nothing
@@ -57,6 +67,11 @@ void cedrus::base_device_t::set_light_sensor_threshold( int threshold )
 int cedrus::base_device_t::get_light_sensor_threshold()
 {
     return INVALID_RETURN_VALUE;
+}
+
+void cedrus::base_device_t::set_scanner_trigger_filter( int mode )
+{
+    // nothing
 }
 
 void cedrus::base_device_t::reset_rt_timer( void )
@@ -100,6 +115,16 @@ int cedrus::base_device_t::get_accessory_connector_mode( void )
 }
 
 void cedrus::base_device_t::set_accessory_connector_mode( int mode )
+{
+    // nothing
+}
+
+int cedrus::base_device_t::get_debouncing_time( void )
+{
+    return INVALID_RETURN_VALUE;
+}
+
+void cedrus::base_device_t::set_debouncing_time( int time )
 {
     // nothing
 }

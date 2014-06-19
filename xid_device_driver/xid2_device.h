@@ -29,11 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef XID_DEVICE_T_H
-#define XID_DEVICE_T_H
+#ifndef XID2_DEVICE_H
+#define XID2_DEVICE_H
 
 #include "constants.h"
-#include "base_device_t.h"
+#include "xid_device_t.h"
 #include "response_mgr.h"
 
 #include "XidDriverImpExpDefs.h"
@@ -43,55 +43,26 @@
 
 namespace cedrus
 {
-    /**
-     * @class xid_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
-     *
-     * @brief abstraction of an XID device
-     */
-    class xid_device_t : public base_device_t
+    class xid2_device : public xid_device_t
     {
     public:
-        xid_device_t(
+        xid2_device(
             boost::shared_ptr<xid_con_t> xid_con,
             boost::shared_ptr<xid_device_config_t> dev_config
             );
-        virtual ~xid_device_t(void);
+        virtual ~xid2_device(void);
 
-        virtual void reset_rt_timer();
+    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_light_sensor_mode();
+    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_light_sensor_mode( int mode );
+    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_light_sensor_threshold( int threshold );
+    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_light_sensor_threshold();
+    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_scanner_trigger_filter( int mode );
+    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode( void );
+    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
+    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_debouncing_time();
+    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_debouncing_time( int time );
 
-        void poll_for_response();
-
-        bool has_queued_responses();
-
-        cedrus::response get_next_response();
-
-        int get_accessory_connector_mode();
-
-        void set_accessory_connector_mode( int mode );
-
-        void set_device_mode( int protocol );
-
-        virtual xid_device_config_t get_device_config();
-        virtual int open_connection();
-        virtual int close_connection();
-        virtual int get_baud_rate();
-        virtual void set_baud_rate( int rate );
-        virtual void get_product_and_model_id( int &product_id, int &model_id );
-        virtual int get_major_firmware_version();
-        virtual int get_minor_firmware_version();
-        virtual std::string get_internal_product_name();
-        virtual void raise_lines(unsigned int lines_bitmask,
-            bool leave_remaining_lines = false);
-        virtual void clear_lines();
-
-    protected:
-        boost::shared_ptr<xid_con_t> xid_con_;
-
-    private:
-        char lines_state_;
-        boost::shared_ptr<cedrus::xid_device_config_t> config_;
-        boost::shared_ptr<cedrus::response_mgr> m_response_mgr;
     };
 } // namespace cedrus
 
-#endif // XID_DEVICE_T_H
+#endif // XID2_DEVICE_H

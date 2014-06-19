@@ -34,6 +34,7 @@
 #include "xid_device_config_t.h"
 #include "xid_con_t.h"
 #include "xid_device_t.h"
+#include "xid2_device.h"
 #include "stim_tracker_t.h"
 
 #include <iostream>
@@ -210,12 +211,17 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
 
                             if(dev_type[0] == 'S')
                             {
-                                boost::shared_ptr<cedrus::stim_tracker_t> stim_tracker (new stim_tracker_t(xid_con, config));
+                                boost::shared_ptr<cedrus::base_device_t> stim_tracker (new stim_tracker_t(xid_con, config));
                                 devices_.push_back(stim_tracker);
                             }
                             else
                             {
-                                boost::shared_ptr<cedrus::xid_device_t> rb_device (new xid_device_t(xid_con, config));
+                                boost::shared_ptr<cedrus::base_device_t> rb_device;
+                                if ( major_firmware_version == 1 )
+                                    rb_device.reset(new xid_device_t(xid_con, config));
+                                else
+                                    rb_device.reset(new xid2_device(xid_con, config));
+
                                 devices_.push_back(rb_device);
                             }
                         }

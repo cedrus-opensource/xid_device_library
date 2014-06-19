@@ -37,9 +37,15 @@ namespace cedrus
 
         static int get_hardware_generation( boost::shared_ptr<xid_con_t> xid_con );
 
+        static int get_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con );
+
+        static void set_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
+
         static void set_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con, int threshold );
 
         static int get_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con );
+
+        static void set_scanner_trigger_filter( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
         static void set_digital_output_lines_xid( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines );
 
@@ -56,6 +62,10 @@ namespace cedrus
         static int get_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con );
 
         static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
+
+        static int get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con );
+
+        static void set_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time );
 
     private:
         /**

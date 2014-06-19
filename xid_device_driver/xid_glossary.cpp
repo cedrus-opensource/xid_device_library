@@ -102,6 +102,28 @@ int cedrus::xid_glossary::get_hardware_generation( boost::shared_ptr<xid_con_t> 
     return gen_return[0]-'0';
 }
 
+int cedrus::xid_glossary::get_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con )
+{
+    char return_info[5];
+    xid_con->send_xid_command(
+        "_lr",
+        return_info,
+        sizeof(return_info));
+
+    return return_info[3]-'0';
+}
+
+void cedrus::xid_glossary::set_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con, int mode )
+{
+    int bytes_written;
+    char change_mode_cmd[3];
+    change_mode_cmd[0] = 'l';
+    change_mode_cmd[1] = 'r';
+    change_mode_cmd[2] = mode+'0';
+
+    xid_con->write((unsigned char*)change_mode_cmd, 3, bytes_written);
+}
+
 void cedrus::xid_glossary::set_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con, int threshold )
 {
     int bytes_written;
@@ -124,6 +146,17 @@ int cedrus::xid_glossary::get_light_sensor_threshold( boost::shared_ptr<xid_con_
 
     unsigned char return_val = (unsigned char)(threshold_return[3]);
     return (int)(return_val);
+}
+
+void cedrus::xid_glossary::set_scanner_trigger_filter( boost::shared_ptr<xid_con_t> xid_con, int mode )
+{
+    int bytes_written;
+    char set_trigger_slice_filter_cmd[3];
+    set_trigger_slice_filter_cmd[0] = 't';
+    set_trigger_slice_filter_cmd[1] = 's';
+    set_trigger_slice_filter_cmd[2] = mode;
+
+    xid_con->write((unsigned char*)set_trigger_slice_filter_cmd, 3, bytes_written);
 }
 
 void cedrus::xid_glossary::set_digital_output_lines_xid (
@@ -225,7 +258,7 @@ void cedrus::xid_glossary::set_pulse_duration( boost::shared_ptr<xid_con_t> xid_
 
 int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[4];
+    char return_info[5];
     xid_con->send_xid_command(
         "_a1",
         return_info,
@@ -241,4 +274,28 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
     s << "a1" << mode;
 
     xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), bytes_written);
+}
+
+int cedrus::xid_glossary::get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con )
+{
+    char threshold_return[5];
+
+    xid_con->send_xid_command(
+        "_a6",
+        threshold_return,
+        sizeof(threshold_return));
+
+    unsigned char return_val = (unsigned char)(threshold_return[3]);
+    return (int)(return_val);
+}
+
+void cedrus::xid_glossary::set_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time )
+{
+    int bytes_written;
+    char set_debouncing_time_cmd[3];
+    set_debouncing_time_cmd[0] = 't';
+    set_debouncing_time_cmd[1] = 's';
+    set_debouncing_time_cmd[2] = time;
+
+    xid_con->write((unsigned char*)set_debouncing_time_cmd, 3, bytes_written);
 }
