@@ -45,6 +45,11 @@ cedrus::stim_tracker_t::~stim_tracker_t(void)
 {
 }
 
+unsigned int cedrus::stim_tracker_t::get_pulse_duration( void )
+{
+    return xid_glossary::get_pulse_duration(xid_con_);
+}
+
 void cedrus::stim_tracker_t::set_pulse_duration(unsigned int duration)
 {
     xid_glossary::set_pulse_duration(xid_con_, duration);

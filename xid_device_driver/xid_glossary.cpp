@@ -231,28 +231,46 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
     model_id = (int)(model_id_return[0]);
 }
 
+unsigned int cedrus::xid_glossary::get_pulse_duration( boost::shared_ptr<xid_con_t> xid_con )
+{
+    char return_info[8];
+    xid_con->send_xid_command(
+        "_mp",
+        return_info,
+        sizeof(return_info));
+
+    unsigned int dur = 0;
+
+    dur |= (return_info[6] & 0x000000ff );
+    dur <<= 8;
+    dur |= (return_info[5] & 0x000000ff );
+    dur <<= 8;
+    dur |= (return_info[4] & 0x000000ff );
+    dur <<= 8;
+    dur |= (return_info[3] & 0x000000ff );
+
+    return dur;
+}
+
 void cedrus::xid_glossary::set_pulse_duration( boost::shared_ptr<xid_con_t> xid_con, unsigned int duration )
 {
-    union {
-        unsigned int as_int;
-        unsigned char as_char[8];
-    } dur;
-
-    dur.as_int = duration;
-
-    unsigned char command[10];
+    unsigned char command[6];
     command[0] = 'm';
     command[1] = 'p';
     
-    for(int i = 2; i < 10; ++i)
-    {
-        command[i] = dur.as_char[i-2];
-    }
+    command[2] = duration & 0x000000ff;
+    duration >>= 8;
+    command[3] = duration & 0x000000ff;
+    duration >>= 8;
+    command[4] = duration & 0x000000ff;
+    duration >>= 8;
+    command[5] = duration & 0x000000ff;
+    duration >>= 8;
 
     int written = 0;
     xid_con->write(
         command,
-        10,
+        6,
         written);
 }
 

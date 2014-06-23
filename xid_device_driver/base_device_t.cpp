@@ -89,6 +89,11 @@ int cedrus::base_device_t::query_base_timer()
     return INVALID_RETURN_VALUE;
 }
 
+unsigned int cedrus::base_device_t::get_pulse_duration( void )
+{
+    return 0;
+}
+
 void cedrus::base_device_t::set_pulse_duration(unsigned int duration)
 {
     // nothing

@@ -55,6 +55,7 @@ namespace cedrus
             boost::shared_ptr<xid_device_config_t> dev_config);
         virtual ~stim_tracker_t(void);
 
+        unsigned int get_pulse_duration( void );
         /**
          * Set the pulse duration when raise_lines() is called.  This is how 
          * long the line will be active.

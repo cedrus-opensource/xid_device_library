@@ -57,6 +57,8 @@ namespace cedrus
 
         static void get_product_and_model_id( boost::shared_ptr<xid_con_t> xid_con, int &product_id, int &model_id );
 
+        static unsigned int get_pulse_duration( boost::shared_ptr<xid_con_t> xid_con );
+
         static void set_pulse_duration( boost::shared_ptr<xid_con_t> xid_con, unsigned int duration );
 
         static int get_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con );

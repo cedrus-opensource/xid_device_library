@@ -70,6 +70,8 @@ namespace cedrus
 
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT query_base_timer();
 
+        virtual unsigned int CEDRUS_XIDDRIVER_IMPORTEXPORT get_pulse_duration();
+
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_pulse_duration(unsigned int duration);
 
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT poll_for_response();
