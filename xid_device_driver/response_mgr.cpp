@@ -10,7 +10,6 @@
 
 cedrus::response_mgr::response_mgr( void )
     : bytes_in_buffer_(0),
-      first_valid_xid_packet_(INVALID_PACKET_INDEX),
       num_keys_down_(0)
 {
     for(int i = 0; i < INPUT_BUFFER_SIZE; ++i)
@@ -44,26 +43,17 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
 
     if(bytes_in_buffer_ >= 6)
     {
-        const int last_byte_index = bytes_in_buffer_ - XID_PACKET_SIZE;
-
-        for(int i = 0; i <= last_byte_index; ++i)
+        for(int i = 0; i <= bytes_in_buffer_; ++i)
         {
             if( input_buffer_[i] == 'k' &&
-                (input_buffer_[i+1] & INVALID_PORT_BITS) == 0 &&
-                input_buffer_[i+5] == '\0')
+                (input_buffer_[i+1] & INVALID_PORT_BITS) == 0)
             {
-                // found a valid XID packet
-                first_valid_xid_packet_ = i;
                 res.was_pressed = (
-                    input_buffer_[first_valid_xid_packet_+1] & KEY_RELEASE_BITMASK) ==
+                    input_buffer_[i+1] & KEY_RELEASE_BITMASK) ==
                     KEY_RELEASE_BITMASK;
-                res.port = input_buffer_[first_valid_xid_packet_+1] & 0x0F;
+                res.port = input_buffer_[i+1] & 0x0F;
+                res.key = (input_buffer_[i+1] & 0xE0) >> 5;
 
-                res.key = (input_buffer_[first_valid_xid_packet_+1] & 0xE0) >> 5;
-
-                if(res.key == 0)
-                    res.key = 8;
-                
                 // get reaction time
                 union {
                     int as_int;
@@ -73,7 +63,7 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
                 for(int n = 0; n < 4; ++n)
                 {
                     // would this work on PPC? due to flipped endianness?
-                    rt.as_char[n] = input_buffer_[first_valid_xid_packet_+2+n];
+                    rt.as_char[n] = input_buffer_[i+2+n];
                 }
                 
                 res.reaction_time = rt.as_int;
@@ -84,13 +74,13 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
                     num_keys_down_++;
                 else
                     num_keys_down_--;
+
+                // We're done. There's only ever one packet.
+                break;
             }
         }
     }
 
-    if(first_valid_xid_packet_ != INVALID_PACKET_INDEX)
-        remove_last_response_from_buffer();
-    
     return input_found;
 }
 
@@ -101,11 +91,10 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_
     response res;
     key_state response_found = NO_KEY_DETECTED;
 
-    status = port_connection->read(&input_buffer_[bytes_in_buffer_], 6, bytes_read);
+    status = port_connection->read(input_buffer_, 6, bytes_in_buffer_);
 
-    if(bytes_read > 0)
+    if(bytes_in_buffer_ > 0)
     {
-        bytes_in_buffer_ += bytes_read;
         response_found = xid_input_found(res);
     }
 
@@ -115,21 +104,6 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_
  
         response_queue_.push(res);
     }
-}
-
-void cedrus::response_mgr::remove_last_response_from_buffer()
-{
-    unsigned char *dest_char = input_buffer_;
-    unsigned char *src_char  = &input_buffer_[first_valid_xid_packet_];
-    int num_bytes = bytes_in_buffer_ - first_valid_xid_packet_;
-
-    for(int i = 0; i < num_bytes; ++i, ++dest_char, ++src_char)
-    {
-        dest_char = src_char;
-    }
-
-    bytes_in_buffer_ -= num_bytes;
-    first_valid_xid_packet_ = INVALID_PACKET_INDEX;
 }
 
 int cedrus::response_mgr::get_number_of_keys_down()

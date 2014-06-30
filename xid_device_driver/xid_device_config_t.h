@@ -35,6 +35,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <array>
 #include <boost/shared_ptr.hpp>
 #include <boost/property_tree/ptree.hpp>
 
@@ -58,7 +59,7 @@ namespace cedrus
         std::string port_name;
         int port_number;
         int number_of_lines;
-        std::map<int,int> key_map;
+        std::array<int,8> key_map;
     };
 
     /**

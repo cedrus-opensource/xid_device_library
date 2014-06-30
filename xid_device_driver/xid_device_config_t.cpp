@@ -96,14 +96,14 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
         if ( pt->get(port_str+".UseableAsResponse", "not_found") == "Yes" )
         {
             // devconfig files have up to 8 key mappings
-            for(int j = 1; j <=8; ++j)
+            for( int j = 0; j < 8; ++j )
             {
                 std::ostringstream s2;
                 s2 << ".XidDeviceKeyMap" << j;
                 std::string key_name = s2.str().c_str();
                 
                 int key_num = pt->get(port_str+key_name, -1);
-                port.key_map.insert(std::make_pair(j, key_num));
+                port.key_map[j] = key_num;
             }
         }
 
@@ -123,18 +123,8 @@ int cedrus::xid_device_config_t::get_mapped_key(int port, int key) const
     if( port_found == m_device_ports.end() )
         return -1;
 
-    // Port exists, but has no key mappings,
-    // which means it's not a response port. Something is very wrong!
-    if( port_found->second.key_map.empty() )
-        return key;
-
-    std::map<int,int>::const_iterator key_found = port_found->second.key_map.find(key);
-
-    // We have the port, it has key mappings, but not for this key.
-    if(key_found == port_found->second.key_map.end())
-        return -1;
-
-    return key_found->second;
+    // Anything that wasn't mapped during the devconfig parsing process will default to -1
+    return port_found->second.key_map[key];
 }
 
 int cedrus::xid_device_config_t::get_num_lines_on_port(int port) const

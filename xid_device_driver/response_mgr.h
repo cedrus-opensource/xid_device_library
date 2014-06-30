@@ -116,7 +116,6 @@ namespace cedrus
     private:
     	enum { OS_FILE_ERROR = -1 };
 
-        void      remove_last_response_from_buffer();
         key_state xid_input_found( response &res );
       
         int delay_;
@@ -129,7 +128,6 @@ namespace cedrus
         int bytes_in_buffer_;
         unsigned char input_buffer_[INPUT_BUFFER_SIZE];
 
-        int first_valid_xid_packet_;
         int num_keys_down_;
 
         std::queue<response> response_queue_;

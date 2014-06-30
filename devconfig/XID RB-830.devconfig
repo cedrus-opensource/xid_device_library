@@ -19,12 +19,8 @@ XidDigitalOutputCommand = a
 [Port0]
 PortName = Keys
 NumberOfLines = 8
-BitFormat = Parallel
-DefaultIoDirection = Input
-IoDirectionChangeablePerGroup = No
-IoDirectionChangeablePerLine = No
-UseableAsDigitalOutput = No
 UseableAsResponse = Yes
+XidDeviceKeyMap0 = 7
 XidDeviceKeyMap1 = 3
 XidDeviceKeyMap2 = 4
 XidDeviceKeyMap3 = 1
@@ -32,17 +28,8 @@ XidDeviceKeyMap4 = 2
 XidDeviceKeyMap5 = 5
 XidDeviceKeyMap6 = 6
 XidDeviceKeyMap7 = 0
-XidDeviceKeyMap8 = 7
 
 [Port1]
 PortName = Accessory Connector
 NumberOfLines = 6
-BitFormat = Parallel
-DefaultIoDirection = Output
-IoDirectionChangeablePerGroup = Yes
-IoDirectionChangeablePerLine = Yes
-UseableAsDigitalOutput = Yes
 UseableAsResponse = No
-DebouncingTime = 0
-IoLinesPrefix = AC
-IoLinesBaseNumber = 1

@@ -54,7 +54,6 @@ namespace cedrus
     public:
         enum
         {
-	    INVALID_PORT_BITS = 0x0C,
             IN_BUFFER_SIZE = 2048,
             OUT_BUFFER_SIZE = 2048
         };

@@ -12,13 +12,8 @@ XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySeria
 XidDigitalOutputCommand = a
 
 [Port0]
-PortName = Keys
+PortName = Lumina Keys + ST
 NumberOfLines = 5
-BitFormat = Parallel
-DefaultIoDirection = Input
-IoDirectionChangeablePerGroup = No
-IoDirectionChangeablePerLine = No
-UseableAsDigitalOutput = No
 UseableAsResponse = Yes
 XidDeviceKeyMap1 = 0
 XidDeviceKeyMap2 = 1
@@ -29,12 +24,4 @@ XidDeviceKeyMap5 = 4
 [Port1]
 PortName = Accessory Connector
 NumberOfLines = 6
-BitFormat = Parallel
-DefaultIoDirection = Output
-IoDirectionChangeablePerGroup = Yes
-IoDirectionChangeablePerLine = Yes
-UseableAsDigitalOutput = No
 UseableAsResponse = No
-DebouncingTime = 0
-IoLinesPrefix = AC
-IoLinesBaseNumber = 1
