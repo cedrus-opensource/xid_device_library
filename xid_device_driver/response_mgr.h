@@ -116,18 +116,19 @@ namespace cedrus
     private:
     	enum { OS_FILE_ERROR = -1 };
 
+        void adjust_buffer_for_packet_recovery();
         key_state xid_input_found( response &res );
       
         int delay_;
 
-        enum {INPUT_BUFFER_SIZE = 1000};
         enum {XID_PACKET_SIZE = 6};
         enum {INVALID_PACKET_INDEX = -1};
         enum {KEY_RELEASE_BITMASK = 0x10};
         
-        int bytes_in_buffer_;
-        unsigned char input_buffer_[INPUT_BUFFER_SIZE];
+        int m_bytes_in_buffer;
+        unsigned char m_input_buffer[XID_PACKET_SIZE];
 
+        int m_xid_packet_index;
         int num_keys_down_;
 
         std::queue<response> response_queue_;

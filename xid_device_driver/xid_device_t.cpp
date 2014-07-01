@@ -40,6 +40,7 @@ cedrus::xid_device_t::xid_device_t(
 {
     clear_lines();
     xid_con_->set_needs_interbyte_delay(config_->needs_interbyte_delay());
+    reset_rt_timer();
 }
 
 cedrus::xid_device_t::~xid_device_t(void)
