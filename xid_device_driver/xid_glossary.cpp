@@ -124,17 +124,6 @@ void cedrus::xid_glossary::set_light_sensor_mode( boost::shared_ptr<xid_con_t> x
     xid_con->write((unsigned char*)change_mode_cmd, 3, bytes_written);
 }
 
-void cedrus::xid_glossary::set_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con, int threshold )
-{
-    int bytes_written;
-    char change_threshold_cmd[3];
-    change_threshold_cmd[0] = 'l';
-    change_threshold_cmd[1] = 't';
-    change_threshold_cmd[2] = threshold;
-
-    xid_con->write((unsigned char*)change_threshold_cmd, 3, bytes_written);
-}
-
 int cedrus::xid_glossary::get_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con )
 {
     char threshold_return[5];
@@ -146,6 +135,17 @@ int cedrus::xid_glossary::get_light_sensor_threshold( boost::shared_ptr<xid_con_
 
     unsigned char return_val = (unsigned char)(threshold_return[3]);
     return (int)(return_val);
+}
+
+void cedrus::xid_glossary::set_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con, int threshold )
+{
+    int bytes_written;
+    char change_threshold_cmd[3];
+    change_threshold_cmd[0] = 'l';
+    change_threshold_cmd[1] = 't';
+    change_threshold_cmd[2] = threshold;
+
+    xid_con->write((unsigned char*)change_threshold_cmd, 3, bytes_written);
 }
 
 void cedrus::xid_glossary::set_scanner_trigger_filter( boost::shared_ptr<xid_con_t> xid_con, int mode )
@@ -283,6 +283,17 @@ int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_co
         sizeof(return_info));
 
     return return_info[3]-'0';
+}
+
+int cedrus::xid_glossary::get_accessory_connector_device( boost::shared_ptr<xid_con_t> xid_con )
+{
+    char return_info[5];
+    xid_con->send_xid_command(
+        "_aa",
+        return_info,
+        sizeof(return_info));
+
+    return return_info[3];
 }
 
 void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode )

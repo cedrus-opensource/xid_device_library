@@ -30,6 +30,19 @@ NumberOfLines = 1
 UseableAsResponse = Yes
 XidDeviceKeyMap3 = 0
 
+[Port3]
+PortName = External Input
+NumberOfLines = 8
+UseableAsResponse = Yes
+XidDeviceKeyMap0 = 0
+XidDeviceKeyMap1 = 1
+XidDeviceKeyMap2 = 2
+XidDeviceKeyMap3 = 3
+XidDeviceKeyMap4 = 4
+XidDeviceKeyMap5 = 5
+XidDeviceKeyMap6 = 6
+XidDeviceKeyMap7 = 7
+
 [Port4]
 PortName = Accessory Connector
 NumberOfLines = 8

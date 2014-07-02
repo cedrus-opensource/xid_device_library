@@ -58,6 +58,7 @@ namespace cedrus
     virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_light_sensor_threshold();
     virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_scanner_trigger_filter( int mode );
     virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode( void );
+    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_device( void );
     virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
     virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_debouncing_time();
     virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_debouncing_time( int time );

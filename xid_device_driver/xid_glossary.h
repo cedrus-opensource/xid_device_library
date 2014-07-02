@@ -33,17 +33,23 @@ namespace cedrus
 
         static int get_minor_firmware_version( boost::shared_ptr<xid_con_t> xid_con );
 
+        // _d6 XID 2.0 only.
         static int get_outpost_model( boost::shared_ptr<xid_con_t> xid_con );
 
+        // _d7 XID 2.0 only
         static int get_hardware_generation( boost::shared_ptr<xid_con_t> xid_con );
 
+        // _lr XID 2.0 only
         static int get_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con );
 
+        // lr XID 2.0 only
         static void set_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
-        static void set_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con, int threshold );
-
+        // _lt XID 2.0 only
         static int get_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con );
+
+        // lt XID 2.0 only
+        static void set_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con, int threshold );
 
         static void set_scanner_trigger_filter( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
@@ -61,8 +67,13 @@ namespace cedrus
 
         static void set_pulse_duration( boost::shared_ptr<xid_con_t> xid_con, unsigned int duration );
 
+        // _a1 deprecated in XID 2.0
         static int get_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con );
 
+        // _aa XID 2.0 only.
+        static int get_accessory_connector_device( boost::shared_ptr<xid_con_t> xid_con );
+
+        // a1 deprecated in XID 2.0
         static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
         static int get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con );

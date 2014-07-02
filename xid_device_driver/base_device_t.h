@@ -82,6 +82,8 @@ namespace cedrus
 
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode( void );
 
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_device();
+
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
 
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_debouncing_time();

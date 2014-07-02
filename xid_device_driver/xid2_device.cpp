@@ -72,6 +72,11 @@ int cedrus::xid2_device::get_accessory_connector_mode( void )
     return INVALID_RETURN_VALUE;
 }
 
+int cedrus::xid2_device::get_accessory_connector_device( void )
+{
+    return xid_glossary::get_accessory_connector_device(xid_con_);
+}
+
 void cedrus::xid2_device::set_accessory_connector_mode( int mode )
 {
     // nothing
