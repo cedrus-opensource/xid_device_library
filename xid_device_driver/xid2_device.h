@@ -52,16 +52,16 @@ namespace cedrus
             );
         virtual ~xid2_device(void);
 
-    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_light_sensor_mode();
-    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_light_sensor_mode( int mode );
-    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_light_sensor_threshold( int threshold );
-    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_light_sensor_threshold();
-    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_scanner_trigger_filter( int mode );
-    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode( void );
-    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_device( void );
-    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
-    virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_debouncing_time();
-    virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_debouncing_time( int time );
+    virtual int get_light_sensor_mode();
+    virtual void set_light_sensor_mode( int mode );
+    virtual void set_light_sensor_threshold( int threshold );
+    virtual int get_light_sensor_threshold();
+    virtual void set_scanner_trigger_filter( int mode );
+    virtual int get_accessory_connector_mode( void );
+    virtual int get_accessory_connector_device( void );
+    virtual void set_accessory_connector_mode( int mode );
+    virtual int get_debouncing_time();
+    virtual void set_debouncing_time( int time );
 
     };
 } // namespace cedrus
