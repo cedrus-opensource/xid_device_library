@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -50,50 +50,7 @@ namespace cedrus
 
     enum
     {
-        UNKNOWN_MODEL_ID = 0
-    };
-
-    enum
-    {
-        ANY_MODEL_ID = -2,
-    };
-    enum
-    {
-        NO_XID_DEVICE_FOUND = -1
-    };
-    
-    enum
-    {
         INVALID_RETURN_VALUE = -99
-    };
-
-    enum
-    {
-        RB530  =  49,
-        RB730  =  50,
-        RB830  =  51,
-        RB834  =  52,
-        SV1    = 21,
-        LUMINA = 31
-    };
-    
-    enum
-    {
-        XID_ID_LUMINA = 48,
-        XID_ID_SV1    = 49,
-        XID_ID_RB     = 50
-    };
-    
-    enum
-    {
-        AD_NO_PROMPTS = 0x01,
-        AD_ASK_BEFORE_CONVERTING = 0x02,
-        AD_CONVERSION_IRREVERSIBLE = 0x04
-    };
-    
-    enum
-    {
-        XID_MODE = '0'
     };
 
     enum key_state
@@ -102,7 +59,7 @@ namespace cedrus
         FOUND_KEY_DOWN = 1,
         FOUND_KEY_UP = 2
     };
-    
+
     enum
     {
         MAX_PORTS = 255

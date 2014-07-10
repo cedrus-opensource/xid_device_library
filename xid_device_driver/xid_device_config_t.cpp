@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -36,7 +36,7 @@
 #include <boost/property_tree/exceptions.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp> 
+#include <boost/foreach.hpp>
 #include <iostream>
 
 #include <sstream>
@@ -45,7 +45,7 @@ boost::shared_ptr<cedrus::xid_device_config_t> cedrus::xid_device_config_t::conf
         boost::property_tree::ptree * pt )
 {
     boost::shared_ptr<xid_device_config_t> devconfig;
-    
+
     devconfig.reset(new xid_device_config_t(pt));
 
     return devconfig;
@@ -63,12 +63,12 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
 
     std::string regex_string(",");
     std::string ports_string = pt->get("DeviceOptions.XidIgnoreSerialPorts", "not_found");
-    
+
     boost::split(ports_to_ignore_,ports_string,boost::is_any_of(regex_string));
-    
+
     // does this device need an interbyte delay?
     std::string byte_delay = pt->get("DeviceOptions.XidNeedsInterByteDelay", "not_found");
-    
+
     if(byte_delay.compare("No") == 0)
         needs_interbyte_delay_ = false;
 
@@ -101,7 +101,7 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
                 std::ostringstream s2;
                 s2 << ".XidDeviceKeyMap" << j;
                 std::string key_name = s2.str().c_str();
-                
+
                 int key_num = pt->get(port_str+key_name, -1);
                 port.key_map[j] = key_num;
             }
@@ -183,7 +183,8 @@ bool cedrus::xid_device_config_t::does_config_match_device( int device_id, int m
     bool doesMatch = false;
     if ( product_id_ == device_id && major_firmware_ver_ == major_firmware_ver)
     {
-        if ( product_id_ == XID_ID_RB )
+        //per XID spec, '0' is Lumina, '1' is SV1, '2' is an RB
+        if ( static_cast<char>(product_id_) == '2' )
         {
             if ( model_id_ == model_id )
                 doesMatch = true;
