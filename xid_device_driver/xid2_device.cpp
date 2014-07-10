@@ -82,11 +82,6 @@ int cedrus::xid2_device::get_accessory_connector_device( void )
     return xid_glossary::get_accessory_connector_device(xid_con_);
 }
 
-void cedrus::xid2_device::set_accessory_connector_mode( int mode )
-{
-    // nothing
-}
-
 int cedrus::xid2_device::get_debouncing_time( void )
 {
     return xid_glossary::get_debouncing_time(xid_con_);

@@ -60,7 +60,6 @@ namespace cedrus
     virtual void set_scanner_trigger_filter( int mode );
     virtual int get_accessory_connector_mode( void );
     virtual int get_accessory_connector_device( void );
-    virtual void set_accessory_connector_mode( int mode );
     virtual int get_debouncing_time();
     virtual void set_debouncing_time( int time );
 
