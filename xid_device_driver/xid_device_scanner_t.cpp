@@ -156,7 +156,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                     // there's a possibility that the device is in E-Prime mode.
                     // Go through the buffer and discard NULL characters, and
                     // only keep the non NULL characters. Also, flush everything.
-                    for(int j = 0; j < sizeof(return_info); ++j)
+                    for(size_t j = 0; j < sizeof(return_info); ++j)
                     {
                         if(return_info[j] != 0)
                         {
