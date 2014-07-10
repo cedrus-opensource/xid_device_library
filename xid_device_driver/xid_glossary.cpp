@@ -10,13 +10,13 @@
 void cedrus::xid_glossary::reset_rt_timer( boost::shared_ptr<xid_con_t> xid_con )
 {
     int bytes_written;
-    xid_con->write((unsigned char*)"e5", 2, bytes_written);
+    xid_con->write((unsigned char*)"e5", 2, &bytes_written);
 }
 
 void cedrus::xid_glossary::reset_base_timer( boost::shared_ptr<xid_con_t> xid_con )
 {
     int bytes_written;
-    xid_con->write((unsigned char*)"e1", 2, bytes_written);
+    xid_con->write((unsigned char*)"e1", 2, &bytes_written);
 }
 
 int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con )
@@ -123,7 +123,7 @@ void cedrus::xid_glossary::set_light_sensor_mode( boost::shared_ptr<xid_con_t> x
     change_mode_cmd[1] = 'r';
     change_mode_cmd[2] = mode+'0';
 
-    xid_con->write((unsigned char*)change_mode_cmd, 3, bytes_written);
+    xid_con->write((unsigned char*)change_mode_cmd, 3, &bytes_written);
 }
 
 int cedrus::xid_glossary::get_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con )
@@ -147,7 +147,7 @@ void cedrus::xid_glossary::set_light_sensor_threshold( boost::shared_ptr<xid_con
     change_threshold_cmd[1] = 't';
     change_threshold_cmd[2] = threshold;
 
-    xid_con->write((unsigned char*)change_threshold_cmd, 3, bytes_written);
+    xid_con->write((unsigned char*)change_threshold_cmd, 3, &bytes_written);
 }
 
 void cedrus::xid_glossary::set_scanner_trigger_filter( boost::shared_ptr<xid_con_t> xid_con, int mode )
@@ -158,7 +158,7 @@ void cedrus::xid_glossary::set_scanner_trigger_filter( boost::shared_ptr<xid_con
     set_trigger_slice_filter_cmd[1] = 's';
     set_trigger_slice_filter_cmd[2] = mode;
 
-    xid_con->write((unsigned char*)set_trigger_slice_filter_cmd, 3, bytes_written);
+    xid_con->write((unsigned char*)set_trigger_slice_filter_cmd, 3, &bytes_written);
 }
 
 void cedrus::xid_glossary::set_digital_output_lines_xid (
@@ -191,7 +191,7 @@ void cedrus::xid_glossary::set_digital_output_lines(
     set_lines_cmd[3] = '\0';
 
     int bytes_written;
-    xid_con->write((unsigned char*)set_lines_cmd, 4, bytes_written);
+    xid_con->write((unsigned char*)set_lines_cmd, 4, &bytes_written);
 }
 
 void cedrus::xid_glossary::set_device_mode( boost::shared_ptr<xid_con_t> xid_con, int protocol )
@@ -200,7 +200,7 @@ void cedrus::xid_glossary::set_device_mode( boost::shared_ptr<xid_con_t> xid_con
     s << "c1" << protocol;
     int bytes_written;
 
-    xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), bytes_written);
+    xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), &bytes_written);
 }
 
 void cedrus::xid_glossary::set_device_baud_rate( boost::shared_ptr<xid_con_t> xid_con, int rate )
@@ -211,10 +211,10 @@ void cedrus::xid_glossary::set_device_baud_rate( boost::shared_ptr<xid_con_t> xi
     change_baud_cmd[1] = '1';
     change_baud_cmd[2] = rate;
 
-    xid_con->write((unsigned char*)change_baud_cmd, 3, bytes_written);
+    xid_con->write((unsigned char*)change_baud_cmd, 3, &bytes_written);
 }
 
-void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int &product_id, int &model_id )
+void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id )
 {
     char product_id_return[2];
     char model_id_return[2];
@@ -229,8 +229,8 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
         model_id_return,
         sizeof(model_id_return));
 
-    product_id = (int)(product_id_return[0]);
-    model_id = (int)(model_id_return[0]);
+    *product_id = (int)(product_id_return[0]);
+    *model_id = (int)(model_id_return[0]);
 }
 
 unsigned int cedrus::xid_glossary::get_pulse_duration( boost::shared_ptr<xid_con_t> xid_con )
@@ -273,7 +273,7 @@ void cedrus::xid_glossary::set_pulse_duration( boost::shared_ptr<xid_con_t> xid_
     xid_con->write(
         command,
         6,
-        written);
+        &written);
 }
 
 int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con )
@@ -304,7 +304,7 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
     std::ostringstream s;
     s << "a1" << mode;
 
-    xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), bytes_written);
+    xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), &bytes_written);
 }
 
 int cedrus::xid_glossary::get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con )
@@ -328,5 +328,5 @@ void cedrus::xid_glossary::set_debouncing_time( boost::shared_ptr<xid_con_t> xid
     set_debouncing_time_cmd[1] = 's';
     set_debouncing_time_cmd[2] = time;
 
-    xid_con->write((unsigned char*)set_debouncing_time_cmd, 3, bytes_written);
+    xid_con->write((unsigned char*)set_debouncing_time_cmd, 3, &bytes_written);
 }

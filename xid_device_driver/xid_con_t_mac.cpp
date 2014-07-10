@@ -333,7 +333,7 @@ int cedrus::xid_con_t::setup_com_port()
 int cedrus::xid_con_t::read(
     unsigned char *in_buffer,
     int bytes_to_read,
-    int &bytes_read) const
+    int *bytes_read) const
 {
     int status = NO_ERR;
     int read = ::read(m_darwinPimpl->m_FileDescriptor, in_buffer, bytes_to_read);
@@ -341,7 +341,7 @@ int cedrus::xid_con_t::read(
     if( read == -1)
         status = ERROR_READING_PORT;
     else
-        bytes_read = read;
+        *bytes_read = read;
 
     return status;
 }
@@ -349,7 +349,7 @@ int cedrus::xid_con_t::read(
 int cedrus::xid_con_t::write(
     unsigned char * const in_buffer,
     int bytes_to_write,
-    int &bytes_written) const
+    int *bytes_written) const
 {
     unsigned char *p = in_buffer;
     int status = NO_ERR;
@@ -375,7 +375,7 @@ int cedrus::xid_con_t::write(
 
             ++p;
         }
-        bytes_written = written;
+        *bytes_written = written;
     }
     else
     {
@@ -384,7 +384,7 @@ int cedrus::xid_con_t::write(
         if( written == -1)
             status = ERROR_WRITING_TO_PORT;
         else
-            bytes_written = written;
+            *bytes_written = written;
     }
 
     return status;

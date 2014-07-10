@@ -84,7 +84,7 @@ void cedrus::stim_tracker_t::set_baud_rate( int rate )
     xid_glossary::set_device_baud_rate(xid_con_, rate);
 }
 
-void cedrus::stim_tracker_t::get_product_and_model_id( int &product_id, int &model_id )
+void cedrus::stim_tracker_t::get_product_and_model_id( int *product_id, int *model_id )
 {
     xid_glossary::get_product_and_model_id(xid_con_, product_id, model_id);
 }

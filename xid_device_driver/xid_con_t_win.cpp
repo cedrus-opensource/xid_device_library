@@ -6,7 +6,7 @@
 * met:
 *
 * Redistributions of source code must retain the above copyright notice,
-* this list of conditions and the following disclaimer.  
+* this list of conditions and the following disclaimer.
 *
 * Redistributions in binary form must reproduce the above copyright
 * notice, this list of conditions and the following disclaimer in the
@@ -47,7 +47,7 @@ struct cedrus::xid_con_t::WindowsConnPimpl
         : device_id_ ( NULL )
     {}
 
-    void setup_dcb(DCB &dcb, 
+    void setup_dcb(DCB &dcb,
         int baud_rate,
         bytesize byte_size,
         bitparity bit_parity,
@@ -216,7 +216,7 @@ int cedrus::xid_con_t::setup_com_port()
 int cedrus::xid_con_t::read(
     unsigned char *in_buffer,
     int bytes_to_read,
-    int &bytes_read) const
+    int *bytes_read) const
 {
     DWORD read = 0;
 
@@ -228,7 +228,7 @@ int cedrus::xid_con_t::read(
     }
     else
     {
-        bytes_read = read;
+        *bytes_read = read;
     }
 
     return status;
@@ -237,7 +237,7 @@ int cedrus::xid_con_t::read(
 int cedrus::xid_con_t::write(
     unsigned char * const in_buffer,
     int bytes_to_write,
-    int &bytes_written) const
+    int *bytes_written) const
 {
     unsigned char *p = in_buffer;
     int status = NO_ERR;
@@ -263,7 +263,7 @@ int cedrus::xid_con_t::write(
 
             ++p;
         }
-        bytes_written = written;
+        *bytes_written = written;
     }
     else
     {
@@ -273,7 +273,7 @@ int cedrus::xid_con_t::write(
         }
         else
         {
-            bytes_written = written;
+            *bytes_written = written;
         }
     }
 

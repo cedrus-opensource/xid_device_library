@@ -100,7 +100,7 @@ int cedrus::xid_con_t::send_xid_command(
     }
 
     int bytes_written = 0;
-    write((unsigned char*)in_command, strlen(in_command), bytes_written);
+    write((unsigned char*)in_command, strlen(in_command), &bytes_written);
 
     unsigned char in_buff[64];
     memset(in_buff, 0x00, sizeof(in_buff));
@@ -123,7 +123,7 @@ int cedrus::xid_con_t::send_xid_command(
         if(needs_interbyte_delay_)
             SLEEP_FUNC(delay_*SLEEP_INC);
 
-        status = read(in_buff, sizeof(in_buff), bytes_read);
+        status = read(in_buff, sizeof(in_buff), &bytes_read);
 
         if(status != NO_ERR)
             break;

@@ -197,7 +197,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                     int major_firmware_version = major_return[0]-'0';
 
                     //What device is it? Get product/model ID, find the corresponding config
-                    xid_glossary::get_product_and_model_id(xid_con, product_id, model_id);
+                    xid_glossary::get_product_and_model_id(xid_con, &product_id, &model_id);
 
                     BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, config_candidates)
                     {

@@ -120,7 +120,7 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_
     // The amount of bytes read is variable as a part of a process that attempts to recover
     // malformed xid packets. The process will not work 100% reliably, but it's the best we
     // can do given the protocol.
-    status = port_connection->read(&m_input_buffer[m_bytes_in_buffer], (XID_PACKET_SIZE - m_bytes_in_buffer), bytes_read);
+    status = port_connection->read(&m_input_buffer[m_bytes_in_buffer], (XID_PACKET_SIZE - m_bytes_in_buffer), &bytes_read);
 
     if(bytes_read > 0)
     {

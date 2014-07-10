@@ -74,7 +74,7 @@ namespace cedrus
         virtual int close_connection();
         virtual int get_baud_rate();
         virtual void set_baud_rate( int rate );
-        virtual void get_product_and_model_id( int &product_id, int &model_id );
+        virtual void get_product_and_model_id( int *product_id, int *model_id );
         virtual int get_major_firmware_version();
         virtual int get_minor_firmware_version();
         virtual std::string get_internal_product_name();

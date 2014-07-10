@@ -156,7 +156,7 @@ namespace cedrus
          *
          * @returns NO_ERR if the read was successful, ERROR_READING_PORT otherwise.
          */
-        int read( unsigned char *in_buffer, int bytes_to_read, int &bytes_read) const;
+        int read( unsigned char *in_buffer, int bytes_to_read, int *bytes_read) const;
 
         /**
          * Write data to the device.
@@ -171,7 +171,7 @@ namespace cedrus
         int write(
             unsigned char * const in_buffer,
             int bytes_to_write,
-            int &bytes_written) const;
+            int *bytes_written) const;
 
         /**
          * Send an XID command to the device.
