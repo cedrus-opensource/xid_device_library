@@ -87,7 +87,7 @@ int cedrus::xid_glossary::get_outpost_model( boost::shared_ptr<xid_con_t> xid_co
         outpost_return,
         sizeof(outpost_return));
 
-    return outpost_return[0]-'0';
+    return (int)(outpost_return[0]);
 }
 
 int cedrus::xid_glossary::get_hardware_generation( boost::shared_ptr<xid_con_t> xid_con )
