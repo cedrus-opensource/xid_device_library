@@ -29,8 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "xid_glossary.h"
 #include "xid_device_scanner_t.h"
+
+#include "xid_glossary.h"
 #include "xid_device_config_t.h"
 #include "xid_con_t.h"
 #include "xid_device_t.h"
