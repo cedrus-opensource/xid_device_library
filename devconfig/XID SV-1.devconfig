@@ -16,23 +16,13 @@ XidDigitalOutputCommand = a
 [Port1]
 PortName = Accessory Connector
 NumberOfLines = 6
-BitFormat = Parallel
-DefaultIoDirection = Output
-IoDirectionChangeablePerGroup = Yes
-IoDirectionChangeablePerLine = Yes
 UseableAsDigitalOutput = Yes
 UseableAsResponse = No
 DebouncingTime = 0
-IoLinesPrefix = AC
-IoLinesBaseNumber = 1
 
 [Port2]
 PortName = Voice Key
 NumberOfLines = 1
-BitFormat = Serial
-DefaultIoDirection = Input
-IoDirectionChangeablePerGroup = No
-IoDirectionChangeablePerLine = No
 UseableAsDigitalOutput = No
 UseableAsResponse = Yes
 XidDeviceKeyMap1 = 0
