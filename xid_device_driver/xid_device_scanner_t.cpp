@@ -151,14 +151,14 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                                           100);
 
                 std::string info;
-                if(return_info[0] == NULL)
+                if(return_info[0] == 0)
                 {
                     // there's a possibility that the device is in E-Prime mode.
                     // Go through the buffer and discard NULL characters, and
                     // only keep the non NULL characters. Also, flush everything.
                     for(int j = 0; j < sizeof(return_info); ++j)
                     {
-                        if(return_info[j] != NULL)
+                        if(return_info[j] != 0)
                         {
                             info.append(&return_info[j], 1);
                         }
