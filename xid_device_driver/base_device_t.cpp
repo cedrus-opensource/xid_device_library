@@ -31,9 +31,7 @@
 
 #include "base_device_t.h"
 
-#include "xid_con_t.h"
 #include "constants.h"
-#include <sstream>
 
 
 cedrus::base_device_t::~base_device_t()
