@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -32,7 +32,7 @@
 #ifndef xid_device_scanner_t_H
 #define xid_device_scanner_t_H
 
-#include <map>
+
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -67,7 +67,7 @@ namespace cedrus
 
         /**
          * Returns an XID connection object for use by the xid_device_t class.
-         * 
+         *
          * The connection must be opened after retreiving it.
          *
          * Note: This only returns response devices.  Use stimtracker_connection_at_index()
