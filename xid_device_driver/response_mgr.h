@@ -33,7 +33,6 @@
 #define RESPONSE_MGR_H
 
 #include "constants.h"
-#include "XidDriverImpExpDefs.h"
 
 #include <boost/shared_ptr.hpp>
 #include <queue>

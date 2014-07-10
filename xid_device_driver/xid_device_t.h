@@ -35,7 +35,6 @@
 #include "base_device_t.h"
 #include "response_mgr.h"
 
-#include "XidDriverImpExpDefs.h"
 #include <boost/shared_ptr.hpp>
 #include <string>
 

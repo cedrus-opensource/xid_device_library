@@ -32,7 +32,6 @@
 #ifndef STIM_TRACKER_T_H
 #define STIM_TRACKER_T_H
 
-#include "XidDriverImpExpDefs.h"
 #include "base_device_t.h"
 #include <boost/shared_ptr.hpp>
 
