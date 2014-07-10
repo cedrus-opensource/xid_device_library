@@ -81,14 +81,7 @@ namespace cedrus
         int CEDRUS_XIDDRIVER_IMPORTEXPORT device_count() const;
 
     private:
-        /**
-        * determines the number of available serial port devices.
-        *
-        * This information is needed by detect_valid_xid_devices()
-        */
-        void load_available_com_ports();
 
-        std::vector<std::string> available_com_ports_;
         std::vector<boost::shared_ptr<cedrus::base_device_t> > devices_;
     };
 } // namespace cedrus

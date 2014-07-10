@@ -28,6 +28,7 @@ inputs = [
     prefix + 'xid_device_driver/xid_glossary.cpp',
     prefix + 'xid_device_driver/xid_device_scanner_t.cpp',
     prefix + 'xid_device_driver/base_device_t.cpp',
+    prefix + 'xid_device_driver/device_factory.cpp',
     prefix + 'xid_device_driver/xid_device_t.cpp',
     prefix + 'xid_device_driver/xid2_device.cpp',
     prefix + 'xid_device_driver/stim_tracker_t.cpp',

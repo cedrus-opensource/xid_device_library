@@ -34,9 +34,8 @@
 #include "xid_glossary.h"
 #include "xid_device_config_t.h"
 #include "xid_con_t.h"
-#include "xid_device_t.h"
-#include "xid2_device.h"
-#include "stim_tracker_t.h"
+#include "base_device_t.h"
+#include "device_factory.h"
 
 #include <iostream>
 
@@ -68,11 +67,6 @@ cedrus::xid_device_scanner_t::~xid_device_scanner_t(void)
 {
 }
 
-void cedrus::xid_device_scanner_t::load_available_com_ports()
-{
-    load_com_ports_platform_specific( &available_com_ports_ );
-}
-
 void cedrus::xid_device_scanner_t::drop_every_connection()
 {
     for (unsigned int i = 0; i < devices_.size(); i++)
@@ -81,9 +75,13 @@ void cedrus::xid_device_scanner_t::drop_every_connection()
     devices_.clear();
 }
 
-int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &config_file_location, boost::function< void ( std::string ) > reportFunction)
+int cedrus::xid_device_scanner_t::detect_valid_xid_devices
+(
+ const std::string &config_file_location,
+ boost::function< void ( std::string ) > reportFunction
+)
 {
-    int devices = 0; //the return value
+    devices_.clear();
 
     try {
         boost::filesystem::path targetDir(config_file_location);
@@ -99,8 +97,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
     // This will contain every devconfig we can find.
     std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > master_config_list;
 
-    load_available_com_ports();
-    devices_.clear();
+    std::vector<std::string> available_com_ports;
+    load_com_ports_platform_specific( &available_com_ports );
 
 	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
 	{
@@ -112,8 +110,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
         }
 	}
 
-    for(std::vector<std::string>::iterator iter = available_com_ports_.begin(),
-        end = available_com_ports_.end();
+    for(std::vector<std::string>::iterator iter = available_com_ports.begin(),
+        end = available_com_ports.end();
         iter != end; ++iter)
     {
         std::vector<boost::shared_ptr< cedrus::xid_device_config_t> > config_candidates;
@@ -199,32 +197,21 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
                     //What device is it? Get product/model ID, find the corresponding config
                     xid_glossary::get_product_and_model_id(xid_con, &product_id, &model_id);
 
-                    BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, config_candidates)
+                    // call "create_device" (which resides in device_factory.cpp)
+                    boost::shared_ptr<cedrus::base_device_t> matched_dev =
+                        create_device( product_id,
+                                       model_id,
+                                       major_firmware_version,
+                                       config_candidates,
+                                       xid_con );
+
+                    if ( matched_dev )
                     {
-                        if ( config->does_config_match_device(product_id, model_id, major_firmware_version) )
+                        devices_.push_back( matched_dev );
+
+                        if ( mode_changed )
                         {
-                            ++devices;
-                            if ( mode_changed )
-                                reportFunction( config->get_device_name() );
-
-                            char dev_type[10];
-                            xid_con->send_xid_command("_d2", dev_type, sizeof(dev_type), 1000);
-
-                            if(dev_type[0] == 'S')
-                            {
-                                boost::shared_ptr<cedrus::base_device_t> stim_tracker (new stim_tracker_t(xid_con, config));
-                                devices_.push_back(stim_tracker);
-                            }
-                            else
-                            {
-                                boost::shared_ptr<cedrus::base_device_t> rb_device;
-                                if ( major_firmware_version == 1 )
-                                    rb_device.reset(new xid_device_t(xid_con, config));
-                                else
-                                    rb_device.reset(new xid2_device(xid_con, config));
-
-                                devices_.push_back(rb_device);
-                            }
+                            reportFunction( matched_dev-> get_device_config().get_device_name() );
                         }
                     }
                 }
@@ -233,7 +220,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
             xid_con->close();
         }
     }
-    return devices;
+    return devices_.size();
 }
 
 boost::shared_ptr<cedrus::base_device_t>

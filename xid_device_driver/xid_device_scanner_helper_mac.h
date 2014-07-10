@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "constants.h"
 
 #include <termios.h>
 #include <IOKit/IOTypes.h> // for io_iterator_t
