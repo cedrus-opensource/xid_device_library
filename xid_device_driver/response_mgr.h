@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -36,7 +36,7 @@
 #include "XidDriverImpExpDefs.h"
 
 #include <boost/shared_ptr.hpp>
-#include <queue>  
+#include <queue>
 
 namespace cedrus
 {
@@ -52,24 +52,24 @@ namespace cedrus
             reaction_time(-1),
             key_state(NO_KEY_DETECTED){}
 
-        //port the response came from. Usualy 0 
-        int port; 
+        //port the response came from. Usualy 0
+        int port;
 
-        //button pressed. This is a 0 based index 
+        //button pressed. This is a 0 based index
         int key;
 
         //pressed or released?
         bool was_pressed;
 
-        int reaction_time; 
-        
-        //key state. NO_KEY_DETECTED, FOUND_KEY_UP, or FOUND_KEY_DOWN 
+        int reaction_time;
+
+        //key state. NO_KEY_DETECTED, FOUND_KEY_UP, or FOUND_KEY_DOWN
         cedrus::key_state key_state;
     };
 
     /**
      * @class xid_con_t xid_con_t.h "xid_device_driver/xid_con_t.h"
-     * 
+     *
      * @brief Implementation of communication with an XID device
      *
      * This class implements the nuts and bolts of communicating with an
@@ -96,12 +96,12 @@ namespace cedrus
          * @param[in] stop_bits stop bits of the device. Defaults to 0
          */
         response_mgr();
-        
+
         ~response_mgr();
 
         /**
          * Checks the device to see if an event response has been sent.
-         * 
+         *
          * @returns key_state if no event was found, NO_KEY_DETECTED is returned.
          * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
          */
@@ -118,13 +118,13 @@ namespace cedrus
 
         void adjust_buffer_for_packet_recovery();
         key_state xid_input_found( response &res );
-      
+
         int delay_;
 
         enum {XID_PACKET_SIZE = 6};
         enum {INVALID_PACKET_INDEX = -1};
         enum {KEY_RELEASE_BITMASK = 0x10};
-        
+
         int m_bytes_in_buffer;
         unsigned char m_input_buffer[XID_PACKET_SIZE];
 

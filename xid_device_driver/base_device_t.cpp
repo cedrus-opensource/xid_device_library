@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -54,12 +54,12 @@ int cedrus::base_device_t::get_light_sensor_mode( void )
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_light_sensor_mode(  int mode )
+void cedrus::base_device_t::set_light_sensor_mode( int /*mode*/ )
 {
     // nothing
 }
 
-void cedrus::base_device_t::set_light_sensor_threshold( int threshold )
+void cedrus::base_device_t::set_light_sensor_threshold( int /*threshold*/ )
 {
     // nothing
 }
@@ -69,7 +69,7 @@ int cedrus::base_device_t::get_light_sensor_threshold()
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_scanner_trigger_filter( int mode )
+void cedrus::base_device_t::set_scanner_trigger_filter( int /*mode*/ )
 {
     // nothing
 }
@@ -94,7 +94,7 @@ unsigned int cedrus::base_device_t::get_pulse_duration( void )
     return 0;
 }
 
-void cedrus::base_device_t::set_pulse_duration(unsigned int duration)
+void cedrus::base_device_t::set_pulse_duration(unsigned int /*duration*/)
 {
     // nothing
 }
@@ -124,7 +124,7 @@ int cedrus::base_device_t::get_accessory_connector_device( void )
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_accessory_connector_mode( int mode )
+void cedrus::base_device_t::set_accessory_connector_mode( int /*mode*/ )
 {
     // nothing
 }
@@ -134,12 +134,12 @@ int cedrus::base_device_t::get_debouncing_time( void )
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_debouncing_time( int time )
+void cedrus::base_device_t::set_debouncing_time( int /*time*/ )
 {
     // nothing
 }
 
-void cedrus::base_device_t::set_device_mode( int protocol )
+void cedrus::base_device_t::set_device_mode( int /*protocol*/ )
 {
     // nothing
 }
