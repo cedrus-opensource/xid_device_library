@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -32,16 +32,15 @@
 #ifndef XID_CON_T_H
 #define XID_CON_T_H
 
-#include "constants.h"
 
 #include <boost/shared_ptr.hpp>
-#include "XidDriverImpExpDefs.h"
+
 
 namespace cedrus
 {
     /**
      * @class xid_con_t xid_con_t.h "xid_device_driver/xid_con_t.h"
-     * 
+     *
      * @brief Implementation of communication with an XID device
      *
      * This class implements the nuts and bolts of communicating with an
@@ -105,22 +104,22 @@ namespace cedrus
                   bitparity bit_parity = BITPARITY_NONE,
                   stopbits stop_bits = STOP_BIT_1
                   );
-        
+
         virtual ~xid_con_t();
 
         /**
          * Closes the device
-         * 
-         * @returns NO_ERR if closing the device was successful, or 
+         *
+         * @returns NO_ERR if closing the device was successful, or
          * ERROR_CLOSING_PORT if it was unsuccessful. Enum values are defined
          * in constants.h
-         */ 
+         */
         int close();
 
         /**
          * Flush the device's input buffer.
-         * 
-         * @returns NO_ERR if flushing the device was successful, or 
+         *
+         * @returns NO_ERR if flushing the device was successful, or
          * ERROR_FLUSHING_PORT if it was unsuccessful.  Enum values are defined
          * in constants.h
          */
@@ -128,8 +127,8 @@ namespace cedrus
 
         /**
          * Flush the device's output buffer.
-         * 
-         * @returns NO_ERR if flushing the device was successful, or 
+         *
+         * @returns NO_ERR if flushing the device was successful, or
          * ERROR_FLUSHING_PORT if it was unsuccessful.  Enum values are defined
          * in constants.h
          */
@@ -138,7 +137,7 @@ namespace cedrus
         /**
          * Opens the COM port for use.
          *
-         * @returns NO_ERR if opening the device for communication was 
+         * @returns NO_ERR if opening the device for communication was
          * successful. If the operation was unsuccessful, it can return one of
          * the following:  PORT_NOT_AVAILABLE, ERROR_SETTING_UP_PORT,
          * ERROR_FLUSHING_PORT.  Enum values are defined in constants.h.
@@ -215,7 +214,7 @@ namespace cedrus
         stopbits stop_bits_;
         handshaking handshaking_;
         std::string port_name_;
-      
+
         int delay_;
         bool needs_interbyte_delay_;
 

@@ -1,12 +1,9 @@
+
 #include "response_mgr.h"
+
 #include "xid_con_t.h"
 #include "xid_device_config_t.h"
 #include "constants.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
 
 cedrus::response_mgr::response_mgr( void )
     : m_bytes_in_buffer(0),
@@ -134,7 +131,7 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_
     if(response_found != cedrus::NO_KEY_DETECTED)
     {
         res.key = dev_config->get_mapped_key(res.port, res.key);
- 
+
         response_queue_.push(res);
     }
 }

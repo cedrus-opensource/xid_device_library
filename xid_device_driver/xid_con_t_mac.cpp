@@ -39,7 +39,6 @@
 #include <IOKit/serial/ioss.h>
 #include <termios.h>
 
-#include <boost/timer.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
 
 #include <iostream>
@@ -256,7 +255,6 @@ int cedrus::xid_con_t::setup_com_port()
 		m_darwinPimpl->m_OptionsCurrent.c_cflag = ( flags );
 
 		// Cause the new options to take effect immediately.
-		//SLTimer::GetTimer().Block(10);
 		usleep(10*1000);
 
 		if (tcsetattr(m_darwinPimpl->m_FileDescriptor, TCSAFLUSH, &(m_darwinPimpl->m_OptionsCurrent)) == OS_FILE_ERROR)

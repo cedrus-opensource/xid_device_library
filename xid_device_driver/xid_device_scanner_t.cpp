@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -102,7 +102,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
     devices_.clear();
 
 	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
-	{ 
+	{
 	    if( is_regular_file(p) && p.extension() == ".devconfig" )
         {
             boost::property_tree::ptree pt;
@@ -235,7 +235,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices(const std::string &co
     return devices;
 }
 
-boost::shared_ptr<cedrus::base_device_t> 
+boost::shared_ptr<cedrus::base_device_t>
 cedrus::xid_device_scanner_t::device_connection_at_index(unsigned int i)
 {
     if(i >= devices_.size())

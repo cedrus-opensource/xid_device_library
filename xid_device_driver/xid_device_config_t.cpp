@@ -30,7 +30,7 @@
  */
 
 #include "xid_device_config_t.h"
-#include "constants.h"
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/exceptions.hpp>

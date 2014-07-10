@@ -1,7 +1,9 @@
-#include "xid_con_t.h"
+
 
 #ifndef XID_GLOSSARY_H
 #define XID_GLOSSARY_H
+
+#include <boost/shared_ptr.hpp>
 
 namespace cedrus
 {
@@ -12,7 +14,7 @@ namespace cedrus
     public:
         /**
         * Resets the internal device reaction time timer.
-        * 
+        *
         * This should be called when a stimulus is presented
         */
         static void reset_rt_timer(boost::shared_ptr<xid_con_t> xid_con);
@@ -83,7 +85,7 @@ namespace cedrus
     private:
         /**
         * Raise digital output lines on the StimTracker device.
-        * 
+        *
         * @param[in] lines_bitmask This is a bitmask used to specify the lines
         * to be raised on the device. Each of the 8 bits in the integer
         * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.

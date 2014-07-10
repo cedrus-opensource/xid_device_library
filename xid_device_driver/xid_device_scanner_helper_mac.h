@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <string>
-#include <boost/shared_ptr.hpp>
 
 #include <termios.h>
 #include <IOKit/IOTypes.h> // for io_iterator_t
@@ -16,7 +15,6 @@
 #include <IOKit/serial/ioss.h>
 #endif
 
-#include "constants.h"
 
 namespace cedrus
 {
@@ -35,8 +33,8 @@ namespace cedrus
             IOServiceGetMatchingServices(kIOMasterPortDefault, classesToMatch, &rIOIterator);
         }
     }
-    
-    
+
+
     /// code is from http://developer.apple.com/library/mac/samplecode/SerialPortSample/index.html
     bool FindNextSerialPort( io_iterator_t & rIOIterator, char *deviceFilePath, CFIndex maxPathSize )
     {
@@ -47,14 +45,14 @@ namespace cedrus
         // Initialize the returned path
         *deviceFilePath = '\0';
 
-        // Iterate across all modems found. In this example, we exit after 
+        // Iterate across all modems found. In this example, we exit after
         // finding the first modem.
         while (!serialFound && (serialService = IOIteratorNext(rIOIterator)) ) // assignment intentional
         {
             CFTypeRef   deviceFilePathAsCFString;
-            // Get the callout device's path (/dev/cu.xxxxx). 
+            // Get the callout device's path (/dev/cu.xxxxx).
             // The callout device should almost always be
-            // used. You would use the dialin device (/dev/tty.xxxxx) when 
+            // used. You would use the dialin device (/dev/tty.xxxxx) when
             // monitoring a serial port for
             // incoming calls, for example, a fax listener.
 
@@ -68,9 +66,9 @@ namespace cedrus
 
                 result = CFStringGetCString(static_cast<CFStringRef>(deviceFilePathAsCFString),
                                             deviceFilePath,
-                                            maxPathSize, 
+                                            maxPathSize,
                                             kCFStringEncodingASCII);
-                
+
                 CFRelease(deviceFilePathAsCFString);
 
                 if (result)
@@ -89,13 +87,13 @@ namespace cedrus
     void load_com_ports_platform_specific( std::vector<std::string> * available_com_ports )
     {
         available_com_ports->clear();
-        
+
         io_iterator_t rIOIterator;
         FindAllSerialPorts( rIOIterator );
-        
+
         char deviceFilePath[50];
         std::string temp;
-        
+
         while( (FindNextSerialPort(rIOIterator, deviceFilePath, sizeof(deviceFilePath))) && (available_com_ports->size() < MAX_PORTS) )
         {
             temp = deviceFilePath;

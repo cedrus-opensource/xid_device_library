@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -30,14 +30,8 @@
  */
 
 #include "xid_con_t.h"
+
 #include "constants.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
-
-#include <boost/timer.hpp>
 #include "boost/date_time/posix_time/posix_time.hpp"
 
 #ifdef __APPLE__
@@ -114,7 +108,7 @@ int cedrus::xid_con_t::send_xid_command(
     int bytes_stored = 0;
 
     // sometimes sending a command needs a delay because the 4MHz processors
-    // in the response pads need a little time to process the command and 
+    // in the response pads need a little time to process the command and
     // send a response.
     if(command_delay > 0)
         SLEEP_FUNC(command_delay*SLEEP_INC);

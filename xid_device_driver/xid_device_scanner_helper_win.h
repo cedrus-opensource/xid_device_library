@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include <boost/shared_ptr.hpp>
 
 #include "xid_con_t.h"
 #include "constants.h"

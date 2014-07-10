@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -32,14 +32,10 @@
 #ifndef XID2_DEVICE_H
 #define XID2_DEVICE_H
 
-#include "constants.h"
-#include "xid_device_t.h"
-#include "response_mgr.h"
 
-#include "XidDriverImpExpDefs.h"
+#include "xid_device_t.h"
+
 #include <boost/shared_ptr.hpp>
-#include <string>
-#include <queue>
 
 namespace cedrus
 {

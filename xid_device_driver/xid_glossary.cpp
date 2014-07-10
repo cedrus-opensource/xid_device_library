@@ -1,4 +1,6 @@
+
 #include "xid_glossary.h"
+
 #include "xid_con_t.h"
 #include "constants.h"
 
@@ -257,7 +259,7 @@ void cedrus::xid_glossary::set_pulse_duration( boost::shared_ptr<xid_con_t> xid_
     unsigned char command[6];
     command[0] = 'm';
     command[1] = 'p';
-    
+
     command[2] = duration & 0x000000ff;
     duration >>= 8;
     command[3] = duration & 0x000000ff;
