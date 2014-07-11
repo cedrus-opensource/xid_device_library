@@ -31,6 +31,8 @@
 
 #include "xid_device_config_t.h"
 
+#include "constants.h"
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/exceptions.hpp>
@@ -38,7 +40,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
-
 #include <sstream>
 
 boost::shared_ptr<cedrus::xid_device_config_t> cedrus::xid_device_config_t::config_for_device(
@@ -56,10 +57,10 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
 {
     std::string digital_output_command;
 
-    major_firmware_ver_ = pt->get<long>("DeviceInfo.MajorFirmwareVersion");
-    device_name_ = pt->get<std::string>("DeviceInfo.DeviceName");
-    product_id_ = pt->get<long>("DeviceInfo.XidProductID");
-    model_id_ = pt->get<long>("DeviceInfo.XidModelID");
+    major_firmware_ver_ = pt->get<long>("DeviceInfo.MajorFirmwareVersion", (long) INVALID_RETURN_VALUE );
+    device_name_ = pt->get<std::string>("DeviceInfo.DeviceName", "" );
+    product_id_ = pt->get<long>("DeviceInfo.XidProductID", (long) INVALID_RETURN_VALUE );
+    model_id_ = pt->get<long>("DeviceInfo.XidModelID", (long) INVALID_RETURN_VALUE );
 
     std::string regex_string(",");
     std::string ports_string = pt->get("DeviceOptions.XidIgnoreSerialPorts", "not_found");
