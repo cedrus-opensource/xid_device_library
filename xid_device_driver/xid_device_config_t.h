@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -103,7 +103,7 @@ namespace cedrus
 
         /**
          * The digital output prefix
-         */ 
+         */
         char CEDRUS_XIDDRIVER_IMPORTEXPORT digital_out_prefix() const;
 
         bool CEDRUS_XIDDRIVER_IMPORTEXPORT is_port_on_ignore_list( std::string port_name ) const;
@@ -117,7 +117,7 @@ namespace cedrus
 
         /**
          * product id of the device.
-         * 
+         *
          * @returns product id
          * 0: Lumina LP-400 response pad system
          * 1: SV-1 voice key system
@@ -127,7 +127,7 @@ namespace cedrus
 
         /**
          * model ID of the device.
-         * 
+         *
          * This is generally only valid on RB series response pads.
          *
          * @returns model id of the device
@@ -144,7 +144,7 @@ namespace cedrus
 
         /**
          * Resets the internal device reaction time timer.
-         * 
+         *
          * This should be called when a stimulus is presented
          */
         void CEDRUS_XIDDRIVER_IMPORTEXPORT reset_rt_timer();
