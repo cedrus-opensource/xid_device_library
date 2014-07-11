@@ -15,17 +15,10 @@ XidNeedsInterCommandDelay = Yes
 XidInterCommandDelay = 1.0
 XidClockRate = 1.0
 # As of Oct 2010, only the initial char of the string XidDigitalOutputCommand is used.
-XidDigitalOutputCommand = m
-XidDigitalOutputBytes = 2
 
 [Port0]
 PortName = Event Marker
 NumberOfLines = 8
-BitFormat = Parallel
-DefaultIoDirection = Output
-IoDirectionChangeablePerGroup = No
 UseableAsDigitalOutput = Yes
 UseableAsResponse = No
 DebouncingTime = 0
-IoLinesPrefix = EM
-IoLinesBaseNumber = 0

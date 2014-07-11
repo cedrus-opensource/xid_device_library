@@ -14,8 +14,6 @@ XidNeedsInterByteDelay = Yes
 #XidClockRate = .9998777397
 #XidClockRate = .999887627
 XidClockRate = .9998837089 #avg
-# As of Oct 2010, only the initial char of the string XidDigitalOutputCommand is used.
-XidDigitalOutputCommand = a
 
 [Port0]
 PortName = Keys
