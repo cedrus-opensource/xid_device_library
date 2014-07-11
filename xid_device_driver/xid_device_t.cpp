@@ -44,6 +44,7 @@ cedrus::xid_device_t::xid_device_t(
     clear_lines();
     xid_con_->set_needs_interbyte_delay(config_->needs_interbyte_delay());
     reset_rt_timer();
+    reset_base_timer();
 }
 
 cedrus::xid_device_t::~xid_device_t(void)
@@ -148,3 +149,14 @@ void cedrus::xid_device_t::clear_lines( void )
     xid_glossary::set_digital_output_lines_xid(xid_con_, 0);
     lines_state_ = 0;
 }
+
+void cedrus::xid_device_t::reset_base_timer()
+{
+    xid_glossary::reset_base_timer(xid_con_);
+}
+
+int cedrus::xid_device_t::query_base_timer()
+{
+    return xid_glossary::query_base_timer( xid_con_ );
+}
+
