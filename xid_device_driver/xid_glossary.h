@@ -29,6 +29,12 @@ namespace cedrus
 
         static int query_base_timer(boost::shared_ptr<xid_con_t> xid_con);
 
+        static unsigned int cedrus::xid_glossary::adjust_endianness_chars_to_uint
+        ( const char c1,
+          const char c2,
+          const char c3,
+          const char c4 );
+
         static std::string get_internal_product_name(boost::shared_ptr<xid_con_t> xid_con);
 
         static int get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con );
@@ -82,16 +88,7 @@ namespace cedrus
 
         static void set_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time );
 
-    private:
-        /**
-        * Raise digital output lines on the StimTracker device.
-        *
-        * @param[in] lines_bitmask This is a bitmask used to specify the lines
-        * to be raised on the device. Each of the 8 bits in the integer
-        * specifies a line.  If bits 0 and 7 are 1, lines 1 and 8 are raised.
-        * @param[in] leave_remaining_lines boolean value of whether or not to
-        * keep the current line state when applying the new bitmask.
-        */
+private:
         static void set_digital_output_lines( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines, char product_specific_prefix );
 
         // A small subset of commands differs slightly between "true" xid devices and StimTracker

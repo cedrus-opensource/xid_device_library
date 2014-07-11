@@ -3,6 +3,7 @@
 
 #include "xid_con_t.h"
 #include "xid_device_config_t.h"
+#include "xid_glossary.h"
 #include "constants.h"
 
 cedrus::response_mgr::response_mgr( void )
@@ -52,19 +53,8 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
             res.port = m_input_buffer[1] & 0x0F;
             res.key = (m_input_buffer[1] & 0xE0) >> 5;
 
-            // get reaction time
-            union {
-                int as_int;
-                char as_char[4];// what if it were a 64 bit int? would this still work?
-            } rt;
-
-            for(int n = 0; n < 4; ++n)
-            {
-                // would this work on PPC? due to flipped endianness?
-                rt.as_char[n] = m_input_buffer[2+n];
-            }
-
-            res.reaction_time = rt.as_int;
+            res.reaction_time = xid_glossary::adjust_endianness_chars_to_uint
+                ( m_input_buffer[2], m_input_buffer[3], m_input_buffer[4], m_input_buffer[5] );
 
             input_found = static_cast<key_state>(FOUND_KEY_DOWN + !res.was_pressed);
 

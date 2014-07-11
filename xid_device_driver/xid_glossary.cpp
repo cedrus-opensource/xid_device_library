@@ -7,6 +7,51 @@
 #include <string.h>
 #include <sstream>
 
+namespace
+{
+    // if we decide that other classes can use this, then i will re-declare it in the header
+    void adjust_endianness_uint_to_chars
+    (
+     const unsigned int the_int,
+     unsigned char* c1,
+     unsigned char* c2,
+     unsigned char* c3,
+     unsigned char* c4
+    )
+    {
+        unsigned int num = the_int;
+
+        *c1 = num & 0x000000ff;
+        num >>= 8;
+        *c2 = num & 0x000000ff;
+        num >>= 8;
+        *c3 = num & 0x000000ff;
+        num >>= 8;
+        *c4 = num & 0x000000ff;
+    }
+}
+
+unsigned int cedrus::xid_glossary::adjust_endianness_chars_to_uint
+(
+ const char c1,
+ const char c2,
+ const char c3,
+ const char c4
+)
+{
+    unsigned int result = 0;
+
+    result |= (c4 & 0x000000ff );
+    result <<= 8;
+    result |= (c3 & 0x000000ff );
+    result <<= 8;
+    result |= (c2 & 0x000000ff );
+    result <<= 8;
+    result |= (c1 & 0x000000ff );
+
+    return result;
+}
+
 void cedrus::xid_glossary::reset_rt_timer( boost::shared_ptr<xid_con_t> xid_con )
 {
     int bytes_written;
@@ -31,16 +76,11 @@ int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con
 
     if(valid_response)
     {
-        union {
-            int as_int;
-            char as_char[4];
-        } rt;
-
-        for(int i = 0; i < 4; ++i)
-        {
-            rt.as_char[i] = return_info[2+i];
-        }
-        return rt.as_int;
+        return adjust_endianness_chars_to_uint
+            ( return_info[2],
+              return_info[3],
+              return_info[4],
+              return_info[5] );
     }
 
     return GENERAL_ERROR;
@@ -241,15 +281,11 @@ unsigned int cedrus::xid_glossary::get_pulse_duration( boost::shared_ptr<xid_con
         return_info,
         sizeof(return_info));
 
-    unsigned int dur = 0;
-
-    dur |= (return_info[6] & 0x000000ff );
-    dur <<= 8;
-    dur |= (return_info[5] & 0x000000ff );
-    dur <<= 8;
-    dur |= (return_info[4] & 0x000000ff );
-    dur <<= 8;
-    dur |= (return_info[3] & 0x000000ff );
+    unsigned int dur = adjust_endianness_chars_to_uint
+        ( return_info[3],
+          return_info[4],
+          return_info[5],
+          return_info[6] );
 
     return dur;
 }
@@ -260,14 +296,12 @@ void cedrus::xid_glossary::set_pulse_duration( boost::shared_ptr<xid_con_t> xid_
     command[0] = 'm';
     command[1] = 'p';
 
-    command[2] = duration & 0x000000ff;
-    duration >>= 8;
-    command[3] = duration & 0x000000ff;
-    duration >>= 8;
-    command[4] = duration & 0x000000ff;
-    duration >>= 8;
-    command[5] = duration & 0x000000ff;
-    duration >>= 8;
+    adjust_endianness_uint_to_chars
+        ( duration,
+          &(command[2]),
+          &(command[3]),
+          &(command[4]),
+          &(command[5]) );
 
     int written = 0;
     xid_con->write(
