@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -51,14 +51,14 @@ namespace cedrus
          */
         stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            boost::shared_ptr<xid_device_config_t> dev_config);
+            boost::shared_ptr<const xid_device_config_t> dev_config);
         virtual ~stim_tracker_t(void);
 
         unsigned int get_pulse_duration( void );
         /**
-         * Set the pulse duration when raise_lines() is called.  This is how 
+         * Set the pulse duration when raise_lines() is called.  This is how
          * long the line will be active.
-         * 
+         *
          * @param[in] duration Length of time in miliseconds
          */
         void set_pulse_duration(unsigned int duration);
@@ -81,7 +81,7 @@ namespace cedrus
 
     protected:
         const boost::shared_ptr<xid_con_t> xid_con_;
-        const boost::shared_ptr<cedrus::xid_device_config_t> config_;
+        const boost::shared_ptr<const cedrus::xid_device_config_t> config_;
     };
 } // namespace cedrus
 

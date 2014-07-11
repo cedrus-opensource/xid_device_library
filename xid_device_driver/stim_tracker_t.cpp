@@ -36,7 +36,7 @@
 
 cedrus::stim_tracker_t::stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
-            boost::shared_ptr<xid_device_config_t> dev_config)
+            boost::shared_ptr<const xid_device_config_t> dev_config)
     : xid_con_(xid_con),
       config_(dev_config)
 {

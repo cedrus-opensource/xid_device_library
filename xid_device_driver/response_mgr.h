@@ -104,7 +104,7 @@ namespace cedrus
          * @returns key_state if no event was found, NO_KEY_DETECTED is returned.
          * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
          */
-        void check_for_keypress(boost::shared_ptr<xid_con_t> port_connection, boost::shared_ptr<xid_device_config_t> dev_config);
+        void check_for_keypress(boost::shared_ptr<xid_con_t> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config);
 
         int get_number_of_keys_down();
 

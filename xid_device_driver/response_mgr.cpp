@@ -110,7 +110,7 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
     return input_found;
 }
 
-void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_connection, boost::shared_ptr<xid_device_config_t> dev_config)
+void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config)
 {
     int bytes_read = 0;
     int status = NO_ERR;
