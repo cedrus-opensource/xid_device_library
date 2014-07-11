@@ -14,7 +14,6 @@ XidNeedsInterByteDelay = No
 XidNeedsInterCommandDelay = Yes
 XidInterCommandDelay = 1.0
 XidClockRate = 1.0
-# As of Oct 2010, only the initial char of the string XidDigitalOutputCommand is used.
 
 [Port0]
 PortName = Event Marker
