@@ -105,8 +105,16 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 	    if( is_regular_file(p) && p.extension() == ".devconfig" )
         {
             boost::property_tree::ptree pt;
-            boost::property_tree::ini_parser::read_ini(p.string(), pt);
-            master_config_list.push_back(cedrus::xid_device_config_t::config_for_device(&pt));
+            try
+            {
+                boost::property_tree::ini_parser::read_ini(p.string(), pt);
+                master_config_list.push_back(cedrus::xid_device_config_t::config_for_device(&pt));
+            }
+            catch ( boost::property_tree::ini_parser::ini_parser_error err )
+            {
+                // TODO: do something with the actual error message
+                //err.filename(); err.line(); err.message();
+            }
         }
 	}
 
