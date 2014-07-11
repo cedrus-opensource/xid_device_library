@@ -145,13 +145,6 @@ namespace cedrus
 
         std::vector<device_port> CEDRUS_XIDDRIVER_IMPORTEXPORT get_vector_of_ports() const;
 
-        /**
-         * Resets the internal device reaction time timer.
-         *
-         * This should be called when a stimulus is presented
-         */
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT reset_rt_timer();
-
         bool CEDRUS_XIDDRIVER_IMPORTEXPORT does_config_match_device( int device_id, int model_id, int major_firmware_ver )  const;
 
 
