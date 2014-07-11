@@ -48,7 +48,10 @@ namespace cedrus
             port_name(""),
             port_number(-1),
             number_of_lines(-1)
-        {}
+        {
+            // initialize all mappings to -1
+            memset( key_map, -1, sizeof(key_map) );
+        }
 
         std::string port_name;
         int port_number;
