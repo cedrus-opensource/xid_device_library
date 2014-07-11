@@ -80,8 +80,8 @@ namespace cedrus
         char lines_state_;
 
     protected:
-        boost::shared_ptr<xid_con_t> xid_con_;
-        boost::shared_ptr<cedrus::xid_device_config_t> config_;
+        const boost::shared_ptr<xid_con_t> xid_con_;
+        const boost::shared_ptr<cedrus::xid_device_config_t> config_;
     };
 } // namespace cedrus
 

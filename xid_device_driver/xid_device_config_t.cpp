@@ -164,7 +164,7 @@ bool cedrus::xid_device_config_t::is_port_on_ignore_list( std::string port_name)
     return std::find(ports_to_ignore_.begin(), ports_to_ignore_.end(), port_name) != ports_to_ignore_.end();
 }
 
-std::string cedrus::xid_device_config_t::get_device_name()
+std::string cedrus::xid_device_config_t::get_device_name() const
 {
     return device_name_;
 }
