@@ -160,3 +160,12 @@ int cedrus::xid_device_t::query_base_timer()
     return xid_glossary::query_base_timer( xid_con_ );
 }
 
+int cedrus::xid_device_t::get_debouncing_time( void )
+{
+    return xid_glossary::get_debouncing_time(xid_con_);
+}
+
+void cedrus::xid_device_t::set_debouncing_time( int time )
+{
+    xid_glossary::set_debouncing_time(xid_con_, time);
+}

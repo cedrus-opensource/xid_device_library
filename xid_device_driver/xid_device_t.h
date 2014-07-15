@@ -83,6 +83,8 @@ namespace cedrus
         virtual int  get_minor_firmware_version();
         virtual std::string get_internal_product_name();
         virtual void clear_lines();
+        virtual int get_debouncing_time();
+        virtual void set_debouncing_time( int time );
 
         virtual void raise_lines
         ( unsigned int lines_bitmask,

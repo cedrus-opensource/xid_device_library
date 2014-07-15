@@ -346,7 +346,7 @@ int cedrus::xid_glossary::get_debouncing_time( boost::shared_ptr<xid_con_t> xid_
     char threshold_return[5];
 
     xid_con->send_xid_command(
-        "_a6",
+        "_f6",
         threshold_return,
         sizeof(threshold_return));
 
@@ -358,8 +358,32 @@ void cedrus::xid_glossary::set_debouncing_time( boost::shared_ptr<xid_con_t> xid
 {
     int bytes_written;
     char set_debouncing_time_cmd[3];
-    set_debouncing_time_cmd[0] = 't';
-    set_debouncing_time_cmd[1] = 's';
+    set_debouncing_time_cmd[0] = 'f';
+    set_debouncing_time_cmd[1] = '6';
+    set_debouncing_time_cmd[2] = time;
+
+    xid_con->write((unsigned char*)set_debouncing_time_cmd, 3, &bytes_written);
+}
+
+int cedrus::xid_glossary::get_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con )
+{
+    char threshold_return[5];
+
+    xid_con->send_xid_command(
+        "_a6",
+        threshold_return,
+        sizeof(threshold_return));
+
+    unsigned char return_val = (unsigned char)(threshold_return[3]);
+    return (int)(return_val);
+}
+
+void cedrus::xid_glossary::set_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time )
+{
+    int bytes_written;
+    char set_debouncing_time_cmd[3];
+    set_debouncing_time_cmd[0] = 'a';
+    set_debouncing_time_cmd[1] = '6';
     set_debouncing_time_cmd[2] = time;
 
     xid_con->write((unsigned char*)set_debouncing_time_cmd, 3, &bytes_written);

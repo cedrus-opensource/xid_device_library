@@ -59,6 +59,7 @@ namespace cedrus
         // lt XID 2.0 only
         static void set_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con, int threshold );
 
+        // ts XID 2.0 only
         static void set_scanner_trigger_filter( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
         static void set_digital_output_lines_xid( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines );
@@ -84,9 +85,17 @@ namespace cedrus
         // a1 deprecated in XID 2.0
         static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
+        // _f6
         static int get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con );
 
+        // f6
         static void set_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time );
+
+        // _a6
+        static int get_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con );
+
+        // a6
+        static void set_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time );
 
 private:
         static void set_digital_output_lines( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines, char product_specific_prefix );
