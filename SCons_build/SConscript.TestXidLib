@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+
+import CedrusQt
+import CedrusBoost
+import CedrusSConsDefaultEnvironments
+import CedrusSConsHelperFunctions
+import gMock
+
+import os
+import sys
+
+Import('env')
+
+# if you change the project_target_name, then please change the name
+# of this scons script file. By convention, if we keep the
+# project_target_name equal to the trailing portion of the scons
+# script (which is named like 'SConscript.[NAME]'), then when you need
+# to pass a single-target to your build call, you will have no
+# question as to what the name of the target is.
+project_target_name = 'TestXidLib'
+
+prefix = ''
+
+if env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
+    prefix = '$OBJ_ROOT/xid_device_library/'
+
+inputs = [
+
+    prefix + 'scons_helpers/cpp_src/qt_gtest_main.cpp',
+
+    prefix + 'AutomatedTesting/TestKeypressPackets.cpp',
+
+]
+
+if sys.platform == 'darwin':
+    inputs.append( prefix + 'scons_helpers/cpp_src/UserInterface/UtilityClasses/MacCocoaQtHelpers.mm' )
+    if env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
+        inputs.append( '$OBJ_ROOT/Common/src/app_init_exit_routines_osx.cpp' )
+
+
+
+defines = []
+
+include_path = [ prefix + 'scons_helpers/cpp_src/' ]
+
+
+cxxflags = []
+frameworks = [ 'Cocoa' ]
+lib_dependencies = ['xid_device_driver']
+lib_path = []
+linkflags = []
+
+# shouldn't this next win-only stuff be handled INSIDE DeclareSConsProgramWithRunnableGoogleTests ?
+if sys.platform == 'win32':
+    linkflags = [ '/SUBSYSTEM:CONSOLE',  '/VERSION:1.0', '/MANIFEST', '/INCREMENTAL', ]
+
+boost = CedrusBoost.CedrusBoostSettings(env)
+
+qt_cedrus = CedrusQt.CedrusQtSettings(env,project_target_name)
+qt_cedrus.need_qt_basics()
+
+need = []
+
+if False == env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
+    need += qt_cedrus.publish_all_libs_to_staging()
+    need += gMock.publish_all_libs_to_staging(env)
+
+gtest_app = CedrusSConsHelperFunctions.DeclareSConsProgramWithRunnableGoogleTests(
+    env,
+    project_target_name,
+    inputs,
+    defines,
+    include_path,
+    cxxflags,
+    frameworks,
+    lib_dependencies,
+    lib_path,
+    linkflags
+)
+
+env.Depends( gtest_app, need )

@@ -13,6 +13,7 @@ env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
 projects = [
     'SConscript.xid_device_driver',
     'SConscript.st_tester',
+    #'SConscript.TestXidLib', # this is commented-out for the general public. the SConscript can be enabled at Cedrus.
 ]
 
 
