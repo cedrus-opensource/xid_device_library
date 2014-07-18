@@ -8,6 +8,7 @@ import gMock
 
 import os
 import sys
+import socket # looks weird, but it worked better than getenv for hostname // comp_name = socket.gethostname()
 
 Import('env')
 
@@ -65,6 +66,12 @@ if False == env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
     need += qt_cedrus.publish_all_libs_to_staging()
     need += gMock.publish_all_libs_to_staging(env)
 
+skip_test_execution = False
+
+if 'oldclicker' in socket.gethostname():
+    # oldclicker is 10.5, and it cannot load qt libraries build for 10.6
+    skip_test_execution = True
+
 gtest_app = CedrusSConsHelperFunctions.DeclareSConsProgramWithRunnableGoogleTests(
     env,
     project_target_name,
@@ -75,7 +82,8 @@ gtest_app = CedrusSConsHelperFunctions.DeclareSConsProgramWithRunnableGoogleTest
     frameworks,
     lib_dependencies,
     lib_path,
-    linkflags
+    linkflags,
+    skip_test_execution
 )
 
 env.Depends( gtest_app, need )
