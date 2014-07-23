@@ -66,7 +66,7 @@ void cedrus::xid_glossary::reset_base_timer( boost::shared_ptr<xid_con_t> xid_co
 
 int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[200];
+    char return_info[6];
     int read = xid_con->send_xid_command(
         "e3",
         return_info,
@@ -88,7 +88,7 @@ int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con
 
 std::string cedrus::xid_glossary::get_internal_product_name( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[200];
+    char return_info[100];
     xid_con->send_xid_command(
         "_d1",
         return_info,
@@ -98,7 +98,7 @@ std::string cedrus::xid_glossary::get_internal_product_name( boost::shared_ptr<x
 
 int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char major_return[2];
+    char major_return[1];
 
     xid_con->send_xid_command(
         "_d4",
@@ -110,7 +110,7 @@ int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_
 
 int cedrus::xid_glossary::get_minor_firmware_version( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char minor_return[2];
+    char minor_return[1];
 
     xid_con->send_xid_command(
         "_d5",
@@ -122,7 +122,7 @@ int cedrus::xid_glossary::get_minor_firmware_version( boost::shared_ptr<xid_con_
 
 int cedrus::xid_glossary::get_outpost_model( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char outpost_return[2];
+    char outpost_return[1];
 
     xid_con->send_xid_command(
         "_d6",
@@ -134,7 +134,7 @@ int cedrus::xid_glossary::get_outpost_model( boost::shared_ptr<xid_con_t> xid_co
 
 int cedrus::xid_glossary::get_hardware_generation( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char gen_return[2];
+    char gen_return[1];
 
     xid_con->send_xid_command(
         "_d7",
@@ -146,7 +146,7 @@ int cedrus::xid_glossary::get_hardware_generation( boost::shared_ptr<xid_con_t> 
 
 int cedrus::xid_glossary::get_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[5];
+    char return_info[4];
     xid_con->send_xid_command(
         "_lr",
         return_info,
@@ -168,7 +168,7 @@ void cedrus::xid_glossary::set_light_sensor_mode( boost::shared_ptr<xid_con_t> x
 
 int cedrus::xid_glossary::get_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char threshold_return[5];
+    char threshold_return[4];
 
     xid_con->send_xid_command(
         "_lt",
@@ -275,7 +275,7 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
 
 unsigned int cedrus::xid_glossary::get_pulse_duration( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[8];
+    char return_info[7];
     xid_con->send_xid_command(
         "_mp",
         return_info,
@@ -312,7 +312,7 @@ void cedrus::xid_glossary::set_pulse_duration( boost::shared_ptr<xid_con_t> xid_
 
 int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[5];
+    char return_info[4];
     xid_con->send_xid_command(
         "_a1",
         return_info,
@@ -323,7 +323,7 @@ int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_co
 
 int cedrus::xid_glossary::get_accessory_connector_device( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[5];
+    char return_info[4];
     xid_con->send_xid_command(
         "_aa",
         return_info,
@@ -343,7 +343,7 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
 
 int cedrus::xid_glossary::get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char threshold_return[5];
+    char threshold_return[4];
 
     xid_con->send_xid_command(
         "_f6",
@@ -367,7 +367,7 @@ void cedrus::xid_glossary::set_debouncing_time( boost::shared_ptr<xid_con_t> xid
 
 int cedrus::xid_glossary::get_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char threshold_return[5];
+    char threshold_return[4];
 
     xid_con->send_xid_command(
         "_a6",

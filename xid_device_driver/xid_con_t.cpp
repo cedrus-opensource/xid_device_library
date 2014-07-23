@@ -123,34 +123,21 @@ int cedrus::xid_con_t::send_xid_command(
         if(needs_interbyte_delay_)
             SLEEP_FUNC(delay_*SLEEP_INC);
 
-        status = read(in_buff, sizeof(in_buff), &bytes_read);
+        status = read(in_buff, max_out_response_size, &bytes_read);
 
         if(status != NO_ERR)
             break;
 
         if(bytes_read >= 1)
         {
-            for(int i = 0; (i<bytes_read) && (bytes_stored < max_out_response_size-1); ++i)
+            for(int i = 0; (i<bytes_read) && (bytes_stored < max_out_response_size); ++i)
             {
                 out_response[bytes_stored] = in_buff[i];
                 bytes_stored++;
             }
         }
         current_time = GetTickCount();
-    } while (current_time < end_time &&
-             bytes_stored < max_out_response_size);
-
-    if(out_response != NULL)
-    {
-        if (bytes_stored >= max_out_response_size )
-        {
-            assert(!"refusing to write a zero into a location one past the end of char array");
-        }
-        else
-        {
-            out_response[bytes_stored] = '\0';
-        }
-    }
+    } while (current_time < end_time && bytes_stored < max_out_response_size);
 
     return bytes_stored;
 }
