@@ -88,6 +88,7 @@ cedrus::xid_con_t::xid_con_t(
       port_name_(port_name),
       delay_(delay_ms),
       needs_interbyte_delay_(true),
+      m_connection_dead (false),
       m_winPimpl( new WindowsConnPimpl )
 {
     std::ostringstream s;
@@ -102,42 +103,26 @@ cedrus::xid_con_t::~xid_con_t(void)
         close();
 }
 
-int cedrus::xid_con_t::close()
+bool cedrus::xid_con_t::close()
 {
-    if(CloseHandle(m_winPimpl->device_id_) == 0)
-        return ERROR_CLOSING_PORT;
-
+    bool status = ( CloseHandle(m_winPimpl->device_id_) != 0 );
     m_winPimpl->device_id_ = 0;
-    return NO_ERR;
-}
-
-int cedrus::xid_con_t::flush_input()
-{
-    int status = NO_ERR;
-
-    if(PurgeComm(m_winPimpl->device_id_, PURGE_RXABORT|PURGE_RXCLEAR) == 0)
-    {
-        status = ERROR_FLUSHING_PORT;
-    }
-
     return status;
 }
 
-int cedrus::xid_con_t::flush_output()
+bool cedrus::xid_con_t::flush_input()
 {
-    int status = NO_ERR;
+    return (PurgeComm(m_winPimpl->device_id_, PURGE_RXABORT|PURGE_RXCLEAR) != 0);
+}
 
-    if(PurgeComm(m_winPimpl->device_id_, PURGE_TXABORT|PURGE_TXCLEAR) == 0)
-    {
-        status = ERROR_FLUSHING_PORT;
-    }
-
-    return status;
+bool cedrus::xid_con_t::flush_output()
+{
+    return (PurgeComm(m_winPimpl->device_id_, PURGE_TXABORT|PURGE_TXCLEAR) != 0);
 }
 
 int cedrus::xid_con_t::open()
 {
-    int status = NO_ERR;
+    int status = XID_NO_ERR;
 
     std::wstring name( port_name_.begin(), port_name_.end() );
     const wchar_t* wchar_name = name.c_str();
@@ -153,12 +138,15 @@ int cedrus::xid_con_t::open()
 
     if(m_winPimpl->device_id_ == INVALID_HANDLE_VALUE)
     {
+        DWORD fart = GetLastError();
         m_winPimpl->device_id_ = 0;
-        status = PORT_NOT_AVAILABLE;
+        status = XID_PORT_NOT_AVAILABLE;
     }
     else
     {
-        status = setup_com_port();
+        if ( !setup_com_port() )
+            status = XID_ERROR_SETTING_UP_PORT;
+
         PurgeComm(m_winPimpl->device_id_,
             PURGE_RXCLEAR|PURGE_TXCLEAR|PURGE_RXABORT|PURGE_TXABORT);
     }
@@ -166,91 +154,75 @@ int cedrus::xid_con_t::open()
     return status;
 }
 
-int cedrus::xid_con_t::setup_com_port()
+bool cedrus::xid_con_t::setup_com_port()
 {
     DCB dcb;
-    int status = NO_ERR;
+    bool status = false;
 
-    if(SetupComm(m_winPimpl->device_id_, IN_BUFFER_SIZE, OUT_BUFFER_SIZE) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
+    if( SetupComm(m_winPimpl->device_id_, IN_BUFFER_SIZE, OUT_BUFFER_SIZE) == 0 )
         return status;
-    }
 
-    if(GetCommState(m_winPimpl->device_id_, &dcb) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
+    if( GetCommState(m_winPimpl->device_id_, &dcb) == 0 )
         return status;
-    }
 
     m_winPimpl->setup_dcb(dcb, baud_rate_, byte_size_, bit_parity_, stop_bits_);
 
-    if(SetCommState(m_winPimpl->device_id_, &dcb) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
+    if( SetCommState(m_winPimpl->device_id_, &dcb) == 0 )
         return status;
-    }
 
     COMMTIMEOUTS ct;
-    if(GetCommTimeouts(m_winPimpl->device_id_, &ct) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
+    if( GetCommTimeouts(m_winPimpl->device_id_, &ct) == 0 )
         return status;
-    }
 
     m_winPimpl->setup_timeouts(ct);
 
-    if(SetCommTimeouts(m_winPimpl->device_id_, &ct) == 0)
-    {
-        status = ERROR_SETTING_UP_PORT;
+    if( SetCommTimeouts(m_winPimpl->device_id_, &ct) == 0 )
         return status;
-    }
 
     status = flush_input();
-    if(status == NO_ERR)
+    if(status)
         status = flush_output();
 
     return status;
 }
 
-int cedrus::xid_con_t::read(
+bool cedrus::xid_con_t::read(
     unsigned char *in_buffer,
     int bytes_to_read,
-    int *bytes_read) const
+    int *bytes_read)
 {
     DWORD read = 0;
+    bool status = (ReadFile(m_winPimpl->device_id_, in_buffer, bytes_to_read, &read, NULL) != 0);
 
-    int status = NO_ERR;
-
-    if(ReadFile(m_winPimpl->device_id_, in_buffer, bytes_to_read, &read, NULL) == 0)
-    {
-        status = ERROR_READING_PORT;
-    }
+    if ( status )
+        *bytes_read = read;
     else
     {
-        *bytes_read = read;
+        if ( GetLastError() == ERROR_ACCESS_DENIED )
+            m_connection_dead = true;
     }
 
     return status;
 }
 
-int cedrus::xid_con_t::write(
+bool cedrus::xid_con_t::write(
     unsigned char * const in_buffer,
     int bytes_to_write,
-    int *bytes_written) const
+    int *bytes_written)
 {
     unsigned char *p = in_buffer;
-    int status = NO_ERR;
+    bool status = true;
     DWORD written = 0;
 
     if(needs_interbyte_delay_)
     {
-        for(int i = 0; i < bytes_to_write && status == NO_ERR; ++i)
+        for(int i = 0; i < bytes_to_write && status; ++i)
         {
             DWORD  byte_count;
-            if(WriteFile(m_winPimpl->device_id_, p, 1, &byte_count, NULL) == 0)
+            status = (WriteFile(m_winPimpl->device_id_, p, 1, &byte_count, NULL) != 0);
+            if( !status && GetLastError() == ERROR_ACCESS_DENIED )
             {
-                status = ERROR_WRITING_TO_PORT;
+                m_connection_dead = true;
                 break;
             }
 
@@ -267,11 +239,11 @@ int cedrus::xid_con_t::write(
     }
     else
     {
-        if(WriteFile(m_winPimpl->device_id_, p, bytes_to_write, &written, NULL) == 0)
-        {
-            status = ERROR_WRITING_TO_PORT;
-        }
-        else
+        status = (WriteFile(m_winPimpl->device_id_, p, bytes_to_write, &written, NULL) != 0);
+        if( !status && GetLastError() == ERROR_ACCESS_DENIED )
+            m_connection_dead = true;
+
+        if( status )
         {
             *bytes_written = written;
         }

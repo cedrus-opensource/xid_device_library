@@ -87,12 +87,17 @@ void cedrus::xid_con_t::set_baud_rate ( int rate )
     }
 }
 
+bool cedrus::xid_con_t::has_lost_connection( void )
+{
+    return m_connection_dead;
+}
+
 int cedrus::xid_con_t::send_xid_command(
     const char in_command[],
     char out_response[],
     int max_out_response_size,
     int timeout,
-    int command_delay) const
+    int command_delay)
 {
     if(out_response != NULL)
     {
@@ -117,15 +122,12 @@ int cedrus::xid_con_t::send_xid_command(
     OS_DEPENDENT_LONG start_time = GetTickCount();
     OS_DEPENDENT_LONG end_time = start_time + timeout;
 
-    int status = 0;
     do
     {
         if(needs_interbyte_delay_)
             SLEEP_FUNC(delay_*SLEEP_INC);
 
-        status = read(in_buff, max_out_response_size, &bytes_read);
-
-        if(status != NO_ERR)
+        if( !read(in_buff, max_out_response_size, &bytes_read) )
             break;
 
         if(bytes_read >= 1)

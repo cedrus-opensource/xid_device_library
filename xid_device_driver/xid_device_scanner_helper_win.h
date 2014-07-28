@@ -23,9 +23,7 @@ namespace cedrus
 
             cedrus::xid_con_t conn(port_name);
 
-            int status = conn.open();
-
-            if(status == NO_ERR)
+            if(conn.open() == XID_NO_ERR)
             {
                 conn.close();
                 available_com_ports->push_back(port_name);

@@ -73,6 +73,11 @@ int cedrus::stim_tracker_t::open_connection( void )
     return xid_con_->open();
 }
 
+bool cedrus::stim_tracker_t::has_lost_connection( void )
+{
+    return xid_con_->has_lost_connection();
+}
+
 int cedrus::stim_tracker_t::get_baud_rate( void )
 {
     return xid_con_->get_baud_rate();

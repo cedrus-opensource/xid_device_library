@@ -83,7 +83,7 @@ int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con
               return_info[5] );
     }
 
-    return GENERAL_ERROR;
+    return XID_GENERAL_ERROR;
 }
 
 std::string cedrus::xid_glossary::get_internal_product_name( boost::shared_ptr<xid_con_t> xid_con )

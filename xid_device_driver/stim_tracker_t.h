@@ -66,6 +66,7 @@ namespace cedrus
         virtual xid_device_config_t get_device_config();
         virtual int open_connection();
         virtual int close_connection();
+        virtual bool has_lost_connection();
         virtual int get_baud_rate();
         virtual void set_baud_rate( int rate );
         virtual void get_product_and_model_id( int *product_id, int *model_id );

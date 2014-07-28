@@ -36,16 +36,11 @@ namespace cedrus
 {
     enum
     {
-        NO_ERR                  =   0,
-        UNDEFINED               =  -1,
-        PORT_NOT_AVAILABLE      =  -2,
-        ERROR_SETTING_UP_PORT   =  -3,
-        ERROR_FLUSHING_PORT     =  -4,
-        ERROR_READING_PORT      =  -5,
-        ERROR_WRITING_TO_PORT   =  -6,
-        ERROR_CLOSING_PORT      =  -7,
-        GENERAL_ERROR           = -10,
-        PORT_OPENED_BUT_ABORTED = -11,
+        XID_NO_ERR                  =   0,
+        XID_UNDEFINED               =  -1,
+        XID_PORT_NOT_AVAILABLE      =  -2,
+        XID_ERROR_SETTING_UP_PORT   =  -3,
+        XID_GENERAL_ERROR           = -10,
     };
 
     enum

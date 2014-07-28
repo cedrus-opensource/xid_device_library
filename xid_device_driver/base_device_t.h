@@ -93,6 +93,7 @@ namespace cedrus
         virtual xid_device_config_t CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config() = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT open_connection() = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection() = 0;
+        virtual bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_lost_connection() = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate() = 0;
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate( int rate ) = 0;
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_and_model_id( int *product_id, int *model_id ) = 0;

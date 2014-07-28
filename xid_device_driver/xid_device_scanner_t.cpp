@@ -145,7 +145,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
         {
             boost::shared_ptr<cedrus::xid_con_t> xid_con(new xid_con_t(*iter, baud_rate[i]));
 
-            if(xid_con->open() == NO_ERR)
+            if(xid_con->open() == XID_NO_ERR)
             {
                 char return_info[200];
                 xid_con->flush_input();

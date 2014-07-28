@@ -110,29 +110,23 @@ namespace cedrus
         /**
          * Closes the device
          *
-         * @returns NO_ERR if closing the device was successful, or
-         * ERROR_CLOSING_PORT if it was unsuccessful. Enum values are defined
-         * in constants.h
+         * @returns true if closing the device was successful, or false if it was unsuccessful.
          */
-        int close();
+        bool close();
 
         /**
          * Flush the device's input buffer.
          *
-         * @returns NO_ERR if flushing the device was successful, or
-         * ERROR_FLUSHING_PORT if it was unsuccessful.  Enum values are defined
-         * in constants.h
+         * @returns true if flushing the device was successful, or false if it was unsuccessful.
          */
-        int flush_input();
+        bool flush_input();
 
         /**
          * Flush the device's output buffer.
          *
-         * @returns NO_ERR if flushing the device was successful, or
-         * ERROR_FLUSHING_PORT if it was unsuccessful.  Enum values are defined
-         * in constants.h
+         * @returns true if flushing the device was successful, or false if it was unsuccessful.
          */
-        int flush_output();
+        bool flush_output();
 
         /**
          * Opens the COM port for use.
@@ -154,9 +148,9 @@ namespace cedrus
          * to be returned from the device
          * @param[out] bytes_read number of bytes actually read
          *
-         * @returns NO_ERR if the read was successful, ERROR_READING_PORT otherwise.
+         * @returns true if the read was successful, false otherwise.
          */
-        int read( unsigned char *in_buffer, int bytes_to_read, int *bytes_read) const;
+        bool read( unsigned char *in_buffer, int bytes_to_read, int *bytes_read);
 
         /**
          * Write data to the device.
@@ -168,10 +162,10 @@ namespace cedrus
          * @param[in] bytes_to_write number of bytes in the command to be sent
          * @param[out] bytes_written number of bytes written to the device
          */
-        int write(
+        bool write(
             unsigned char * const in_buffer,
             int bytes_to_write,
-            int *bytes_written) const;
+            int *bytes_written);
 
         /**
          * Send an XID command to the device.
@@ -191,7 +185,7 @@ namespace cedrus
             char out_response[],
             int max_out_response_size,
             int timeout = 100,
-            int command_delay = 0) const;
+            int command_delay = 0);
 
         /**
          * Sets whether or not the device needs an inter-byte delay.
@@ -202,10 +196,12 @@ namespace cedrus
 
         void set_baud_rate ( int rate );
 
+        bool has_lost_connection();
+
     private:
     	enum { OS_FILE_ERROR = -1 };
 
-        int setup_com_port();
+        bool setup_com_port();
         unsigned long GetTickCount() const;
 
         int baud_rate_;
@@ -217,6 +213,7 @@ namespace cedrus
 
         int delay_;
         bool needs_interbyte_delay_;
+        bool m_connection_dead;
 
         struct DarwinConnPimpl;
         boost::shared_ptr<DarwinConnPimpl> m_darwinPimpl;
