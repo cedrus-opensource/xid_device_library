@@ -34,6 +34,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <IOKit/serial/ioss.h>
@@ -70,6 +71,7 @@ cedrus::xid_con_t::xid_con_t(
       port_name_(port_name),
       delay_(delay_ms),
       needs_interbyte_delay_(true),
+      m_connection_dead (false),
       m_darwinPimpl( new DarwinConnPimpl )
 {
 }
@@ -81,91 +83,73 @@ cedrus::xid_con_t::~xid_con_t(void)
         close();
 }
 
-int cedrus::xid_con_t::close()
+bool cedrus::xid_con_t::close()
 {
-    if(::close(m_darwinPimpl->m_FileDescriptor) == -1)
-        return ERROR_CLOSING_PORT;
-
+    bool status = (::close(m_darwinPimpl->m_FileDescriptor) != -1);
     m_darwinPimpl->m_FileDescriptor = 0;
-    return NO_ERR;
-}
-
-int cedrus::xid_con_t::flush_input()
-{
-    int status = NO_ERR;
-
-    if(tcflush( m_darwinPimpl->m_FileDescriptor, TCIFLUSH ) != 0)
-    {
-        status = ERROR_FLUSHING_PORT;
-    }
 
     return status;
 }
 
-int cedrus::xid_con_t::flush_output()
+bool cedrus::xid_con_t::flush_input()
 {
-    int status = NO_ERR;
+    return ( tcflush( m_darwinPimpl->m_FileDescriptor, TCIFLUSH ) == 0 );
+}
 
-    if(tcflush( m_darwinPimpl->m_FileDescriptor, TCOFLUSH ) != 0)
-    {
-        status = ERROR_FLUSHING_PORT;
-    }
-
-    return status;
+bool cedrus::xid_con_t::flush_output()
+{
+    return ( tcflush( m_darwinPimpl->m_FileDescriptor, TCOFLUSH ) == 0 );
 }
 
 int cedrus::xid_con_t::open()
 {
-    int status = NO_ERR;
+    int status = XID_NO_ERR;
 
     m_darwinPimpl->m_FileDescriptor = ::open(port_name_.c_str(), O_RDWR | O_NOCTTY /*| O_NONBLOCK | O_FSYNC*/ );
 
     if(m_darwinPimpl->m_FileDescriptor == -1)
     {
         m_darwinPimpl->m_FileDescriptor = 0;
-        status = PORT_NOT_AVAILABLE;
+        status = XID_PORT_NOT_AVAILABLE;
     }
     else
     {
         if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCEXCL) == -1)
         {
-            status = PORT_NOT_AVAILABLE;
+            status = XID_PORT_NOT_AVAILABLE;
         }
         else
         {
-            status = NO_ERR;
-            status = setup_com_port();
+            if ( !setup_com_port() )
+                status = XID_ERROR_SETTING_UP_PORT;
         }
     }
 
     return status;
 }
 
-int cedrus::xid_con_t::setup_com_port()
+bool cedrus::xid_con_t::setup_com_port()
 {
-	int status = NO_ERR;
+	bool status = true;
 
 	// http://developer.apple.com/documentation/DeviceDrivers/Conceptual/WorkingWSerial/WWSerial_SerialDevs/chapter_2_section_7.html#//apple_ref/doc/uid/TP40000972-TP30000384-CIHIAAFF
 
-	if ( status == NO_ERR )
-	{
-		// Get the current options and save them so we can restore the
-		// default settings later.
-		if (tcgetattr(m_darwinPimpl->m_FileDescriptor, &(m_darwinPimpl->m_OptionsOriginal)) == OS_FILE_ERROR)
-			status = ERROR_SETTING_UP_PORT;
-		else
-		{
-			// The serial port attributes such as timeouts and baud rate are set by
-			// modifying the termios structure and then calling tcsetattr to
-			// cause the changes to take effect. Note that the
-			// changes will not take effect without the tcsetattr() call.
-			// See tcsetattr(4) ("man 4 tcsetattr") for details.
+    // Get the current options and save them so we can restore the
+    // default settings later.
+    if (tcgetattr(m_darwinPimpl->m_FileDescriptor, &(m_darwinPimpl->m_OptionsOriginal)) == OS_FILE_ERROR)
+        status = false;
+    else
+    {
+        // The serial port attributes such as timeouts and baud rate are set by
+        // modifying the termios structure and then calling tcsetattr to
+        // cause the changes to take effect. Note that the
+        // changes will not take effect without the tcsetattr() call.
+        // See tcsetattr(4) ("man 4 tcsetattr") for details.
+        
+        m_darwinPimpl->m_OptionsCurrent = m_darwinPimpl->m_OptionsOriginal;
+    }
 
-			m_darwinPimpl->m_OptionsCurrent = m_darwinPimpl->m_OptionsOriginal;
-		}
-	}
-
-	if ( status == NO_ERR )
+	if ( status )
 	{
 		// Set raw input (non-canonical) mode, with reads blocking until either
 		// a single character has been received or a one second timeout expires.
@@ -258,45 +242,45 @@ int cedrus::xid_con_t::setup_com_port()
 		usleep(10*1000);
 
 		if (tcsetattr(m_darwinPimpl->m_FileDescriptor, TCSAFLUSH, &(m_darwinPimpl->m_OptionsCurrent)) == OS_FILE_ERROR)
-			status = ERROR_SETTING_UP_PORT;
+			status = false;
 	}
 
 	if ( handshaking_ == HANDSHAKE_HARDWARE )
 	{
 
-		if ( status == NO_ERR )
+		if ( status )
 		{
 			// To set the modem handshake lines, use the following ioctls.
 			// See tty(4) ("man 4 tty") and ioctl(2) ("man 2 ioctl") for details.
 			if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCSDTR) == OS_FILE_ERROR)
-				status = ERROR_SETTING_UP_PORT;
+				status = false;
 		}
 
-		if ( status == NO_ERR )
+		if ( status )
 		{
 			// Clear Data Terminal Ready (DTR)
 			if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCCDTR) == OS_FILE_ERROR)
-				status = ERROR_SETTING_UP_PORT;
+				status = false;
 		}
 
 		unsigned long handshake = 0;
 
-		if ( status == NO_ERR )
+		if ( status )
 		{
 			handshake = TIOCM_DTR | TIOCM_DSR | TIOCM_RTS | TIOCM_CTS;
 			// Set the modem lines depending on the bits set in handshake.
 			if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCMSET, &handshake) == OS_FILE_ERROR)
-				status = ERROR_SETTING_UP_PORT;
+				status = false;
 		}
 
-		if ( status == NO_ERR )
+		if ( status )
 		{
 			// To read the state of the modem lines, use the following ioctl.
 			// See tty(4) ("man 4 tty") and ioctl(2) ("man 2 ioctl") for details.
 
 			// Store the state of the modem lines in handshake.
 			if (ioctl(m_darwinPimpl->m_FileDescriptor, TIOCMGET, &handshake) == OS_FILE_ERROR)
-				status = ERROR_SETTING_UP_PORT;
+				status = false;
 		}
 	} // handshaking
 
@@ -305,7 +289,7 @@ int cedrus::xid_con_t::setup_com_port()
 	// http://developer.apple.com/samplecode/SerialPortSample/listing2.html
     // http://developer.apple.com/library/mac/samplecode/SerialPortSample/index.html
 #if defined(MAC_OS_X_VERSION_10_3) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_3)
-	if ( status == NO_ERR )
+	if ( status )
 	{
 		unsigned long mics = 1UL;
 
@@ -317,11 +301,11 @@ int cedrus::xid_con_t::setup_com_port()
 
 		// set latency to 1 microsecond
 		if (ioctl(m_darwinPimpl->m_FileDescriptor, IOSSDATALAT, &mics) == OS_FILE_ERROR) //does that actually happen??
-			status = ERROR_SETTING_UP_PORT;
+			status = false;
 	}
 #endif
 
-	if ( status == NO_ERR )
+	if ( status )
 	{
 		flush_input();
 		flush_output();
@@ -330,39 +314,42 @@ int cedrus::xid_con_t::setup_com_port()
 	return status;
 }
 
-int cedrus::xid_con_t::read(
+bool cedrus::xid_con_t::read(
     unsigned char *in_buffer,
     int bytes_to_read,
-    int *bytes_read) const
+    int *bytes_read)
 {
-    int status = NO_ERR;
+    int status = true;
     int read = ::read(m_darwinPimpl->m_FileDescriptor, in_buffer, bytes_to_read);
 
     if( read == -1)
-        status = ERROR_READING_PORT;
+        status = false;
     else
         *bytes_read = read;
 
     return status;
 }
 
-int cedrus::xid_con_t::write(
+bool cedrus::xid_con_t::write(
     unsigned char * const in_buffer,
     int bytes_to_write,
-    int *bytes_written) const
+    int *bytes_written)
 {
     unsigned char *p = in_buffer;
-    int status = NO_ERR;
+    int status = true;
     int written = 0;
 
     if(needs_interbyte_delay_)
     {
-        for(int i = 0; i < bytes_to_write && status == NO_ERR; ++i)
+        for(int i = 0; i < bytes_to_write && status; ++i)
         {
             ssize_t byte_count = ::write(m_darwinPimpl->m_FileDescriptor, p, 1);
+
             if( byte_count == -1)
             {
-                status = ERROR_WRITING_TO_PORT;
+                status = false;
+                if ( errno == ENXIO )
+                    m_connection_dead = true;
                 break;
             }
 
@@ -381,8 +368,14 @@ int cedrus::xid_con_t::write(
     {
         written = ::write(m_darwinPimpl->m_FileDescriptor, in_buffer, bytes_to_write);
         tcdrain(m_darwinPimpl->m_FileDescriptor);
+
         if( written == -1)
-            status = ERROR_WRITING_TO_PORT;
+        {
+            if ( errno == ENXIO )
+                m_connection_dead = true;
+
+            status = false;
+        }
         else
             *bytes_written = written;
     }

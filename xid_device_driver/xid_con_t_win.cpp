@@ -138,7 +138,6 @@ int cedrus::xid_con_t::open()
 
     if(m_winPimpl->device_id_ == INVALID_HANDLE_VALUE)
     {
-        DWORD fart = GetLastError();
         m_winPimpl->device_id_ = 0;
         status = XID_PORT_NOT_AVAILABLE;
     }
@@ -220,9 +219,10 @@ bool cedrus::xid_con_t::write(
         {
             DWORD  byte_count;
             status = (WriteFile(m_winPimpl->device_id_, p, 1, &byte_count, NULL) != 0);
-            if( !status && GetLastError() == ERROR_ACCESS_DENIED )
+            if( !status  )
             {
-                m_connection_dead = true;
+                if ( GetLastError() == ERROR_ACCESS_DENIED )
+                    m_connection_dead = true;
                 break;
             }
 
