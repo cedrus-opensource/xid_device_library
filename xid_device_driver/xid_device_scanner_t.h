@@ -63,7 +63,9 @@ namespace cedrus
          *
          * @returns number of XID devices detected.
          */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(const std::string &config_file_location, boost::function< void ( std::string ) > reportFunction = NULL);
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(const std::string &config_file_location,
+            boost::function< void ( std::string ) > reportFunction = NULL,
+            boost::function< void ( int ) > progressFunction = NULL);
 
         /**
          * Returns an XID connection object for use by the xid_device_t class.

@@ -1,5 +1,4 @@
 [DeviceInfo]
-DeviceID = 3001
 MajorFirmwareVersion = 1
 DeviceName = RB-530
 XidProductID = 50
@@ -9,10 +8,6 @@ XidModelID = 49
 # This is a USB device.  There's no reason to check these other common ports.  Add any ports you don't want to check.
 XidIgnoreSerialPorts = /dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.modem,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
 XidNeedsInterByteDelay = Yes
-#XidClockRate = .99857625
-#XidClockRate = .99988576
-#XidClockRate = .9998777397
-#XidClockRate = .999887627
 XidClockRate = .9998837089 #avg
 
 [Port0]

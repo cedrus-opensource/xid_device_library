@@ -78,10 +78,12 @@ void cedrus::xid_device_scanner_t::drop_every_connection()
 int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 (
  const std::string &config_file_location,
- boost::function< void ( std::string ) > reportFunction
+ boost::function< void ( std::string ) > reportFunction,
+ boost::function< void ( int ) > progressFunction
 )
 {
     devices_.clear();
+    progressFunction(0);
 
     try {
         boost::filesystem::path targetDir(config_file_location);
@@ -100,6 +102,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     std::vector<std::string> available_com_ports;
     load_com_ports_platform_specific( &available_com_ports );
 
+    progressFunction(5);
 	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
 	{
 	    if( is_regular_file(p) && p.extension() == ".devconfig" )
@@ -118,6 +121,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
         }
 	}
 
+    progressFunction(40);
     for(std::vector<std::string>::iterator iter = available_com_ports.begin(),
         end = available_com_ports.end();
         iter != end; ++iter)
@@ -178,6 +182,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
                 if( strstr(info.c_str(), "_xid") )
                 {
+                    progressFunction(70);
                     device_found = true;
                     bool mode_changed = false;
 
@@ -228,6 +233,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
             xid_con->close();
         }
     }
+    progressFunction(100);
     return devices_.size();
 }
 

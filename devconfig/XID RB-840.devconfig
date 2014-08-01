@@ -1,6 +1,6 @@
 [DeviceInfo]
-MajorFirmwareVersion = 1
-DeviceName = RB-830
+MajorFirmwareVersion = 2
+DeviceName = RB-840
 XidProductID = 50
 XidModelID = 51
 
@@ -26,4 +26,29 @@ XidDeviceKeyMap7 = 0
 [Port1]
 PortName = Accessory Connector
 NumberOfLines = 6
+UseableAsResponse = No
+
+[Port2]
+PortName = Light Sensor
+NumberOfLines = 1
+UseableAsResponse = Yes
+XidDeviceKeyMap3 = 3
+
+[Port3]
+PortName = External Input
+NumberOfLines = 8
+UseableAsResponse = Yes
+XidDeviceKeyMap0 = 0
+XidDeviceKeyMap1 = 1
+XidDeviceKeyMap2 = 2
+XidDeviceKeyMap3 = 3
+XidDeviceKeyMap4 = 4
+XidDeviceKeyMap5 = 5
+XidDeviceKeyMap6 = 6
+XidDeviceKeyMap7 = 7
+
+[Port4]
+PortName = Accessory Connector
+NumberOfLines = 8
+UseableAsDigitalOutput = Yes
 UseableAsResponse = No
