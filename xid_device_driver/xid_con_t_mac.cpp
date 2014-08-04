@@ -323,7 +323,11 @@ bool cedrus::xid_con_t::read(
     int read = ::read(m_darwinPimpl->m_FileDescriptor, in_buffer, bytes_to_read);
 
     if( read == -1)
+    {
         status = false;
+        if ( errno == ENXIO )
+            m_connection_dead = true;
+    }
     else
         *bytes_read = read;
 
