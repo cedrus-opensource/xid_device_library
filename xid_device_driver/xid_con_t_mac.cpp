@@ -125,6 +125,9 @@ int cedrus::xid_con_t::open()
         }
     }
 
+    if ( status == XID_NO_ERR )
+        m_connection_dead = false;
+
     return status;
 }
 
@@ -319,6 +322,9 @@ bool cedrus::xid_con_t::read(
     int bytes_to_read,
     int *bytes_read)
 {
+    if ( m_connection_dead )
+        return false;
+
     int status = true;
     int read = ::read(m_darwinPimpl->m_FileDescriptor, in_buffer, bytes_to_read);
 
@@ -339,6 +345,9 @@ bool cedrus::xid_con_t::write(
     int bytes_to_write,
     int *bytes_written)
 {
+    if ( m_connection_dead )
+        return false;
+
     unsigned char *p = in_buffer;
     int status = true;
     int written = 0;
