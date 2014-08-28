@@ -36,13 +36,14 @@
 
 #include "xid_device_config_t.h"
 #include "response_mgr.h"
+#include "read_only_device.h"
 
 
 namespace cedrus
 {
     class xid_con_t;
 
-    class base_device_t
+    class base_device_t : public read_only_device
     {
     public:
         virtual ~base_device_t();
