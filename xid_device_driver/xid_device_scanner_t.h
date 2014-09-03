@@ -55,6 +55,8 @@ namespace cedrus
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_every_connection();
 
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_connection_by_ptr( boost::shared_ptr<cedrus::base_device_t> device );
+
         /**
          * Returns the number of valid XID devices connected to the computer
          *

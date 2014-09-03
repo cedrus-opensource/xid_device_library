@@ -75,6 +75,20 @@ void cedrus::xid_device_scanner_t::drop_every_connection()
     devices_.clear();
 }
 
+void cedrus::xid_device_scanner_t::drop_connection_by_ptr( boost::shared_ptr<cedrus::base_device_t> device )
+{
+    for( std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin(),
+            end = devices_.end();
+            iter != end; ++iter )
+     {
+        if ( device == *iter )
+        {
+            (*iter)->close_connection();
+            devices_.erase(iter);
+        }
+    }
+}
+
 int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 (
  const std::string &config_file_location,
