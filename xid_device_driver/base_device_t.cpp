@@ -137,7 +137,7 @@ void cedrus::base_device_t::set_debouncing_time( int /*time*/ )
     // nothing
 }
 
-void cedrus::base_device_t::set_device_mode( int /*protocol*/ )
+void cedrus::base_device_t::set_device_protocol( int /*protocol*/ )
 {
     // nothing
 }

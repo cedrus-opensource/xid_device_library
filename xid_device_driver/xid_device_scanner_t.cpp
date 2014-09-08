@@ -77,15 +77,16 @@ void cedrus::xid_device_scanner_t::drop_every_connection()
 
 void cedrus::xid_device_scanner_t::drop_connection_by_ptr( boost::shared_ptr<cedrus::base_device_t> device )
 {
-    for( std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin(),
-            end = devices_.end();
-            iter != end; ++iter )
+    for( std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin();
+            iter != devices_.end(); )
      {
         if ( device == *iter )
         {
             (*iter)->close_connection();
-            devices_.erase(iter);
+            iter = devices_.erase(iter);
         }
+        else
+            ++iter;
     }
 }
 
@@ -165,34 +166,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
             if(xid_con->open() == XID_NO_ERR)
             {
-                char return_info[200];
-                xid_con->flush_input();
-                xid_con->flush_output();
-
-                xid_con->send_xid_command("_c1",
-                                          return_info,
-                                          sizeof(return_info),
-                                          1000,
-                                          100);
-
-                std::string info;
-                if(return_info[0] == 0)
-                {
-                    // there's a possibility that the device is in E-Prime mode.
-                    // Go through the buffer and discard NULL characters, and
-                    // only keep the non NULL characters. Also, flush everything.
-                    for(size_t j = 0; j < sizeof(return_info); ++j)
-                    {
-                        if(return_info[j] != 0)
-                        {
-                            info.append(&return_info[j], 1);
-                        }
-                    }
-                    xid_con->flush_input();
-                    xid_con->flush_output();
-                }
-                else
-                    info = std::string(return_info);
+                std::string info = xid_glossary::get_device_protocol(xid_con);
 
                 if( strstr(info.c_str(), "_xid") )
                 {
@@ -203,23 +177,16 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                     if(strcmp(info.c_str(), "_xid0") != 0)
                     {
                         // Force the device into XID mode if it isn't. This is an XID library.
-                        xid_glossary::set_device_mode(xid_con, 0);
+                        xid_glossary::set_device_protocol(xid_con, 0);
 
-                        xid_con->flush_input();
-                        xid_con->flush_output();
+                        xid_con->flush_read_from_device_buffer();
                         mode_changed = true;
                     }
 
                     int product_id;
                     int model_id;
-                    char major_return[2];
 
-                    xid_con->send_xid_command(
-                            "_d4",
-                            major_return,
-                            sizeof(major_return));
-
-                    int major_firmware_version = major_return[0]-'0';
+                    int major_firmware_version = xid_glossary::get_major_firmware_version(xid_con);
 
                     //What device is it? Get product/model ID, find the corresponding config
                     xid_glossary::get_product_and_model_id(xid_con, &product_id, &model_id);
@@ -237,9 +204,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                         devices_.push_back( matched_dev );
 
                         if ( mode_changed )
-                        {
                             reportFunction( matched_dev-> get_device_config().get_device_name() );
-                        }
                     }
                 }
             }

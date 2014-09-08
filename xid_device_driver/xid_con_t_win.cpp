@@ -110,12 +110,12 @@ bool cedrus::xid_con_t::close()
     return status;
 }
 
-bool cedrus::xid_con_t::flush_input()
+bool cedrus::xid_con_t::flush_write_to_device_buffer()
 {
     return (PurgeComm(m_winPimpl->device_id_, PURGE_RXABORT|PURGE_RXCLEAR) != 0);
 }
 
-bool cedrus::xid_con_t::flush_output()
+bool cedrus::xid_con_t::flush_read_from_device_buffer()
 {
     return (PurgeComm(m_winPimpl->device_id_, PURGE_TXABORT|PURGE_TXCLEAR) != 0);
 }
@@ -178,9 +178,9 @@ bool cedrus::xid_con_t::setup_com_port()
     if( SetCommTimeouts(m_winPimpl->device_id_, &ct) == 0 )
         return status;
 
-    status = flush_input();
+    status = flush_write_to_device_buffer();
     if(status)
-        status = flush_output();
+        status = flush_read_from_device_buffer();
 
     return status;
 }
@@ -228,10 +228,10 @@ bool cedrus::xid_con_t::write(
 
             written += byte_count;
 
+            Sleep(delay_);
+
             if(written == bytes_to_write)
                 break;
-
-            Sleep(delay_);
 
             ++p;
         }

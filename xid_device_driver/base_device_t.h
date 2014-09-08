@@ -88,7 +88,7 @@ namespace cedrus
 
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_debouncing_time( int time );
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_mode( int protocol );
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_protocol( int protocol );
 
         // Every device needs these.
         virtual xid_device_config_t CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config() = 0;

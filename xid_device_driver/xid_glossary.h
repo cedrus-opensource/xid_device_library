@@ -66,7 +66,9 @@ namespace cedrus
 
         static void set_digital_output_lines_st( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines );
 
-        static void set_device_mode( boost::shared_ptr<xid_con_t> xid_con, int protocol );
+        static std::string get_device_protocol( boost::shared_ptr<xid_con_t> xid_con );
+
+        static void set_device_protocol( boost::shared_ptr<xid_con_t> xid_con, int protocol );
 
         static void set_device_baud_rate( boost::shared_ptr<xid_con_t> xid_con, int rate );
 

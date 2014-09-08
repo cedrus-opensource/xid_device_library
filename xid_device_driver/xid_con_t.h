@@ -35,6 +35,16 @@
 
 #include <boost/shared_ptr.hpp>
 
+#ifdef __APPLE__
+#   define SLEEP_FUNC usleep
+#   define SLEEP_INC 1000
+#   define OS_DEPENDENT_LONG unsigned long
+#elif defined(_WIN32)
+#   include <windows.h>
+#   define SLEEP_FUNC Sleep
+#   define SLEEP_INC 1
+#   define OS_DEPENDENT_LONG DWORD
+#endif
 
 namespace cedrus
 {
@@ -119,14 +129,14 @@ namespace cedrus
          *
          * @returns true if flushing the device was successful, or false if it was unsuccessful.
          */
-        bool flush_input();
+        bool flush_write_to_device_buffer();
 
         /**
          * Flush the device's output buffer.
          *
          * @returns true if flushing the device was successful, or false if it was unsuccessful.
          */
-        bool flush_output();
+        bool flush_read_from_device_buffer();
 
         /**
          * Opens the COM port for use.

@@ -234,7 +234,41 @@ void cedrus::xid_glossary::set_digital_output_lines(
     xid_con->write((unsigned char*)set_lines_cmd, 4, &bytes_written);
 }
 
-void cedrus::xid_glossary::set_device_mode( boost::shared_ptr<xid_con_t> xid_con, int protocol )
+std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con_t> xid_con )
+{
+    // There's a possibility that the device is in E-Prime mode. Right
+    // now is the only time the library cares about it, and we need to
+    // do some PST-proofing. To start, flush everything to remove the
+    // potential spew of zeroes.
+    char return_info[200];
+    std::string device_mode;
+
+    xid_con->flush_read_from_device_buffer();
+
+    xid_con->send_xid_command("_c1",
+        return_info,
+        sizeof(return_info),
+        1000,
+        100);
+
+    // If there's a 0 in the buffer, the device is in PST mode and we need
+    // to clean out a bunch of zeroes out of the buffer to get the mode.
+    if(return_info[0] == 0)
+    {
+        for(size_t j = 0; j < sizeof(return_info); ++j)
+        {
+            if(return_info[j] != 0)
+                device_mode.append(&return_info[j], 1);
+        }
+    }
+    else
+        device_mode = std::string(return_info);
+
+    return device_mode;
+}
+
+
+void cedrus::xid_glossary::set_device_protocol( boost::shared_ptr<xid_con_t> xid_con, int protocol )
 {
     std::ostringstream s;
     s << "c1" << protocol;
@@ -256,8 +290,8 @@ void cedrus::xid_glossary::set_device_baud_rate( boost::shared_ptr<xid_con_t> xi
 
 void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id )
 {
-    char product_id_return[2];
-    char model_id_return[2];
+    char product_id_return[1];
+    char model_id_return[1];
 
     xid_con->send_xid_command(
         "_d2",

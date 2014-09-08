@@ -91,12 +91,12 @@ bool cedrus::xid_con_t::close()
     return status;
 }
 
-bool cedrus::xid_con_t::flush_input()
+bool cedrus::xid_con_t::flush_write_to_device_buffer()
 {
     return ( tcflush( m_darwinPimpl->m_FileDescriptor, TCIFLUSH ) == 0 );
 }
 
-bool cedrus::xid_con_t::flush_output()
+bool cedrus::xid_con_t::flush_read_from_device_buffer()
 {
     return ( tcflush( m_darwinPimpl->m_FileDescriptor, TCOFLUSH ) == 0 );
 }
@@ -310,8 +310,8 @@ bool cedrus::xid_con_t::setup_com_port()
 
 	if ( status )
 	{
-		flush_input();
-		flush_output();
+		flush_write_to_device_buffer();
+		flush_read_from_device_buffer();
 	}
 
 	return status;

@@ -34,17 +34,6 @@
 #include "constants.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#ifdef __APPLE__
-#   define SLEEP_FUNC usleep
-#   define SLEEP_INC 1000
-#   define OS_DEPENDENT_LONG unsigned long
-#elif defined(_WIN32)
-#   include <windows.h>
-#   define SLEEP_FUNC Sleep
-#   define SLEEP_INC 1
-#   define OS_DEPENDENT_LONG DWORD
-#endif
-
 unsigned long cedrus::xid_con_t::GetTickCount() const
 {
     boost::posix_time::ptime time_microseconds = boost::posix_time::microsec_clock::local_time();
@@ -100,9 +89,7 @@ int cedrus::xid_con_t::send_xid_command(
     int command_delay)
 {
     if(out_response != NULL)
-    {
         memset(out_response, 0x00, max_out_response_size);
-    }
 
     int bytes_written = 0;
     write((unsigned char*)in_command, strlen(in_command), &bytes_written);
@@ -127,17 +114,18 @@ int cedrus::xid_con_t::send_xid_command(
         if(needs_interbyte_delay_)
             SLEEP_FUNC(delay_*SLEEP_INC);
 
-        if( !read(in_buff, max_out_response_size, &bytes_read) )
+        if( !read(in_buff, sizeof(in_buff), &bytes_read) )
             break;
 
         if(bytes_read >= 1)
         {
-            for(int i = 0; (i<bytes_read) && (bytes_stored < max_out_response_size); ++i)
+            for(int i = 0; (i < bytes_read) && (bytes_stored < max_out_response_size); ++i)
             {
                 out_response[bytes_stored] = in_buff[i];
                 bytes_stored++;
             }
         }
+
         current_time = GetTickCount();
     } while (current_time < end_time && bytes_stored < max_out_response_size);
 
