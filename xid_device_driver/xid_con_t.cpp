@@ -84,9 +84,7 @@ bool cedrus::xid_con_t::has_lost_connection( void )
 int cedrus::xid_con_t::send_xid_command(
     const char in_command[],
     char out_response[],
-    int max_out_response_size,
-    int timeout,
-    int command_delay)
+    int max_out_response_size)
 {
     if(out_response != NULL)
         memset(out_response, 0x00, max_out_response_size);
@@ -99,16 +97,7 @@ int cedrus::xid_con_t::send_xid_command(
     int bytes_read = 0;
     int bytes_stored = 0;
 
-    // sometimes sending a command needs a delay because the 4MHz processors
-    // in the response pads need a little time to process the command and
-    // send a response.
-    if(command_delay > 0)
-        SLEEP_FUNC(command_delay*SLEEP_INC);
-
-    OS_DEPENDENT_LONG current_time;
-    OS_DEPENDENT_LONG start_time = GetTickCount();
-    OS_DEPENDENT_LONG end_time = start_time + timeout;
-
+    int i = 0;
     do
     {
         if(needs_interbyte_delay_)
@@ -126,8 +115,60 @@ int cedrus::xid_con_t::send_xid_command(
             }
         }
 
-        current_time = GetTickCount();
-    } while (current_time < end_time && bytes_stored < max_out_response_size);
+        ++i;
+    } while (i < 15 && bytes_stored < max_out_response_size);
+
+    return bytes_stored;
+}
+
+int cedrus::xid_con_t::send_xid_command_pst_proof(
+    const char in_command[],
+    char out_response[],
+    int max_out_response_size)
+{
+    if(out_response != NULL)
+        memset(out_response, 0x00, max_out_response_size);
+
+    int bytes_written = 0;
+    write((unsigned char*)in_command, strlen(in_command), &bytes_written);
+
+    unsigned char in_buff[64];
+    memset(in_buff, 0x00, sizeof(in_buff));
+    int bytes_read = 0;
+    int bytes_stored = 0;
+
+    // sometimes sending a command needs a delay because the 4MHz processors
+    // in the response pads need a little time to process the command and
+    // send a response.
+    SLEEP_FUNC(100*SLEEP_INC);
+
+    int num_retries = 0;
+    do
+    {
+        if(needs_interbyte_delay_)
+            SLEEP_FUNC(delay_*SLEEP_INC);
+
+        // We're reading from the buffer in chunks of 64 because of all the potential zeroes.
+        if( !read(in_buff, sizeof(in_buff), &bytes_read) )
+            break;
+
+        if(bytes_read >= 1)
+        {
+            for(int i = 0; (i < bytes_read) && (bytes_stored < max_out_response_size); ++i)
+            {
+                // Clean out the potential zeroes in the buffer.
+                // NOTE: THIS ONLY WORKS AS LONG AS NOTHING CAN RETURN NULL
+                // AS A VALID RESPONSE.
+                if(in_buff[i] != 0)
+                {
+                    out_response[bytes_stored] = in_buff[i];
+                    bytes_stored++;
+                }
+            }
+        }
+
+        ++num_retries;
+    } while (num_retries < 15 && bytes_stored < max_out_response_size);
 
     return bytes_stored;
 }

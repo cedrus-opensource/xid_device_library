@@ -9,6 +9,16 @@ namespace cedrus
 {
     class xid_con_t;
 
+    class xid_glossary_pst_proof
+    {
+    public:
+        static int get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con );
+
+        static std::string get_device_protocol( boost::shared_ptr<xid_con_t> xid_con );
+
+        static void get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id );
+    };
+
     class xid_glossary
     {
     public:

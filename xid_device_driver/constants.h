@@ -60,6 +60,14 @@ namespace cedrus
         MAX_PORTS = 255
     };
 
+    // These correspond to ASCII values
+    enum
+    {
+        PRODUCT_ID_LUMINA = 48, // '0'
+        PRODUCT_ID_SV1    = 49, // '1'
+        PRODUCT_ID_RB     = 50  // '2'
+    };
+
 } // namespace cedrus
 
 #endif // CONSTANTS_H

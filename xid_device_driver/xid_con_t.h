@@ -193,9 +193,12 @@ namespace cedrus
         int send_xid_command(
             const char in_command[],
             char out_response[],
-            int max_out_response_size,
-            int timeout = 100,
-            int command_delay = 0);
+            int max_out_response_size);
+
+        int send_xid_command_pst_proof(
+            const char in_command[],
+            char out_response[],
+            int max_out_response_size);
 
         /**
          * Sets whether or not the device needs an inter-byte delay.

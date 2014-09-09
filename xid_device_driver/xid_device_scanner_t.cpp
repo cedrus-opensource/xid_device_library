@@ -166,7 +166,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
             if(xid_con->open() == XID_NO_ERR)
             {
-                std::string info = xid_glossary::get_device_protocol(xid_con);
+                // NOTE THE USAGE OF xid_glossary_pst_proof IN THIS CODE. IT'S IMPORTANT!
+                std::string info = xid_glossary_pst_proof::get_device_protocol(xid_con);
 
                 if( strstr(info.c_str(), "_xid") )
                 {
@@ -186,10 +187,10 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                     int product_id;
                     int model_id;
 
-                    int major_firmware_version = xid_glossary::get_major_firmware_version(xid_con);
+                    int major_firmware_version = xid_glossary_pst_proof::get_major_firmware_version(xid_con);
 
                     //What device is it? Get product/model ID, find the corresponding config
-                    xid_glossary::get_product_and_model_id(xid_con, &product_id, &model_id);
+                    xid_glossary_pst_proof::get_product_and_model_id(xid_con, &product_id, &model_id);
 
                     // call "create_device" (which resides in device_factory.cpp)
                     boost::shared_ptr<cedrus::base_device_t> matched_dev =
