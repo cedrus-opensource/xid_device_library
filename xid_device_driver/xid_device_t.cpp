@@ -34,6 +34,8 @@
 #include "xid_con_t.h"
 #include "xid_glossary.h"
 
+#include "CedrusAssert.h"
+
 cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
     boost::shared_ptr<const xid_device_config_t> dev_config)
@@ -113,6 +115,8 @@ int cedrus::xid_device_t::get_baud_rate( void )
 
 void cedrus::xid_device_t::set_baud_rate( int rate )
 {
+    //CEDRUS_ASSERT( 1 == 2, "here is set_baud_rate" ); // <--- JUST A SAMPLE FOR SYNTAX
+
     xid_con_->set_baud_rate(rate);
     xid_glossary::set_device_baud_rate(xid_con_, rate);
 }

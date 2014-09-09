@@ -22,6 +22,10 @@ env.Replace(
     TARGET_ARCH='x86'
 )
 
+if GetOption('build_mode') == 'opt':
+    env.AppendUnique( CPPDEFINES = [ 'CEDRUS_DISABLE_ASSERT' ] )
+
+
 env[ 'CURRENT_CEDRUS_REPO_ROOT' ] = sys.path[0] + '/../'
 print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
 

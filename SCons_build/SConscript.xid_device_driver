@@ -41,7 +41,7 @@ elif sys.platform == 'darwin':
     inputs += [ prefix + 'xid_device_driver/xid_con_t_mac.cpp']
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
-include_path = []
+include_path = [ prefix + 'scons_helpers/cpp_src/' ]
 cxxflags = []
 frameworks = []
 lib_dependencies = []
