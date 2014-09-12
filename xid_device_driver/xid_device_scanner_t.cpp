@@ -169,7 +169,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                 // NOTE THE USAGE OF xid_glossary_pst_proof IN THIS CODE. IT'S IMPORTANT!
                 std::string info = xid_glossary_pst_proof::get_device_protocol(xid_con);
 
-                if( strstr(info.c_str(), "_xid") )
+                if( boost::starts_with( info, "_xid" ) )
                 {
                     progressFunction(70);
                     device_found = true;

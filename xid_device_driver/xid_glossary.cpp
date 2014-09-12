@@ -3,9 +3,12 @@
 
 #include "xid_con_t.h"
 #include "constants.h"
+#include "CedrusAssert.h"
 
 #include <string.h>
 #include <sstream>
+
+#include <boost/algorithm/string/predicate.hpp>
 
 namespace
 {
@@ -73,7 +76,6 @@ std::string cedrus::xid_glossary_pst_proof::get_device_protocol( boost::shared_p
     // do some PST-proofing. To start, flush everything to remove the
     // potential spew of zeroes.
     char return_info[5];
-    std::string device_mode;
 
     xid_con->flush_read_from_device_buffer();
 
@@ -81,7 +83,12 @@ std::string cedrus::xid_glossary_pst_proof::get_device_protocol( boost::shared_p
         return_info,
         sizeof(return_info));
 
-    return std::string(return_info);
+    // It's okay for this to sometimes return nothing at all. That just
+    // means we queried an incorrect baud and there's nothing wrong with that.
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0, 
+        "get_device_protocol's return value must start with _xid" );
+
+    return std::string(return_info, sizeof(return_info));
 }
 
 void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id )
@@ -98,6 +105,8 @@ void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<
 
     *product_id = (int)(product_id_return[0]);
 
+    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50, "_d2 command's result value must be between '0' and '2'" );
+
     // Model IDS are meaningless for non-RB devices
     if ( *product_id == PRODUCT_ID_RB )
     {
@@ -107,6 +116,8 @@ void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<
             sizeof(model_id_return));
 
         *model_id = (int)(model_id_return[0]);
+
+        CEDRUS_ASSERT( *model_id >= 49 && *model_id <= 52, "_d3 command's result value must be between '1' and '4'" );
     }
     else
         *model_id = 0;
@@ -212,6 +223,9 @@ int cedrus::xid_glossary::get_light_sensor_mode( boost::shared_ptr<xid_con_t> xi
         return_info,
         sizeof(return_info));
 
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_lr" ), "get_light_sensor_mode xid query result must start with _lr" );
+    CEDRUS_ASSERT( return_info[3] >= 48 && return_info[3] <= 51, "get_light_sensor_mode's return value must be between '0' and '3'" );
+
     return return_info[3]-'0';
 }
 
@@ -234,6 +248,8 @@ int cedrus::xid_glossary::get_light_sensor_threshold( boost::shared_ptr<xid_con_
         "_lt",
         threshold_return,
         sizeof(threshold_return));
+
+    CEDRUS_ASSERT( boost::starts_with( threshold_return , "_lt" ), "get_light_sensor_threshold xid query result must start with _lt" );
 
     unsigned char return_val = (unsigned char)(threshold_return[3]);
     return (int)(return_val);
@@ -301,12 +317,17 @@ std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con
     // do some PST-proofing. To start, flush everything to remove the
     // potential spew of zeroes.
     char return_info[5];
-    std::string device_mode;
 
     xid_con->send_xid_command("_c1",
         return_info,
         sizeof(return_info));
-    return std::string(return_info);
+
+    // It's okay for this to sometimes return nothing at all. That just
+    // means we queried an incorrect baud and there's nothing wrong with that.
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0, 
+        "This function's return value must start with _xid" );
+
+    return std::string(return_info, sizeof(return_info));
 }
 
 
@@ -342,6 +363,8 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
 
     *product_id = (int)(product_id_return[0]);
 
+    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50, "_d2 command's result value must be between '0' and '2'" );
+
     // Model IDS are meaningless for non-RB devices
     if ( *product_id == PRODUCT_ID_RB )
     {
@@ -351,6 +374,8 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
             sizeof(model_id_return));
 
         *model_id = (int)(model_id_return[0]);
+
+        CEDRUS_ASSERT( *model_id >= 49 && *model_id <= 52, "_d3 command's result value must be between '1' and '4'" );
     }
     else
         *model_id = 0;
@@ -401,6 +426,9 @@ int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_co
         return_info,
         sizeof(return_info));
 
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_a1" ), "get_accessory_connector_mode's return value must start with _a1" );
+    CEDRUS_ASSERT( return_info[3] >= 48 && return_info[3] <= 51, "get_accessory_connector_device's return value must be between '0' and '3'" );
+
     return return_info[3]-'0';
 }
 
@@ -411,6 +439,9 @@ int cedrus::xid_glossary::get_accessory_connector_device( boost::shared_ptr<xid_
         "_aa",
         return_info,
         sizeof(return_info));
+
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_aa" ), "get_accessory_connector_device's xid query result must start with _aa" );
+    CEDRUS_ASSERT( return_info[3] >= 0 && return_info[3] <= 64, "get_accessory_connector_device's return value must be between 0 and 64" );
 
     return return_info[3];
 }
@@ -432,6 +463,8 @@ int cedrus::xid_glossary::get_debouncing_time( boost::shared_ptr<xid_con_t> xid_
         "_f6",
         threshold_return,
         sizeof(threshold_return));
+
+    CEDRUS_ASSERT( boost::starts_with( threshold_return , "_f6" ), "get_debouncing_time's xid query result must start with _f6" );
 
     unsigned char return_val = (unsigned char)(threshold_return[3]);
     return (int)(return_val);
