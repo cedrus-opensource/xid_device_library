@@ -105,9 +105,9 @@ void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<
 
     *product_id = (int)(product_id_return[0]);
 
-    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50, "_d2 command's result value must be between '0' and '2'" );
+    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
 
-    // Model IDS are meaningless for non-RB devices
+    // Model IDs are meaningless for non-RB devices
     if ( *product_id == PRODUCT_ID_RB )
     {
         xid_con->send_xid_command_pst_proof(
@@ -435,7 +435,7 @@ int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_co
 int cedrus::xid_glossary::get_accessory_connector_device( boost::shared_ptr<xid_con_t> xid_con )
 {
     char return_info[4];
-    xid_con->send_xid_command(
+    xid_con->send_xid_command_slow(
         "_aa",
         return_info,
         sizeof(return_info));

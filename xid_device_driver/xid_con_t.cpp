@@ -86,6 +86,27 @@ int cedrus::xid_con_t::send_xid_command(
     char out_response[],
     int max_out_response_size)
 {
+    // 15 has been determined to be enough for most commands
+    return send_xid_command( in_command, out_response, max_out_response_size, 15);
+}
+
+int cedrus::xid_con_t::send_xid_command_slow(
+    const char in_command[],
+    char out_response[],
+    int max_out_response_size)
+{
+    // Some commands, like _aa apparently need some extra leeway. 50 has been
+    // enough thus far.
+    return send_xid_command( in_command, out_response, max_out_response_size, 50);
+}
+
+
+int cedrus::xid_con_t::send_xid_command(
+    const char in_command[],
+    char out_response[],
+    int max_out_response_size,
+    int num_retries)
+{
     if(out_response != NULL)
         memset(out_response, 0x00, max_out_response_size);
 
@@ -116,7 +137,7 @@ int cedrus::xid_con_t::send_xid_command(
         }
 
         ++i;
-    } while (i < 15 && bytes_stored < max_out_response_size);
+    } while (i < num_retries && bytes_stored < max_out_response_size);
 
     return bytes_stored;
 }

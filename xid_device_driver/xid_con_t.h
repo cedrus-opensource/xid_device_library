@@ -177,20 +177,12 @@ namespace cedrus
             int bytes_to_write,
             int *bytes_written);
 
-        /**
-         * Send an XID command to the device.
-         *
-         * XID commands are documented at http://www.cedrus.com/xid/
-         *
-         * @param[in] in_command command to send to the device
-         * @param[out] out_response response from the device
-         * @param[in] max_out_response_size maximum allowed response size
-         * @param[in] timeout command timeout.  Defaults to 100ms
-         * @param[in] command_delay Some devices need an additional delay
-         * between receiving a request and sending a response. Set the delay
-         * here.  It defaults to 0.
-         */
         int send_xid_command(
+            const char in_command[],
+            char out_response[],
+            int max_out_response_size);
+
+        int send_xid_command_slow(
             const char in_command[],
             char out_response[],
             int max_out_response_size);
@@ -216,6 +208,23 @@ namespace cedrus
 
         bool setup_com_port();
         unsigned long GetTickCount() const;
+ 
+        /**
+         * Send an XID command to the device.
+         *
+         * XID commands are documented at http://www.cedrus.com/xid/
+         *
+         * @param[in] in_command command to send to the device
+         * @param[out] out_response response from the device
+         * @param[in] max_out_response_size maximum allowed response size
+         * @param[in] num_retries specifies the number of retries we're
+         * willing to allow until while we wait for the device to respond
+         */
+        int send_xid_command(
+            const char in_command[],
+            char out_response[],
+            int max_out_response_size,
+            int num_retries);
 
         int baud_rate_;
         bytesize byte_size_;
