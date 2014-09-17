@@ -94,7 +94,6 @@ std::string cedrus::xid_glossary_pst_proof::get_device_protocol( boost::shared_p
 void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id )
 {
     char product_id_return[1];
-    char model_id_return[1];
 
     xid_con->flush_read_from_device_buffer();
 
@@ -110,6 +109,8 @@ void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<
     // Model IDs are meaningless for non-RB devices
     if ( *product_id == PRODUCT_ID_RB )
     {
+        char model_id_return[1];
+
         xid_con->send_xid_command_pst_proof(
             "_d3",
             model_id_return,
