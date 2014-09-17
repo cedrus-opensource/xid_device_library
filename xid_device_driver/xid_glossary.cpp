@@ -85,7 +85,7 @@ std::string cedrus::xid_glossary_pst_proof::get_device_protocol( boost::shared_p
 
     // It's okay for this to sometimes return nothing at all. That just
     // means we queried an incorrect baud and there's nothing wrong with that.
-    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0, 
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0,
         "get_device_protocol's return value must start with _xid" );
 
     return std::string(return_info, sizeof(return_info));
@@ -324,7 +324,7 @@ std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con
 
     // It's okay for this to sometimes return nothing at all. That just
     // means we queried an incorrect baud and there's nothing wrong with that.
-    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0, 
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0,
         "This function's return value must start with _xid" );
 
     return std::string(return_info, sizeof(return_info));
