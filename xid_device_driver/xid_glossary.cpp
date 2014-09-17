@@ -93,15 +93,20 @@ std::string cedrus::xid_glossary_pst_proof::get_device_protocol( boost::shared_p
 
 void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id )
 {
-    char product_id_return[1];
+    char product_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
 
     xid_con->flush_read_from_device_buffer();
 
-    xid_con->send_xid_command_pst_proof(
+    const int bytes_stored = xid_con->send_xid_command_pst_proof(
         "_d2",
         product_id_return,
         sizeof(product_id_return));
 
+    CEDRUS_ASSERT( bytes_stored >= 1 || product_id_return[0] == 0,
+                   "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our product_id_return buffer" );
+
+    // the preceding assertion makes sure we don't read GARBAGE from product_id_return[0] here:
     *product_id = (int)(product_id_return[0]);
 
     CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
@@ -109,12 +114,16 @@ void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<
     // Model IDs are meaningless for non-RB devices
     if ( *product_id == PRODUCT_ID_RB )
     {
-        char model_id_return[1];
+        char model_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
 
-        xid_con->send_xid_command_pst_proof(
+        const int bytes_count = xid_con->send_xid_command_pst_proof(
             "_d3",
             model_id_return,
             sizeof(model_id_return));
+
+        CEDRUS_ASSERT( bytes_count >= 1 || model_id_return[0] == 0,
+                       "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our buffer" );
 
         *model_id = (int)(model_id_return[0]);
 
