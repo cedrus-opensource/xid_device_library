@@ -112,9 +112,21 @@ namespace cedrus
 private:
         static void set_digital_output_lines( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines, char product_specific_prefix );
 
+        // _d4
+        static int get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con, bool pst_proof );
+
+        // _c1
+        static std::string get_device_protocol( boost::shared_ptr<xid_con_t> xid_con, bool pst_proof );
+
+        // _d2 and _d3
+        static void get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id, bool pst_proof );
+
         // A small subset of commands differs slightly between "true" xid devices and StimTracker
         static const char XID_COMMAND_PREFIX = 'a';
         static const char ST_COMMAND_PREFIX = 'm';
+
+        // For commands that have pst-proof implementations.
+        friend class xid_glossary_pst_proof;
     };
 }
 #endif // XID_GLOSSARY_H

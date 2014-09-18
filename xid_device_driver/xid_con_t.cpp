@@ -121,8 +121,7 @@ int cedrus::xid_con_t::send_xid_command(
     int i = 0;
     do
     {
-        if(needs_interbyte_delay_)
-            SLEEP_FUNC(delay_*SLEEP_INC);
+        SLEEP_FUNC(delay_*SLEEP_INC);
 
         if( !read(in_buff, sizeof(in_buff), &bytes_read) )
             break;
@@ -166,8 +165,7 @@ int cedrus::xid_con_t::send_xid_command_pst_proof(
     int num_retries = 0;
     do
     {
-        if(needs_interbyte_delay_)
-            SLEEP_FUNC(delay_*SLEEP_INC);
+        SLEEP_FUNC(delay_*SLEEP_INC);
 
         // We're reading from the buffer in chunks of 64 because of all the potential zeroes.
         if( !read(in_buff, sizeof(in_buff), &bytes_read) )

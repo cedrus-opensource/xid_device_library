@@ -57,70 +57,17 @@ unsigned int cedrus::xid_glossary::adjust_endianness_chars_to_uint
 
 int cedrus::xid_glossary_pst_proof::get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char major_return[1];
-
-    xid_con->flush_read_from_device_buffer();
-
-    xid_con->send_xid_command_pst_proof(
-        "_d4",
-        major_return,
-        sizeof(major_return));
-
-    return major_return[0]-'0';
+    return cedrus::xid_glossary::get_major_firmware_version(xid_con, true);
 }
 
 std::string cedrus::xid_glossary_pst_proof::get_device_protocol( boost::shared_ptr<xid_con_t> xid_con )
 {
-    // There's a possibility that the device is in E-Prime mode. Right
-    // now is the only time the library cares about it, and we need to
-    // do some PST-proofing. To start, flush everything to remove the
-    // potential spew of zeroes.
-    char return_info[5];
-
-    xid_con->flush_read_from_device_buffer();
-
-    xid_con->send_xid_command_pst_proof("_c1",
-        return_info,
-        sizeof(return_info));
-
-    // It's okay for this to sometimes return nothing at all. That just
-    // means we queried an incorrect baud and there's nothing wrong with that.
-    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0, 
-        "get_device_protocol's return value must start with _xid" );
-
-    return std::string(return_info, sizeof(return_info));
+    return cedrus::xid_glossary::get_device_protocol( xid_con, true );
 }
 
 void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id )
 {
-    char product_id_return[1];
-    char model_id_return[1];
-
-    xid_con->flush_read_from_device_buffer();
-
-    xid_con->send_xid_command_pst_proof(
-        "_d2",
-        product_id_return,
-        sizeof(product_id_return));
-
-    *product_id = (int)(product_id_return[0]);
-
-    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
-
-    // Model IDs are meaningless for non-RB devices
-    if ( *product_id == PRODUCT_ID_RB )
-    {
-        xid_con->send_xid_command_pst_proof(
-            "_d3",
-            model_id_return,
-            sizeof(model_id_return));
-
-        *model_id = (int)(model_id_return[0]);
-
-        CEDRUS_ASSERT( *model_id >= 49 && *model_id <= 52, "_d3 command's result value must be between '1' and '4'" );
-    }
-    else
-        *model_id = 0;
+    return cedrus::xid_glossary::get_product_and_model_id( xid_con, product_id, model_id, true );
 }
 
 void cedrus::xid_glossary::reset_rt_timer( boost::shared_ptr<xid_con_t> xid_con )
@@ -169,12 +116,31 @@ std::string cedrus::xid_glossary::get_internal_product_name( boost::shared_ptr<x
 
 int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con )
 {
+    return cedrus::xid_glossary::get_major_firmware_version(xid_con, false);
+}
+
+int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con, bool pst_proof )
+{
     char major_return[1];
 
-    xid_con->send_xid_command(
-        "_d4",
-        major_return,
-        sizeof(major_return));
+    if( pst_proof )
+    {
+        xid_con->flush_read_from_device_buffer();
+
+        xid_con->send_xid_command_pst_proof(
+            "_d4",
+            major_return,
+            sizeof(major_return));
+    }
+    else
+    {
+        xid_con->send_xid_command_slow(
+            "_d4",
+            major_return,
+            sizeof(major_return));
+    }
+
+    CEDRUS_ASSERT( major_return[0] >= 48 && major_return[0] <= 50, "_d4 command's result value must be between '0' and '2'" );
 
     return major_return[0]-'0';
 }
@@ -183,10 +149,12 @@ int cedrus::xid_glossary::get_minor_firmware_version( boost::shared_ptr<xid_con_
 {
     char minor_return[1];
 
-    xid_con->send_xid_command(
+    xid_con->send_xid_command_slow(
         "_d5",
         minor_return,
         sizeof(minor_return));
+
+    CEDRUS_ASSERT( minor_return[0] >= 48, "_d5 command's result value must be '0' or greater" );
 
     return minor_return[0]-'0';
 }
@@ -310,7 +278,7 @@ void cedrus::xid_glossary::set_digital_output_lines(
     xid_con->write((unsigned char*)set_lines_cmd, 4, &bytes_written);
 }
 
-std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con_t> xid_con )
+std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con_t> xid_con, bool pst_proof )
 {
     // There's a possibility that the device is in E-Prime mode. Right
     // now is the only time the library cares about it, and we need to
@@ -318,18 +286,33 @@ std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con
     // potential spew of zeroes.
     char return_info[5];
 
-    xid_con->send_xid_command("_c1",
-        return_info,
-        sizeof(return_info));
+    if ( pst_proof )
+    {
+        xid_con->flush_read_from_device_buffer();
+
+        xid_con->send_xid_command_pst_proof("_c1",
+            return_info,
+            sizeof(return_info));
+    }
+    else
+    {
+        xid_con->send_xid_command("_c1",
+            return_info,
+            sizeof(return_info));
+    }
 
     // It's okay for this to sometimes return nothing at all. That just
     // means we queried an incorrect baud and there's nothing wrong with that.
     CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0, 
-        "This function's return value must start with _xid" );
+        "get_device_protocol's return value must start with _xid" );
 
     return std::string(return_info, sizeof(return_info));
 }
 
+std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con_t> xid_con )
+{
+    return cedrus::xid_glossary::get_device_protocol(xid_con, false );
+}
 
 void cedrus::xid_glossary::set_device_protocol( boost::shared_ptr<xid_con_t> xid_con, int protocol )
 {
@@ -353,25 +336,52 @@ void cedrus::xid_glossary::set_device_baud_rate( boost::shared_ptr<xid_con_t> xi
 
 void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id )
 {
+    return cedrus::xid_glossary::get_product_and_model_id(xid_con, product_id, model_id, true );
+}
+
+void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id, bool pst_proof )
+{
     char product_id_return[1];
     char model_id_return[1];
 
-    xid_con->send_xid_command(
-        "_d2",
-        product_id_return,
-        sizeof(product_id_return));
+    if ( pst_proof )
+    {
+        xid_con->flush_read_from_device_buffer();
+
+        xid_con->send_xid_command_pst_proof(
+            "_d2",
+            product_id_return,
+            sizeof(product_id_return));
+    }
+    else
+    {
+        xid_con->send_xid_command(
+            "_d2",
+            product_id_return,
+            sizeof(product_id_return));
+    }
 
     *product_id = (int)(product_id_return[0]);
 
-    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50, "_d2 command's result value must be between '0' and '2'" );
+    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
 
-    // Model IDS are meaningless for non-RB devices
+    // Model IDs are meaningless for non-RB devices
     if ( *product_id == PRODUCT_ID_RB )
     {
-        xid_con->send_xid_command(
-            "_d3",
-            model_id_return,
-            sizeof(model_id_return));
+        if ( pst_proof )
+        {
+            xid_con->send_xid_command_pst_proof(
+                "_d3",
+                model_id_return,
+                sizeof(model_id_return));
+        }
+        else
+        {
+            xid_con->send_xid_command(
+                "_d3",
+                model_id_return,
+                sizeof(model_id_return));
+        }
 
         *model_id = (int)(model_id_return[0]);
 
