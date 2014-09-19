@@ -185,11 +185,15 @@ int cedrus::xid_glossary::get_hardware_generation( boost::shared_ptr<xid_con_t> 
 
 int cedrus::xid_glossary::get_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[4];
-    xid_con->send_xid_command(
+    char return_info[4]; // we rely on send_xid_command to zero-initialize this buffer
+    const int bytes_count = xid_con->send_xid_command(
         "_lr",
         return_info,
         sizeof(return_info));
+
+    CEDRUS_ASSERT( bytes_count >= 1 || ( return_info[0] == 0 && return_info[3] == 0 ),
+                   "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our buffer" );
 
     CEDRUS_ASSERT( boost::starts_with( return_info , "_lr" ), "get_light_sensor_mode xid query result must start with _lr" );
     CEDRUS_ASSERT( return_info[3] >= 48 && return_info[3] <= 51, "get_light_sensor_mode's return value must be between '0' and '3'" );
@@ -210,7 +214,7 @@ void cedrus::xid_glossary::set_light_sensor_mode( boost::shared_ptr<xid_con_t> x
 
 int cedrus::xid_glossary::get_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char threshold_return[4];
+    char threshold_return[4]; // we rely on send_xid_command to zero-initialize this buffer
 
     xid_con->send_xid_command(
         "_lt",
@@ -284,26 +288,31 @@ std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con
     // now is the only time the library cares about it, and we need to
     // do some PST-proofing. To start, flush everything to remove the
     // potential spew of zeroes.
-    char return_info[5];
+    char return_info[5]; // we rely on send_xid_command to zero-initialize this buffer
+    int bytes_count;
 
     if ( pst_proof )
     {
         xid_con->flush_read_from_device_buffer();
 
-        xid_con->send_xid_command_pst_proof("_c1",
+        bytes_count = xid_con->send_xid_command_pst_proof("_c1",
             return_info,
             sizeof(return_info));
     }
     else
     {
-        xid_con->send_xid_command("_c1",
+        bytes_count = xid_con->send_xid_command("_c1",
             return_info,
             sizeof(return_info));
     }
 
+    CEDRUS_ASSERT( bytes_count >= 1 || ( return_info[0] == 0 && return_info[4] == 0 ),
+                   "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our buffer" );
+
     // It's okay for this to sometimes return nothing at all. That just
     // means we queried an incorrect baud and there's nothing wrong with that.
-    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0, 
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0,
         "get_device_protocol's return value must start with _xid" );
 
     return std::string(return_info, sizeof(return_info));
@@ -341,26 +350,32 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
 
 void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id, bool pst_proof )
 {
-    char product_id_return[1];
-    char model_id_return[1];
+    char product_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
+
+    int bytes_stored;
 
     if ( pst_proof )
     {
         xid_con->flush_read_from_device_buffer();
 
-        xid_con->send_xid_command_pst_proof(
+        bytes_stored = xid_con->send_xid_command_pst_proof(
             "_d2",
             product_id_return,
             sizeof(product_id_return));
     }
     else
     {
-        xid_con->send_xid_command(
+        bytes_stored = xid_con->send_xid_command(
             "_d2",
             product_id_return,
             sizeof(product_id_return));
     }
 
+    CEDRUS_ASSERT( bytes_stored >= 1 || product_id_return[0] == 0,
+        "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our product_id_return buffer" );
+
+    // the preceding assertion makes sure we don't read GARBAGE from product_id_return[0] here:
     *product_id = (int)(product_id_return[0]);
 
     CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
@@ -368,20 +383,27 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
     // Model IDs are meaningless for non-RB devices
     if ( *product_id == PRODUCT_ID_RB )
     {
+        char model_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
+        int bytes_count;
+
         if ( pst_proof )
         {
-            xid_con->send_xid_command_pst_proof(
+            bytes_count = xid_con->send_xid_command_pst_proof(
                 "_d3",
                 model_id_return,
                 sizeof(model_id_return));
         }
         else
         {
-            xid_con->send_xid_command(
+            bytes_count = xid_con->send_xid_command(
                 "_d3",
                 model_id_return,
                 sizeof(model_id_return));
         }
+
+        CEDRUS_ASSERT( bytes_count >= 1 || model_id_return[0] == 0,
+            "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our buffer" );
 
         *model_id = (int)(model_id_return[0]);
 
@@ -430,7 +452,7 @@ void cedrus::xid_glossary::set_pulse_duration( boost::shared_ptr<xid_con_t> xid_
 
 int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[4];
+    char return_info[4]; // we rely on send_xid_command to zero-initialize this buffer
     xid_con->send_xid_command(
         "_a1",
         return_info,
@@ -444,11 +466,15 @@ int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_co
 
 int cedrus::xid_glossary::get_accessory_connector_device( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[4];
-    xid_con->send_xid_command_slow(
+    char return_info[4]; // we rely on send_xid_command to zero-initialize this buffer
+    const int bytes_count = xid_con->send_xid_command_slow(
         "_aa",
         return_info,
         sizeof(return_info));
+
+    CEDRUS_ASSERT( bytes_count >= 1 || ( return_info[0] == 0 && return_info[3] == 0 ),
+                   "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our buffer" );
 
     CEDRUS_ASSERT( boost::starts_with( return_info , "_aa" ), "get_accessory_connector_device's xid query result must start with _aa" );
     CEDRUS_ASSERT( return_info[3] >= 0 && return_info[3] <= 64, "get_accessory_connector_device's return value must be between 0 and 64" );
@@ -467,7 +493,7 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
 
 int cedrus::xid_glossary::get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char threshold_return[4];
+    char threshold_return[4]; // we rely on send_xid_command to zero-initialize this buffer
 
     xid_con->send_xid_command(
         "_f6",
