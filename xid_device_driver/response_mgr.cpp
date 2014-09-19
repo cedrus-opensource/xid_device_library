@@ -6,6 +6,8 @@
 #include "xid_glossary.h"
 #include "constants.h"
 
+#include "CedrusAssert.h"
+
 cedrus::response_mgr::response_mgr( void )
     : m_bytes_in_buffer(0),
       m_xid_packet_index(INVALID_PACKET_INDEX),
@@ -39,15 +41,16 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
     //    that the last byte is set to 0.
 
     key_state input_found = NO_KEY_DETECTED;
-    m_xid_packet_index = 0;
+    m_xid_packet_index = INVALID_PACKET_INDEX;
 
-    // We will not give a partial packet the time of day.
-    if(m_bytes_in_buffer == XID_PACKET_SIZE)
+    if( m_input_buffer[0] == 'k' && ((m_input_buffer[1] & INVALID_PORT_BITS) == 0) )
     {
-        // A valid XID packet will meet all of these requirements.
-        if( m_input_buffer[0] == 'k' &&
-            (m_input_buffer[1] & INVALID_PORT_BITS) == 0 &&
-            m_input_buffer[5] == '\0')
+        m_xid_packet_index = 0;
+
+        // If this is false, all is not yet lost. Looks like we have a partial XID
+        // packet for whatever reason. We don't need to adjust the buffer in any way,
+        // we'll just read in fewer bytes on the next pass in an attempt to finish it.
+        if(m_bytes_in_buffer == XID_PACKET_SIZE && m_input_buffer[5] == '\0')
         {
             res.was_pressed = (m_input_buffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
             res.port = m_input_buffer[1] & 0x0F;
@@ -63,38 +66,48 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
             else
                 num_keys_down_--;
         }
-        else // O-oh... Well, maybe it's a part of a packet? Look for a k later in the packet.
+    }
+    else
+    {
+        // Something is amiss, but perhaps the packet is later in the buffer?
+        for(int i = 1; i < XID_PACKET_SIZE; ++i)
         {
-            for(int i = 1; i < XID_PACKET_SIZE; ++i)
+            if ( m_input_buffer[i] == 'k' )
             {
-                if ( m_input_buffer[i] == 'k' )
-                {
-                    m_xid_packet_index = i;
-                    break;
-                }
+                // We have found a k later in the buffer. Setting the index will
+                // allow adjust_buffer_for_packet_recovery() to adjust the buffer
+                // accordingly in preparation for recovery.
+                m_xid_packet_index = i;
+                break;
             }
         }
+
+        // We never want to be here. This means that we either have random junk
+        // in the buffer, or that we just ate some other valid output from the
+        // device that was not meant for us. That can have mystifying consequences
+        // elsewhere, so take note.
+        CEDRUS_ASSERT( m_xid_packet_index == INVALID_PACKET_INDEX, "response_mgr just read something inappropriate from the device buffer!" );
     }
 
-    /*
-        Three scenarios at this point and why we're claiming that we now have 0 bytes in buffer:
+    if ( m_xid_packet_index == 0 && m_bytes_in_buffer == XID_PACKET_SIZE )
+    {
+        /* 
+        This is the end of our journey. We have either successfully cobbled together an XID packet
+        or we have failed utterly. Enjoy the complimentary assert if that was the case, and keep in
+        mind that we cannot process responses from XID devices that have been on for 4.66 hours.
+        If you're fairly certain 4.66 hours haven't passed and/or if you're getting SOME responses,
+        there's probably something terribly wrong!
+        */
 
-        1) We were satisfied with the packet. We have a fully formed response and everything is great.
-        We're pretending the buffer is now empty.
+        CEDRUS_ASSERT( input_found != NO_KEY_DETECTED, "We failed to get a response from an XID device! See comments for why it may have failed." );
+        m_bytes_in_buffer = 0; // Either way, we're starting fresh.
+    }
 
-        2) The packet was complete garbage and didn't even have a k in it! We're pretending that didn't
-        happen and moving on with our lives.
-
-        3) The packet was malformed, but had a k in it. At this point we cannot guarantee that we haven't
-        missed any responses or that this one will ultimately register, but we can attempt to salvage it.
-        adjust_buffer_for_packet_recovery() will do some math and set m_bytes_in_buffer to a different
-        value to try and keep us on track.
-    */
-    m_bytes_in_buffer = 0;
-
-    // True: that the packet was malformed, but can possibly still be salvaged. Proceed with recovery.
-    // False: the packet was either valid or garbled beyond all hope. Don't worry about it.
-    if( m_xid_packet_index != 0 )
+    // If m_xid_packet_index == INVALID_PACKET_INDEX, recovery is impossible, as
+    // we have no point of reference to attempt to reconstruct a response packet.
+    // If m_xid_packet_index is 0, there is no need to adjust the buffer for recovery.
+    // Otherwise, we need to flush some unwanted bytes from the buffer.
+    if( m_xid_packet_index != INVALID_PACKET_INDEX && m_xid_packet_index != 0 )
         adjust_buffer_for_packet_recovery();
 
     return input_found;
@@ -127,6 +140,8 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_
 
 void cedrus::response_mgr::adjust_buffer_for_packet_recovery()
 {
+    CEDRUS_ASSERT( m_xid_packet_index != INVALID_PACKET_INDEX, "We're about to crash, because someone misused this function!" );
+
     unsigned char *dest_char = m_input_buffer;
     unsigned char *src_char  = &m_input_buffer[m_xid_packet_index];
 
@@ -137,10 +152,8 @@ void cedrus::response_mgr::adjust_buffer_for_packet_recovery()
     }
 
     // check_for_keypress() uses m_bytes_in_buffer to know how many bytes
-    // to read, so we're setting it to "however many it would take to
-    // potentially finish an xid packet."
-    m_bytes_in_buffer = XID_PACKET_SIZE - m_xid_packet_index;
-    m_xid_packet_index = 0;
+    // to read, so we're setting it appropriately here.
+    m_bytes_in_buffer = m_bytes_in_buffer - m_xid_packet_index;
 }
 
 int cedrus::response_mgr::get_number_of_keys_down()
