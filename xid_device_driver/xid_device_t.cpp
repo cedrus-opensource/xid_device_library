@@ -169,12 +169,28 @@ int cedrus::xid_device_t::query_base_timer()
     return xid_glossary::query_base_timer( xid_con_ );
 }
 
-int cedrus::xid_device_t::get_debouncing_time( void )
+int cedrus::xid_device_t::get_trigger_debounce_time( void )
 {
-    return xid_glossary::get_debouncing_time(xid_con_);
+    return xid_glossary::get_trigger_debounce_time(xid_con_);
 }
 
-void cedrus::xid_device_t::set_debouncing_time( int time )
+void cedrus::xid_device_t::set_trigger_debounce_time( int time )
 {
-    xid_glossary::set_debouncing_time(xid_con_, time);
+    xid_glossary::set_trigger_debounce_time(xid_con_, time);
 }
+
+int cedrus::xid_device_t::get_button_debounce_time( void )
+{
+    return xid_glossary::get_button_debounce_time(xid_con_);
+}
+
+void cedrus::xid_device_t::set_button_debounce_time( int time )
+{
+    xid_glossary::set_button_debounce_time(xid_con_, time);
+}
+
+void cedrus::xid_device_t::restore_factory_defaults( void )
+{
+    xid_glossary::restore_factory_defaults(xid_con_);
+}
+

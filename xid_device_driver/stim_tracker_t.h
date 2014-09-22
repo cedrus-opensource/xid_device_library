@@ -76,6 +76,7 @@ namespace cedrus
         virtual void raise_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false);
         virtual void clear_lines();
+        virtual void restore_factory_defaults();
 
     private:
         char lines_state_;

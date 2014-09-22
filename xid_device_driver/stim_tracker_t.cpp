@@ -126,3 +126,8 @@ void cedrus::stim_tracker_t::clear_lines( void )
     xid_glossary::set_digital_output_lines_st(xid_con_, 0);
     lines_state_ = 0;
 }
+
+void cedrus::stim_tracker_t::restore_factory_defaults( void )
+{
+    xid_glossary::restore_factory_defaults(xid_con_);
+}

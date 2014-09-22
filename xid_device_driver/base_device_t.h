@@ -84,9 +84,13 @@ namespace cedrus
 
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_debouncing_time();
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_trigger_debounce_time();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_debouncing_time( int time );
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_trigger_debounce_time( int time );
+
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_button_debounce_time();
+
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_button_debounce_time( int time );
 
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_protocol( int protocol );
 
@@ -104,6 +108,7 @@ namespace cedrus
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
             bool leave_remaining_lines = false) = 0;
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines() = 0;
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT restore_factory_defaults() = 0;
     };
 
 } // namespace cedrus

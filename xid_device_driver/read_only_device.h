@@ -57,8 +57,6 @@ namespace cedrus
         
         virtual int get_outpost_model() = 0;
 
-        virtual int get_debouncing_time() = 0;
-
         // Every device needs these.
         virtual xid_device_config_t get_device_config() = 0;
         virtual int get_baud_rate() = 0;

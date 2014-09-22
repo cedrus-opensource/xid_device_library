@@ -114,6 +114,71 @@ std::string cedrus::xid_glossary::get_internal_product_name( boost::shared_ptr<x
     return std::string(return_info);
 }
 
+void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id, bool pst_proof )
+{
+    char product_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
+
+    int bytes_stored;
+
+    if ( pst_proof )
+    {
+        xid_con->flush_read_from_device_buffer();
+
+        bytes_stored = xid_con->send_xid_command_pst_proof(
+            "_d2",
+            product_id_return,
+            sizeof(product_id_return));
+    }
+    else
+    {
+        bytes_stored = xid_con->send_xid_command(
+            "_d2",
+            product_id_return,
+            sizeof(product_id_return));
+    }
+
+    CEDRUS_ASSERT( bytes_stored >= 1 || product_id_return[0] == 0,
+        "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our product_id_return buffer" );
+
+    // the preceding assertion makes sure we don't read GARBAGE from product_id_return[0] here:
+    *product_id = (int)(product_id_return[0]);
+
+    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
+
+    // Model IDs are meaningless for non-RB devices
+    if ( *product_id == PRODUCT_ID_RB )
+    {
+        char model_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
+        int bytes_count;
+
+        if ( pst_proof )
+        {
+            bytes_count = xid_con->send_xid_command_pst_proof(
+                "_d3",
+                model_id_return,
+                sizeof(model_id_return));
+        }
+        else
+        {
+            bytes_count = xid_con->send_xid_command(
+                "_d3",
+                model_id_return,
+                sizeof(model_id_return));
+        }
+
+        CEDRUS_ASSERT( bytes_count >= 1 || model_id_return[0] == 0,
+            "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+it will at least zero our buffer" );
+
+        *model_id = (int)(model_id_return[0]);
+
+        CEDRUS_ASSERT( *model_id >= 49 && *model_id <= 52, "_d3 command's result value must be between '1' and '4'" );
+    }
+    else
+        *model_id = 0;
+}
+
 int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con )
 {
     return cedrus::xid_glossary::get_major_firmware_version(xid_con, false);
@@ -348,71 +413,6 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
     return cedrus::xid_glossary::get_product_and_model_id(xid_con, product_id, model_id, true );
 }
 
-void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id, bool pst_proof )
-{
-    char product_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
-
-    int bytes_stored;
-
-    if ( pst_proof )
-    {
-        xid_con->flush_read_from_device_buffer();
-
-        bytes_stored = xid_con->send_xid_command_pst_proof(
-            "_d2",
-            product_id_return,
-            sizeof(product_id_return));
-    }
-    else
-    {
-        bytes_stored = xid_con->send_xid_command(
-            "_d2",
-            product_id_return,
-            sizeof(product_id_return));
-    }
-
-    CEDRUS_ASSERT( bytes_stored >= 1 || product_id_return[0] == 0,
-        "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
-it will at least zero our product_id_return buffer" );
-
-    // the preceding assertion makes sure we don't read GARBAGE from product_id_return[0] here:
-    *product_id = (int)(product_id_return[0]);
-
-    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
-
-    // Model IDs are meaningless for non-RB devices
-    if ( *product_id == PRODUCT_ID_RB )
-    {
-        char model_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
-        int bytes_count;
-
-        if ( pst_proof )
-        {
-            bytes_count = xid_con->send_xid_command_pst_proof(
-                "_d3",
-                model_id_return,
-                sizeof(model_id_return));
-        }
-        else
-        {
-            bytes_count = xid_con->send_xid_command(
-                "_d3",
-                model_id_return,
-                sizeof(model_id_return));
-        }
-
-        CEDRUS_ASSERT( bytes_count >= 1 || model_id_return[0] == 0,
-            "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
-it will at least zero our buffer" );
-
-        *model_id = (int)(model_id_return[0]);
-
-        CEDRUS_ASSERT( *model_id >= 49 && *model_id <= 52, "_d3 command's result value must be between '1' and '4'" );
-    }
-    else
-        *model_id = 0;
-}
-
 unsigned int cedrus::xid_glossary::get_pulse_duration( boost::shared_ptr<xid_con_t> xid_con )
 {
     char return_info[7];
@@ -491,7 +491,33 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
     xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), &bytes_written);
 }
 
-int cedrus::xid_glossary::get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con )
+int cedrus::xid_glossary::get_trigger_debounce_time( boost::shared_ptr<xid_con_t> xid_con )
+{
+    char threshold_return[4]; // we rely on send_xid_command to zero-initialize this buffer
+
+    xid_con->send_xid_command(
+        "_f5",
+        threshold_return,
+        sizeof(threshold_return));
+
+    CEDRUS_ASSERT( boost::starts_with( threshold_return , "_f5" ), "get_trigger_debounce_time's xid query result must start with _f5" );
+
+    unsigned char return_val = (unsigned char)(threshold_return[3]);
+    return (int)(return_val);
+}
+
+void cedrus::xid_glossary::set_trigger_debounce_time( boost::shared_ptr<xid_con_t> xid_con, int time )
+{
+    int bytes_written;
+    char set_debouncing_time_cmd[3];
+    set_debouncing_time_cmd[0] = 'f';
+    set_debouncing_time_cmd[1] = '5';
+    set_debouncing_time_cmd[2] = time;
+
+    xid_con->write((unsigned char*)set_debouncing_time_cmd, 3, &bytes_written);
+}
+
+int cedrus::xid_glossary::get_button_debounce_time( boost::shared_ptr<xid_con_t> xid_con )
 {
     char threshold_return[4]; // we rely on send_xid_command to zero-initialize this buffer
 
@@ -500,13 +526,13 @@ int cedrus::xid_glossary::get_debouncing_time( boost::shared_ptr<xid_con_t> xid_
         threshold_return,
         sizeof(threshold_return));
 
-    CEDRUS_ASSERT( boost::starts_with( threshold_return , "_f6" ), "get_debouncing_time's xid query result must start with _f6" );
+    CEDRUS_ASSERT( boost::starts_with( threshold_return , "_f6" ), "get_button_debounce_time's xid query result must start with _f6" );
 
     unsigned char return_val = (unsigned char)(threshold_return[3]);
     return (int)(return_val);
 }
 
-void cedrus::xid_glossary::set_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time )
+void cedrus::xid_glossary::set_button_debounce_time( boost::shared_ptr<xid_con_t> xid_con, int time )
 {
     int bytes_written;
     char set_debouncing_time_cmd[3];
@@ -515,6 +541,12 @@ void cedrus::xid_glossary::set_debouncing_time( boost::shared_ptr<xid_con_t> xid
     set_debouncing_time_cmd[2] = time;
 
     xid_con->write((unsigned char*)set_debouncing_time_cmd, 3, &bytes_written);
+}
+
+void cedrus::xid_glossary::restore_factory_defaults( boost::shared_ptr<xid_con_t> xid_con )
+{
+    int bytes_written;
+    xid_con->write((unsigned char*)"f7", 2, &bytes_written);
 }
 
 int cedrus::xid_glossary::get_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con )

@@ -45,10 +45,16 @@ namespace cedrus
           const char c3,
           const char c4 );
 
+        // _d1
         static std::string get_internal_product_name(boost::shared_ptr<xid_con_t> xid_con);
 
+        // _d2 and _d3
+        static void get_product_and_model_id( boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id );
+
+        // _d4
         static int get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con );
 
+        // _d5
         static int get_minor_firmware_version( boost::shared_ptr<xid_con_t> xid_con );
 
         // _d6 XID 2.0 only.
@@ -72,20 +78,25 @@ namespace cedrus
         // ts XID 2.0 only
         static void set_scanner_trigger_filter( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
+        // ah
         static void set_digital_output_lines_xid( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines );
 
+        // mh
         static void set_digital_output_lines_st( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines );
 
+        // _c1
         static std::string get_device_protocol( boost::shared_ptr<xid_con_t> xid_con );
 
+        // c1
         static void set_device_protocol( boost::shared_ptr<xid_con_t> xid_con, int protocol );
 
+        // f1
         static void set_device_baud_rate( boost::shared_ptr<xid_con_t> xid_con, int rate );
 
-        static void get_product_and_model_id( boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id );
-
+        // _mp
         static unsigned int get_pulse_duration( boost::shared_ptr<xid_con_t> xid_con );
 
+        // mp
         static void set_pulse_duration( boost::shared_ptr<xid_con_t> xid_con, unsigned int duration );
 
         // _a1 deprecated in XID 2.0
@@ -97,11 +108,20 @@ namespace cedrus
         // a1 deprecated in XID 2.0
         static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
+        // _f5
+        static int get_trigger_debounce_time( boost::shared_ptr<xid_con_t> xid_con );
+
+        // f5
+        static void set_trigger_debounce_time( boost::shared_ptr<xid_con_t> xid_con, int time );
+
         // _f6
-        static int get_debouncing_time( boost::shared_ptr<xid_con_t> xid_con );
+        static int get_button_debounce_time( boost::shared_ptr<xid_con_t> xid_con );
 
         // f6
-        static void set_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time );
+        static void set_button_debounce_time( boost::shared_ptr<xid_con_t> xid_con, int time );
+
+        // f7
+        static void restore_factory_defaults( boost::shared_ptr<xid_con_t> xid_con );
 
         // _a6
         static int get_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con );
@@ -110,6 +130,7 @@ namespace cedrus
         static void set_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time );
 
 private:
+        // ah or mh
         static void set_digital_output_lines( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines, char product_specific_prefix );
 
         // _d4

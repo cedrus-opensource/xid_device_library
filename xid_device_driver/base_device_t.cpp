@@ -127,12 +127,22 @@ void cedrus::base_device_t::set_accessory_connector_mode( int /*mode*/ )
     // nothing
 }
 
-int cedrus::base_device_t::get_debouncing_time( void )
+int cedrus::base_device_t::get_trigger_debounce_time( void )
 {
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_debouncing_time( int /*time*/ )
+void cedrus::base_device_t::set_trigger_debounce_time( int /*time*/ )
+{
+    // nothing
+}
+
+int cedrus::base_device_t::get_button_debounce_time( void )
+{
+    return INVALID_RETURN_VALUE;
+}
+
+void cedrus::base_device_t::set_button_debounce_time( int /*time*/ )
 {
     // nothing
 }
