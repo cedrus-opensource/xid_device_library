@@ -107,7 +107,7 @@ int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con
 std::string cedrus::xid_glossary::get_internal_product_name( boost::shared_ptr<xid_con_t> xid_con )
 {
     char return_info[100];
-    xid_con->send_xid_command(
+    xid_con->send_xid_command_slow(
         "_d1",
         return_info,
         sizeof(return_info));
@@ -232,6 +232,8 @@ int cedrus::xid_glossary::get_outpost_model( boost::shared_ptr<xid_con_t> xid_co
         "_d6",
         outpost_return,
         sizeof(outpost_return));
+
+    CEDRUS_ASSERT( (outpost_return[0] >= 48 && outpost_return[0] <= 52) || outpost_return[0] == 'x', "_d6 command's result value must be between '0' and '4' or be 'x'" );
 
     return (int)(outpost_return[0]);
 }
