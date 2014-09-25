@@ -493,6 +493,32 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
     xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), &bytes_written);
 }
 
+bool cedrus::xid_glossary::get_trigger_default( boost::shared_ptr<xid_con_t> xid_con )
+{
+    char default_return[4]; // we rely on send_xid_command to zero-initialize this buffer
+
+    xid_con->send_xid_command(
+        "_f4",
+        default_return,
+        sizeof(default_return));
+
+    CEDRUS_ASSERT( boost::starts_with( default_return , "_f4" ), "get_trigger_default's xid query result must start with _f4" );
+    CEDRUS_ASSERT( default_return[3] == '0' || default_return[3] == '1', "get_trigger_default's value must be either '0' or '1'" );
+
+    return default_return[3] == '1';
+}
+
+void cedrus::xid_glossary::set_trigger_default( boost::shared_ptr<xid_con_t> xid_con, bool default_on )
+{
+    int bytes_written;
+    char set_trigger_default_cmd[3];
+    set_trigger_default_cmd[0] = 'f';
+    set_trigger_default_cmd[1] = '4';
+    set_trigger_default_cmd[2] = (int)default_on + '0';
+
+    xid_con->write((unsigned char*)set_trigger_default_cmd, 3, &bytes_written);
+}
+
 int cedrus::xid_glossary::get_trigger_debounce_time( boost::shared_ptr<xid_con_t> xid_con )
 {
     char threshold_return[4]; // we rely on send_xid_command to zero-initialize this buffer

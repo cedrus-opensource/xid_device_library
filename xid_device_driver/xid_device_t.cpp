@@ -169,6 +169,16 @@ int cedrus::xid_device_t::query_base_timer()
     return xid_glossary::query_base_timer( xid_con_ );
 }
 
+bool cedrus::xid_device_t::get_trigger_default( void )
+{
+    return xid_glossary::get_trigger_default(xid_con_);
+}
+
+void cedrus::xid_device_t::set_trigger_default( bool default_on )
+{
+    xid_glossary::set_trigger_default(xid_con_, default_on);
+}
+
 int cedrus::xid_device_t::get_trigger_debounce_time( void )
 {
     return xid_glossary::get_trigger_debounce_time(xid_con_);

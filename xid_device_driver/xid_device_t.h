@@ -84,6 +84,8 @@ namespace cedrus
         virtual int  get_minor_firmware_version();
         virtual std::string get_internal_product_name();
         virtual void clear_lines();
+        virtual bool get_trigger_default();
+        virtual void set_trigger_default( bool default_on );
         virtual int get_trigger_debounce_time();
         virtual void set_trigger_debounce_time( int time );
         virtual int get_button_debounce_time();
