@@ -93,12 +93,14 @@ bool cedrus::xid_con_t::close()
 
 bool cedrus::xid_con_t::flush_write_to_device_buffer()
 {
-    return ( tcflush( m_darwinPimpl->m_FileDescriptor, TCIFLUSH ) == 0 );
+    // TCOFLUSH flushes data written but not transmitted.    
+    return ( tcflush( m_darwinPimpl->m_FileDescriptor, TCOFLUSH ) == 0 );
 }
 
 bool cedrus::xid_con_t::flush_read_from_device_buffer()
 {
-    return ( tcflush( m_darwinPimpl->m_FileDescriptor, TCOFLUSH ) == 0 );
+    // TCIFLUSH flushes data received but not read.
+    return ( tcflush( m_darwinPimpl->m_FileDescriptor, TCIFLUSH ) == 0 );
 }
 
 int cedrus::xid_con_t::open()
