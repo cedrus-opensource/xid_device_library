@@ -166,6 +166,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
             if(xid_con->open() == XID_NO_ERR)
             {
+                // This may seem like a good place to flush, but open() has taken care of that by now.
+
                 // NOTE THE USAGE OF xid_glossary_pst_proof IN THIS CODE. IT'S IMPORTANT!
                 std::string info = xid_glossary_pst_proof::get_device_protocol(xid_con);
 
@@ -180,7 +182,6 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                         // Force the device into XID mode if it isn't. This is an XID library.
                         xid_glossary::set_device_protocol(xid_con, 0);
 
-                        xid_con->flush_read_from_device_buffer();
                         mode_changed = true;
                     }
 

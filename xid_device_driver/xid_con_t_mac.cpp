@@ -314,6 +314,9 @@ bool cedrus::xid_con_t::setup_com_port()
 	{
 		flush_write_to_device_buffer();
 		flush_read_from_device_buffer();
+
+        // This seems to ensure that the buffers actually get flushed.
+        usleep(10*1000);
 	}
 
 	return status;

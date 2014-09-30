@@ -187,7 +187,7 @@ int cedrus::xid_con_t::send_xid_command_pst_proof(
         }
 
         ++num_retries;
-    } while (num_retries < 15 && bytes_stored < max_out_response_size);
+    } while (num_retries < 50 && bytes_stored < max_out_response_size);
 
     return bytes_stored;
 }
