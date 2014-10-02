@@ -87,7 +87,8 @@ namespace cedrus
          *
          * @returns a device configuration object
          */
-        static boost::shared_ptr<xid_device_config_t> config_for_device(boost::property_tree::ptree * pt);
+        // This is exported for testing purposes only!
+        static CEDRUS_XIDDRIVER_IMPORTEXPORT boost::shared_ptr<xid_device_config_t> config_for_device(boost::property_tree::ptree * pt);
 
         CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_config_t(void);
 
@@ -109,7 +110,7 @@ namespace cedrus
          */
         char CEDRUS_XIDDRIVER_IMPORTEXPORT digital_out_prefix() const;
 
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT is_port_on_ignore_list( std::string port_name ) const;
+        bool is_port_on_ignore_list( std::string port_name ) const;
 
         /**
          * Returns the name of the device
@@ -145,7 +146,7 @@ namespace cedrus
 
         std::vector<device_port> CEDRUS_XIDDRIVER_IMPORTEXPORT get_vector_of_ports() const;
 
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT does_config_match_device( int device_id, int model_id, int major_firmware_ver )  const;
+        bool does_config_match_device( int device_id, int model_id, int major_firmware_ver )  const;
 
 
     public:

@@ -43,6 +43,7 @@ if sys.platform == 'darwin':
 defines = []
 
 include_path = [ prefix + 'scons_helpers/cpp_src/' ]
+include_path += [ prefix + 'xid_device_driver/' ]
 
 
 cxxflags = []

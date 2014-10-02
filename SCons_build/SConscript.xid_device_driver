@@ -23,6 +23,7 @@ if env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
 
 inputs = [
     prefix + 'xid_device_driver/xid_con_t.cpp',
+    prefix + 'xid_device_driver/xid_con_test_only.cpp',
     prefix + 'xid_device_driver/xid_device_config_t.cpp',
     prefix + 'xid_device_driver/response_mgr.cpp',
     prefix + 'xid_device_driver/xid_glossary.cpp',

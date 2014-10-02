@@ -1,7 +1,6 @@
-
 #include "response_mgr.h"
 
-#include "xid_con_t.h"
+#include "interface_xid_con.h"
 #include "xid_device_config_t.h"
 #include "xid_glossary.h"
 #include "constants.h"
@@ -10,8 +9,7 @@
 
 cedrus::response_mgr::response_mgr( void )
     : m_bytes_in_buffer(0),
-      m_xid_packet_index(INVALID_PACKET_INDEX),
-      num_keys_down_(0)
+      m_xid_packet_index(INVALID_PACKET_INDEX)
 {
     for(int i = 0; i < XID_PACKET_SIZE; ++i)
     {
@@ -60,11 +58,6 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
                 ( m_input_buffer[2], m_input_buffer[3], m_input_buffer[4], m_input_buffer[5] );
 
             input_found = static_cast<key_state>(FOUND_KEY_DOWN + !res.was_pressed);
-
-            if(input_found == FOUND_KEY_DOWN)
-                num_keys_down_++;
-            else
-                num_keys_down_--;
         }
     }
     else
@@ -113,7 +106,7 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
     return input_found;
 }
 
-void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<xid_con_t> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config)
+void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<interface_xid_con> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config)
 {
     int bytes_read = 0;
     response res;
@@ -156,11 +149,6 @@ void cedrus::response_mgr::adjust_buffer_for_packet_recovery()
     m_bytes_in_buffer = m_bytes_in_buffer - m_xid_packet_index;
 }
 
-int cedrus::response_mgr::get_number_of_keys_down()
-{
-    return num_keys_down_;
-}
-
 bool cedrus::response_mgr::has_queued_responses() const
 {
     return !response_queue_.empty();
@@ -168,8 +156,12 @@ bool cedrus::response_mgr::has_queued_responses() const
 
 cedrus::response cedrus::response_mgr::get_next_response()
 {
-    response res = response_queue_.front();
-    response_queue_.pop();
+    response res;
+    if ( !response_queue_.empty() )
+    {
+        res = response_queue_.front();
+        response_queue_.pop();
+    }
 
     return res;
 }

@@ -32,7 +32,7 @@
 #ifndef XID_CON_T_H
 #define XID_CON_T_H
 
-
+#include "interface_xid_con.h"
 #include <boost/shared_ptr.hpp>
 
 #ifdef __APPLE__
@@ -58,7 +58,7 @@ namespace cedrus
      * communicating with a 4 MHz XID device.  It also handles the parsing
      * of the XID protocol 6-byte packats.
      */
-    class xid_con_t
+    class xid_con_t : public interface_xid_con
     {
     public:
         enum
