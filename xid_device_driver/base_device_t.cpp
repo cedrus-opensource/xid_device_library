@@ -129,7 +129,7 @@ void cedrus::base_device_t::set_accessory_connector_mode( int /*mode*/ )
 
 bool cedrus::base_device_t::get_trigger_default( void )
 {
-    return INVALID_RETURN_VALUE;
+    return false;
 }
 
 void cedrus::base_device_t::set_trigger_default( bool /*default_on*/ )
