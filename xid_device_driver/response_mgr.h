@@ -50,8 +50,7 @@ namespace cedrus
             port(-1),
             key(-1),
             was_pressed(false),
-            reaction_time(-1),
-            key_state(NO_KEY_DETECTED){}
+            reaction_time(-1){}
 
         //port the response came from. Usualy 0
         int port;
@@ -63,9 +62,6 @@ namespace cedrus
         bool was_pressed;
 
         int reaction_time;
-
-        //key state. NO_KEY_DETECTED, FOUND_KEY_UP, or FOUND_KEY_DOWN
-        cedrus::key_state key_state;
     };
 
     class response_mgr
@@ -91,7 +87,8 @@ namespace cedrus
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         void CEDRUS_XIDDRIVER_IMPORTEXPORT check_for_keypress(boost::shared_ptr<interface_xid_con> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config);
 
-        bool has_queued_responses() const;
+        // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses() const;
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();

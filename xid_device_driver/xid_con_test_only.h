@@ -14,6 +14,7 @@ namespace cedrus
         xid_con_test_only( char * input_buffer, int size );
 
         bool read( unsigned char *in_buffer, int bytes_to_read, int *bytes_read);
+        void insert_more_data_into_buffer( char * input_buffer, int size );
 
     private:
         std::stringstream m_input_buffer;

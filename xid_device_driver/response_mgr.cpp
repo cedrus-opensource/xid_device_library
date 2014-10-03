@@ -48,19 +48,27 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
         // If this is false, all is not yet lost. Looks like we have a partial XID
         // packet for whatever reason. We don't need to adjust the buffer in any way,
         // we'll just read in fewer bytes on the next pass in an attempt to finish it.
-        if(m_bytes_in_buffer == XID_PACKET_SIZE && m_input_buffer[5] == '\0')
+        if( m_bytes_in_buffer == XID_PACKET_SIZE )
         {
-            res.was_pressed = (m_input_buffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
-            res.port = m_input_buffer[1] & 0x0F;
-            res.key = (m_input_buffer[1] & 0xE0) >> 5;
+            // However, if we have a packet's worth of data, but it's not a valid packet,
+            // things are starting to head south.
+            if( m_input_buffer[5] == '\0' )
+            {
+                res.was_pressed = (m_input_buffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
+                res.port = m_input_buffer[1] & 0x0F;
+                res.key = (m_input_buffer[1] & 0xE0) >> 5;
 
-            res.reaction_time = xid_glossary::adjust_endianness_chars_to_uint
-                ( m_input_buffer[2], m_input_buffer[3], m_input_buffer[4], m_input_buffer[5] );
+                res.reaction_time = xid_glossary::adjust_endianness_chars_to_uint
+                    ( m_input_buffer[2], m_input_buffer[3], m_input_buffer[4], m_input_buffer[5] );
 
-            input_found = static_cast<key_state>(FOUND_KEY_DOWN + !res.was_pressed);
+                input_found = static_cast<key_state>(FOUND_KEY_DOWN + !res.was_pressed);
+            }
+            else
+                m_xid_packet_index = INVALID_PACKET_INDEX;
         }
     }
-    else
+
+    if ( m_xid_packet_index == INVALID_PACKET_INDEX )
     {
         // Something is amiss, but perhaps the packet is later in the buffer?
         for(int i = 1; i < XID_PACKET_SIZE; ++i)
@@ -129,6 +137,10 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<interface_xid_co
 
         response_queue_.push(res);
     }
+
+    // This means we have a partial packet in the buffer. Let's attempt to finish it.
+    if ( (bytes_read > 0) && (m_bytes_in_buffer > 0 && m_bytes_in_buffer < XID_PACKET_SIZE) )
+        check_for_keypress(port_connection, dev_config);
 }
 
 void cedrus::response_mgr::adjust_buffer_for_packet_recovery()
@@ -147,6 +159,9 @@ void cedrus::response_mgr::adjust_buffer_for_packet_recovery()
     // check_for_keypress() uses m_bytes_in_buffer to know how many bytes
     // to read, so we're setting it appropriately here.
     m_bytes_in_buffer = m_bytes_in_buffer - m_xid_packet_index;
+
+    // Clean out the rest of the buffer past the partial packet
+    memset( &m_input_buffer[m_bytes_in_buffer], 0x00, (XID_PACKET_SIZE - m_bytes_in_buffer) );
 }
 
 bool cedrus::response_mgr::has_queued_responses() const
@@ -154,10 +169,13 @@ bool cedrus::response_mgr::has_queued_responses() const
     return !response_queue_.empty();
 }
 
+// If there are no processed responses, this will return a default response
+// with most of the properties resolving to -1 and such. To avoid that, verify
+// that responses exist with has_queued_responses()
 cedrus::response cedrus::response_mgr::get_next_response()
 {
     response res;
-    if ( !response_queue_.empty() )
+    if ( has_queued_responses() )
     {
         res = response_queue_.front();
         response_queue_.pop();
