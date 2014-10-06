@@ -137,10 +137,6 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<interface_xid_co
 
         response_queue_.push(res);
     }
-
-    // This means we have a partial packet in the buffer. Let's attempt to finish it.
-    if ( (bytes_read > 0) && (m_bytes_in_buffer > 0 && m_bytes_in_buffer < XID_PACKET_SIZE) )
-        check_for_keypress(port_connection, dev_config);
 }
 
 void cedrus::response_mgr::adjust_buffer_for_packet_recovery()

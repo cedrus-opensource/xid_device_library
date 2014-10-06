@@ -41,16 +41,6 @@ protected:
     cedrus::device_port m_dummyDevicePort;
 };
 
-
-TEST_F( TestKeypressPackets, TestRejectInvalidFile_01 )
-{
-    int x = 0;
-    int y = 1;
-
-    // if you two FAILING ones, you'll see two failures.
-    EXPECT_FALSE( x == y ); // make 1 fail, then the other.
-}
-
 // Read in a single valid keypress. It should resolve to "Port 0, Button 8 Pressed"
 TEST_F( TestKeypressPackets, TestSingleValidKeypress )
 {
@@ -236,13 +226,16 @@ TEST_F( TestKeypressPackets, TestValidKeypressWithJunkSimultaneous )
     boost::shared_ptr<cedrus::xid_con_test_only> dummyConnection( new cedrus::xid_con_test_only(testPacket, sizeof(testPacket)) );
 
     m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
+    m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
+    m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
+    m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
+
     cedrus::response res = m_responseMgr.get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
     EXPECT_TRUE(res.was_pressed == false);
 
-    m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
     res = m_responseMgr.get_next_response();
 
     EXPECT_TRUE(res.port == 0);
@@ -255,6 +248,7 @@ TEST_F( TestKeypressPackets, TestValidKeypressWithJunkSimultaneous )
 // This is something that can and does happen and steps should be taken to
 // mitigate it when the library is used. There might be something in the buffer
 // when we go to look for keypresses, and the response manager will eat it.
+// This is a variation with data coming in slowly over time.
 TEST_F( TestKeypressPackets, TestValidKeypressWithJunkGradual )
 {
     Cedrus::Suppress_All_Assertions();
@@ -273,32 +267,28 @@ TEST_F( TestKeypressPackets, TestValidKeypressWithJunkGradual )
     testPacket2[0] = '1';
     testPacket2[1] = '1';
     testPacket2[2] = 0;
-    testPacket2[3] = '_'; // return from a _lr
-    testPacket2[4] = 'l';
-    testPacket2[5] = 'r';
+    testPacket2[3] = 'k'; // complete packet start
+    testPacket2[4] = '0';
+    testPacket2[5] = '1';
 
-    char testPacket3[5];
-    testPacket3[0] = '0';
-    testPacket3[1] = 'k'; // complete packet start
-    testPacket3[2] = 0;
-    testPacket3[3] = '1';
-    testPacket3[4] = '1';
+    char testPacket3[2];
+    testPacket3[0] = '1';
+    testPacket3[1] = '1';
 
-    char testPacket4[3];
-    testPacket4[0] = '1';
-    testPacket4[1] = 0;
-    testPacket4[2] = 'd';
+    char testPacket4[6];
+    testPacket4[0] = 0;
+    testPacket4[1] = '_';
+    testPacket4[2] = 'l';
+    testPacket4[3] = 'r'; // return from a _lr
+    testPacket4[4] = 0;
+    testPacket4[5] = 'd';
 
     boost::shared_ptr<cedrus::xid_con_test_only> dummyConnection( new cedrus::xid_con_test_only(testPacket1, sizeof(testPacket1)) );
     m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
 
+    EXPECT_FALSE(m_responseMgr.has_queued_responses());
+
     dummyConnection->insert_more_data_into_buffer(testPacket2, sizeof(testPacket2));
-    m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
-
-    dummyConnection->insert_more_data_into_buffer(testPacket3, sizeof(testPacket3));
-    m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
-
-    dummyConnection->insert_more_data_into_buffer(testPacket4, sizeof(testPacket4));
     m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
 
     cedrus::response res = m_responseMgr.get_next_response();
@@ -307,11 +297,19 @@ TEST_F( TestKeypressPackets, TestValidKeypressWithJunkGradual )
     EXPECT_TRUE(res.key == 8);
     EXPECT_TRUE(res.was_pressed == false);
 
+    dummyConnection->insert_more_data_into_buffer(testPacket3, sizeof(testPacket3));
+    m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
+
+    EXPECT_FALSE(m_responseMgr.has_queued_responses());
+
+    dummyConnection->insert_more_data_into_buffer(testPacket4, sizeof(testPacket4));
+    m_responseMgr.check_for_keypress(dummyConnection, m_dummyConfig);
+
     res = m_responseMgr.get_next_response();
 
     EXPECT_TRUE(res.port == 0);
-    EXPECT_TRUE(res.key == 1);
-    EXPECT_TRUE(res.was_pressed == false);
+    EXPECT_TRUE(res.key == 2);
+    EXPECT_TRUE(res.was_pressed == true);
 
     Cedrus::UnSuppress_All_Assertions();
 }
