@@ -87,7 +87,7 @@ int cedrus::xid_con_t::send_xid_command(
     int max_out_response_size)
 {
     // 15 has been determined to be enough for most commands
-    return send_xid_command( in_command, out_response, max_out_response_size, 15);
+    return send_xid_command( in_command, out_response, max_out_response_size, 25);
 }
 
 int cedrus::xid_con_t::send_xid_command_slow(
