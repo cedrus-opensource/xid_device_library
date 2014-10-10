@@ -111,7 +111,10 @@ std::string cedrus::xid_glossary::get_internal_product_name( boost::shared_ptr<x
         "_d1",
         return_info,
         sizeof(return_info));
-    return std::string(return_info);
+
+    std::string return_name(return_info);
+
+    return return_name.empty() ? std::string("Error Retrieving Name") : return_name;
 }
 
 void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id, bool pst_proof )
@@ -205,9 +208,11 @@ int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_
             sizeof(major_return));
     }
 
-    CEDRUS_ASSERT( major_return[0] >= 48 && major_return[0] <= 50, "_d4 command's result value must be between '0' and '2'" );
+    bool return_valid = (major_return[0] >= 48 && major_return[0] <= 50);
 
-    return major_return[0]-'0';
+    CEDRUS_ASSERT( return_valid, "_d4 command's result value must be between '0' and '2'" );
+
+    return return_valid ? major_return[0]-'0' : INVALID_RETURN_VALUE;
 }
 
 int cedrus::xid_glossary::get_minor_firmware_version( boost::shared_ptr<xid_con_t> xid_con )
@@ -219,9 +224,11 @@ int cedrus::xid_glossary::get_minor_firmware_version( boost::shared_ptr<xid_con_
         minor_return,
         sizeof(minor_return));
 
-    CEDRUS_ASSERT( minor_return[0] >= 48, "_d5 command's result value must be '0' or greater" );
+    bool return_valid = minor_return[0] >= 48;
 
-    return minor_return[0]-'0';
+    CEDRUS_ASSERT( return_valid, "_d5 command's result value must be '0' or greater" );
+
+    return return_valid ? minor_return[0]-'0' : INVALID_RETURN_VALUE;
 }
 
 int cedrus::xid_glossary::get_outpost_model( boost::shared_ptr<xid_con_t> xid_con )
@@ -233,9 +240,11 @@ int cedrus::xid_glossary::get_outpost_model( boost::shared_ptr<xid_con_t> xid_co
         outpost_return,
         sizeof(outpost_return));
 
-    CEDRUS_ASSERT( (outpost_return[0] >= 48 && outpost_return[0] <= 52) || outpost_return[0] == 'x', "_d6 command's result value must be between '0' and '4' or be 'x'" );
+    bool return_valid = (outpost_return[0] >= 48 && outpost_return[0] <= 52) || outpost_return[0] == 'x';
 
-    return (int)(outpost_return[0]);
+    CEDRUS_ASSERT( return_valid, "_d6 command's result value must be between '0' and '4' or be 'x'" );
+
+    return return_valid ? (int)(outpost_return[0]) : INVALID_RETURN_VALUE;
 }
 
 int cedrus::xid_glossary::get_hardware_generation( boost::shared_ptr<xid_con_t> xid_con )
@@ -262,10 +271,13 @@ int cedrus::xid_glossary::get_light_sensor_mode( boost::shared_ptr<xid_con_t> xi
                    "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
 it will at least zero our buffer" );
 
-    CEDRUS_ASSERT( boost::starts_with( return_info , "_lr" ), "get_light_sensor_mode xid query result must start with _lr" );
-    CEDRUS_ASSERT( return_info[3] >= 48 && return_info[3] <= 51, "get_light_sensor_mode's return value must be between '0' and '3'" );
+    bool return_valid_lr = boost::starts_with( return_info , "_lr" );
+    bool return_valid_val = return_info[3] >= 48 && return_info[3] <= 51;
 
-    return return_info[3]-'0';
+    CEDRUS_ASSERT( return_valid_lr, "get_light_sensor_mode xid query result must start with _lr" );
+    CEDRUS_ASSERT( return_valid_val, "get_light_sensor_mode's return value must be between '0' and '3'" );
+
+    return (return_valid_lr && return_valid_val) ? return_info[3]-'0' : INVALID_RETURN_VALUE;
 }
 
 void cedrus::xid_glossary::set_light_sensor_mode( boost::shared_ptr<xid_con_t> xid_con, int mode )
@@ -288,10 +300,12 @@ int cedrus::xid_glossary::get_light_sensor_threshold( boost::shared_ptr<xid_con_
         threshold_return,
         sizeof(threshold_return));
 
-    CEDRUS_ASSERT( boost::starts_with( threshold_return , "_lt" ), "get_light_sensor_threshold xid query result must start with _lt" );
+    bool return_valid = boost::starts_with( threshold_return , "_lt" );
+
+    CEDRUS_ASSERT( return_valid, "get_light_sensor_threshold xid query result must start with _lt" );
 
     unsigned char return_val = (unsigned char)(threshold_return[3]);
-    return (int)(return_val);
+    return return_valid ? (int)(return_val) : INVALID_RETURN_VALUE;
 }
 
 void cedrus::xid_glossary::set_light_sensor_threshold( boost::shared_ptr<xid_con_t> xid_con, int threshold )
@@ -377,12 +391,14 @@ std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con
                    "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
 it will at least zero our buffer" );
 
+    bool return_valid = boost::starts_with( return_info , "_xid" );
+
     // It's okay for this to sometimes return nothing at all. That just
     // means we queried an incorrect baud and there's nothing wrong with that.
-    CEDRUS_ASSERT( boost::starts_with( return_info , "_xid" ) || return_info[0] == 0,
+    CEDRUS_ASSERT( return_valid || return_info[0] == 0,
         "get_device_protocol's return value must start with _xid" );
 
-    return std::string(return_info, sizeof(return_info));
+    return return_valid ? std::string(return_info, sizeof(return_info)) : std::string("Invalid Protocol");
 }
 
 std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con_t> xid_con )
@@ -460,10 +476,13 @@ int cedrus::xid_glossary::get_accessory_connector_mode( boost::shared_ptr<xid_co
         return_info,
         sizeof(return_info));
 
-    CEDRUS_ASSERT( boost::starts_with( return_info , "_a1" ), "get_accessory_connector_mode's return value must start with _a1" );
-    CEDRUS_ASSERT( return_info[3] >= 48 && return_info[3] <= 51, "get_accessory_connector_device's return value must be between '0' and '3'" );
+    bool return_valid_a1 = boost::starts_with( return_info , "_a1" );
+    bool return_valid_val = return_info[3] >= 48 && return_info[3] <= 51;
 
-    return return_info[3]-'0';
+    CEDRUS_ASSERT( return_valid_a1, "get_accessory_connector_mode's return value must start with _a1" );
+    CEDRUS_ASSERT( return_valid_val, "get_accessory_connector_device's return value must be between '0' and '3'" );
+
+    return (return_valid_a1 && return_valid_val) ? return_info[3]-'0' : INVALID_RETURN_VALUE;
 }
 
 int cedrus::xid_glossary::get_accessory_connector_device( boost::shared_ptr<xid_con_t> xid_con )
@@ -478,10 +497,13 @@ int cedrus::xid_glossary::get_accessory_connector_device( boost::shared_ptr<xid_
                    "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
 it will at least zero our buffer" );
 
-    CEDRUS_ASSERT( boost::starts_with( return_info , "_aa" ), "get_accessory_connector_device's xid query result must start with _aa" );
-    CEDRUS_ASSERT( return_info[3] >= 0 && return_info[3] <= 64, "get_accessory_connector_device's return value must be between 0 and 64" );
+    bool return_valid_aa = boost::starts_with( return_info , "_aa" );
+    bool return_valid_val = return_info[3] >= 0 && return_info[3] <= 64;
 
-    return return_info[3];
+    CEDRUS_ASSERT( return_valid_aa, "get_accessory_connector_device's xid query result must start with _aa" );
+    CEDRUS_ASSERT( return_valid_val, "get_accessory_connector_device's return value must be between 0 and 64" );
+
+    return (return_valid_aa && return_valid_val) ? return_info[3] : INVALID_RETURN_VALUE;
 }
 
 void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode )
@@ -493,7 +515,9 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
     xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), &bytes_written);
 }
 
-bool cedrus::xid_glossary::get_trigger_default( boost::shared_ptr<xid_con_t> xid_con )
+// This function's intended return is essentially a boolean. However, that prevents us from
+// verifying that the query succeeded, which is why it's an int instead.
+int cedrus::xid_glossary::get_trigger_default( boost::shared_ptr<xid_con_t> xid_con )
 {
     char default_return[4]; // we rely on send_xid_command to zero-initialize this buffer
 
@@ -502,10 +526,13 @@ bool cedrus::xid_glossary::get_trigger_default( boost::shared_ptr<xid_con_t> xid
         default_return,
         sizeof(default_return));
 
-    CEDRUS_ASSERT( boost::starts_with( default_return , "_f4" ), "get_trigger_default's xid query result must start with _f4" );
-    CEDRUS_ASSERT( default_return[3] == '0' || default_return[3] == '1', "get_trigger_default's value must be either '0' or '1'" );
+    bool return_valid_f4 = boost::starts_with( default_return , "_f4" );
+    bool return_valid_val = default_return[3] == '0' || default_return[3] == '1';
 
-    return default_return[3] == '1';
+    CEDRUS_ASSERT( return_valid_f4, "get_trigger_default's xid query result must start with _f4" );
+    CEDRUS_ASSERT( return_valid_val, "get_trigger_default's value must be either '0' or '1'" );
+
+    return (return_valid_f4 && return_valid_val) ? default_return[3] == '1' : INVALID_RETURN_VALUE;
 }
 
 void cedrus::xid_glossary::set_trigger_default( boost::shared_ptr<xid_con_t> xid_con, bool default_on )
@@ -528,10 +555,12 @@ int cedrus::xid_glossary::get_trigger_debounce_time( boost::shared_ptr<xid_con_t
         threshold_return,
         sizeof(threshold_return));
 
-    CEDRUS_ASSERT( boost::starts_with( threshold_return , "_f5" ), "get_trigger_debounce_time's xid query result must start with _f5" );
+    bool return_valid = boost::starts_with( threshold_return , "_f5" );
+
+    CEDRUS_ASSERT( return_valid, "get_trigger_debounce_time's xid query result must start with _f5" );
 
     unsigned char return_val = (unsigned char)(threshold_return[3]);
-    return (int)(return_val);
+    return return_valid ? (int)(return_val) : INVALID_RETURN_VALUE;
 }
 
 void cedrus::xid_glossary::set_trigger_debounce_time( boost::shared_ptr<xid_con_t> xid_con, int time )
@@ -554,10 +583,12 @@ int cedrus::xid_glossary::get_button_debounce_time( boost::shared_ptr<xid_con_t>
         threshold_return,
         sizeof(threshold_return));
 
-    CEDRUS_ASSERT( boost::starts_with( threshold_return , "_f6" ), "get_button_debounce_time's xid query result must start with _f6" );
+    bool return_valid = boost::starts_with( threshold_return , "_f6" );
+
+    CEDRUS_ASSERT( return_valid, "get_button_debounce_time's xid query result must start with _f6" );
 
     unsigned char return_val = (unsigned char)(threshold_return[3]);
-    return (int)(return_val);
+    return return_valid ? (int)(return_val) : INVALID_RETURN_VALUE;
 }
 
 void cedrus::xid_glossary::set_button_debounce_time( boost::shared_ptr<xid_con_t> xid_con, int time )
@@ -586,8 +617,12 @@ int cedrus::xid_glossary::get_ac_debouncing_time( boost::shared_ptr<xid_con_t> x
         threshold_return,
         sizeof(threshold_return));
 
+    bool return_valid = boost::starts_with( threshold_return , "_a6" );
+
+    CEDRUS_ASSERT( return_valid, "get_ac_debouncing_time's xid query result must start with _a6" );
+
     unsigned char return_val = (unsigned char)(threshold_return[3]);
-    return (int)(return_val);
+    return return_valid ? (int)(return_val) : INVALID_RETURN_VALUE;
 }
 
 void cedrus::xid_glossary::set_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time )

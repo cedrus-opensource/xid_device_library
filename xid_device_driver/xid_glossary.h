@@ -109,7 +109,7 @@ namespace cedrus
         static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
         // _f4
-        static bool get_trigger_default( boost::shared_ptr<xid_con_t> xid_con );
+        static int get_trigger_default( boost::shared_ptr<xid_con_t> xid_con );
 
         // f4
         static void set_trigger_default( boost::shared_ptr<xid_con_t> xid_con, bool default_on );
