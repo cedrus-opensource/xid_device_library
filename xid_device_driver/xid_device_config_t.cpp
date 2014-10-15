@@ -57,10 +57,10 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
 {
     std::string digital_output_command;
 
-    major_firmware_ver_ = pt->get<long>("DeviceInfo.MajorFirmwareVersion", (long) INVALID_RETURN_VALUE );
+    major_firmware_ver_ = pt->get<int>("DeviceInfo.MajorFirmwareVersion", (int) INVALID_RETURN_VALUE );
     device_name_ = pt->get<std::string>("DeviceInfo.DeviceName", "" );
-    product_id_ = pt->get<long>("DeviceInfo.XidProductID", (long) INVALID_RETURN_VALUE );
-    model_id_ = pt->get<long>("DeviceInfo.XidModelID", (long) INVALID_RETURN_VALUE );
+    product_id_ = pt->get<int>("DeviceInfo.XidProductID", (int) INVALID_RETURN_VALUE );
+    model_id_ = pt->get<int>("DeviceInfo.XidModelID", (int) INVALID_RETURN_VALUE );
 
     std::string regex_string(",");
     std::string ports_string = pt->get("DeviceOptions.XidIgnoreSerialPorts", "not_found");
@@ -96,7 +96,7 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
 
         if ( pt->get(port_str+".UseableAsResponse", "not_found") == "Yes" )
         {
-            // devconfig files have up to 8 key mappings
+            // devconfig files have up to 8 key mappings per port
             for( int j = 0; j < 8; ++j )
             {
                 std::ostringstream s2;
