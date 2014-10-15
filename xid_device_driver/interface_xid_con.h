@@ -6,9 +6,6 @@ namespace cedrus
     class interface_xid_con
     {
     public:
-        virtual ~interface_xid_con()
-        {}
-
         virtual bool read( unsigned char *in_buffer, int bytes_to_read, int *bytes_read) = 0;
 
     };
