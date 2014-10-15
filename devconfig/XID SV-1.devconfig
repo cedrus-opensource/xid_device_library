@@ -1,5 +1,4 @@
 [DeviceInfo]
-DeviceID = 3021
 MajorFirmwareVersion = 1
 DeviceName = SV-1 Voice Key
 XidProductID = 49
@@ -16,7 +15,6 @@ PortName = Accessory Connector
 NumberOfLines = 6
 UseableAsDigitalOutput = Yes
 UseableAsResponse = No
-DebouncingTime = 0
 
 [Port2]
 PortName = Voice Key

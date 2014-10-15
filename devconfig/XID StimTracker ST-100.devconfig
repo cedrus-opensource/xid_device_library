@@ -11,13 +11,9 @@ XidModelID = 67
 # This is an RS-232 device.  There's no reason to check the modem--or a wireless phone.  Add yours if you know where it is connected.
 XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
 XidNeedsInterByteDelay = No
-XidNeedsInterCommandDelay = Yes
-XidInterCommandDelay = 1.0
-XidClockRate = 1.0
 
 [Port0]
 PortName = Event Marker
 NumberOfLines = 8
 UseableAsDigitalOutput = Yes
 UseableAsResponse = No
-DebouncingTime = 0

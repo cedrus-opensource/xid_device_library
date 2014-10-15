@@ -2,7 +2,6 @@
 MajorFirmwareVersion = 2
 DeviceName = Lumina 3G
 XidProductID = 48
-# ASCII 'A'
 XidModelID = 65
 
 [DeviceOptions]
