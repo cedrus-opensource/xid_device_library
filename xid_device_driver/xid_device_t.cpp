@@ -44,7 +44,6 @@ cedrus::xid_device_t::xid_device_t(
       m_response_mgr(new response_mgr())
 {
     clear_lines();
-    xid_con_->set_needs_interbyte_delay(config_->needs_interbyte_delay());
     reset_rt_timer();
     reset_base_timer();
 }

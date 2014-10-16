@@ -13,12 +13,10 @@ XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySeria
 [Port1]
 PortName = Accessory Connector
 NumberOfLines = 6
-UseableAsDigitalOutput = Yes
 UseableAsResponse = No
 
 [Port2]
 PortName = Voice Key
 NumberOfLines = 1
-UseableAsDigitalOutput = No
 UseableAsResponse = Yes
 XidDeviceKeyMap1 = 0

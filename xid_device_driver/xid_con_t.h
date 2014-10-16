@@ -96,12 +96,13 @@ namespace cedrus
             HANDSHAKE_HARDWARE = 2,
         };
 
+        enum { INTERBYTE_DELAY = 1 };
+
         /**
          * xid_con_t constructor
          *
          * @param[in] port_name COM port name the device is connected to.
          * @param[in] port_speed speed of the port. This defaults to 115200bps
-         * @param[in] delay_ms Inter-byte delay time in miliseconds.  Defaults to 1ms.
          * @param[in] byte_size Byte size used by the device
          * @param[in] bit_parity bit parity of the device.  Defaults to none.
          * @param[in] stop_bits stop bits of the device. Defaults to 0
@@ -109,7 +110,6 @@ namespace cedrus
         xid_con_t(
                   const std::string &port_name,
                   int port_speed = 115200,
-                  int delay_ms = 1,
                   bytesize byte_size = BYTESIZE_8,
                   bitparity bit_parity = BITPARITY_NONE,
                   stopbits stop_bits = STOP_BIT_1
@@ -192,11 +192,6 @@ namespace cedrus
             char out_response[],
             int max_out_response_size);
 
-        /**
-         * Sets whether or not the device needs an inter-byte delay.
-         */
-        void set_needs_interbyte_delay(bool need_delay = true);
-
         int get_baud_rate () const;
 
         void set_baud_rate ( int rate );
@@ -233,8 +228,6 @@ namespace cedrus
         handshaking handshaking_;
         std::string port_name_;
 
-        int delay_;
-        bool needs_interbyte_delay_;
         bool m_connection_dead;
 
         struct DarwinConnPimpl;

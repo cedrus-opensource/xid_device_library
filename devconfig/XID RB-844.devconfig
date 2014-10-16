@@ -7,7 +7,6 @@ XidModelID = 52
 [DeviceOptions]
 # This is a USB device.  There's no reason to check these other common ports.  Add any ports you don't want to check.
 XidIgnoreSerialPorts = /dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.modem,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
-XidNeedsInterByteDelay = Yes
 
 [Port0]
 PortName = Keys
@@ -49,5 +48,4 @@ XidDeviceKeyMap7 = 7
 [Port4]
 PortName = Accessory Connector
 NumberOfLines = 8
-UseableAsDigitalOutput = Yes
 UseableAsResponse = No

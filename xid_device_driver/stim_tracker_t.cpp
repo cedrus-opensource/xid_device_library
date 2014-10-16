@@ -41,7 +41,6 @@ cedrus::stim_tracker_t::stim_tracker_t(
       config_(dev_config)
 {
     clear_lines();
-    xid_con_->set_needs_interbyte_delay(config_->needs_interbyte_delay());
 }
 
 cedrus::stim_tracker_t::~stim_tracker_t(void)

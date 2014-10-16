@@ -58,7 +58,6 @@ struct cedrus::xid_con_t::DarwinConnPimpl
 cedrus::xid_con_t::xid_con_t(
     const std::string &port_name,
     int port_speed,
-    int delay_ms,
     bytesize byte_size,
     bitparity bit_parity,
     stopbits stop_bits
@@ -69,8 +68,6 @@ cedrus::xid_con_t::xid_con_t(
       stop_bits_(stop_bits),
       handshaking_(HANDSHAKE_NONE),
       port_name_(port_name),
-      delay_(delay_ms),
-      needs_interbyte_delay_(true),
       m_connection_dead (false),
       m_darwinPimpl( new DarwinConnPimpl )
 {
@@ -357,46 +354,39 @@ bool cedrus::xid_con_t::write(
     int status = true;
     int written = 0;
 
-    if(needs_interbyte_delay_)
+    for(int i = 0; i < bytes_to_write && status; ++i)
     {
-        for(int i = 0; i < bytes_to_write && status; ++i)
+        ssize_t byte_count = ::write(m_darwinPimpl->m_FileDescriptor, p, 1);
+
+        if( byte_count == -1)
         {
-            ssize_t byte_count = ::write(m_darwinPimpl->m_FileDescriptor, p, 1);
-
-            if( byte_count == -1)
-            {
-                status = false;
-                if ( errno == ENXIO )
-                    m_connection_dead = true;
-                break;
-            }
-
-            written += byte_count;
-
-            if(written == bytes_to_write)
-                break;
-
-            usleep(delay_*1000);
-
-            ++p;
-        }
-        *bytes_written = written;
-    }
-    else
-    {
-        written = ::write(m_darwinPimpl->m_FileDescriptor, in_buffer, bytes_to_write);
-        tcdrain(m_darwinPimpl->m_FileDescriptor);
-
-        if( written == -1)
-        {
+            status = false;
             if ( errno == ENXIO )
                 m_connection_dead = true;
-
-            status = false;
+            break;
         }
-        else
-            *bytes_written = written;
+
+        written += byte_count;
+
+        if(written == bytes_to_write)
+            break;
+
+        /* 
+        This used to be governed by a devconfig flag on a per-device basis.
+        However, the entire thing wasn't documented, and different versions
+        of devconfigs had conflicting information on the subject; with some
+        devices apparently needing it, contrary to the claim, and vice versa.
+
+        It's safer to just do this for every XID device, as the only time-
+        sensitive use for the library is reading responses, and no writing
+        takes place at that time.
+        */
+        usleep(INTERBYTE_DELAY*1000);
+
+        ++p;
     }
+
+    *bytes_written = written;
 
     return status;
 }

@@ -14,16 +14,15 @@ XidModelID = 51
 # This is primarily a MacOS feature. Checking all bauds on a port can be time-consuming, and there will never be an XID device on these common ports.
 # Add more ports you don't want to check, if you know of any.
 XidIgnoreSerialPorts = /dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.modem,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
-# This is uhhh... ????
-XidNeedsInterByteDelay = Yes
 
-# Ports are labelled 0-7, since we have 3 bits to relay it as per the XID protocol. Some devices have more than others
+# Ports are labelled 0-7, since we have 3 bits to relay it as per the XID protocol. Some devices have more than others.
 [Port0]
 # The port name isn't used by the library itself, but may be of great value to its clients as a way to differentiate the ports.
 PortName = Keys
 # This line is of greater value to non-response ports and is pretty self-explanatory.
 NumberOfLines = 8
-# Determines whether or not this port value is capable of producing responses for the library to consume.
+# Determines whether or not this port value is capable of producing responses for the library to consume. With the devices currently available,
+# "No" means it's an output port.
 UseableAsResponse = Yes
 # This is an important part. Devices will return a 0-7 value corresponding to the key that was pressed. In the overwhelming majority of the cases,
 # it will not make a lot of sense when compared to the physical button pressed on the device, and some devices have fewer than 8 buttons.

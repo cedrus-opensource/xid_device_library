@@ -75,7 +75,6 @@ struct cedrus::xid_con_t::WindowsConnPimpl
 cedrus::xid_con_t::xid_con_t(
     const std::string &port_name,
     int port_speed,
-    int delay_ms,
     bytesize byte_size,
     bitparity bit_parity,
     stopbits stop_bits
@@ -86,8 +85,6 @@ cedrus::xid_con_t::xid_con_t(
       stop_bits_(stop_bits),
       handshaking_(HANDSHAKE_NONE),
       port_name_(port_name),
-      delay_(delay_ms),
-      needs_interbyte_delay_(true),
       m_connection_dead (false),
       m_winPimpl( new WindowsConnPimpl )
 {
@@ -213,41 +210,38 @@ bool cedrus::xid_con_t::write(
     bool status = true;
     DWORD written = 0;
 
-    if(needs_interbyte_delay_)
+    for(int i = 0; i < bytes_to_write && status; ++i)
     {
-        for(int i = 0; i < bytes_to_write && status; ++i)
+        DWORD  byte_count;
+        status = (WriteFile(m_winPimpl->device_id_, p, 1, &byte_count, NULL) != 0);
+        if( !status  )
         {
-            DWORD  byte_count;
-            status = (WriteFile(m_winPimpl->device_id_, p, 1, &byte_count, NULL) != 0);
-            if( !status  )
-            {
-                if ( GetLastError() == ERROR_ACCESS_DENIED )
-                    m_connection_dead = true;
-                break;
-            }
-
-            written += byte_count;
-
-            Sleep(delay_);
-
-            if(written == bytes_to_write)
-                break;
-
-            ++p;
+            if ( GetLastError() == ERROR_ACCESS_DENIED )
+                m_connection_dead = true;
+            break;
         }
-        *bytes_written = written;
-    }
-    else
-    {
-        status = (WriteFile(m_winPimpl->device_id_, p, bytes_to_write, &written, NULL) != 0);
-        if( !status && GetLastError() == ERROR_ACCESS_DENIED )
-            m_connection_dead = true;
 
-        if( status )
-        {
-            *bytes_written = written;
-        }
+        written += byte_count;
+
+        /* 
+        This used to be governed by a devconfig flag on a per-device basis.
+        However, the entire thing wasn't documented, and different versions
+        of devconfigs had conflicting information on the subject; with some
+        devices apparently needing it, contrary to the claim, and vice versa.
+
+        It's safer to just do this for every XID device, as the only time-
+        sensitive use for the library is reading responses, and no writing
+        takes place at that time.
+        */
+        Sleep(INTERBYTE_DELAY);
+
+        if(written == bytes_to_write)
+            break;
+
+        ++p;
     }
+
+    *bytes_written = written;
 
     return status;
 }

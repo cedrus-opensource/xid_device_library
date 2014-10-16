@@ -53,7 +53,6 @@ boost::shared_ptr<cedrus::xid_device_config_t> cedrus::xid_device_config_t::conf
 }
 
 cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * pt )
-    : needs_interbyte_delay_(true)
 {
     std::string digital_output_command;
 
@@ -67,14 +66,10 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
 
     boost::split(ports_to_ignore_,ports_string,boost::is_any_of(regex_string));
 
-    // does this device need an interbyte delay?
-    std::string byte_delay = pt->get("DeviceOptions.XidNeedsInterByteDelay", "not_found");
-
-    if(byte_delay.compare("No") == 0)
-        needs_interbyte_delay_ = false;
-
-    // xid devices support up to 255 ports.  In reality, usually only
-    // 2 or 3 are used
+    // xid devices support up to 255 ports. In reality, usually only
+    // 2 or 3 are used. This claim is technically true. However, the
+    // XID protocol can only report responses from a maximum of 8 ports.
+    // Just something to consider, I suppose.
     for(int i = 0; i <= 255; ++i)
     {
         std::string port_str;
@@ -85,7 +80,7 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
         try {
             pt->get_child(port_str);
         }
-        catch ( boost::property_tree::ptree_error ) {
+        catch ( boost::property_tree::ptree_bad_path err ) {
             continue; // The device doesn't support this port
         }
 
@@ -152,11 +147,6 @@ std::vector<cedrus::device_port> cedrus::xid_device_config_t::get_vector_of_port
     }
 
     return vector_of_ports;
-}
-
-bool cedrus::xid_device_config_t::needs_interbyte_delay() const
-{
-    return needs_interbyte_delay_;
 }
 
 bool cedrus::xid_device_config_t::is_port_on_ignore_list( std::string port_name) const

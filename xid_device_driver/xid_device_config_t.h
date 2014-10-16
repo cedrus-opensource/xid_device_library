@@ -100,16 +100,6 @@ namespace cedrus
          */
         int CEDRUS_XIDDRIVER_IMPORTEXPORT get_mapped_key(int port, int key) const;
 
-        /**
-         * Whether or not the device requires an inter-byte delay
-         */
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT needs_interbyte_delay() const;
-
-        /**
-         * The digital output prefix
-         */
-        char CEDRUS_XIDDRIVER_IMPORTEXPORT digital_out_prefix() const;
-
         bool is_port_on_ignore_list( std::string port_name ) const;
 
         /**
@@ -151,8 +141,6 @@ namespace cedrus
 
     public:
         xid_device_config_t(boost::property_tree::ptree * pt);
-
-        bool needs_interbyte_delay_;
 
         std::string device_name_;
         int major_firmware_ver_;
