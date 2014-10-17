@@ -136,19 +136,19 @@ namespace cedrus
 
         std::vector<device_port> CEDRUS_XIDDRIVER_IMPORTEXPORT get_vector_of_ports() const;
 
-        bool does_config_match_device( int device_id, int model_id, int major_firmware_ver )  const;
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT does_config_match_device( int device_id, int model_id, int major_firmware_ver )  const;
 
 
     public:
         xid_device_config_t(boost::property_tree::ptree * pt);
 
-        std::string device_name_;
-        int major_firmware_ver_;
-        int product_id_;
-        int model_id_;
+        std::string m_device_name;
+        int m_major_firmware_ver;
+        int m_product_id;
+        int m_model_id;
 
         std::map<int, device_port> m_device_ports;
-        std::vector<std::string> ports_to_ignore_;
+        std::vector<std::string> m_ports_to_ignore;
     };
 } // namespace cedrus
 

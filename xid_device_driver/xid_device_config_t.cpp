@@ -56,15 +56,15 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
 {
     std::string digital_output_command;
 
-    major_firmware_ver_ = pt->get<int>("DeviceInfo.MajorFirmwareVersion", (int) INVALID_RETURN_VALUE );
-    device_name_ = pt->get<std::string>("DeviceInfo.DeviceName", "" );
-    product_id_ = pt->get<int>("DeviceInfo.XidProductID", (int) INVALID_RETURN_VALUE );
-    model_id_ = pt->get<int>("DeviceInfo.XidModelID", (int) INVALID_RETURN_VALUE );
+    m_major_firmware_ver = pt->get<int>("DeviceInfo.MajorFirmwareVersion", (int) INVALID_RETURN_VALUE );
+    m_device_name = pt->get<std::string>("DeviceInfo.DeviceName", "" );
+    m_product_id = pt->get<int>("DeviceInfo.XidProductID", (int) INVALID_RETURN_VALUE );
+    m_model_id = pt->get<int>("DeviceInfo.XidModelID", (int) INVALID_RETURN_VALUE );
 
     std::string regex_string(",");
     std::string ports_string = pt->get("DeviceOptions.XidIgnoreSerialPorts", "not_found");
 
-    boost::split(ports_to_ignore_,ports_string,boost::is_any_of(regex_string));
+    boost::split(m_ports_to_ignore,ports_string,boost::is_any_of(regex_string));
 
     // xid devices support up to 255 ports. In reality, usually only
     // 2 or 3 are used. This claim is technically true. However, the
@@ -151,38 +151,38 @@ std::vector<cedrus::device_port> cedrus::xid_device_config_t::get_vector_of_port
 
 bool cedrus::xid_device_config_t::is_port_on_ignore_list( std::string port_name) const
 {
-    return std::find(ports_to_ignore_.begin(), ports_to_ignore_.end(), port_name) != ports_to_ignore_.end();
+    return std::find(m_ports_to_ignore.begin(), m_ports_to_ignore.end(), port_name) != m_ports_to_ignore.end();
 }
 
 std::string cedrus::xid_device_config_t::get_device_name() const
 {
-    return device_name_;
+    return m_device_name;
 }
 
 int cedrus::xid_device_config_t::get_product_id() const
 {
-    return product_id_;
+    return m_product_id;
 }
 
 int cedrus::xid_device_config_t::get_model_id() const
 {
-    return model_id_;
+    return m_model_id;
 }
 
 bool cedrus::xid_device_config_t::does_config_match_device( int device_id, int model_id, int major_firmware_ver ) const
 {
-    bool doesMatch = false;
-    if ( product_id_ == device_id && major_firmware_ver_ == major_firmware_ver)
+    bool does_match = false;
+    if ( m_product_id == device_id && m_major_firmware_ver == major_firmware_ver)
     {
         //per XID spec, '0' is Lumina, '1' is SV1, '2' is an RB
-        if ( static_cast<char>(product_id_) == '2' )
+        if ( static_cast<char>(m_product_id) == '2' )
         {
-            if ( model_id_ == model_id )
-                doesMatch = true;
+            if ( m_model_id == model_id )
+                does_match = true;
         }
         else
-            doesMatch = true;
+            does_match = true;
     }
 
-    return doesMatch;
+    return does_match;
 }
