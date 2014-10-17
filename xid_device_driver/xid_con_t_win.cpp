@@ -194,7 +194,8 @@ bool cedrus::xid_con_t::read(
         *bytes_read = read;
     else
     {
-        if ( GetLastError() == ERROR_ACCESS_DENIED )
+        int error_code = GetLastError();
+        if ( error_code == ERROR_ACCESS_DENIED || error_code == ERROR_INVALID_HANDLE )
             m_connection_dead = true;
     }
 
@@ -216,7 +217,8 @@ bool cedrus::xid_con_t::write(
         status = (WriteFile(m_winPimpl->device_id_, p, 1, &byte_count, NULL) != 0);
         if( !status  )
         {
-            if ( GetLastError() == ERROR_ACCESS_DENIED )
+            int error_code = GetLastError();
+            if ( error_code == ERROR_ACCESS_DENIED || error_code == ERROR_INVALID_HANDLE )
                 m_connection_dead = true;
             break;
         }
