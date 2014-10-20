@@ -521,7 +521,7 @@ int cedrus::xid_glossary::get_trigger_default( boost::shared_ptr<xid_con_t> xid_
 {
     char default_return[4]; // we rely on send_xid_command to zero-initialize this buffer
 
-    xid_con->send_xid_command(
+    xid_con->send_xid_command_slow(
         "_f4",
         default_return,
         sizeof(default_return));
