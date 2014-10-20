@@ -90,7 +90,14 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
         CEDRUS_ASSERT( m_xid_packet_index == INVALID_PACKET_INDEX, "response_mgr just read something inappropriate from the device buffer!" );
     }
 
-    if ( m_xid_packet_index == 0 && m_bytes_in_buffer == XID_PACKET_SIZE )
+    // If m_xid_packet_index == INVALID_PACKET_INDEX, recovery is impossible, as
+    // we have no point of reference to attempt to reconstruct a response packet.
+    // If m_xid_packet_index is 0, there is no need to adjust the buffer for recovery.
+    // Otherwise, we need to flush some unwanted bytes from the buffer.
+    if( m_xid_packet_index != INVALID_PACKET_INDEX && m_xid_packet_index != 0 )
+        adjust_buffer_for_packet_recovery();
+
+    if ( m_bytes_in_buffer == XID_PACKET_SIZE )
     {
         /* 
         This is the end of our journey. We have either successfully cobbled together an XID packet
@@ -101,15 +108,10 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
         */
 
         CEDRUS_ASSERT( input_found != NO_KEY_DETECTED, "We failed to get a response from an XID device! See comments for why it may have failed." );
-        m_bytes_in_buffer = 0; // Either way, we're starting fresh.
-    }
 
-    // If m_xid_packet_index == INVALID_PACKET_INDEX, recovery is impossible, as
-    // we have no point of reference to attempt to reconstruct a response packet.
-    // If m_xid_packet_index is 0, there is no need to adjust the buffer for recovery.
-    // Otherwise, we need to flush some unwanted bytes from the buffer.
-    if( m_xid_packet_index != INVALID_PACKET_INDEX && m_xid_packet_index != 0 )
-        adjust_buffer_for_packet_recovery();
+        // Either way, we're starting fresh.
+        m_bytes_in_buffer = 0;
+    }
 
     return input_found;
 }
@@ -155,9 +157,6 @@ void cedrus::response_mgr::adjust_buffer_for_packet_recovery()
     // check_for_keypress() uses m_bytes_in_buffer to know how many bytes
     // to read, so we're setting it appropriately here.
     m_bytes_in_buffer = m_bytes_in_buffer - m_xid_packet_index;
-
-    // Clean out the rest of the buffer past the partial packet
-    memset( &m_input_buffer[m_bytes_in_buffer], 0x00, (XID_PACKET_SIZE - m_bytes_in_buffer) );
 }
 
 bool cedrus::response_mgr::has_queued_responses() const
