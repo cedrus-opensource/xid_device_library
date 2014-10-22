@@ -333,7 +333,7 @@ bool cedrus::xid_con_t::read(
     if( read == -1)
     {
         status = false;
-        if ( errno == ENXIO )
+        if ( errno == ENXIO || errno == EINTR || errno == EBADF )
             m_connection_dead = true;
     }
     else
@@ -361,7 +361,7 @@ bool cedrus::xid_con_t::write(
         if( byte_count == -1)
         {
             status = false;
-            if ( errno == ENXIO )
+            if ( errno == ENXIO || errno == EINTR || errno == EBADF )
                 m_connection_dead = true;
             break;
         }
