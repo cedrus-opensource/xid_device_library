@@ -503,7 +503,9 @@ it will at least zero our buffer" );
     CEDRUS_ASSERT( return_valid_aa, "get_accessory_connector_device's xid query result must start with _aa" );
     CEDRUS_ASSERT( return_valid_val, "get_accessory_connector_device's return value must be between 0 and 64" );
 
-    return (return_valid_aa && return_valid_val) ? return_info[3] : INVALID_RETURN_VALUE;
+    return (return_valid_aa && return_valid_val) ?
+        static_cast<int>( return_info[3] )
+        : static_cast<int>( INVALID_RETURN_VALUE );
 }
 
 void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode )
@@ -532,7 +534,9 @@ int cedrus::xid_glossary::get_trigger_default( boost::shared_ptr<xid_con_t> xid_
     CEDRUS_ASSERT( return_valid_f4, "get_trigger_default's xid query result must start with _f4" );
     CEDRUS_ASSERT( return_valid_val, "get_trigger_default's value must be either '0' or '1'" );
 
-    return (return_valid_f4 && return_valid_val) ? default_return[3] == '1' : INVALID_RETURN_VALUE;
+    return (return_valid_f4 && return_valid_val) ?
+        static_cast<int>(default_return[3] == '1')
+        : static_cast<int>( INVALID_RETURN_VALUE );
 }
 
 void cedrus::xid_glossary::set_trigger_default( boost::shared_ptr<xid_con_t> xid_con, bool default_on )
