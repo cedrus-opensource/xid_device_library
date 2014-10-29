@@ -8,13 +8,13 @@
 
 namespace cedrus
 {
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_con_test_only : public interface_xid_con
+    class  xid_con_test_only : public interface_xid_con
     {
     public:
-        xid_con_test_only( char * input_buffer, int size );
+        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_con_test_only( char * input_buffer, int size );
 
-        bool read( unsigned char *in_buffer, int bytes_to_read, int *bytes_read);
-        void insert_more_data_into_buffer( char * input_buffer, int size );
+        CEDRUS_XIDDRIVER_IMPORTEXPORT bool read( unsigned char *in_buffer, int bytes_to_read, int *bytes_read);
+        CEDRUS_XIDDRIVER_IMPORTEXPORT void insert_more_data_into_buffer( char * input_buffer, int size );
 
     private:
         std::stringstream m_input_buffer;
