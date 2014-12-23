@@ -33,43 +33,43 @@
 
 #include "stdafx.h"
 #include "CedrusXidActiveDevice.h"
-#include "../xid_device_driver/xid_device_t.h"
+#include "../xid_device_driver/base_device_t.h"
+#include "../xid_device_driver/xid_device_config_t.h"
 
 // CCedrusXidActiveDevice
 
 CCedrusXidActiveDevice::CCedrusXidActiveDevice()
-    : button_count_(0),
-      xid_device_(),
-      timer_uncertainty_(0)
+    : m_button_count(0),
+      m_xid_device(),
+      m_timer_uncertainty(0)
 {
     LARGE_INTEGER hpc_freq;
     QueryPerformanceFrequency(&hpc_freq);
-    hpc_freq_ = hpc_freq.QuadPart;
+    m_hpc_freq = hpc_freq.QuadPart;
 }
 
-void CCedrusXidActiveDevice::set_xid_device(
-    boost::shared_ptr<cedrus::xid_device_t> xid_device)
+void CCedrusXidActiveDevice::set_xid_device(boost::shared_ptr<cedrus::base_device_t> xid_device)
 {
     // LARGE_INTEGER begin;
     // LARGE_INTEGER end;
-    xid_device_ = xid_device;
-    xid_device_->reset_base_timer();
+    m_xid_device = xid_device;
+    m_xid_device->reset_base_timer();
 
     // QueryPerformanceCounter(&begin);
-    xid_device_->reset_rt_timer();
+    m_xid_device->reset_rt_timer();
     // QueryPerformanceCounter(&end);
-    // timer_uncertainty_ = end.QuadPart - begin.QuadPart;
+    // m_timer_uncertainty = end.QuadPart - begin.QuadPart;
 }
 
 STDMETHODIMP CCedrusXidActiveDevice::getName(BSTR *name)
 {
-    if(!xid_device_)
+    if(!m_xid_device)
     {
-        last_error_ = L"Xid device has not been properly initialized.";
+        m_last_error = L"Xid device has not been properly initialized.";
         return E_FAIL;
     }
 
-    std::string dev_name = xid_device_->get_device_name();
+    std::string dev_name = m_xid_device->get_device_config().get_device_name();
     std::wstring wname;
     wname.assign(dev_name.begin(), dev_name.end());
 
@@ -93,53 +93,57 @@ STDMETHODIMP CCedrusXidActiveDevice::processMessage(BSTR message, BSTR *result)
 }
 
 // According to the Presentation SDK documentation, this method is polled
-// at approximately 1000Hz.  Thus we use this method to poll the XID device
+// at approximately 1000Hz. Thus we use this method to poll the XID device
 // for responses.
 STDMETHODIMP CCedrusXidActiveDevice::getResponseCount(unsigned long *count)
 {
-    if(!xid_device_)
+    if(!m_xid_device)
     {
-        last_error_ = L"Xid device has not been properly initialized.";
+        m_last_error = L"Xid device has not been properly initialized.";
         return E_FAIL;
     }
 
-    xid_device_->poll_for_response();
-    std::size_t queue_size = xid_device_->response_queue_size();
+    m_xid_device->poll_for_response();
+    cedrus::response res = m_xid_device->get_next_response();
 
-    for(std::size_t i = 0; i < queue_size; ++i)
+    // as far as I can tell right now, there's no way in Presentation to
+    // differentiate between a key press and release.  Here, we only grab
+    // key press events from the xid device and ignre the release events.
+
+    /*
+    UPDATE: there is a way to differentiate! (From the docs):
+
+    If the device can generate different events for the same button (such
+    as press and release), each event should be listed as a seperate
+    button with an appropriate name, even though those events are related
+    to the same physical button.
+
+    As we haven't done this historically and no one seems to have
+    complained, we'll leave this be.
+    */
+    if(res.was_pressed == true)
     {
-        cedrus::response res = xid_device_->get_next_response();
+        // translate the cedrus::response struct into a tagResponseInfo
+        // struct and place it in the key press events list.
+        std::vector<cedrus::device_port> port_vector = m_xid_device->get_device_config().get_vector_of_ports();
+        int math = 0;
 
-        // as far as I can tell right now, there's no way in Presentation to
-        // differentiate between a key press and release.  Here, we only grab
-        // key press events from the xid device and ignre the release events.
-        if(res.key_state == cedrus::FOUND_KEY_DOWN)
+        for ( unsigned int i = 0; i < res.port; i++ )
         {
-#if 0
-            LARGE_INTEGER begin_hpc;
-            QueryPerformanceCounter(&begin_hpc);
-            long long base_timer = xid_device_->query_base_timer();
-            LARGE_INTEGER end_hpc;
-            QueryPerformanceCounter(&end_hpc);
-#endif
-
-            // translate the cedrus::response struct into a tagResponseInfo
-            // struct and place it in the key press events list.
-            tagResponseInfo info;
-            info.buttonIndex = res.button;
-            info.useTime = 0;
-#if 0
-            info.useTime = 1;
-            info.time = begin_hpc.QuadPart - 
-                ((hpc_freq_*(base_timer-res.reaction_time))/1000);
-            info.uncertainty = end_hpc.QuadPart - begin_hpc.QuadPart + 
-                timer_uncertainty_;
-#endif
-            key_press_events_.push_back(info);
+            if ( port_vector[i].is_response_port )
+            {
+                math += port_vector[i].number_of_lines;
+            }
         }
+
+        tagResponseInfo info;
+        info.buttonIndex = math+res.key;
+        info.useTime = 0;
+
+        m_key_press_events.push_back(info);
     }
 
-    *count = key_press_events_.size();
+    *count = m_key_press_events.size();
 
     return S_OK;
 }
@@ -148,27 +152,27 @@ STDMETHODIMP CCedrusXidActiveDevice::getResponseData(
     tagResponseInfo *data, unsigned long *count)
 {
 #undef min
-    *count = std::min<unsigned long>(*count, key_press_events_.size());
+    *count = std::min<unsigned long>(*count, m_key_press_events.size());
 
-    std::copy(key_press_events_.begin(),
-              key_press_events_.begin() + *count, data);
+    std::copy(m_key_press_events.begin(),
+              m_key_press_events.begin() + *count, data);
 
-    key_press_events_.erase(key_press_events_.begin(),
-                            key_press_events_.begin() + *count);
+    m_key_press_events.erase(m_key_press_events.begin(),
+                            m_key_press_events.begin() + *count);
 
     return S_OK;
 }
 
 STDMETHODIMP CCedrusXidActiveDevice::clearResponseData()
 {
-    if(!xid_device_)
+    if(!m_xid_device)
     {
-        last_error_ = L"Xid device has not been properly initialized.";
+        m_last_error = L"Xid device has not been properly initialized.";
         return E_FAIL;
     }
 
-    xid_device_->clear_response_queue();
-    key_press_events_.clear();
+    m_xid_device->clear_responses();
+    m_key_press_events.clear();
     return S_OK;
 }
 
@@ -190,12 +194,12 @@ STDMETHODIMP CCedrusXidActiveDevice::pollAxisChanges(
 
 STDMETHODIMP CCedrusXidActiveDevice::getLastError(BSTR *error)
 {
-    *error = SysAllocString(last_error_.c_str());
+    *error = SysAllocString(m_last_error.c_str());
     return S_OK;
 }
 
 STDMETHODIMP CCedrusXidActiveDevice::setButtonCount(unsigned long buttonCount)
 {
-    button_count_ = buttonCount;
+    m_button_count = buttonCount;
     return S_OK;
 }

@@ -35,36 +35,35 @@
 #include "CedrusXidDeviceEnumerator.h"
 #include "CedrusXidResponseDevice.h"
 #include "../xid_device_driver/xid_device_scanner_t.h"
-#include "../xid_device_driver/xid_device_t.h"
+#include "../xid_device_driver/base_device_t.h"
 #include <boost/shared_ptr.hpp>
 
 using namespace public_nbs;
 
-// CCedrusXidDeviceEnumerator
-
 CCedrusXidDeviceEnumerator::CCedrusXidDeviceEnumerator()
 {
-    // lookup the path to this DLL.  The devconfig files are stored along 
-    // with it.
+    // Look up the path to this DLL. The devconfig files are stored along with it.
     HMODULE module = GetModuleHandle(L"CedrusXidDriver.dll");
+    std::wstring devconfig_location;
     if(module)
     {
         wchar_t result[MAX_PATH];
 
         if(GetModuleFileName(module, result, sizeof(result)) != 0)
         {
-            devconfig_location_ = std::wstring(result);
-            std::size_t pos = devconfig_location_.find_last_of(L"\\") + 1;
-            devconfig_location_.erase(pos);
+            devconfig_location = std::wstring(result);
+            std::size_t pos = devconfig_location.find_last_of(L"\\") + 1;
+            devconfig_location.erase(pos);
         }
     }
-    port_info_.detect_valid_xid_devices(std::string(devconfig_location_.begin(), devconfig_location_.end()));
-    devices_.resize(port_info_.rb_device_count());
+    m_device_scanner.detect_valid_xid_devices(std::string(devconfig_location.begin(), devconfig_location.end()));
+
+    m_devices.resize(m_device_scanner.device_count());
 }
 
 STDMETHODIMP CCedrusXidDeviceEnumerator::getDeviceCount(unsigned long *count)
 {
-    *count = devices_.size();
+    *count = m_devices.size();
     return S_OK;
 }
 
@@ -73,57 +72,54 @@ STDMETHODIMP CCedrusXidDeviceEnumerator::getDevice(
 {
     HRESULT rval = S_OK;
     
-    if(index >= devices_.size())
+    if(index >= m_devices.size())
     {
-        last_error_ = 
-            L"Invalid index passed to CedrusXidDeviceEnumerator::getDevice";
+        m_last_error = L"Invalid index passed to CedrusXidDeviceEnumerator::getDevice";
         rval = E_FAIL;
     }
     else
     {
         try
         {
-            if(!devices_[index].get())
+            if(!m_devices[index].get())
             {
-                // device not yet created
-                // create it here.
-                devices_[index] = devices_[index].create(
+                // Device not yet created.
+                m_devices[index] = m_devices[index].create(
                     CLSID_CedrusXidResponseDevice, IID_IResponseDevice);
 
                 CCedrusXidResponseDevice *dev = 
-                    static_cast<CCedrusXidResponseDevice*>(
-                        devices_[index].get());
+                    static_cast<CCedrusXidResponseDevice*>(m_devices[index].get());
 
                 if(dev)
                 {
-                    boost::shared_ptr<cedrus::xid_device_t> xid_device = 
-                        port_info_.response_device_connection_at_index(index);
+                    boost::shared_ptr<cedrus::base_device_t> xid_device = 
+                        m_device_scanner.device_connection_at_index(index);
                     xid_device->open_connection();
 
                     dev->set_xid_device(xid_device);
                 }
             }
 
-            if(!devices_[index].get())
+            if(!m_devices[index].get())
             {
-                last_error_ = L"Failed to create IResponseDevice";
+                m_last_error = L"Failed to create IResponseDevice";
                 rval = E_FAIL;
             }
             else
             {
-                *device = devices_[index].get();
+                *device = m_devices[index].get();
                 // The assumption is that Presentation will call Release on this when the time comes.
                 (*device)->AddRef();
             }
         }
         catch(Exception &e)
         {
-            last_error_ = e.message();
+            m_last_error = e.message();
             rval = E_FAIL;
         }
         catch(...)
         {
-            last_error_ = L"Unknown exception creating IResponseDevice";
+            m_last_error = L"Unknown exception creating IResponseDevice";
             rval = E_FAIL;
         }
     }
@@ -133,6 +129,6 @@ STDMETHODIMP CCedrusXidDeviceEnumerator::getDevice(
 
 STDMETHODIMP CCedrusXidDeviceEnumerator::getLastError(BSTR *error)
 {
-    *error = SysAllocString(last_error_.c_str());
+    *error = SysAllocString(m_last_error.c_str());
     return S_OK;
 }

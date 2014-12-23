@@ -40,7 +40,7 @@
 
 namespace cedrus
 {
-    class xid_device_t;
+    class base_device_t;
 }
 
 using namespace ATL;
@@ -91,7 +91,7 @@ public:
     // ICedrusXidActiveDevice
 public:
     STDMETHOD(setButtonCount)(unsigned long count);
-    void set_xid_device(boost::shared_ptr<cedrus::xid_device_t> xid_device);
+    void set_xid_device(boost::shared_ptr<cedrus::base_device_t> xid_device);
 
     // IActiveResponseDevice Methods
 public:
@@ -106,12 +106,12 @@ public:
     STDMETHOD(getLastError)(BSTR * error);
 
 private:
-    unsigned long button_count_;
-    boost::shared_ptr<cedrus::xid_device_t> xid_device_;
-    std::wstring last_error_;
-    std::vector<tagResponseInfo> key_press_events_;
-    long long hpc_freq_;
-    long timer_uncertainty_;
+    unsigned long m_button_count;
+    boost::shared_ptr<cedrus::base_device_t> m_xid_device;
+    std::wstring m_last_error;
+    std::vector<tagResponseInfo> m_key_press_events;
+    long long m_hpc_freq;
+    long m_timer_uncertainty;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(CedrusXidActiveDevice), CCedrusXidActiveDevice)

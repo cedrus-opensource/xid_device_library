@@ -34,70 +34,91 @@
 #include "stdafx.h"
 #include "CedrusXidResponseDevice.h"
 #include "CedrusXidActiveDevice.h"
-#include "../xid_device_driver/xid_device_t.h"
+#include "../xid_device_driver/base_device_t.h"
+#include "../xid_device_driver/xid_device_config_t.h"
 #include "string_utilities.h"
 #include "com_ptr.h"
 
 using namespace public_nbs;
 
-// CCedrusXidResponseDevice
-
 CCedrusXidResponseDevice::CCedrusXidResponseDevice()
-    : xid_device_(),
-      button_count_(0)
+    : m_xid_device(),
+      m_button_count(0)
 {
 }
 
 void CCedrusXidResponseDevice::set_button_names()
 {
-    button_names_.clear();
+    m_button_names.clear();
 
-    if(!xid_device_)
+    if(!m_xid_device)
     {
         return;
     }
 
-    std::string temp = xid_device_->input_name_prefix();
-    std::wstring prefix (temp.begin(), temp.end()) ;
+    std::string temp = "Button";
+    if ( m_xid_device->get_device_config().get_product_id() == 49 )
+        temp = "Voice Response";
 
-    if(button_count_ == 1)
+    std::wstring prefix (temp.begin(), temp.end());
+
+    std::vector<cedrus::device_port> port_vector = m_xid_device->get_device_config().get_vector_of_ports();
+    int m_button_count = 0;
+    bool is_lumina_3g = (m_xid_device->get_device_config().get_product_id() == 48 &&
+        m_xid_device->get_device_config().m_major_firmware_ver == 2);
+
+    for ( unsigned int i = 0; i < port_vector.size(); i++ )
     {
-        button_names_.push_back(prefix);
-    }
-    else
-    {
-        for(unsigned int i = 0; i < button_count_; ++i)
+        if ( port_vector[i].is_response_port )
         {
-            if(xid_device_->get_product_id() == 0 && i == 4) {
-                button_names_.push_back(
-                    L"Trigger");
-            }
-            else
+            for  ( unsigned int j = 0; j < port_vector[i].number_of_lines; ++j )
             {
-                button_names_.push_back(
-                    prefix + L" " + public_nbs::to_wstr(i+1));
+                if ( is_lumina_3g && i == 2 && j == 0 )
+                {
+                    m_button_names.push_back( L"Light Sensor" );
+                }
+                else if ( is_lumina_3g && i == 2 && j == 1 )
+                {
+                    m_button_names.push_back( L"Trigger" );
+                }
+                else
+                {
+                    temp = port_vector[i].port_name;
+                    std::wstring prefix (temp.begin(), temp.end());
+                    m_button_names.push_back(
+                        prefix + L" " + public_nbs::to_wstr(j+1));
+                }
+                m_button_count++;
             }
         }
     }
 }
 
-void CCedrusXidResponseDevice::set_xid_device(
-    boost::shared_ptr<cedrus::xid_device_t> xid_device)
+void CCedrusXidResponseDevice::set_xid_device(boost::shared_ptr<cedrus::base_device_t> xid_device)
 {
-    xid_device_ = xid_device;
-    button_count_ = xid_device_->get_button_count();
+    m_xid_device = xid_device;
+
+    std::vector<cedrus::device_port> port_vector = xid_device->get_device_config().get_vector_of_ports();
+
+    for ( unsigned int i = 0; i < port_vector.size(); i++ )
+    {
+        if ( port_vector[i].is_response_port )
+        {
+            m_button_count += port_vector[i].number_of_lines;
+        }
+    }
     set_button_names();
 }
 
 STDMETHODIMP CCedrusXidResponseDevice::getName(BSTR *name)
 {
-    if(!xid_device_)
+    if(!m_xid_device)
     {
-        last_error_ = L"Xid device has not been properly initialized.";
+        m_last_error = L"Xid device has not been properly initialized.";
         return E_FAIL;
     }
 
-    std::string dev_name = xid_device_->get_device_name();
+    std::string dev_name = m_xid_device->get_device_config().get_device_name();
     std::wstring wname;
     wname.assign(dev_name.begin(), dev_name.end());
 
@@ -125,7 +146,7 @@ STDMETHODIMP CCedrusXidResponseDevice::setDefaults()
 
 STDMETHODIMP CCedrusXidResponseDevice::getProperties(BSTR *parameters)
 {
-    *parameters = SysAllocString(to_wstr(button_count_).c_str());
+    *parameters = SysAllocString(to_wstr(m_button_count).c_str());
     return S_OK;
 }
 
@@ -137,7 +158,7 @@ STDMETHODIMP CCedrusXidResponseDevice::setProperties(BSTR parameters)
 
 STDMETHODIMP CCedrusXidResponseDevice::getButtonCount(unsigned long *count)
 {
-    *count = button_count_;
+    *count = m_button_count;
     return S_OK;
 }
 
@@ -145,11 +166,11 @@ STDMETHODIMP CCedrusXidResponseDevice::getButtonNames(
     BSTR *names, unsigned long *count)
 {
 #undef min
-    *count = std::min<unsigned long>(*count, button_count_);
+    *count = std::min<unsigned long>(*count, m_button_count);
 
     for(unsigned int i = 0; i < *count; ++i)
     {
-        names[i] = SysAllocString(button_names_[i].c_str());
+        names[i] = SysAllocString(m_button_names[i].c_str());
     }
     return S_OK;
 }
@@ -167,10 +188,9 @@ STDMETHODIMP CCedrusXidResponseDevice::acquire(
         active_device = active_device.create(
             CLSID_CedrusXidActiveDevice, IID_IActiveResponseDevice);
 
-
         if(active_device.get() == 0)
         {
-            last_error_ = L"Failed to create response device";
+            m_last_error = L"Failed to create response device";
             rval = E_FAIL;
         }
         else
@@ -181,13 +201,13 @@ STDMETHODIMP CCedrusXidResponseDevice::acquire(
             CCedrusXidActiveDevice *dev = static_cast<
                 CCedrusXidActiveDevice*>(*device);
 
-            dev->set_xid_device(xid_device_);
-            dev->setButtonCount(button_count_);
+            dev->set_xid_device(m_xid_device);
+            dev->setButtonCount(m_button_count);
         }
     }
     catch(...)
     {
-        last_error_ = L"Failed to create response device";
+        m_last_error = L"Failed to create response device";
         rval = E_FAIL;
     }
 
@@ -212,6 +232,6 @@ STDMETHODIMP CCedrusXidResponseDevice::getAxisNames(
 
 STDMETHODIMP CCedrusXidResponseDevice::getLastError(BSTR *error)
 {
-    *error = SysAllocString(last_error_.c_str());
+    *error = SysAllocString(m_last_error.c_str());
     return S_OK;
 }

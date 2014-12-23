@@ -97,11 +97,10 @@ public:
     STDMETHOD(getLastError)(BSTR * error);
 
 private:
-    std::wstring last_error_;
-    std::vector<public_nbs::COM_ptr<IResponseDevice> > devices_;
-    std::wstring devconfig_location_;
+    std::wstring m_last_error;
+    std::vector<public_nbs::COM_ptr<IResponseDevice> > m_devices;
 
-    cedrus::xid_device_scanner_t port_info_;
+    cedrus::xid_device_scanner_t m_device_scanner;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(CedrusXidDeviceEnumerator), CCedrusXidDeviceEnumerator)

@@ -41,7 +41,7 @@
 
 namespace cedrus
 {
-    class xid_device_t;
+    class base_device_t;
 }
 
 using namespace ATL;
@@ -91,7 +91,7 @@ public:
 
     // ICedrusXidResponseDevice
 public:
-    void set_xid_device(boost::shared_ptr<cedrus::xid_device_t> xid_device);
+    void set_xid_device(boost::shared_ptr<cedrus::base_device_t> xid_device);
 
 private:
     void set_button_names();
@@ -114,10 +114,10 @@ public:
     STDMETHOD(getLastError)(BSTR * error);
 
 private:
-    std::wstring last_error_;
-    boost::shared_ptr<cedrus::xid_device_t> xid_device_;
-    std::vector<std::wstring> button_names_;
-    unsigned int button_count_;
+    std::wstring m_last_error;
+    boost::shared_ptr<cedrus::base_device_t> m_xid_device;
+    std::vector<std::wstring> m_button_names;
+    unsigned int m_button_count;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(CedrusXidResponseDevice), CCedrusXidResponseDevice)
