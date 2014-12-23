@@ -34,7 +34,12 @@
 					<File Id='XID_RB_730' Name='XID RB-730.devconfig' DiskId='1' Source='..\devconfig\XID RB-730.devconfig'/>
 					<File Id='XID_RB_830' Name='XID RB-830.devconfig' DiskId='1' Source='..\devconfig\XID RB-830.devconfig'/>
 					<File Id='XID_RB_834' Name='XID RB-834.devconfig' DiskId='1' Source='..\devconfig\XID RB-834.devconfig'/>
+					<File Id='XID_RB_540' Name='XID RB-540.devconfig' DiskId='1' Source='..\devconfig\XID RB-540.devconfig'/>
+					<File Id='XID_RB_740' Name='XID RB-740.devconfig' DiskId='1' Source='..\devconfig\XID RB-740.devconfig'/>
+					<File Id='XID_RB_840' Name='XID RB-840.devconfig' DiskId='1' Source='..\devconfig\XID RB-840.devconfig'/>
+					<File Id='XID_RB_844' Name='XID RB-844.devconfig' DiskId='1' Source='..\devconfig\XID RB-844.devconfig'/>
 					<File Id='XID_Lumina_LP_400' Name='XID Lumina LP-400.devconfig' DiskId='1' Source='..\devconfig\XID Lumina LP-400.devconfig'/>
+					<File Id='XID_Lumina_3G' Name='XID Lumina 3G.devconfig' DiskId='1' Source='..\devconfig\XID Lumina 3G.devconfig'/>
 					<File Id='XID_StimTracker_ST_100' Name='XID StimTracker ST-100.devconfig' DiskId='1' Source='..\devconfig\XID StimTracker ST-100.devconfig'/>
 					<File Id='XID_SV_1' Name='XID SV-1.devconfig' DiskId='1' Source='..\devconfig\XID SV-1.devconfig'/>
 				</Component>
