@@ -52,7 +52,7 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
         {
             // However, if we have a packet's worth of data, but it's not a valid packet,
             // things are starting to head south.
-            if( m_input_buffer[5] == '\0' )
+            //if( m_input_buffer[5] == '\0' )
             {
                 res.was_pressed = (m_input_buffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
                 res.port = m_input_buffer[1] & 0x0F;
@@ -63,8 +63,8 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
 
                 input_found = static_cast<key_state>(FOUND_KEY_DOWN + !res.was_pressed);
             }
-            else
-                m_xid_packet_index = INVALID_PACKET_INDEX;
+            //else
+            //    m_xid_packet_index = INVALID_PACKET_INDEX;
         }
     }
 

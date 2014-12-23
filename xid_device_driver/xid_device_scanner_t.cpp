@@ -98,7 +98,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 )
 {
     devices_.clear();
-    progressFunction(0);
+    if ( progressFunction )
+        progressFunction(0);
 
     try {
         boost::filesystem::path targetDir(config_file_location);
@@ -117,7 +118,9 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     std::vector<std::string> available_com_ports;
     load_com_ports_platform_specific( &available_com_ports );
 
-    progressFunction(5);
+    if ( progressFunction )
+        progressFunction(5);
+
 	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
 	{
 	    if( is_regular_file(p) && p.extension() == ".devconfig" )
@@ -136,7 +139,9 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
         }
 	}
 
-    progressFunction(40);
+    if ( progressFunction )
+        progressFunction(40);
+
     for(std::vector<std::string>::iterator iter = available_com_ports.begin(),
         end = available_com_ports.end();
         iter != end; ++iter)
@@ -173,7 +178,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
                 if( boost::starts_with( info, "_xid" ) )
                 {
-                    progressFunction(70);
+                    if ( progressFunction )
+                        progressFunction(70);
                     device_found = true;
                     bool mode_changed = false;
 
@@ -205,7 +211,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                     {
                         devices_.push_back( matched_dev );
 
-                        if ( mode_changed )
+                        if ( mode_changed && reportFunction )
                             reportFunction( matched_dev-> get_device_config().get_device_name() );
                     }
                 }
@@ -214,7 +220,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
             xid_con->close();
         }
     }
-    progressFunction(100);
+    if ( progressFunction )
+        progressFunction(100);
     return devices_.size();
 }
 

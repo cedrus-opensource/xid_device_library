@@ -112,6 +112,11 @@ cedrus::response cedrus::base_device_t::get_next_response()
     return cedrus::response();
 }
 
+void cedrus::base_device_t::clear_responses()
+{
+    // nothing
+}
+
 int cedrus::base_device_t::get_accessory_connector_mode( void )
 {
     return INVALID_RETURN_VALUE;

@@ -79,6 +79,8 @@ namespace cedrus
 
         virtual cedrus::response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
 
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_responses();
+
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode( void );
 
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_device();

@@ -61,17 +61,19 @@ namespace cedrus
 
         virtual int query_base_timer();
 
-        void poll_for_response();
+        virtual void poll_for_response();
 
-        bool has_queued_responses();
+        virtual bool has_queued_responses();
 
-        cedrus::response get_next_response();
+        virtual cedrus::response get_next_response();
 
-        int get_accessory_connector_mode();
+        virtual void clear_responses();
 
-        void set_accessory_connector_mode( int mode );
+        virtual int get_accessory_connector_mode();
 
-        void set_device_protocol( int protocol );
+        virtual void set_accessory_connector_mode( int mode );
+
+        virtual void set_device_protocol( int protocol );
 
         virtual xid_device_config_t get_device_config();
         virtual int  open_connection();

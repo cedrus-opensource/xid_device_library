@@ -88,8 +88,9 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
         port.port_name = pt->get(port_str+".PortName", "not_found");
         port.port_number = i;
         port.number_of_lines = pt->get(port_str+".NumberOfLines", -1);
+        port.is_response_port = pt->get(port_str+".UseableAsResponse", "not_found") == "Yes";
 
-        if ( pt->get(port_str+".UseableAsResponse", "not_found") == "Yes" )
+        if ( port.is_response_port )
         {
             // devconfig files have up to 8 key mappings per port
             for( int j = 0; j < 8; ++j )

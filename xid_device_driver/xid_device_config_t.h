@@ -47,7 +47,8 @@ namespace cedrus
         device_port():
             port_name(""),
             port_number(-1),
-            number_of_lines(-1)
+            number_of_lines(-1),
+            is_response_port(false)
         {
             // initialize all mappings to -1
             memset( key_map, -1, sizeof(key_map) );
@@ -57,6 +58,7 @@ namespace cedrus
         int port_number;
         int number_of_lines;
         int key_map[8];
+        bool is_response_port;
     };
 
     /**

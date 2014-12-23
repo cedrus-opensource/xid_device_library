@@ -72,6 +72,11 @@ cedrus::response cedrus::xid_device_t::get_next_response()
     return m_response_mgr->get_next_response();
 }
 
+void cedrus::xid_device_t::clear_responses()
+{
+    xid_con_->flush_read_from_device_buffer();
+}
+
 int cedrus::xid_device_t::get_accessory_connector_mode( void )
 {
     return xid_glossary::get_accessory_connector_mode(xid_con_);
