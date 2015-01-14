@@ -41,7 +41,7 @@ cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<const xid_device_config_t> dev_config)
     : xid_con_(xid_con),
       config_(dev_config),
-      m_response_mgr(new response_mgr())
+      m_response_mgr(new response_mgr(get_minor_firmware_version(), dev_config))
 {
     clear_lines();
     reset_rt_timer();

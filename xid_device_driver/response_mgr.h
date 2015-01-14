@@ -35,6 +35,7 @@
 #include "constants.h"
 
 #include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 #include <queue>
 
 #include "XidDriverImpExpDefs.h"
@@ -74,6 +75,7 @@ namespace cedrus
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         CEDRUS_XIDDRIVER_IMPORTEXPORT response_mgr();
+        response_mgr(int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         CEDRUS_XIDDRIVER_IMPORTEXPORT ~response_mgr();
@@ -98,6 +100,7 @@ namespace cedrus
 
         void adjust_buffer_for_packet_recovery();
         key_state xid_input_found( response &res );
+        key_state xid_input_found_lumina3g_21( response &res );
 
         int delay_;
 
@@ -111,6 +114,7 @@ namespace cedrus
         int m_xid_packet_index;
 
         std::queue<response> response_queue_;
+        boost::function< cedrus::key_state (response&) > m_response_parsing_function;
     };
 } // namespace cedrus
 
