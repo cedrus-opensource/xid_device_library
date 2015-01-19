@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -51,14 +51,14 @@ using namespace ATL;
 
 class ATL_NO_VTABLE CCedrusXidActiveDevice :
     public CComObjectRootEx<CComSingleThreadModel>,
-    public CComCoClass<CCedrusXidActiveDevice, 
+    public CComCoClass<CCedrusXidActiveDevice,
                        &CLSID_CedrusXidActiveDevice>,
-    public IDispatchImpl<ICedrusXidActiveDevice, 
-                         &IID_ICedrusXidActiveDevice, 
-                         &LIBID_CedrusXidDriverLib, 
+    public IDispatchImpl<ICedrusXidActiveDevice,
+                         &IID_ICedrusXidActiveDevice,
+                         &LIBID_CedrusXidDriverLib,
                          /*wMajor =*/ 1, /*wMinor =*/ 0>,
-    public IDispatchImpl<IActiveResponseDevice, 
-                         &__uuidof(IActiveResponseDevice), 
+    public IDispatchImpl<IActiveResponseDevice,
+                         &__uuidof(IActiveResponseDevice),
                          &LIBID_ResponseExtension>
 {
 public:
