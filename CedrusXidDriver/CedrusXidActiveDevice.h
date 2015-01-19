@@ -110,8 +110,6 @@ private:
     boost::shared_ptr<cedrus::base_device_t> m_xid_device;
     std::wstring m_last_error;
     std::vector<tagResponseInfo> m_key_press_events;
-    long long m_hpc_freq;
-    long m_timer_uncertainty;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(CedrusXidActiveDevice), CCedrusXidActiveDevice)

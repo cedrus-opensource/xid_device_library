@@ -40,25 +40,15 @@
 
 CCedrusXidActiveDevice::CCedrusXidActiveDevice()
     : m_button_count(0),
-      m_xid_device(),
-      m_timer_uncertainty(0)
-{
-    LARGE_INTEGER hpc_freq;
-    QueryPerformanceFrequency(&hpc_freq);
-    m_hpc_freq = hpc_freq.QuadPart;
-}
+      m_xid_device()
+{}
 
 void CCedrusXidActiveDevice::set_xid_device(boost::shared_ptr<cedrus::base_device_t> xid_device)
 {
-    // LARGE_INTEGER begin;
-    // LARGE_INTEGER end;
     m_xid_device = xid_device;
     m_xid_device->reset_base_timer();
 
-    // QueryPerformanceCounter(&begin);
     m_xid_device->reset_rt_timer();
-    // QueryPerformanceCounter(&end);
-    // m_timer_uncertainty = end.QuadPart - begin.QuadPart;
 }
 
 STDMETHODIMP CCedrusXidActiveDevice::getName(BSTR *name)
