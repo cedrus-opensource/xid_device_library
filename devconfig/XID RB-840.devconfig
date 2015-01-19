@@ -23,14 +23,14 @@ XidDeviceKeyMap7 = 0
 
 [Port1]
 PortName = Accessory Connector
-NumberOfLines = 6
+NumberOfLines = 8
 UseableAsResponse = No
 
 [Port2]
 PortName = Light Sensor
 NumberOfLines = 1
 UseableAsResponse = Yes
-XidDeviceKeyMap3 = 3
+XidDeviceKeyMap3 = 0
 
 [Port3]
 PortName = External Input
@@ -44,8 +44,3 @@ XidDeviceKeyMap4 = 4
 XidDeviceKeyMap5 = 5
 XidDeviceKeyMap6 = 6
 XidDeviceKeyMap7 = 7
-
-[Port4]
-PortName = Accessory Connector
-NumberOfLines = 8
-UseableAsResponse = No

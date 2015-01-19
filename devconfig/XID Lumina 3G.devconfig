@@ -9,8 +9,8 @@ XidModelID = 65
 XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
 
 [Port0]
-PortName = Lumina Keys 1
-NumberOfLines = 4
+PortName = Lumina Pad 1, Button
+NumberOfLines = 5
 UseableAsResponse = Yes
 XidDeviceKeyMap1 = 0
 XidDeviceKeyMap2 = 1
@@ -19,21 +19,21 @@ XidDeviceKeyMap4 = 3
 XidDeviceKeyMap5 = 4
 
 [Port1]
-PortName = Lumina Keys 2
-NumberOfLines = 4
+PortName = Lumina Pad 2, Button
+NumberOfLines = 5
 UseableAsResponse = Yes
-XidDeviceKeyMap1 = 5
-XidDeviceKeyMap2 = 6
-XidDeviceKeyMap3 = 7
-XidDeviceKeyMap4 = 8
-XidDeviceKeyMap5 = 9
+XidDeviceKeyMap1 = 0
+XidDeviceKeyMap2 = 1
+XidDeviceKeyMap3 = 2
+XidDeviceKeyMap4 = 3
+XidDeviceKeyMap5 = 4
 
 [Port2]
 PortName = Light Sensor + Scanner Trigger
 NumberOfLines = 2
 UseableAsResponse = Yes
-XidDeviceKeyMap3 = 3
-XidDeviceKeyMap4 = 4
+XidDeviceKeyMap3 = 0
+XidDeviceKeyMap4 = 1
 
 [Port3]
 PortName = External Input
