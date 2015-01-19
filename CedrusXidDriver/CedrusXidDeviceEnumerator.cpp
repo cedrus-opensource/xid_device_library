@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -71,7 +71,7 @@ STDMETHODIMP CCedrusXidDeviceEnumerator::getDevice(
     unsigned long index, IResponseDevice **device)
 {
     HRESULT rval = S_OK;
-    
+
     if(index >= m_devices.size())
     {
         m_last_error = L"Invalid index passed to CedrusXidDeviceEnumerator::getDevice";
@@ -87,12 +87,12 @@ STDMETHODIMP CCedrusXidDeviceEnumerator::getDevice(
                 m_devices[index] = m_devices[index].create(
                     CLSID_CedrusXidResponseDevice, IID_IResponseDevice);
 
-                CCedrusXidResponseDevice *dev = 
+                CCedrusXidResponseDevice *dev =
                     static_cast<CCedrusXidResponseDevice*>(m_devices[index].get());
 
                 if(dev)
                 {
-                    boost::shared_ptr<cedrus::base_device_t> xid_device = 
+                    boost::shared_ptr<cedrus::base_device_t> xid_device =
                         m_device_scanner.device_connection_at_index(index);
                     xid_device->open_connection();
 

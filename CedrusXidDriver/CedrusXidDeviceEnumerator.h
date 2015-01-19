@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -52,12 +52,12 @@ class ATL_NO_VTABLE CCedrusXidDeviceEnumerator :
     public CComObjectRootEx<CComSingleThreadModel>,
     public CComCoClass<CCedrusXidDeviceEnumerator,
                        &CLSID_CedrusXidDeviceEnumerator>,
-    public IDispatchImpl<ICedrusXidDeviceEnumerator, 
-                         &IID_ICedrusXidDeviceEnumerator, 
-                         &LIBID_CedrusXidDriverLib, 
+    public IDispatchImpl<ICedrusXidDeviceEnumerator,
+                         &IID_ICedrusXidDeviceEnumerator,
+                         &LIBID_CedrusXidDriverLib,
                          /*wMajor =*/ 1, /*wMinor =*/ 0>,
-    public IDispatchImpl<IResponseDeviceEnumerator, 
-                         &__uuidof(IResponseDeviceEnumerator), 
+    public IDispatchImpl<IResponseDeviceEnumerator,
+                         &__uuidof(IResponseDeviceEnumerator),
                          &LIBID_ResponseExtension>
 {
 public:

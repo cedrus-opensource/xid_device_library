@@ -6,7 +6,7 @@
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.  
+ * this list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
@@ -52,14 +52,14 @@ using namespace ATL;
 
 class ATL_NO_VTABLE CCedrusXidResponseDevice :
     public CComObjectRootEx<CComSingleThreadModel>,
-    public CComCoClass<CCedrusXidResponseDevice, 
+    public CComCoClass<CCedrusXidResponseDevice,
                        &CLSID_CedrusXidResponseDevice>,
-    public IDispatchImpl<ICedrusXidResponseDevice, 
-                         &IID_ICedrusXidResponseDevice, 
-                         &LIBID_CedrusXidDriverLib, 
+    public IDispatchImpl<ICedrusXidResponseDevice,
+                         &IID_ICedrusXidResponseDevice,
+                         &LIBID_CedrusXidDriverLib,
                          /*wMajor =*/ 1, /*wMinor =*/ 0>,
-    public IDispatchImpl<IResponseDevice, 
-                         &__uuidof(IResponseDevice), 
+    public IDispatchImpl<IResponseDevice,
+                         &__uuidof(IResponseDevice),
                          &LIBID_ResponseExtension>
 {
 public:
@@ -106,8 +106,8 @@ public:
     STDMETHOD(setProperties)(BSTR parameters);
     STDMETHOD(getButtonCount)(unsigned long * count);
     STDMETHOD(getButtonNames)(BSTR * names, unsigned long * size);
-    STDMETHOD(acquire)(unsigned char useButtons, 
-                       unsigned char useAxes, 
+    STDMETHOD(acquire)(unsigned char useButtons,
+                       unsigned char useAxes,
                        IActiveResponseDevice * * device);
     STDMETHOD(getAxisCount)(unsigned long * count, AxisType * type);
     STDMETHOD(getAxisNames)(BSTR * names, unsigned long * size);
