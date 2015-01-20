@@ -36,6 +36,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
+#include <boost/noncopyable.hpp>
 #include <queue>
 
 #include "XidDriverImpExpDefs.h"
@@ -65,7 +66,7 @@ namespace cedrus
         int reaction_time;
     };
 
-    class response_mgr
+    class response_mgr : private boost::noncopyable
     {
     public:
         enum
@@ -74,8 +75,7 @@ namespace cedrus
         };
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        CEDRUS_XIDDRIVER_IMPORTEXPORT response_mgr();
-        response_mgr(int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config);
+        CEDRUS_XIDDRIVER_IMPORTEXPORT response_mgr(int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         CEDRUS_XIDDRIVER_IMPORTEXPORT ~response_mgr();

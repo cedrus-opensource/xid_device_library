@@ -7,18 +7,8 @@
 
 #include "CedrusAssert.h"
 
-cedrus::response_mgr::response_mgr()
-    : m_bytes_in_buffer(0),
-      m_xid_packet_index(INVALID_PACKET_INDEX),
-      m_response_parsing_function( boost::bind( &cedrus::response_mgr::xid_input_found, this, _1 ) )
-{
-    for(int i = 0; i < XID_PACKET_SIZE; ++i)
-    {
-        m_input_buffer[i] = '\0';
-    }
-}
 
-cedrus::response_mgr::response_mgr( int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config )
+cedrus::response_mgr::response_mgr( const int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config )
     : m_bytes_in_buffer(0),
       m_xid_packet_index(INVALID_PACKET_INDEX),
       m_response_parsing_function( boost::bind( &cedrus::response_mgr::xid_input_found, this, _1 ) )
@@ -34,10 +24,10 @@ cedrus::response_mgr::response_mgr( int minor_firmware_ver, boost::shared_ptr<co
      bugged and is producing 7-byte xid response packets, which is weird and bad
      for a variety of reasons. Our parsing can handle snipping off the extra byte,
      but since the 7th byte isn't at the end of the packet, this messes with the
-     timestamp, making the problem described in the comment at the top of 
+     timestamp, making the problem described in the comment at the top of
      cedrus::response_mgr::xid_input_found much, much worse.
     */
-    if ( dev_config->get_product_id() == PRODUCT_ID_LUMINA && minor_firmware_ver == 1 )
+    if ( dev_config && dev_config->get_product_id() == PRODUCT_ID_LUMINA && minor_firmware_ver == 1 )
     {
         m_response_parsing_function = boost::bind( &cedrus::response_mgr::xid_input_found_lumina3g_21, this, _1 );
     }
@@ -125,7 +115,7 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
 
     if ( m_bytes_in_buffer == XID_PACKET_SIZE )
     {
-        /* 
+        /*
         This is the end of our journey. We have either successfully cobbled together an XID packet
         or we have failed utterly. Enjoy the complimentary assert if that was the case, and keep in
         mind that we cannot process responses from XID devices that have been on for 4.66 hours.

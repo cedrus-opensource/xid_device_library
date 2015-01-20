@@ -42,7 +42,7 @@ protected:
     cedrus::device_port m_dummyDevicePort;
 };
 
-cedrus::response_mgr TestKeypressPackets::m_responseMgr;
+cedrus::response_mgr TestKeypressPackets::m_responseMgr( 0, boost::shared_ptr<const cedrus::xid_device_config_t>() );
 boost::shared_ptr<cedrus::xid_con_test_only> TestKeypressPackets::m_dummyConnection( new cedrus::xid_con_test_only(NULL, 0) );
 
 // Read in a single valid keypress. It should resolve to "Port 0, Button 8 Pressed"
