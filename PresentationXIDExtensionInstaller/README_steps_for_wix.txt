@@ -40,4 +40,6 @@ sure you add that location to your PATH variable!
 
 6. If step 5 succeeds, then you should now have 'CedrusPresentationXIDExtension.msi'.  If you run/install that msi, it should install the extension correctly to 'C:\Program Files (x86)\Cedrus XID Response Extension for Presentation\'.
 
-7. If you're a Cedrus developer, codesign the msi.
+7. [OPTIONAL] If you're a Cedrus developer, codesign the msi.  The codesigning command will look roughly like:
+
+G:\path_to_tools\codesigning_win\signtool sign /t http://timestamp.digicert.com /f "G:\path_to_tools\codesigning_win\digicert_6_27_win.pfx" /p xxxxxxxxxx "G:\some_path\PresentationXIDExtensionInstaller\CedrusPresentationXIDExtension.msi"
