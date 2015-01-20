@@ -7,6 +7,21 @@
 
 #include "CedrusAssert.h"
 
+namespace
+{
+    bool device_is_7byte_lumina3g_21
+    (
+     const int minor_firmware_ver,
+     boost::shared_ptr<const cedrus::xid_device_config_t> dev_config
+    )
+    {
+        const bool prod_is_lumina3g_21 = ( dev_config->get_product_id() == cedrus::PRODUCT_ID_LUMINA );
+        const bool maj_fw_is_lumina3g_21 = ( dev_config->m_major_firmware_ver == 2 );
+        const bool min_fw_is_lumina3g_21 = ( minor_firmware_ver == 1 );
+
+        return ( prod_is_lumina3g_21 && maj_fw_is_lumina3g_21 && min_fw_is_lumina3g_21 );
+    }
+}
 
 cedrus::response_mgr::response_mgr( const int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config )
     : m_bytes_in_buffer(0),
@@ -27,7 +42,7 @@ cedrus::response_mgr::response_mgr( const int minor_firmware_ver, boost::shared_
      timestamp, making the problem described in the comment at the top of
      cedrus::response_mgr::xid_input_found much, much worse.
     */
-    if ( dev_config && dev_config->get_product_id() == PRODUCT_ID_LUMINA && minor_firmware_ver == 1 )
+    if ( dev_config && device_is_7byte_lumina3g_21( minor_firmware_ver, dev_config ) )
     {
         m_response_parsing_function = boost::bind( &cedrus::response_mgr::xid_input_found_lumina3g_21, this, _1 );
     }
