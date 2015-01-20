@@ -5,20 +5,11 @@
             <Component Id="boost_date_time_vc100_mt_1_49.dll" Guid="*">
                 <File Id="boost_date_time_vc100_mt_1_49.dll" KeyPath="yes" Source="$(var.SourceDir)\boost_date_time-vc100-mt-1_49.dll" />
             </Component>
-            <Component Id="boost_date_time_vc100_mt_gd_1_49.dll" Guid="*">
-                <File Id="boost_date_time_vc100_mt_gd_1_49.dll" KeyPath="yes" Source="$(var.SourceDir)\boost_date_time-vc100-mt-gd-1_49.dll" />
-            </Component>
             <Component Id="boost_filesystem_vc100_mt_1_49.dll" Guid="*">
                 <File Id="boost_filesystem_vc100_mt_1_49.dll" KeyPath="yes" Source="$(var.SourceDir)\boost_filesystem-vc100-mt-1_49.dll" />
             </Component>
-            <Component Id="boost_filesystem_vc100_mt_gd_1_49.dll" Guid="*">
-                <File Id="boost_filesystem_vc100_mt_gd_1_49.dll" KeyPath="yes" Source="$(var.SourceDir)\boost_filesystem-vc100-mt-gd-1_49.dll" />
-            </Component>
             <Component Id="boost_system_vc100_mt_1_49.dll" Guid="*">
                 <File Id="boost_system_vc100_mt_1_49.dll" KeyPath="yes" Source="$(var.SourceDir)\boost_system-vc100-mt-1_49.dll" />
-            </Component>
-            <Component Id="boost_system_vc100_mt_gd_1_49.dll" Guid="*">
-                <File Id="boost_system_vc100_mt_gd_1_49.dll" KeyPath="yes" Source="$(var.SourceDir)\boost_system-vc100-mt-gd-1_49.dll" />
             </Component>
             <Component Id="CedrusXidDriver.dll" Guid="*">
                 <File Id="CedrusXidDriver.dll" KeyPath="yes" Source="$(var.SourceDir)\CedrusXidDriver.dll" />
@@ -31,11 +22,8 @@
     <Fragment>
         <ComponentGroup Id="dlls_to_include">
             <ComponentRef Id="boost_date_time_vc100_mt_1_49.dll" />
-            <ComponentRef Id="boost_date_time_vc100_mt_gd_1_49.dll" />
             <ComponentRef Id="boost_filesystem_vc100_mt_1_49.dll" />
-            <ComponentRef Id="boost_filesystem_vc100_mt_gd_1_49.dll" />
             <ComponentRef Id="boost_system_vc100_mt_1_49.dll" />
-            <ComponentRef Id="boost_system_vc100_mt_gd_1_49.dll" />
             <ComponentRef Id="CedrusXidDriver.dll" />
             <ComponentRef Id="xid_device_driver.dll" />
         </ComponentGroup>
