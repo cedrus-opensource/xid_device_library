@@ -42,8 +42,7 @@
 using namespace public_nbs;
 
 CCedrusXidResponseDevice::CCedrusXidResponseDevice()
-    : m_xid_device(),
-      m_button_count(0)
+    : m_xid_device()
 {
 }
 
@@ -63,7 +62,7 @@ void CCedrusXidResponseDevice::set_button_names()
     std::wstring prefix (temp.begin(), temp.end());
 
     std::vector<cedrus::device_port> port_vector = m_xid_device->get_device_config().get_vector_of_ports();
-    int m_button_count = 0;
+
     bool is_lumina_3g = (m_xid_device->get_device_config().get_product_id() == 48 &&
         m_xid_device->get_device_config().m_major_firmware_ver == 2);
 
@@ -88,7 +87,6 @@ void CCedrusXidResponseDevice::set_button_names()
                     m_button_names.push_back(
                         prefix + L" " + public_nbs::to_wstr(j+1));
                 }
-                m_button_count++;
             }
         }
     }
@@ -98,15 +96,6 @@ void CCedrusXidResponseDevice::set_xid_device(boost::shared_ptr<cedrus::base_dev
 {
     m_xid_device = xid_device;
 
-    std::vector<cedrus::device_port> port_vector = xid_device->get_device_config().get_vector_of_ports();
-
-    for ( unsigned int i = 0; i < port_vector.size(); i++ )
-    {
-        if ( port_vector[i].is_response_port )
-        {
-            m_button_count += port_vector[i].number_of_lines;
-        }
-    }
     set_button_names();
 }
 
@@ -146,7 +135,7 @@ STDMETHODIMP CCedrusXidResponseDevice::setDefaults()
 
 STDMETHODIMP CCedrusXidResponseDevice::getProperties(BSTR *parameters)
 {
-    *parameters = SysAllocString(to_wstr(m_button_count).c_str());
+    *parameters = SysAllocString(to_wstr(m_button_names.size()).c_str());
     return S_OK;
 }
 
@@ -158,7 +147,7 @@ STDMETHODIMP CCedrusXidResponseDevice::setProperties(BSTR parameters)
 
 STDMETHODIMP CCedrusXidResponseDevice::getButtonCount(unsigned long *count)
 {
-    *count = m_button_count;
+    *count = m_button_names.size();
     return S_OK;
 }
 
@@ -166,7 +155,7 @@ STDMETHODIMP CCedrusXidResponseDevice::getButtonNames(
     BSTR *names, unsigned long *count)
 {
 #undef min
-    *count = std::min<unsigned long>(*count, m_button_count);
+    *count = std::min<unsigned long>(*count, m_button_names.size());
 
     for(unsigned int i = 0; i < *count; ++i)
     {
@@ -202,7 +191,7 @@ STDMETHODIMP CCedrusXidResponseDevice::acquire(
                 CCedrusXidActiveDevice*>(*device);
 
             dev->set_xid_device(m_xid_device);
-            dev->setButtonCount(m_button_count);
+            dev->setButtonCount(m_button_names.size());
         }
     }
     catch(...)

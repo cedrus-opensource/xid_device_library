@@ -117,7 +117,6 @@ private:
     std::wstring m_last_error;
     boost::shared_ptr<cedrus::base_device_t> m_xid_device;
     std::vector<std::wstring> m_button_names;
-    unsigned int m_button_count;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(CedrusXidResponseDevice), CCedrusXidResponseDevice)
