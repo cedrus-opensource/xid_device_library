@@ -89,6 +89,8 @@ cedrus::key_state cedrus::response_mgr::xid_input_found( response &res )
                 res.port = m_input_buffer[1] & 0x0F;
                 res.key = (m_input_buffer[1] & 0xE0) >> 5;
 
+                CEDRUS_ASSERT ( res.port < 6, "As of March 2015, no devices should be able to receive input from more than 5 ports!" );
+
                 res.reaction_time = xid_glossary::adjust_endianness_chars_to_uint
                     ( m_input_buffer[2], m_input_buffer[3], m_input_buffer[4], m_input_buffer[5] );
 
@@ -165,6 +167,8 @@ cedrus::key_state cedrus::response_mgr::xid_input_found_lumina3g_21( response &r
             res.was_pressed = (m_input_buffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
             res.port = m_input_buffer[1] & 0x0F;
             res.key = (m_input_buffer[1] & 0xE0) >> 5;
+
+            CEDRUS_ASSERT ( res.port < 6, "As of March 2015, no devices should be able to receive input from more than 5 ports!" );
 
             res.reaction_time = xid_glossary::adjust_endianness_chars_to_uint
                 ( m_input_buffer[2], m_input_buffer[3], m_input_buffer[4], m_input_buffer[5] );

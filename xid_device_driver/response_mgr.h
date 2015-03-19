@@ -71,7 +71,7 @@ namespace cedrus
     public:
         enum
         {
-	    INVALID_PORT_BITS = 0x0C
+            INVALID_PORT_BITS = 0x08
         };
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
