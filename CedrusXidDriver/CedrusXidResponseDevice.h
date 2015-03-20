@@ -106,6 +106,7 @@ public:
     STDMETHOD(setProperties)(BSTR parameters);
     STDMETHOD(getButtonCount)(unsigned long * count);
     STDMETHOD(getButtonNames)(BSTR * names, unsigned long * size);
+    // IMPORTANT: This function resets the device timer
     STDMETHOD(acquire)(unsigned char useButtons,
                        unsigned char useAxes,
                        IActiveResponseDevice * * device);

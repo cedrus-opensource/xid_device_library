@@ -164,6 +164,7 @@ STDMETHODIMP CCedrusXidResponseDevice::getButtonNames(
     return S_OK;
 }
 
+// IMPORTANT: This function resets the device timer
 STDMETHODIMP CCedrusXidResponseDevice::acquire(
     unsigned char useButtons,
     unsigned char useAxes,
@@ -190,7 +191,9 @@ STDMETHODIMP CCedrusXidResponseDevice::acquire(
             CCedrusXidActiveDevice *dev = static_cast<
                 CCedrusXidActiveDevice*>(*device);
 
+            // This is the actual only time where we reset the device timer.
             dev->set_xid_device(m_xid_device);
+
             dev->setButtonCount(m_button_names.size());
         }
     }
