@@ -29,6 +29,9 @@ protected:
         boost::property_tree::ptree pt;
         m_dummyConfig = cedrus::xid_device_config_t::config_for_device(&pt);
         m_dummyConfig->m_device_ports.insert(std::make_pair(0, m_dummyDevicePort));
+
+        m_responseMgr.reset( new cedrus::response_mgr( 0, boost::shared_ptr<const cedrus::xid_device_config_t>() ) );
+        m_dummyConnection.reset( new cedrus::xid_con_test_only( cedrus::xid_con_test_only(NULL, 0) ) );
     }
 
     virtual void TearDown()
@@ -36,14 +39,11 @@ protected:
         //delete logNull;
     }
 
-    static cedrus::response_mgr m_responseMgr;
-    static boost::shared_ptr<cedrus::xid_con_test_only> m_dummyConnection;
+    boost::shared_ptr<cedrus::response_mgr> m_responseMgr;
+    boost::shared_ptr<cedrus::xid_con_test_only> m_dummyConnection;
     boost::shared_ptr<cedrus::xid_device_config_t> m_dummyConfig;
     cedrus::device_port m_dummyDevicePort;
 };
-
-cedrus::response_mgr TestKeypressPackets::m_responseMgr( 0, boost::shared_ptr<const cedrus::xid_device_config_t>() );
-boost::shared_ptr<cedrus::xid_con_test_only> TestKeypressPackets::m_dummyConnection( new cedrus::xid_con_test_only(NULL, 0) );
 
 // Read in a single valid keypress. It should resolve to "Port 0, Button 8 Pressed"
 TEST_F( TestKeypressPackets, TestSingleValidKeypress )
@@ -56,10 +56,10 @@ TEST_F( TestKeypressPackets, TestSingleValidKeypress )
     testPacket[4] = '1';
     testPacket[5] = 0;
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
+    m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
 
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    cedrus::response res = TestKeypressPackets::m_responseMgr.get_next_response();
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    cedrus::response res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
@@ -85,17 +85,17 @@ TEST_F( TestKeypressPackets, TestSingleValidKeyPressRelease )
     testPacket[10] = '1';
     testPacket[11] = 0;
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
+    m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
 
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    cedrus::response res = TestKeypressPackets::m_responseMgr.get_next_response();
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    cedrus::response res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
     EXPECT_TRUE(res.was_pressed == true);
 
-    res = TestKeypressPackets::m_responseMgr.get_next_response();
+    res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
@@ -118,12 +118,12 @@ TEST_F( TestKeypressPackets, TestSingleInvalidKeypress )
     testPacket[5] = '1';
     testPacket[6] = 0;
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
+    m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
 
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    cedrus::response res = TestKeypressPackets::m_responseMgr.get_next_response();
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    cedrus::response res = m_responseMgr->get_next_response();
 
-    EXPECT_FALSE(TestKeypressPackets::m_responseMgr.has_queued_responses());
+    EXPECT_FALSE(m_responseMgr->has_queued_responses());
 
     Cedrus::UnSuppress_All_Assertions();
 }
@@ -147,13 +147,11 @@ TEST_F( TestKeypressPackets, TestOverlappingKeypressSimultaneous )
     testPacket[7] = '1';
     testPacket[8] = 0;
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
+    m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
 
-    // This extra check is now needed to 'complete' this attempt to read in a packet
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    cedrus::response res = TestKeypressPackets::m_responseMgr.get_next_response();
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    cedrus::response res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
@@ -186,11 +184,11 @@ TEST_F( TestKeypressPackets, TestOverlappingKeypressTricky )
     testPacket[8] = '1';
     testPacket[9] = 0;
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
+    m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
 
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    cedrus::response res = TestKeypressPackets::m_responseMgr.get_next_response();
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    cedrus::response res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
@@ -229,21 +227,20 @@ TEST_F( TestKeypressPackets, TestValidKeypressWithJunkSimultaneous )
     testPacket[19] = '1';
     testPacket[20] = 0;
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
+    m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
 
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
 
-    cedrus::response res = TestKeypressPackets::m_responseMgr.get_next_response();
+    cedrus::response res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
     EXPECT_TRUE(res.was_pressed == false);
 
-    res = TestKeypressPackets::m_responseMgr.get_next_response();
+    res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 1);
@@ -285,29 +282,29 @@ TEST_F( TestKeypressPackets, TestValidKeypressWithJunkGradual )
     char testPacket4[1];
     testPacket4[0] = 0;
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket1, sizeof(testPacket1));
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
+    m_dummyConnection->insert_more_data_into_buffer(testPacket1, sizeof(testPacket1));
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
 
-    EXPECT_FALSE(TestKeypressPackets::m_responseMgr.has_queued_responses());
+    EXPECT_FALSE(m_responseMgr->has_queued_responses());
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket2, sizeof(testPacket2));
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
+    m_dummyConnection->insert_more_data_into_buffer(testPacket2, sizeof(testPacket2));
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
 
-    cedrus::response res = TestKeypressPackets::m_responseMgr.get_next_response();
+    cedrus::response res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
     EXPECT_TRUE(res.was_pressed == false);
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket3, sizeof(testPacket3));
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
+    m_dummyConnection->insert_more_data_into_buffer(testPacket3, sizeof(testPacket3));
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
 
-    EXPECT_FALSE(TestKeypressPackets::m_responseMgr.has_queued_responses());
+    EXPECT_FALSE(m_responseMgr->has_queued_responses());
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket4, sizeof(testPacket4));
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
+    m_dummyConnection->insert_more_data_into_buffer(testPacket4, sizeof(testPacket4));
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
 
-    res = TestKeypressPackets::m_responseMgr.get_next_response();
+    res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 2);
@@ -342,29 +339,29 @@ TEST_F( TestKeypressPackets, TestLumina3G7ByteJamboree )
     testPacket3[5] = 0;
 
     // This is to clean out the remnants of the previous test.
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
+    m_dummyConnection->insert_more_data_into_buffer(testPacket, sizeof(testPacket));
 
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    cedrus::response res = TestKeypressPackets::m_responseMgr.get_next_response();
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    cedrus::response res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 5);
     EXPECT_TRUE(res.was_pressed == true);
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket2, sizeof(testPacket2));
+    m_dummyConnection->insert_more_data_into_buffer(testPacket2, sizeof(testPacket2));
 
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    res = TestKeypressPackets::m_responseMgr.get_next_response();
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    res = m_responseMgr->get_next_response();
 
-    EXPECT_FALSE(TestKeypressPackets::m_responseMgr.has_queued_responses());
+    EXPECT_FALSE(m_responseMgr->has_queued_responses());
 
-    TestKeypressPackets::m_dummyConnection->insert_more_data_into_buffer(testPacket3, sizeof(testPacket3));
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
+    m_dummyConnection->insert_more_data_into_buffer(testPacket3, sizeof(testPacket3));
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
 
-    EXPECT_FALSE(TestKeypressPackets::m_responseMgr.has_queued_responses());
+    EXPECT_FALSE(m_responseMgr->has_queued_responses());
 
-    TestKeypressPackets::m_responseMgr.check_for_keypress(TestKeypressPackets::m_dummyConnection, m_dummyConfig);
-    res = TestKeypressPackets::m_responseMgr.get_next_response();
+    m_responseMgr->check_for_keypress(m_dummyConnection, m_dummyConfig);
+    res = m_responseMgr->get_next_response();
 
     EXPECT_TRUE(res.port == 0);
     EXPECT_TRUE(res.key == 8);
