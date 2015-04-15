@@ -31,7 +31,7 @@ protected:
         m_dummyConfig->m_device_ports.insert(std::make_pair(0, m_dummyDevicePort));
 
         m_responseMgr.reset( new cedrus::response_mgr( 0, boost::shared_ptr<const cedrus::xid_device_config_t>() ) );
-        m_dummyConnection.reset( new cedrus::xid_con_test_only( cedrus::xid_con_test_only(NULL, 0) ) );
+        m_dummyConnection.reset( new cedrus::xid_con_test_only(NULL, 0) );
     }
 
     virtual void TearDown()
