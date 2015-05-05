@@ -5,10 +5,11 @@
 #include "XidDriverImpExpDefs.h"
 
 #include <sstream>
+#include <boost/noncopyable.hpp>
 
 namespace cedrus
 {
-    class  xid_con_test_only : public interface_xid_con
+    class  xid_con_test_only : public interface_xid_con, private boost::noncopyable
     {
     public:
         CEDRUS_XIDDRIVER_IMPORTEXPORT xid_con_test_only( char * input_buffer, int size );
