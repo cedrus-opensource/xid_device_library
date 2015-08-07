@@ -39,7 +39,7 @@ namespace cedrus
 
         static int query_base_timer(boost::shared_ptr<xid_con_t> xid_con);
 
-        static unsigned int cedrus::xid_glossary::adjust_endianness_chars_to_uint
+        static unsigned int adjust_endianness_chars_to_uint
         ( const char c1,
           const char c2,
           const char c3,
