@@ -102,8 +102,6 @@ namespace cedrus
         key_state xid_input_found( response &res );
         key_state xid_input_found_lumina3g_21( response &res );
 
-        int delay_;
-
         enum {XID_PACKET_SIZE = 6};
         enum {INVALID_PACKET_INDEX = -1};
         enum {KEY_RELEASE_BITMASK = 0x10};
