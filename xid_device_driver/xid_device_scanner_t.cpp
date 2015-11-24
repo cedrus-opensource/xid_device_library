@@ -121,9 +121,9 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     if ( progressFunction )
         progressFunction(5);
 
-	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
-	{
-	    if( is_regular_file(p) && p.extension() == ".devconfig" )
+    BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
+    {
+        if( is_regular_file(p) && p.extension() == ".devconfig" )
         {
             boost::property_tree::ptree pt;
             try
@@ -137,7 +137,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                 //err.filename(); err.line(); err.message();
             }
         }
-	}
+    }
 
     if ( progressFunction )
         progressFunction(40);

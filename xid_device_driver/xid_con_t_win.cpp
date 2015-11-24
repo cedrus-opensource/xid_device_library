@@ -40,14 +40,15 @@
 #include <windows.h>
 
 #include "constants.h"
+#include "ftd2xx.h"
 
 struct cedrus::xid_con_t::WindowsConnPimpl
 {
     WindowsConnPimpl()
-        : device_id_ ( NULL )
+        : m_deviceId ( NULL )
     {}
 
-    void setup_dcb(DCB &dcb,
+    void setup_dcb(FTDCB &dcb,
         int baud_rate,
         bytesize byte_size,
         bitparity bit_parity,
@@ -60,7 +61,7 @@ struct cedrus::xid_con_t::WindowsConnPimpl
         dcb.fBinary  = 1;
     }
 
-    void setup_timeouts(COMMTIMEOUTS &ct) const
+    void setup_timeouts(FTTIMEOUTS &ct) const
     {
         ct.ReadIntervalTimeout         = MAXDWORD;
         ct.ReadTotalTimeoutConstant    = 0;
@@ -69,7 +70,7 @@ struct cedrus::xid_con_t::WindowsConnPimpl
         ct.WriteTotalTimeoutMultiplier = 500;
     }
 
-    HANDLE device_id_;
+    FT_HANDLE m_deviceId;
 };
 
 cedrus::xid_con_t::xid_con_t(
@@ -89,32 +90,31 @@ cedrus::xid_con_t::xid_con_t(
       m_winPimpl( new WindowsConnPimpl )
 {
     std::ostringstream s;
-    s << "\\\\.\\" << port_name;
+    s << port_name;
     port_name_ = s.str().c_str();
 }
 
-
 cedrus::xid_con_t::~xid_con_t(void)
 {
-    if(m_winPimpl->device_id_ != 0)
+    if(m_winPimpl->m_deviceId != 0)
         close();
 }
 
 bool cedrus::xid_con_t::close()
 {
-    bool status = ( CloseHandle(m_winPimpl->device_id_) != 0 );
-    m_winPimpl->device_id_ = 0;
+    bool status = ( FT_W32_CloseHandle(m_winPimpl->m_deviceId) != 0 );
+    m_winPimpl->m_deviceId = 0;
     return status;
 }
 
 bool cedrus::xid_con_t::flush_write_to_device_buffer()
 {
-    return (PurgeComm(m_winPimpl->device_id_, PURGE_RXABORT|PURGE_RXCLEAR) != 0);
+    return (FT_W32_PurgeComm(m_winPimpl->m_deviceId, PURGE_RXABORT|PURGE_RXCLEAR) != 0);
 }
 
 bool cedrus::xid_con_t::flush_read_from_device_buffer()
 {
-    return (PurgeComm(m_winPimpl->device_id_, PURGE_TXABORT|PURGE_TXCLEAR) != 0);
+    return (FT_W32_PurgeComm(m_winPimpl->m_deviceId, PURGE_TXABORT|PURGE_TXCLEAR) != 0);
 }
 
 int cedrus::xid_con_t::open()
@@ -124,18 +124,18 @@ int cedrus::xid_con_t::open()
     std::wstring name( port_name_.begin(), port_name_.end() );
     const wchar_t* wchar_name = name.c_str();
 
-    m_winPimpl->device_id_ = CreateFile(
-        wchar_name,
+    m_winPimpl->m_deviceId = FT_W32_CreateFile(
+        (LPCTSTR)port_name_.c_str(),
         GENERIC_READ|GENERIC_WRITE,
         0,
         NULL,
         OPEN_EXISTING,
-        0,
+        FILE_ATTRIBUTE_NORMAL | FT_OPEN_BY_SERIAL_NUMBER,
         0);
 
-    if(m_winPimpl->device_id_ == INVALID_HANDLE_VALUE)
+    if(m_winPimpl->m_deviceId == INVALID_HANDLE_VALUE)
     {
-        m_winPimpl->device_id_ = 0;
+        m_winPimpl->m_deviceId = 0;
         status = XID_PORT_NOT_AVAILABLE;
     }
     else
@@ -143,7 +143,7 @@ int cedrus::xid_con_t::open()
         if ( !setup_com_port() )
             status = XID_ERROR_SETTING_UP_PORT;
 
-        PurgeComm(m_winPimpl->device_id_,
+        FT_W32_PurgeComm(m_winPimpl->m_deviceId,
             PURGE_RXCLEAR|PURGE_TXCLEAR|PURGE_RXABORT|PURGE_TXABORT);
     }
 
@@ -152,27 +152,27 @@ int cedrus::xid_con_t::open()
 
 bool cedrus::xid_con_t::setup_com_port()
 {
-    DCB dcb;
+    FTDCB dcb;
     bool status = false;
 
-    if( SetupComm(m_winPimpl->device_id_, IN_BUFFER_SIZE, OUT_BUFFER_SIZE) == 0 )
+    if( FT_W32_SetupComm(m_winPimpl->m_deviceId, IN_BUFFER_SIZE, OUT_BUFFER_SIZE) == 0 )
         return status;
 
-    if( GetCommState(m_winPimpl->device_id_, &dcb) == 0 )
+    if( FT_W32_GetCommState(m_winPimpl->m_deviceId, &dcb) == 0 )
         return status;
 
     m_winPimpl->setup_dcb(dcb, baud_rate_, byte_size_, bit_parity_, stop_bits_);
 
-    if( SetCommState(m_winPimpl->device_id_, &dcb) == 0 )
+    if( FT_W32_SetCommState(m_winPimpl->m_deviceId, &dcb) == 0 )
         return status;
 
-    COMMTIMEOUTS ct;
-    if( GetCommTimeouts(m_winPimpl->device_id_, &ct) == 0 )
+    FTTIMEOUTS ct;
+    if( FT_W32_GetCommTimeouts(m_winPimpl->m_deviceId, &ct) == 0 )
         return status;
 
     m_winPimpl->setup_timeouts(ct);
 
-    if( SetCommTimeouts(m_winPimpl->device_id_, &ct) == 0 )
+    if( FT_W32_SetCommTimeouts(m_winPimpl->m_deviceId, &ct) == 0 )
         return status;
 
     status = flush_write_to_device_buffer();
@@ -188,7 +188,7 @@ bool cedrus::xid_con_t::read(
     int *bytes_read)
 {
     DWORD read = 0;
-    bool status = (ReadFile(m_winPimpl->device_id_, in_buffer, bytes_to_read, &read, NULL) != 0);
+    bool status = (FT_W32_ReadFile(m_winPimpl->m_deviceId, in_buffer, bytes_to_read, &read, NULL) != 0);
 
     if ( status )
         *bytes_read = read;
@@ -213,9 +213,9 @@ bool cedrus::xid_con_t::write(
 
     for(int i = 0; i < bytes_to_write && status; ++i)
     {
-        DWORD  byte_count;
-        status = (WriteFile(m_winPimpl->device_id_, p, 1, &byte_count, NULL) != 0);
-        if( !status  )
+        DWORD byte_count;
+        status = (FT_W32_WriteFile(m_winPimpl->m_deviceId, p, 1, &byte_count, NULL) != 0);
+        if( !status )
         {
             int error_code = GetLastError();
             if ( error_code == ERROR_ACCESS_DENIED || error_code == ERROR_INVALID_HANDLE )
