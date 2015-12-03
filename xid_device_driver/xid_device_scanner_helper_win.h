@@ -17,7 +17,7 @@ void load_com_ports_platform_specific( std::vector<std::string> * available_com_
 {
     available_com_ports->clear();
 
-    FT_STATUS status; // currently unused, it might be once we know more about possible errors
+    FT_STATUS status;
     FT_DEVICE_LIST_INFO_NODE * dev_info;
     DWORD num_devs;
 
@@ -33,18 +33,22 @@ void load_com_ports_platform_specific( std::vector<std::string> * available_com_
         status = FT_GetDeviceInfoList(dev_info, &num_devs);
     }
 
-    for ( unsigned int i = 0; i < num_devs; i++ )
+    if ( status == FT_OK )
     {
-        cedrus::xid_con_t conn(dev_info[i].SerialNumber);
-
-        if(conn.open() == XID_NO_ERR)
+        for ( unsigned int i = 0; i < num_devs; i++ )
         {
-            conn.close();
-            available_com_ports->push_back(dev_info[i].SerialNumber);
+            cedrus::xid_con_t conn(dev_info[i].SerialNumber);
+
+            if(conn.open() == XID_NO_ERR)
+            {
+                conn.close();
+                available_com_ports->push_back(dev_info[i].SerialNumber);
+            }
         }
     }
 
-    free(dev_info);
+    if ( num_devs > 0 )
+        free(dev_info);
 }
 
 } // namespace cedrus

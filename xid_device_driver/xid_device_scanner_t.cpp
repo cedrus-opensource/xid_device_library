@@ -50,11 +50,11 @@
 
 #include <sstream>
 
-#ifdef __APPLE__
-#   include "xid_device_scanner_helper_mac.h"
-#elif defined(_WIN32)
+//#ifdef __APPLE__
+//#   include "xid_device_scanner_helper_mac.h"
+//#elif defined(_WIN32)
 #   include "xid_device_scanner_helper_win.h"
-#endif
+//#endif
 
 enum { OS_FILE_ERROR = -1,
     NO_FILE_SELECTED = 0};

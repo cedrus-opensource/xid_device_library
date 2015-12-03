@@ -37,10 +37,13 @@
 #include <errno.h>
 #include <sstream>
 
-#include <windows.h>
+//#include <windows.h>
 
 #include "constants.h"
 #include "ftd2xx.h"
+
+// Not defined on mac, probably temporary
+#define MAXDWORD 0xffffffff
 
 struct cedrus::xid_con_t::WindowsConnPimpl
 {
@@ -102,7 +105,7 @@ cedrus::xid_con_t::~xid_con_t(void)
 
 bool cedrus::xid_con_t::close()
 {
-    bool status = ( FT_W32_CloseHandle(m_winPimpl->m_deviceId) != 0 );
+    bool status = ( FT_Close(m_winPimpl->m_deviceId) == FT_OK );
     m_winPimpl->m_deviceId = 0;
     return status;
 }
@@ -124,16 +127,12 @@ int cedrus::xid_con_t::open()
     std::wstring name( port_name_.begin(), port_name_.end() );
     const wchar_t* wchar_name = name.c_str();
 
-    m_winPimpl->m_deviceId = FT_W32_CreateFile(
-        (LPCTSTR)port_name_.c_str(),
-        GENERIC_READ|GENERIC_WRITE,
-        0,
-        NULL,
-        OPEN_EXISTING,
-        FILE_ATTRIBUTE_NORMAL | FT_OPEN_BY_SERIAL_NUMBER,
-        0);
+    DWORD open_success = FT_OpenEx(
+              (PVOID)port_name_.c_str(),
+              FT_OPEN_BY_SERIAL_NUMBER,
+              &m_winPimpl->m_deviceId);
 
-    if(m_winPimpl->m_deviceId == INVALID_HANDLE_VALUE)
+    if( open_success != FT_OK )
     {
         m_winPimpl->m_deviceId = 0;
         status = XID_PORT_NOT_AVAILABLE;
@@ -188,14 +187,15 @@ bool cedrus::xid_con_t::read(
     int *bytes_read)
 {
     DWORD read = 0;
-    bool status = (FT_W32_ReadFile(m_winPimpl->m_deviceId, in_buffer, bytes_to_read, &read, NULL) != 0);
+    FT_SetTimeouts(m_winPimpl->m_deviceId, 1000, 0);
+    bool status = (FT_Read(m_winPimpl->m_deviceId, in_buffer, bytes_to_read, &read) == FT_OK);
 
     if ( status )
         *bytes_read = read;
     else
     {
-        int error_code = GetLastError();
-        if ( error_code == ERROR_ACCESS_DENIED || error_code == ERROR_INVALID_HANDLE )
+        int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
+        if ( /*error_code == ERROR_ACCESS_DENIED ||*/ error_code == FT_INVALID_HANDLE )
             m_connection_dead = true;
     }
 
@@ -208,17 +208,17 @@ bool cedrus::xid_con_t::write(
     int *bytes_written)
 {
     unsigned char *p = in_buffer;
-    bool status = true;
+    DWORD status = 0;
     DWORD written = 0;
 
-    for(int i = 0; i < bytes_to_write && status; ++i)
+    for(int i = 0; i < bytes_to_write; ++i)
     {
         DWORD byte_count;
-        status = (FT_W32_WriteFile(m_winPimpl->m_deviceId, p, 1, &byte_count, NULL) != 0);
-        if( !status )
+        status = (FT_Write(m_winPimpl->m_deviceId, p, 1, &byte_count) != 0);
+        if( status != FT_OK )
         {
-            int error_code = GetLastError();
-            if ( error_code == ERROR_ACCESS_DENIED || error_code == ERROR_INVALID_HANDLE )
+            int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
+            if ( /*error_code == ERROR_ACCESS_DENIED ||*/ error_code == FT_INVALID_HANDLE )
                 m_connection_dead = true;
             break;
         }
@@ -235,7 +235,7 @@ bool cedrus::xid_con_t::write(
         sensitive use for the library is reading responses, and no writing
         takes place at that time.
         */
-        Sleep(INTERBYTE_DELAY);
+        SLEEP_FUNC(INTERBYTE_DELAY);
 
         if(written == bytes_to_write)
             break;

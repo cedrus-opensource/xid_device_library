@@ -39,14 +39,14 @@ if sys.platform == 'win32':
     inputs += [ prefix + 'xid_device_driver/xid_con_t_win.cpp']
 
 elif sys.platform == 'darwin':
-    inputs += [ prefix + 'xid_device_driver/xid_con_t_mac.cpp']
+    inputs += [ prefix + 'xid_device_driver/xid_con_t_win.cpp']
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
 include_path = [ prefix + 'scons_helpers/cpp_src/' ]
 cxxflags = []
 frameworks = []
-lib_dependencies = ['ftd2xx']
-lib_path = []
+lib_dependencies = ['ftd2xx.1.2.2']
+lib_path = ['.']
 # can these go inside a helper?
 linkflags = []
 
