@@ -34,6 +34,7 @@
 
 #include "interface_xid_con.h"
 #include <boost/shared_ptr.hpp>
+#include "ftd2xx.h"
 
 #ifdef __APPLE__
 #   define SLEEP_FUNC usleep
@@ -89,13 +90,6 @@ namespace cedrus
             FIRST_BYTESIZE = BYTESIZE_6
         };
 
-        enum handshaking
-        {
-            HANDSHAKE_NONE     = 0,
-            HANDSHAKE_XON_XOFF = 1,
-            HANDSHAKE_HARDWARE = 2,
-        };
-
         enum { INTERBYTE_DELAY = 1 };
 
         /**
@@ -109,10 +103,10 @@ namespace cedrus
          */
         xid_con_t(
                   const std::string &port_name,
-                  int port_speed = 115200,
-                  bytesize byte_size = BYTESIZE_8,
-                  bitparity bit_parity = BITPARITY_NONE,
-                  stopbits stop_bits = STOP_BIT_1
+                  DWORD port_speed = 115200,
+                  BYTE byte_size = FT_BITS_8,
+                  BYTE bit_parity = FT_PARITY_NONE,
+                  BYTE stop_bits = FT_STOP_BITS_1
                   );
 
         virtual ~xid_con_t();
@@ -221,11 +215,10 @@ namespace cedrus
             int max_out_response_size,
             int num_retries);
 
-        int baud_rate_;
-        bytesize byte_size_;
-        bitparity bit_parity_;
-        stopbits stop_bits_;
-        handshaking handshaking_;
+        DWORD baud_rate_;
+        BYTE byte_size_;
+        BYTE bit_parity_;
+        BYTE stop_bits_;
         std::string port_name_;
 
         bool m_connection_dead;

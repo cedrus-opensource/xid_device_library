@@ -37,10 +37,7 @@
 #include <errno.h>
 #include <sstream>
 
-//#include <windows.h>
-
 #include "constants.h"
-#include "ftd2xx.h"
 
 // Not defined on mac, probably temporary
 #define MAXDWORD 0xffffffff
@@ -78,16 +75,15 @@ struct cedrus::xid_con_t::WindowsConnPimpl
 
 cedrus::xid_con_t::xid_con_t(
     const std::string &port_name,
-    int port_speed,
-    bytesize byte_size,
-    bitparity bit_parity,
-    stopbits stop_bits
+    DWORD port_speed,
+    BYTE byte_size,
+    BYTE bit_parity,
+    BYTE stop_bits
     )
     : baud_rate_(port_speed),
       byte_size_(byte_size),
       bit_parity_(bit_parity),
       stop_bits_(stop_bits),
-      handshaking_(HANDSHAKE_NONE),
       port_name_(port_name),
       m_connection_dead (false),
       m_winPimpl( new WindowsConnPimpl )
@@ -112,20 +108,17 @@ bool cedrus::xid_con_t::close()
 
 bool cedrus::xid_con_t::flush_write_to_device_buffer()
 {
-    return (FT_W32_PurgeComm(m_winPimpl->m_deviceId, PURGE_RXABORT|PURGE_RXCLEAR) != 0);
+    return (FT_Purge(m_winPimpl->m_deviceId, FT_PURGE_RX) == FT_OK);
 }
 
 bool cedrus::xid_con_t::flush_read_from_device_buffer()
 {
-    return (FT_W32_PurgeComm(m_winPimpl->m_deviceId, PURGE_TXABORT|PURGE_TXCLEAR) != 0);
+    return (FT_Purge(m_winPimpl->m_deviceId, FT_PURGE_TX) == FT_OK);
 }
 
 int cedrus::xid_con_t::open()
 {
     int status = XID_NO_ERR;
-
-    std::wstring name( port_name_.begin(), port_name_.end() );
-    const wchar_t* wchar_name = name.c_str();
 
     DWORD open_success = FT_OpenEx(
               (PVOID)port_name_.c_str(),
@@ -142,8 +135,7 @@ int cedrus::xid_con_t::open()
         if ( !setup_com_port() )
             status = XID_ERROR_SETTING_UP_PORT;
 
-        FT_W32_PurgeComm(m_winPimpl->m_deviceId,
-            PURGE_RXCLEAR|PURGE_TXCLEAR|PURGE_RXABORT|PURGE_TXABORT);
+        FT_Purge(m_winPimpl->m_deviceId, FT_PURGE_RX|FT_PURGE_TX);
     }
 
     return status;
@@ -151,28 +143,13 @@ int cedrus::xid_con_t::open()
 
 bool cedrus::xid_con_t::setup_com_port()
 {
-    FTDCB dcb;
     bool status = false;
 
-    if( FT_W32_SetupComm(m_winPimpl->m_deviceId, IN_BUFFER_SIZE, OUT_BUFFER_SIZE) == 0 )
-        return status;
+    FT_SetBaudRate(m_winPimpl->m_deviceId, baud_rate_);
+    FT_SetDataCharacteristics(m_winPimpl->m_deviceId, byte_size_, stop_bits_, bit_parity_);
 
-    if( FT_W32_GetCommState(m_winPimpl->m_deviceId, &dcb) == 0 )
-        return status;
-
-    m_winPimpl->setup_dcb(dcb, baud_rate_, byte_size_, bit_parity_, stop_bits_);
-
-    if( FT_W32_SetCommState(m_winPimpl->m_deviceId, &dcb) == 0 )
-        return status;
-
-    FTTIMEOUTS ct;
-    if( FT_W32_GetCommTimeouts(m_winPimpl->m_deviceId, &ct) == 0 )
-        return status;
-
-    m_winPimpl->setup_timeouts(ct);
-
-    if( FT_W32_SetCommTimeouts(m_winPimpl->m_deviceId, &ct) == 0 )
-        return status;
+    FT_SetTimeouts(m_winPimpl->m_deviceId, 1, 500);
+    FT_SetUSBParameters(m_winPimpl->m_deviceId, 64, 64);
 
     status = flush_write_to_device_buffer();
     if(status)
@@ -186,21 +163,64 @@ bool cedrus::xid_con_t::read(
     int bytes_to_read,
     int *bytes_read)
 {
+    bool status = false;
     DWORD read = 0;
-    FT_SetTimeouts(m_winPimpl->m_deviceId, 1000, 0);
-    bool status = (FT_Read(m_winPimpl->m_deviceId, in_buffer, bytes_to_read, &read) == FT_OK);
+
+    status = (FT_Read(m_winPimpl->m_deviceId, in_buffer, bytes_to_read, &read) == FT_OK);
 
     if ( status )
         *bytes_read = read;
     else
     {
-        int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
-        if ( /*error_code == ERROR_ACCESS_DENIED ||*/ error_code == FT_INVALID_HANDLE )
-            m_connection_dead = true;
+        // The call will no longer be needed: use the status return instead.
+        //int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
+        //if ( error_code == FT_INVALID_HANDLE )
+        //    m_connection_dead = true;
     }
 
     return status;
 }
+
+// We can avoid having to do an actual read by checking if there's anything to be read first.
+// I don't know if that's actually faster or not, according to the docs this is primarily for
+// threading purposes.
+/*
+bool cedrus::xid_con_t::read(
+    unsigned char *in_buffer,
+    int bytes_to_read,
+    int *bytes_read)
+{
+    bool status = false;
+    DWORD read = 0;
+
+    DWORD event_dword;
+    DWORD rx_bytes;
+    DWORD tx_bytes;
+    status = (FT_GetStatus(m_winPimpl->m_deviceId, &rx_bytes, &tx_bytes, &event_dword) == FT_OK);
+
+    unsigned int bytes_to_actually_read = 0;
+
+    if ( rx_bytes < bytes_to_read )
+        bytes_to_actually_read = rx_bytes;
+    else
+        bytes_to_actually_read = bytes_to_read;
+
+    if ( bytes_to_actually_read > 0 )
+        status = (FT_Read(m_winPimpl->m_deviceId, in_buffer, bytes_to_actually_read, &read) == FT_OK);
+
+    if ( status )
+        *bytes_read = read;
+    else
+    {
+        // The call will no longer be needed: use the status return instead.
+        //int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
+        //if ( error_code == FT_INVALID_HANDLE )
+        //    m_connection_dead = true;
+    }
+
+    return status;
+}
+*/
 
 bool cedrus::xid_con_t::write(
     unsigned char * const in_buffer,
@@ -208,18 +228,18 @@ bool cedrus::xid_con_t::write(
     int *bytes_written)
 {
     unsigned char *p = in_buffer;
-    DWORD status = 0;
+    bool status = false;
     DWORD written = 0;
 
     for(int i = 0; i < bytes_to_write; ++i)
     {
         DWORD byte_count;
-        status = (FT_Write(m_winPimpl->m_deviceId, p, 1, &byte_count) != 0);
-        if( status != FT_OK )
+        status = (FT_Write(m_winPimpl->m_deviceId, p, 1, &byte_count) == FT_OK);
+        if( !status )
         {
-            int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
-            if ( /*error_code == ERROR_ACCESS_DENIED ||*/ error_code == FT_INVALID_HANDLE )
-                m_connection_dead = true;
+            //int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
+            //if ( /*error_code == ERROR_ACCESS_DENIED ||*/ error_code == FT_INVALID_HANDLE )
+            //    m_connection_dead = true;
             break;
         }
 
