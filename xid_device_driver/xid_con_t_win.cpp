@@ -48,33 +48,11 @@ struct cedrus::xid_con_t::WindowsConnPimpl
         : m_deviceId ( NULL )
     {}
 
-    void setup_dcb(FTDCB &dcb,
-        int baud_rate,
-        bytesize byte_size,
-        bitparity bit_parity,
-        stopbits stop_bits) const
-    {
-        dcb.BaudRate = baud_rate;
-        dcb.ByteSize = static_cast<BYTE>(byte_size);
-        dcb.Parity   = static_cast<BYTE>(bit_parity);
-        dcb.StopBits = static_cast<BYTE>(stop_bits);
-        dcb.fBinary  = 1;
-    }
-
-    void setup_timeouts(FTTIMEOUTS &ct) const
-    {
-        ct.ReadIntervalTimeout         = MAXDWORD;
-        ct.ReadTotalTimeoutConstant    = 0;
-        ct.ReadTotalTimeoutMultiplier  = 0;
-        ct.WriteTotalTimeoutConstant   = 0;
-        ct.WriteTotalTimeoutMultiplier = 500;
-    }
-
     FT_HANDLE m_deviceId;
 };
 
 cedrus::xid_con_t::xid_con_t(
-    const std::string &port_name,
+    const DWORD location,
     DWORD port_speed,
     BYTE byte_size,
     BYTE bit_parity,
@@ -84,13 +62,10 @@ cedrus::xid_con_t::xid_con_t(
       byte_size_(byte_size),
       bit_parity_(bit_parity),
       stop_bits_(stop_bits),
-      port_name_(port_name),
+      m_location(location),
       m_connection_dead (false),
       m_winPimpl( new WindowsConnPimpl )
 {
-    std::ostringstream s;
-    s << port_name;
-    port_name_ = s.str().c_str();
 }
 
 cedrus::xid_con_t::~xid_con_t(void)
@@ -121,8 +96,8 @@ int cedrus::xid_con_t::open()
     int status = XID_NO_ERR;
 
     DWORD open_success = FT_OpenEx(
-              (PVOID)port_name_.c_str(),
-              FT_OPEN_BY_SERIAL_NUMBER,
+              (PVOID)m_location,
+              FT_OPEN_BY_LOCATION,
               &m_winPimpl->m_deviceId);
 
     if( open_success != FT_OK )

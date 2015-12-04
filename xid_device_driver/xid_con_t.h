@@ -62,34 +62,6 @@ namespace cedrus
     class xid_con_t : public interface_xid_con
     {
     public:
-        enum
-        {
-            IN_BUFFER_SIZE = 2048,
-            OUT_BUFFER_SIZE = 2048
-        };
-
-        enum bitparity
-        {
-            BITPARITY_NONE = 0,
-            BITPARITY_ODD  = 1,
-            BITPARITY_EVEN = 2
-        };
-
-        enum stopbits
-        {
-            STOP_BIT_1 = 0,
-            STOP_BIT_2 = 1
-        };
-
-        enum bytesize
-        {
-            BYTESIZE_6 = 6,
-            BYTESIZE_7 = 7,
-            BYTESIZE_8 = 8,
-
-            FIRST_BYTESIZE = BYTESIZE_6
-        };
-
         enum { INTERBYTE_DELAY = 1 };
 
         /**
@@ -102,7 +74,7 @@ namespace cedrus
          * @param[in] stop_bits stop bits of the device. Defaults to 0
          */
         xid_con_t(
-                  const std::string &port_name,
+                  const DWORD location,
                   DWORD port_speed = 115200,
                   BYTE byte_size = FT_BITS_8,
                   BYTE bit_parity = FT_PARITY_NONE,
@@ -193,7 +165,6 @@ namespace cedrus
         bool has_lost_connection();
 
     private:
-    	enum { OS_FILE_ERROR = -1 };
 
         bool setup_com_port();
         unsigned long GetTickCount() const;
@@ -219,7 +190,7 @@ namespace cedrus
         BYTE byte_size_;
         BYTE bit_parity_;
         BYTE stop_bits_;
-        std::string port_name_;
+        DWORD m_location;
 
         bool m_connection_dead;
 

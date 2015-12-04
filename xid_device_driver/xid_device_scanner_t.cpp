@@ -56,9 +56,6 @@
 #   include "xid_device_scanner_helper_win.h"
 //#endif
 
-enum { OS_FILE_ERROR = -1,
-    NO_FILE_SELECTED = 0};
-
 cedrus::xid_device_scanner_t::xid_device_scanner_t(void)
 {
 }
@@ -115,7 +112,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     // This will contain every devconfig we can find.
     std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > master_config_list;
 
-    std::vector<std::string> available_com_ports;
+    std::vector<unsigned long> available_com_ports;
     load_com_ports_platform_specific( &available_com_ports );
 
     if ( progressFunction )
@@ -142,7 +139,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     if ( progressFunction )
         progressFunction(40);
 
-    for(std::vector<std::string>::iterator iter = available_com_ports.begin(),
+    for(std::vector<unsigned long>::iterator iter = available_com_ports.begin(),
         end = available_com_ports.end();
         iter != end; ++iter)
     {
@@ -152,7 +149,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
         // is important because "dry" port scans are very time consuming!
         BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, master_config_list)
         {
-            if ( !config->is_port_on_ignore_list( *iter ) )
+            // This may possibly be no longer needed with the FTDI library.
+            //if ( !config->is_port_on_ignore_list( *iter ) )
                 config_candidates.push_back(config);
         }
 

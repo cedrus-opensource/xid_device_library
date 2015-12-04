@@ -13,7 +13,7 @@
 namespace cedrus
 {
 
-void load_com_ports_platform_specific( std::vector<std::string> * available_com_ports )
+void load_com_ports_platform_specific( std::vector<unsigned long> * available_com_ports )
 {
     available_com_ports->clear();
 
@@ -37,12 +37,12 @@ void load_com_ports_platform_specific( std::vector<std::string> * available_com_
     {
         for ( unsigned int i = 0; i < num_devs; i++ )
         {
-            cedrus::xid_con_t conn(dev_info[i].SerialNumber);
+            cedrus::xid_con_t conn(dev_info[i].LocId);
 
             if(conn.open() == XID_NO_ERR)
             {
                 conn.close();
-                available_com_ports->push_back(dev_info[i].SerialNumber);
+                available_com_ports->push_back(dev_info[i].LocId);
             }
         }
     }
