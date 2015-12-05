@@ -126,7 +126,7 @@ namespace cedrus
          *
          * @returns true if the read was successful, false otherwise.
          */
-        bool read( unsigned char *in_buffer, int bytes_to_read, int *bytes_read);
+        bool read( unsigned char *in_buffer, int bytes_to_read, unsigned long *bytes_read);
 
         /**
          * Write data to the device.

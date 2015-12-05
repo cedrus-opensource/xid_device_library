@@ -39,9 +39,6 @@
 
 #include "constants.h"
 
-// Not defined on mac, probably temporary
-#define MAXDWORD 0xffffffff
-
 struct cedrus::xid_con_t::WindowsConnPimpl
 {
     WindowsConnPimpl()
@@ -136,24 +133,21 @@ bool cedrus::xid_con_t::setup_com_port()
 bool cedrus::xid_con_t::read(
     unsigned char *in_buffer,
     int bytes_to_read,
-    int *bytes_read)
+    unsigned long *bytes_read)
 {
-    bool status = false;
-    DWORD read = 0;
+    DWORD read_status = FT_OK;
 
-    status = (FT_Read(m_winPimpl->m_deviceId, in_buffer, bytes_to_read, &read) == FT_OK);
+    read_status = FT_Read(m_winPimpl->m_deviceId, in_buffer, bytes_to_read, bytes_read);
 
-    if ( status )
-        *bytes_read = read;
-    else
+    if ( read_status != FT_OK )
     {
-        // The call will no longer be needed: use the status return instead.
-        //int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
-        //if ( error_code == FT_INVALID_HANDLE )
-        //    m_connection_dead = true;
+        // We used to check for specific error codes here, but I'm not certain why.
+        // I don't know that any of them are errors you can recover from, so let's
+        // err on the side of caution here.
+        m_connection_dead = true;
     }
 
-    return status;
+    return read_status == FT_OK;
 }
 
 // We can avoid having to do an actual read by checking if there's anything to be read first.
@@ -187,10 +181,10 @@ bool cedrus::xid_con_t::read(
         *bytes_read = read;
     else
     {
-        // The call will no longer be needed: use the status return instead.
-        //int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
-        //if ( error_code == FT_INVALID_HANDLE )
-        //    m_connection_dead = true;
+        // We used to check for specific error codes here, but I'm not certain why.
+        // I don't know that any of them are errors you can recover from, so let's
+        // err on the side of caution here.
+        m_connection_dead = true;
     }
 
     return status;
@@ -203,18 +197,19 @@ bool cedrus::xid_con_t::write(
     int *bytes_written)
 {
     unsigned char *p = in_buffer;
-    bool status = false;
+    DWORD write_status = FT_OK;
     DWORD written = 0;
 
     for(int i = 0; i < bytes_to_write; ++i)
     {
         DWORD byte_count;
-        status = (FT_Write(m_winPimpl->m_deviceId, p, 1, &byte_count) == FT_OK);
-        if( !status )
+        write_status = FT_Write(m_winPimpl->m_deviceId, p, 1, &byte_count);
+        if( write_status != FT_OK )
         {
-            //int error_code = FT_W32_GetLastError(m_winPimpl->m_deviceId);
-            //if ( /*error_code == ERROR_ACCESS_DENIED ||*/ error_code == FT_INVALID_HANDLE )
-            //    m_connection_dead = true;
+            // We used to check for specific error codes here, but I'm not certain why.
+            // I don't know that any of them are errors you can recover from, so let's
+            // err on the side of caution here.
+            m_connection_dead = true;
             break;
         }
 
@@ -240,5 +235,5 @@ bool cedrus::xid_con_t::write(
 
     *bytes_written = written;
 
-    return status;
+    return write_status == FT_OK;
 }
