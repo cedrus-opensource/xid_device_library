@@ -1,4 +1,3 @@
-
 #ifndef device_factory_H
 #define device_factory_H
 
