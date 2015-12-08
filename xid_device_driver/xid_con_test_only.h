@@ -14,7 +14,7 @@ namespace cedrus
     public:
         CEDRUS_XIDDRIVER_IMPORTEXPORT xid_con_test_only( char * input_buffer, int size );
 
-        CEDRUS_XIDDRIVER_IMPORTEXPORT bool read( unsigned char *in_buffer, int bytes_to_read, unsigned long *bytes_read);
+        CEDRUS_XIDDRIVER_IMPORTEXPORT bool read( unsigned char *in_buffer, int bytes_to_read, DWORD *bytes_read);
         CEDRUS_XIDDRIVER_IMPORTEXPORT void insert_more_data_into_buffer( char * input_buffer, int size );
 
     private:

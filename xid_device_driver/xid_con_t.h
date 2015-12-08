@@ -34,17 +34,14 @@
 
 #include "interface_xid_con.h"
 #include <boost/shared_ptr.hpp>
-#include "ftd2xx.h"
 
 #ifdef __APPLE__
 #   define SLEEP_FUNC usleep
 #   define SLEEP_INC 1000
-#   define OS_DEPENDENT_LONG unsigned long
 #elif defined(_WIN32)
 #   include <windows.h>
 #   define SLEEP_FUNC Sleep
 #   define SLEEP_INC 1
-#   define OS_DEPENDENT_LONG DWORD
 #endif
 
 namespace cedrus
@@ -126,7 +123,7 @@ namespace cedrus
          *
          * @returns true if the read was successful, false otherwise.
          */
-        bool read( unsigned char *in_buffer, int bytes_to_read, unsigned long *bytes_read);
+        bool read( unsigned char *in_buffer, int bytes_to_read, DWORD *bytes_read);
 
         /**
          * Write data to the device.

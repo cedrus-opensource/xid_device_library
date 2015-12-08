@@ -13,7 +13,7 @@
 namespace cedrus
 {
 
-void load_com_ports_platform_specific( std::vector<unsigned long> * available_com_ports )
+void load_com_ports_platform_specific( std::vector<DWORD> * available_com_ports )
 {
     available_com_ports->clear();
 

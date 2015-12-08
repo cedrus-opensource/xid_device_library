@@ -110,7 +110,7 @@ int cedrus::xid_con_t::send_xid_command(
 
     unsigned char in_buff[64];
     memset(in_buff, 0x00, sizeof(in_buff));
-    unsigned long bytes_read = 0;
+    DWORD bytes_read = 0;
     int bytes_stored = 0;
 
     int i = 0;
@@ -149,7 +149,7 @@ int cedrus::xid_con_t::send_xid_command_pst_proof(
 
     unsigned char in_buff[64];
     memset(in_buff, 0x00, sizeof(in_buff));
-    unsigned long bytes_read = 0;
+    DWORD bytes_read = 0;
     int bytes_stored = 0;
 
     // sometimes sending a command needs a delay because the 4MHz processors

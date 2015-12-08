@@ -208,7 +208,7 @@ cedrus::key_state cedrus::response_mgr::xid_input_found_lumina3g_21( response &r
 
 void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<interface_xid_con> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config)
 {
-    unsigned long bytes_read = 0;
+    DWORD bytes_read = 0;
     response res;
     key_state response_found = NO_KEY_DETECTED;
 

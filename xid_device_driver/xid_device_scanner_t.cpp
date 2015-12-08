@@ -112,7 +112,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     // This will contain every devconfig we can find.
     std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > master_config_list;
 
-    std::vector<unsigned long> available_com_ports;
+    std::vector<DWORD> available_com_ports;
     load_com_ports_platform_specific( &available_com_ports );
 
     if ( progressFunction )
@@ -139,7 +139,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     if ( progressFunction )
         progressFunction(40);
 
-    for(std::vector<unsigned long>::iterator iter = available_com_ports.begin(),
+    for(std::vector<DWORD>::iterator iter = available_com_ports.begin(),
         end = available_com_ports.end();
         iter != end; ++iter)
     {

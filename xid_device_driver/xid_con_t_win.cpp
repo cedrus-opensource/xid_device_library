@@ -133,7 +133,7 @@ bool cedrus::xid_con_t::setup_com_port()
 bool cedrus::xid_con_t::read(
     unsigned char *in_buffer,
     int bytes_to_read,
-    unsigned long *bytes_read)
+    DWORD *bytes_read)
 {
     DWORD read_status = FT_OK;
 
