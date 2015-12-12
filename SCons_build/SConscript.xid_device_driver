@@ -45,7 +45,10 @@ defines = [ 'CEDRUS_XID_MAKEDLL' ]
 include_path = [ prefix + 'scons_helpers/cpp_src/' ]
 cxxflags = []
 frameworks = []
-lib_dependencies = ['ftd2xx.1.2.2']
+if sys.platform == 'win32':
+    lib_dependencies = ['ftd2xx']
+if sys.platform == 'darwin':
+    lib_dependencies = ['ftd2xx.1.2.2']
 lib_path = ['.']
 # can these go inside a helper?
 linkflags = []
