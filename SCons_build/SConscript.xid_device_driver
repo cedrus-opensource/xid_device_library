@@ -53,6 +53,8 @@ lib_path = ['.']
 # can these go inside a helper?
 linkflags = []
 
+env.Install( str( env.subst('$STAGING_DIR')), env.subst('ftd2xx.dll') )
+
 if sys.platform == 'win32':
     linkflags = [ '/SUBSYSTEM:WINDOWS',  '/VERSION:4.5', '/MANIFEST', '/INCREMENTAL', ]
 
