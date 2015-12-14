@@ -53,7 +53,7 @@ lib_path = ['.']
 # can these go inside a helper?
 linkflags = []
 
-env.Install( str( env.subst('$STAGING_DIR')), env.subst('ftd2xx.dll') )
+ftdi_lib = env.Install( str( env.subst('$STAGING_DIR')), env.subst('ftd2xx.dll') )
 
 if sys.platform == 'win32':
     linkflags = [ '/SUBSYSTEM:WINDOWS',  '/VERSION:4.5', '/MANIFEST', '/INCREMENTAL', ]
@@ -61,7 +61,7 @@ if sys.platform == 'win32':
 elif sys.platform == 'darwin':
     frameworks = ['CoreFoundation', 'IOKit']
 
-CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
+staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
     env,
     project_target_name,
     inputs,
@@ -73,3 +73,5 @@ CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
     lib_path,
     linkflags
 )
+
+env.Depends(staged_binary, ftdi_lib)
