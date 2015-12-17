@@ -80,7 +80,7 @@ namespace cedrus
         virtual int  close_connection();
         virtual bool has_lost_connection();
         virtual int  get_baud_rate();
-        virtual void set_baud_rate( int rate );
+        virtual void set_baud_rate( unsigned char rate );
         virtual void get_product_and_model_id( int *product_id, int *model_id );
         virtual int  get_major_firmware_version();
         virtual int  get_minor_firmware_version();
@@ -89,21 +89,21 @@ namespace cedrus
         virtual int get_trigger_default();
         virtual void set_trigger_default( bool default_on );
         virtual int get_trigger_debounce_time();
-        virtual void set_trigger_debounce_time( int time );
+        virtual void set_trigger_debounce_time( unsigned char time );
         virtual int get_button_debounce_time();
-        virtual void set_button_debounce_time( int time );
+        virtual void set_button_debounce_time( unsigned char time );
         virtual void restore_factory_defaults();
 
         virtual void raise_lines
-        ( unsigned int lines_bitmask,
+        ( unsigned char lines_bitmask,
           bool leave_remaining_lines = false);
 
     protected:
-        boost::shared_ptr<xid_con_t> xid_con_;
+        boost::shared_ptr<xid_con_t> m_xidCon;
 
     private:
-        char lines_state_;
-        const boost::shared_ptr<const cedrus::xid_device_config_t> config_;
+        unsigned char m_linesState;
+        const boost::shared_ptr<const cedrus::xid_device_config_t> m_config;
         const boost::shared_ptr<cedrus::response_mgr> m_response_mgr;
     };
 } // namespace cedrus

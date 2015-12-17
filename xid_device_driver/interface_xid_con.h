@@ -11,8 +11,7 @@ namespace cedrus
         virtual ~interface_xid_con()
         {}
 
-        virtual bool read( unsigned char *in_buffer, int bytes_to_read, DWORD *bytes_read) = 0;
-
+        virtual bool read( unsigned char *in_buffer, DWORD bytes_to_read, LPDWORD bytes_read ) = 0;
     };
 } // namespace cedrus
 

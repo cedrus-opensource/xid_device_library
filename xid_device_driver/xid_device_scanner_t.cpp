@@ -50,18 +50,47 @@
 
 #include <sstream>
 
-//#ifdef __APPLE__
-//#   include "xid_device_scanner_helper_mac.h"
-//#elif defined(_WIN32)
-#   include "xid_device_scanner_helper_win.h"
-//#endif
-
 cedrus::xid_device_scanner_t::xid_device_scanner_t(void)
 {
 }
 
 cedrus::xid_device_scanner_t::~xid_device_scanner_t(void)
 {
+}
+
+void cedrus::xid_device_scanner_t::load_com_ports( std::vector<DWORD> * available_com_ports )
+{
+    available_com_ports->clear();
+
+    FT_STATUS status;
+    DWORD num_devs;
+
+    // create the device information list
+    status = FT_CreateDeviceInfoList(&num_devs);
+
+    if (num_devs > 0)
+    {
+        // allocate storage for list based on numDevs
+        FT_DEVICE_LIST_INFO_NODE * dev_info = (FT_DEVICE_LIST_INFO_NODE*)malloc(sizeof(FT_DEVICE_LIST_INFO_NODE)*num_devs);
+        // get the device information list
+        status = FT_GetDeviceInfoList(dev_info, &num_devs);
+
+        if ( status == FT_OK )
+        {
+            for ( unsigned int i = 0; i < num_devs; i++ )
+            {
+                cedrus::xid_con_t conn(dev_info[i].LocId);
+
+                if(conn.open() == XID_NO_ERR)
+                {
+                    conn.close();
+                    available_com_ports->push_back(dev_info[i].LocId);
+                }
+            }
+        }
+
+        free(dev_info);
+    }
 }
 
 void cedrus::xid_device_scanner_t::drop_every_connection()
@@ -113,7 +142,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > master_config_list;
 
     std::vector<DWORD> available_com_ports;
-    load_com_ports_platform_specific( &available_com_ports );
+    load_com_ports( &available_com_ports );
 
     if ( progressFunction )
         progressFunction(5);

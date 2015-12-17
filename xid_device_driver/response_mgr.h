@@ -96,7 +96,7 @@ namespace cedrus
         response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
 
     private:
-    	enum { OS_FILE_ERROR = -1 };
+        enum { OS_FILE_ERROR = -1 };
 
         void adjust_buffer_for_packet_recovery();
         key_state xid_input_found( response &res );
@@ -111,7 +111,7 @@ namespace cedrus
         unsigned char m_input_buffer[XID_PACKET_SIZE];
         int m_xid_packet_index;
 
-        std::queue<response> response_queue_;
+        std::queue<response> m_responseQueue;
         boost::function< cedrus::key_state (response&) > m_response_parsing_function;
     };
 } // namespace cedrus

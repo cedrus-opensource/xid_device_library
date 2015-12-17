@@ -32,11 +32,12 @@
 #ifndef xid_device_scanner_t_H
 #define xid_device_scanner_t_H
 
-
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
+
+#include "ftd2xx.h"
 
 #include "XidDriverImpExpDefs.h"
 
@@ -52,6 +53,8 @@ namespace cedrus
     public:
         CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t(void);
         virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_scanner_t(void);
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT load_com_ports( std::vector<DWORD> * available_com_ports );
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_every_connection();
 
