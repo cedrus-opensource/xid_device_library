@@ -47,7 +47,7 @@ interface ICedrusXidActiveDevice : IDispatch{
 library CedrusXidDriverLib
 {
     importlib("stdole2.tlb");
-    [		
+    [
         uuid(AF16F32C-DC86-4877-B236-422F750978A2),
         helpstring("CedrusXidDeviceEnumerator Class")
     ]
@@ -56,7 +56,7 @@ library CedrusXidDriverLib
         [default] interface ICedrusXidDeviceEnumerator;
         interface IResponseDeviceEnumerator;
     };
-    [		
+    [
         uuid(AC943237-D115-4EF4-82CD-7FA1F5256510),
         helpstring("CedrusXidResponseDevice Class")
     ]
@@ -65,7 +65,7 @@ library CedrusXidDriverLib
         [default] interface ICedrusXidResponseDevice;
         interface IResponseDevice;
     };
-    [		
+    [
         uuid(48DD7CDC-E786-4AC6-8B0D-5A89DD68EE5C),
         helpstring("CedrusXidActiveDevice Class")
     ]
