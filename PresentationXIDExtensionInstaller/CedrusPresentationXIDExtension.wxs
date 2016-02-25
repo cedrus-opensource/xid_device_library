@@ -40,7 +40,6 @@
 					<File Id='XID_RB_844' Name='XID RB-844.devconfig' DiskId='1' Source='..\devconfig\XID RB-844.devconfig'/>
 					<File Id='XID_Lumina_LP_400' Name='XID Lumina LP-400.devconfig' DiskId='1' Source='..\devconfig\XID Lumina LP-400.devconfig'/>
 					<File Id='XID_Lumina_3G' Name='XID Lumina 3G.devconfig' DiskId='1' Source='..\devconfig\XID Lumina 3G.devconfig'/>
-					<File Id='XID_StimTracker_ST_100' Name='XID StimTracker ST-100.devconfig' DiskId='1' Source='..\devconfig\XID StimTracker ST-100.devconfig'/>
 					<File Id='XID_SV_1' Name='XID SV-1.devconfig' DiskId='1' Source='..\devconfig\XID SV-1.devconfig'/>
 				</Component>
 			</Directory>
