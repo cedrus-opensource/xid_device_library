@@ -9,7 +9,7 @@ XidModelID = 51
 XidIgnoreSerialPorts = /dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.modem,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
 
 [Port0]
-PortName = Keys
+PortName = Key
 NumberOfLines = 8
 UseableAsResponse = Yes
 XidDeviceKeyMap0 = 7

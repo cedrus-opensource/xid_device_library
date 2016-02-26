@@ -55,37 +55,65 @@ void CCedrusXidResponseDevice::set_button_names()
         return;
     }
 
-    std::string temp = "Button";
-    if ( m_xid_device->get_device_config().get_product_id() == 49 )
-        temp = "Voice Response";
-
-    std::wstring prefix (temp.begin(), temp.end());
-
     std::vector<cedrus::device_port> port_vector = m_xid_device->get_device_config().get_vector_of_ports();
 
+    // Populating is done in two passes. The first adds the presses and the second
+    // adds the releases. We're keeping the two halves separate for experiment
+    // import purposes. Since the releases are new, if we intermixed them with
+    // presses, old experiments would break in puzzling ways. "Key 2" would
+    // become "Key 1 Release", "Key 5" would become "Key 3 Press" and so on.
+    populate_response_collection( &port_vector, true/*presses*/ );
+    populate_response_collection( &port_vector, false/*releases*/ );
+}
+
+void CCedrusXidResponseDevice::populate_response_collection( std::vector<cedrus::device_port> * portVector, bool isPressPass )
+{
+    // This part is awkward. Both Lumina models have a port that provides mixed
+    // responses: keys/trigger and light sensor/trigger respectively. As such,
+    // we end up with a little bit of kludgy logic to separate out the different
+    // responses for clarity.
+    bool is_lumina_lp400 = (m_xid_device->get_device_config().get_product_id() == 48 &&
+        m_xid_device->get_device_config().m_major_firmware_ver == 1);
     bool is_lumina_3g = (m_xid_device->get_device_config().get_product_id() == 48 &&
         m_xid_device->get_device_config().m_major_firmware_ver == 2);
 
-    for ( unsigned int i = 0; i < port_vector.size(); i++ )
+    std::wstring light_sensor_string = std::wstring(L"Light Sensor ") + std::wstring(isPressPass? L"On" : L"Off");
+    std::wstring scanner_trigger_string = std::wstring(L"Scanner Trigger ") + std::wstring(isPressPass? L"On" : L"Off");
+    std::wstring generic_suffix = isPressPass? L" Press" : L" Release";
+
+    std::string temp = "Key";
+
+    // Iterate through every port and add responses for each response port.
+    for ( unsigned int i = 0; i < portVector->size(); i++ )
     {
-        if ( port_vector[i].is_response_port )
+        if ( (*portVector)[i].is_response_port )
         {
-            for  ( unsigned int j = 0; j < port_vector[i].number_of_lines; ++j )
+            for ( unsigned int button = 0; button < (*portVector)[i].number_of_lines; ++button )
             {
-                if ( is_lumina_3g && i == 2 && j == 0 )
+                if ( is_lumina_3g && i == 2 )
                 {
-                    m_button_names.push_back( L"Light Sensor" );
+                    if ( button == 0 )
+                        m_button_names.push_back( light_sensor_string );
+                    else if ( button == 1 )
+                        m_button_names.push_back( scanner_trigger_string );
                 }
-                else if ( is_lumina_3g && i == 2 && j == 1 )
+                else if ( is_lumina_lp400 && i == 0 )
                 {
-                    m_button_names.push_back( L"Trigger" );
+                    if ( button < 4 )
+                    {
+                        std::wstring prefix (temp.begin(), temp.end());
+                        m_button_names.push_back(
+                            prefix + L" " + public_nbs::to_wstr(button+1)+ generic_suffix);
+                    }
+                    else if ( button == 4 )
+                        m_button_names.push_back( scanner_trigger_string );
                 }
                 else
                 {
-                    temp = port_vector[i].port_name;
+                    temp = (*portVector)[i].port_name;
                     std::wstring prefix (temp.begin(), temp.end());
                     m_button_names.push_back(
-                        prefix + L" " + public_nbs::to_wstr(j+1));
+                        prefix + L" " + public_nbs::to_wstr(button+1)+ generic_suffix);
                 }
             }
         }

@@ -96,38 +96,41 @@ STDMETHODIMP CCedrusXidActiveDevice::getResponseCount(unsigned long *count)
     m_xid_device->poll_for_response();
     cedrus::response res = m_xid_device->get_next_response();
 
-    // as far as I can tell right now, there's no way in Presentation to
-    // differentiate between a key press and release.  Here, we only grab
-    // key press events from the xid device and ignre the release events.
-
     /*
-    UPDATE: there is a way to differentiate! (From the docs):
-
     If the device can generate different events for the same button (such
     as press and release), each event should be listed as a seperate
     button with an appropriate name, even though those events are related
     to the same physical button.
-
-    As we haven't done this historically and no one seems to have
-    complained, we'll leave this be.
     */
-    if(res.was_pressed == true)
+
+    if(res.port != -1)
     {
-        // translate the cedrus::response struct into a tagResponseInfo
+        // Translate the cedrus::response struct into a tagResponseInfo
         // struct and place it in the key press events list.
         std::vector<cedrus::device_port> port_vector = m_xid_device->get_device_config().get_vector_of_ports();
-        int math = 0;
+        int port_based_offset = 0;
+        tagResponseInfo info;
 
-        for ( unsigned int i = 0; i < res.port; i++ )
+        // If the response is a release, we need to offset it by the total
+        // number of responses across all ports, because releases are the
+        // second half of the list.
+        if ( !res.was_pressed )
         {
-            if ( port_vector[i].is_response_port )
+            for ( unsigned int i = 0; i < port_vector.size(); i++ )
             {
-                math += port_vector[i].number_of_lines;
+                if ( port_vector[i].is_response_port )
+                    port_based_offset += port_vector[i].number_of_lines;
             }
         }
 
-        tagResponseInfo info;
-        info.buttonIndex = math+res.key;
+        // We need to offset the response index based on port number regardless.
+        for ( unsigned int i = 0; i < res.port; i++ )
+        {
+            if ( port_vector[i].is_response_port )
+                port_based_offset += port_vector[i].number_of_lines;
+        }
+
+        info.buttonIndex = port_based_offset + res.key;
         info.useTime = 0;
 
         m_key_press_events.push_back(info);
