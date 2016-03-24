@@ -67,6 +67,16 @@ bool cedrus::xid_device_t::has_queued_responses()
     return m_response_mgr->has_queued_responses();
 }
 
+int cedrus::xid_device_t::get_number_of_keys_down() const
+{
+    return m_response_mgr->get_number_of_keys_down();;
+}
+
+void cedrus::xid_device_t::clear_response_queue()
+{
+    m_response_mgr->clear_response_queue();
+}
+
 cedrus::response cedrus::xid_device_t::get_next_response()
 {
     return m_response_mgr->get_next_response();

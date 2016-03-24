@@ -26,6 +26,7 @@ namespace
 cedrus::response_mgr::response_mgr( const int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config )
     : m_bytes_in_buffer(0),
       m_xid_packet_index(INVALID_PACKET_INDEX),
+      m_numKeysDown(0),
       m_response_parsing_function( boost::bind( &cedrus::response_mgr::xid_input_found, this, _1 ) )
 {
     for(int i = 0; i < XID_PACKET_SIZE; ++i)
@@ -228,6 +229,11 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<interface_xid_co
         res.key = dev_config->get_mapped_key(res.port, res.key);
 
         response_queue_.push(res);
+
+        if (res.was_pressed)
+            ++m_numKeysDown;
+        else
+            --m_numKeysDown;
     }
 }
 
@@ -270,4 +276,18 @@ cedrus::response cedrus::response_mgr::get_next_response()
     }
 
     return res;
+}
+
+int cedrus::response_mgr::get_number_of_keys_down() const
+{
+    return m_numKeysDown;
+}
+
+void cedrus::response_mgr::clear_response_queue()
+{
+    // This is how you clear a queue, evidently.
+    response_queue_ = std::queue<response>();
+
+    // We probably want to zero out the keypress counter.
+    m_numKeysDown = 0;
 }

@@ -77,6 +77,10 @@ namespace cedrus
 
         virtual bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses();
 
+        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_number_of_keys_down() const;
+
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_response_queue();
+
         virtual cedrus::response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
 
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_responses();

@@ -65,6 +65,10 @@ namespace cedrus
 
         virtual bool has_queued_responses();
 
+        virtual int get_number_of_keys_down() const;
+
+        virtual void clear_response_queue();
+
         virtual cedrus::response get_next_response();
 
         virtual void clear_responses();
