@@ -32,7 +32,6 @@
 #ifndef xid_device_scanner_t_H
 #define xid_device_scanner_t_H
 
-
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -46,28 +45,28 @@ namespace cedrus
     class base_device_t;
     class xid_device_t;
     class stim_tracker_t;
+    class xid_device_config_t;
 
     class xid_device_scanner_t
     {
     public:
-        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t(void);
+        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t(const std::string &config_file_location);
         virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_scanner_t(void);
+
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT read_in_devconfigs ( const std::string &config_file_location );
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT close_all_connections();
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_every_connection();
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_connection_by_ptr( boost::shared_ptr<cedrus::base_device_t> device );
 
-        /**
-         * Returns the number of valid XID devices connected to the computer
-         *
-         * In the process of scanning for XID devices, this adds each device
-         * to the xid_connections_ vector.
-         *
-         * @returns number of XID devices detected.
-         */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(const std::string &config_file_location,
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT check_connections_drop_dead_ones();
+
+        // This does a clean scan for devices.
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(
             boost::function< void ( std::string ) > reportFunction = NULL,
-            boost::function< void ( int ) > progressFunction = NULL);
+            boost::function< void ( int ) > progressFunction = NULL );
 
         /**
          * Returns an XID connection object for use by the xid_device_t class.
@@ -87,6 +86,8 @@ namespace cedrus
     private:
 
         std::vector<boost::shared_ptr<cedrus::base_device_t> > devices_;
+
+        std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > m_masterConfigList;
     };
 } // namespace cedrus
 

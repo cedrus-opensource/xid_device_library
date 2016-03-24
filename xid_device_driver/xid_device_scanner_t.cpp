@@ -59,18 +59,58 @@
 enum { OS_FILE_ERROR = -1,
     NO_FILE_SELECTED = 0};
 
-cedrus::xid_device_scanner_t::xid_device_scanner_t(void)
+cedrus::xid_device_scanner_t::xid_device_scanner_t( const std::string &config_file_location )
 {
+    read_in_devconfigs(config_file_location);
 }
 
 cedrus::xid_device_scanner_t::~xid_device_scanner_t(void)
 {
 }
 
-void cedrus::xid_device_scanner_t::drop_every_connection()
+bool cedrus::xid_device_scanner_t::read_in_devconfigs ( const std::string &config_file_location )
+{
+    try {
+        boost::filesystem::path targetDir(config_file_location);
+        boost::filesystem::directory_iterator it(targetDir), eod;
+    }
+    catch ( boost::filesystem::filesystem_error ) {
+        return false; // BAIL BAIL BAIL! Error retrieving devconfigs!
+    }
+
+    boost::filesystem::path targetDir(config_file_location);
+    boost::filesystem::directory_iterator it(targetDir), eod;
+
+    BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
+    {
+        if( is_regular_file(p) && p.extension() == ".devconfig" && p.filename().string().find("XID") != std::string::npos )
+        {
+            boost::property_tree::ptree pt;
+            try
+            {
+                boost::property_tree::ini_parser::read_ini(p.string(), pt);
+                m_masterConfigList.push_back(cedrus::xid_device_config_t::config_for_device(&pt));
+            }
+            catch ( boost::property_tree::ini_parser::ini_parser_error err )
+            {
+                // TODO: do something with the actual error message
+                //err.filename(); err.line(); err.message();
+            }
+        }
+    }
+
+    return true;
+}
+
+void cedrus::xid_device_scanner_t::close_all_connections()
 {
     for (unsigned int i = 0; i < devices_.size(); i++)
         devices_[i]->close_connection();
+}
+
+void cedrus::xid_device_scanner_t::drop_every_connection()
+{
+    close_all_connections();
 
     devices_.clear();
 }
@@ -92,55 +132,17 @@ void cedrus::xid_device_scanner_t::drop_connection_by_ptr( boost::shared_ptr<ced
 
 int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 (
- const std::string &config_file_location,
  boost::function< void ( std::string ) > reportFunction,
  boost::function< void ( int ) > progressFunction
 )
 {
     devices_.clear();
-    if ( progressFunction )
-        progressFunction(0);
-
-    try {
-        boost::filesystem::path targetDir(config_file_location);
-        boost::filesystem::directory_iterator it(targetDir), eod;
-    }
-    catch ( boost::filesystem::filesystem_error ) {
-        return -1; // Error retrieving devconfigs
-    }
-
-    boost::filesystem::path targetDir(config_file_location);
-    boost::filesystem::directory_iterator it(targetDir), eod;
-
-    // This will contain every devconfig we can find.
-    std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > master_config_list;
 
     std::vector<std::string> available_com_ports;
     load_com_ports_platform_specific( &available_com_ports );
 
     if ( progressFunction )
         progressFunction(5);
-
-	BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
-	{
-	    if( is_regular_file(p) && p.extension() == ".devconfig" )
-        {
-            boost::property_tree::ptree pt;
-            try
-            {
-                boost::property_tree::ini_parser::read_ini(p.string(), pt);
-                master_config_list.push_back(cedrus::xid_device_config_t::config_for_device(&pt));
-            }
-            catch ( boost::property_tree::ini_parser::ini_parser_error err )
-            {
-                // TODO: do something with the actual error message
-                //err.filename(); err.line(); err.message();
-            }
-        }
-	}
-
-    if ( progressFunction )
-        progressFunction(40);
 
     for(std::vector<std::string>::iterator iter = available_com_ports.begin(),
         end = available_com_ports.end();
@@ -150,7 +152,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
         // If a config is for a device that can potentially be on this port, it's a candidate. This step
         // is important because "dry" port scans are very time consuming!
-        BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, master_config_list)
+        BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, m_masterConfigList)
         {
             if ( !config->is_port_on_ignore_list( *iter ) )
                 config_candidates.push_back(config);
