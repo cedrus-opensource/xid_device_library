@@ -136,7 +136,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
  boost::function< void ( int ) > progressFunction
 )
 {
-    devices_.clear();
+    drop_every_connection();
 
     std::vector<std::string> available_com_ports;
     load_com_ports_platform_specific( &available_com_ports );
