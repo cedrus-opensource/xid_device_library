@@ -68,27 +68,9 @@ namespace cedrus
      */
     class xid_device_config_t
     {
+    private:
+        xid_device_config_t(boost::property_tree::ptree * pt);
     public:
-        /**
-         * Returns a device configuration object.
-         *
-         * This class reads the .devconfig files distributed with this library.
-         * The user must specify the runtime path to the devconfig files otherwise
-         * very conservative defaults are used.  Button counts on the device
-         * may not match up with reality and button ordering may be different
-         * than expected.
-         *
-         * If the path passed into this function is empty, an invalid
-         * boost::shared_ptr will be returned.
-         *
-         * @param[in] product_id product id of the XID device
-         * @param[in] model_id Used with RB-series devices. 0 otherwise.
-         * @param[in] devconfig_location Path to the devconfig files.  See the
-         * constructor of CedrusXidDeviceEnumerator for an example of looking
-         * up the path to the devconfig files.
-         *
-         * @returns a device configuration object
-         */
         // This is exported for testing purposes only!
         static CEDRUS_XIDDRIVER_IMPORTEXPORT boost::shared_ptr<xid_device_config_t> config_for_device(boost::property_tree::ptree * pt);
 
@@ -142,8 +124,6 @@ namespace cedrus
 
 
     public:
-        xid_device_config_t(boost::property_tree::ptree * pt);
-
         std::string m_device_name;
         int m_major_firmware_ver;
         int m_product_id;
