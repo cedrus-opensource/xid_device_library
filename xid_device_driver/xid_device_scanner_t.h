@@ -53,8 +53,6 @@ namespace cedrus
         CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t(const std::string &config_file_location);
         virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_scanner_t(void);
 
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT read_in_devconfigs ( const std::string &config_file_location );
-
         void CEDRUS_XIDDRIVER_IMPORTEXPORT close_all_connections();
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_every_connection();
@@ -62,6 +60,8 @@ namespace cedrus
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_connection_by_ptr( boost::shared_ptr<cedrus::base_device_t> device );
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT check_connections_drop_dead_ones();
+
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT read_in_devconfigs ( const std::string &config_file_location );
 
         // This does a clean scan for devices.
         int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(
@@ -79,9 +79,13 @@ namespace cedrus
          * @param[in] i index of the device
          * @returns an xid connection object for use by an instance of xid_device_t.
          */
-        boost::shared_ptr<base_device_t> CEDRUS_XIDDRIVER_IMPORTEXPORT device_connection_at_index(unsigned int i);
+        boost::shared_ptr<base_device_t> CEDRUS_XIDDRIVER_IMPORTEXPORT device_connection_at_index(unsigned int i) const;
 
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT device_count() const;
+        unsigned int CEDRUS_XIDDRIVER_IMPORTEXPORT device_count() const;
+
+        const boost::shared_ptr<const xid_device_config_t> CEDRUS_XIDDRIVER_IMPORTEXPORT devconfig_at_index(unsigned int i) const;
+
+        unsigned int CEDRUS_XIDDRIVER_IMPORTEXPORT devconfig_count() const;
 
     private:
 

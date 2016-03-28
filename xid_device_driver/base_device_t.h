@@ -108,7 +108,7 @@ namespace cedrus
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_protocol( int protocol );
 
         // Every device needs these.
-        virtual xid_device_config_t CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config() = 0;
+        virtual const boost::shared_ptr<const xid_device_config_t> CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config() const = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT open_connection() = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection() = 0;
         virtual bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_lost_connection() = 0;

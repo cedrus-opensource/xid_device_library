@@ -81,7 +81,7 @@ namespace cedrus
 
         virtual void set_device_protocol( int protocol );
 
-        virtual xid_device_config_t get_device_config();
+        virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const;
         virtual int  open_connection();
         virtual int  close_connection();
         virtual bool has_lost_connection();

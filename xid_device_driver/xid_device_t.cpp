@@ -107,9 +107,9 @@ void cedrus::xid_device_t::set_device_protocol( int protocol )
     xid_glossary::set_device_protocol(xid_con_, protocol);
 }
 
-cedrus::xid_device_config_t cedrus::xid_device_t::get_device_config( void )
+const boost::shared_ptr<const cedrus::xid_device_config_t> cedrus::xid_device_t::get_device_config( void ) const
 {
-    return *config_;
+    return config_;
 }
 
 int cedrus::xid_device_t::close_connection( void )

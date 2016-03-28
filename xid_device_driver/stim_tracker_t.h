@@ -63,7 +63,7 @@ namespace cedrus
          */
         void set_pulse_duration(unsigned int duration);
 
-        virtual xid_device_config_t get_device_config();
+        virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const;
         virtual int open_connection();
         virtual int close_connection();
         virtual bool has_lost_connection();
@@ -81,9 +81,8 @@ namespace cedrus
     private:
         char lines_state_;
 
-    protected:
         const boost::shared_ptr<xid_con_t> xid_con_;
-        const boost::shared_ptr<const cedrus::xid_device_config_t> config_;
+        const boost::shared_ptr<const xid_device_config_t> config_;
     };
 } // namespace cedrus
 

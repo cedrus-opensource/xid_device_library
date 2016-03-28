@@ -58,7 +58,7 @@ namespace cedrus
         virtual int get_outpost_model() = 0;
 
         // Every device needs these.
-        virtual xid_device_config_t get_device_config() = 0;
+        virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const = 0;
         virtual int get_baud_rate() = 0;
         virtual void get_product_and_model_id( int *product_id, int *model_id ) = 0;
         virtual int get_major_firmware_version() = 0;

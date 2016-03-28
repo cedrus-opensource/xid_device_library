@@ -224,11 +224,14 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     }
     if ( progressFunction )
         progressFunction(100);
+
+    close_all_connections();
+
     return devices_.size();
 }
 
 boost::shared_ptr<cedrus::base_device_t>
-cedrus::xid_device_scanner_t::device_connection_at_index(unsigned int i)
+cedrus::xid_device_scanner_t::device_connection_at_index(unsigned int i) const
 {
     if(i >= devices_.size())
         return boost::shared_ptr<base_device_t>();
@@ -236,7 +239,21 @@ cedrus::xid_device_scanner_t::device_connection_at_index(unsigned int i)
     return devices_[i];
 }
 
-int cedrus::xid_device_scanner_t::device_count() const
+unsigned int cedrus::xid_device_scanner_t::device_count() const
 {
     return devices_.size();
+}
+
+const boost::shared_ptr<const cedrus::xid_device_config_t>
+cedrus::xid_device_scanner_t::devconfig_at_index(unsigned int i) const
+{
+    if(i >= m_masterConfigList.size())
+        return boost::shared_ptr<const xid_device_config_t>();
+
+    return m_masterConfigList[i];
+}
+
+unsigned int cedrus::xid_device_scanner_t::devconfig_count() const
+{
+    return m_masterConfigList.size();
 }
