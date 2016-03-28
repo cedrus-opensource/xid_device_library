@@ -23,21 +23,24 @@ namespace cedrus
     {
     public:
         /**
-        * Resets the internal device reaction time timer.
-        *
-        * This should be called when a stimulus is presented
-        */
-        static void reset_rt_timer(boost::shared_ptr<xid_con_t> xid_con);
-
-        /**
         * Resets the device's base timer
         *
         * This should be called when the device is initialized or an experiment
         * starts
         */
+        // e1
         static void reset_base_timer(boost::shared_ptr<xid_con_t> xid_con);
 
+        // e3
         static int query_base_timer(boost::shared_ptr<xid_con_t> xid_con);
+
+        /**
+        * Resets the internal device reaction time timer.
+        *
+        * This should be called when a stimulus is presented
+        */
+        // e5
+        static void reset_rt_timer(boost::shared_ptr<xid_con_t> xid_con);
 
         static unsigned int adjust_endianness_chars_to_uint
         ( const char c1,
@@ -104,6 +107,9 @@ namespace cedrus
 
         // _aa XID 2.0 only.
         static int get_accessory_connector_device( boost::shared_ptr<xid_con_t> xid_con );
+
+        // a0 deprecated in XID 2.0
+        static void set_output_logic( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
         // a1 deprecated in XID 2.0
         static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );

@@ -137,6 +137,11 @@ int cedrus::base_device_t::get_accessory_connector_device( void )
     return INVALID_RETURN_VALUE;
 }
 
+void cedrus::base_device_t::set_output_logic( int /*mode*/ )
+{
+    // nothing
+}
+
 void cedrus::base_device_t::set_accessory_connector_mode( int /*mode*/ )
 {
     // nothing

@@ -75,6 +75,8 @@ namespace cedrus
 
         virtual int get_accessory_connector_mode();
 
+        virtual void set_output_logic( int mode );
+
         virtual void set_accessory_connector_mode( int mode );
 
         virtual void set_device_protocol( int protocol );

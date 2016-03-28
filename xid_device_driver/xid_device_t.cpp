@@ -92,6 +92,11 @@ int cedrus::xid_device_t::get_accessory_connector_mode( void )
     return xid_glossary::get_accessory_connector_mode(xid_con_);
 }
 
+void cedrus::xid_device_t::set_output_logic( int mode )
+{
+    xid_glossary::set_output_logic(xid_con_, mode);
+}
+
 void cedrus::xid_device_t::set_accessory_connector_mode( int mode )
 {
     xid_glossary::set_accessory_connector_mode(xid_con_, mode);

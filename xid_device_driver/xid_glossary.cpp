@@ -70,11 +70,6 @@ void cedrus::xid_glossary_pst_proof::get_product_and_model_id(boost::shared_ptr<
     return cedrus::xid_glossary::get_product_and_model_id( xid_con, product_id, model_id, true );
 }
 
-void cedrus::xid_glossary::reset_rt_timer( boost::shared_ptr<xid_con_t> xid_con )
-{
-    int bytes_written;
-    xid_con->write((unsigned char*)"e5", 2, &bytes_written);
-}
 
 void cedrus::xid_glossary::reset_base_timer( boost::shared_ptr<xid_con_t> xid_con )
 {
@@ -102,6 +97,12 @@ int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con
     }
 
     return XID_GENERAL_ERROR;
+}
+
+void cedrus::xid_glossary::reset_rt_timer( boost::shared_ptr<xid_con_t> xid_con )
+{
+    int bytes_written;
+    xid_con->write((unsigned char*)"e5", 2, &bytes_written);
 }
 
 std::string cedrus::xid_glossary::get_internal_product_name( boost::shared_ptr<xid_con_t> xid_con )
@@ -506,6 +507,15 @@ it will at least zero our buffer" );
     return (return_valid_aa && return_valid_val) ?
         static_cast<int>( return_info[3] )
         : static_cast<int>( INVALID_RETURN_VALUE );
+}
+
+void cedrus::xid_glossary::set_output_logic( boost::shared_ptr<xid_con_t> xid_con, int mode )
+{
+    int bytes_written;
+    std::ostringstream s;
+    s << "a0" << mode;
+
+    xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), &bytes_written);
 }
 
 void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode )

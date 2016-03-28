@@ -89,6 +89,8 @@ namespace cedrus
 
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_device();
 
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_output_logic( int mode );
+
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
 
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_trigger_default();
