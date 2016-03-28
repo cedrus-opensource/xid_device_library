@@ -149,6 +149,17 @@ std::vector<cedrus::device_port> cedrus::xid_device_config_t::get_vector_of_port
     return m_device_ports;
 }
 
+const cedrus::device_port * cedrus::xid_device_config_t::get_port_ptr_by_index(unsigned int portNum) const
+{
+    const cedrus::device_port * port_ptr;
+    if ( portNum < m_device_ports.size() )
+        port_ptr = &(m_device_ports[portNum]);
+    else
+        CEDRUS_FAIL("Requested port number doesn't exist!");
+
+    return port_ptr;
+}
+
 bool cedrus::xid_device_config_t::is_port_on_ignore_list( std::string port_name) const
 {
     return std::find(m_ports_to_ignore.begin(), m_ports_to_ignore.end(), port_name) != m_ports_to_ignore.end();

@@ -66,15 +66,15 @@ namespace cedrus
      *
      * @brief device configuration class
      */
-    class xid_device_config_t
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_config_t
     {
     private:
         xid_device_config_t(boost::property_tree::ptree * pt);
     public:
         // This is exported for testing purposes only!
-        static CEDRUS_XIDDRIVER_IMPORTEXPORT boost::shared_ptr<xid_device_config_t> config_for_device(boost::property_tree::ptree * pt);
+        static boost::shared_ptr<xid_device_config_t> config_for_device(boost::property_tree::ptree * pt);
 
-        CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_config_t(void);
+        ~xid_device_config_t(void);
 
         /**
          * Gets the actual button pressed based on the devconfig key mapping
@@ -82,7 +82,7 @@ namespace cedrus
          * @param[in] key key reported by the response pad
          * @returns the mapped key number based on the .devconfig file.
          */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_mapped_key(int port, int key) const;
+        int get_mapped_key(int port, int key) const;
 
         bool is_port_on_ignore_list( std::string port_name ) const;
 
@@ -91,7 +91,7 @@ namespace cedrus
          *
          * @returns name of the device
          */
-        std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_name() const;
+        std::string get_device_name() const;
 
         /**
          * product id of the device.
@@ -101,7 +101,7 @@ namespace cedrus
          * 1: SV-1 voice key system
          * 2: RB series response pad.
          */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_id() const;
+        int get_product_id() const;
 
         /**
          * model ID of the device.
@@ -114,13 +114,15 @@ namespace cedrus
          * 3: RB-830
          * 4: RB-834
          */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_model_id() const;
+        int get_model_id() const;
 
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT get_num_lines_on_port(int port) const;
+        int get_num_lines_on_port(int port) const;
 
-        std::vector<device_port> CEDRUS_XIDDRIVER_IMPORTEXPORT get_vector_of_ports() const;
+        std::vector<device_port> get_vector_of_ports() const;
 
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT does_config_match_device( int device_id, int model_id, int major_firmware_ver ) const;
+        const cedrus::device_port * get_port_ptr_by_index(unsigned int portNum) const;
+
+        bool does_config_match_device( int device_id, int model_id, int major_firmware_ver ) const;
 
     public:
         std::string m_device_name;
