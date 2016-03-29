@@ -108,6 +108,15 @@ void cedrus::xid_device_scanner_t::close_all_connections()
         devices_[i]->close_connection();
 }
 
+// This may seem like an odd function to have, but it can be used to short-
+// circuit logic by preventing existing devices from being picked up during
+// a scan.
+void cedrus::xid_device_scanner_t::open_all_connections()
+{
+    for (unsigned int i = 0; i < devices_.size(); i++)
+        devices_[i]->open_connection();
+}
+
 void cedrus::xid_device_scanner_t::drop_every_connection()
 {
     close_all_connections();
@@ -153,7 +162,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
  boost::function< bool ( unsigned int ) > progressFunction
 )
 {
-    drop_every_connection();
+    check_connections_drop_dead_ones();
+    open_all_connections();
 
     unsigned int current_prog = 0;
 

@@ -55,6 +55,8 @@ namespace cedrus
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT close_all_connections();
 
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT open_all_connections();
+
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_every_connection();
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_connection_by_ptr( boost::shared_ptr<cedrus::base_device_t> device );
