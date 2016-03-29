@@ -130,23 +130,45 @@ void cedrus::xid_device_scanner_t::drop_connection_by_ptr( boost::shared_ptr<ced
     }
 }
 
+void cedrus::xid_device_scanner_t::check_connections_drop_dead_ones()
+{
+    close_all_connections();
+
+    for( std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin();
+        iter != devices_.end(); )
+    {
+        if( (*iter)->open_connection() != XID_NO_ERR )
+            drop_connection_by_ptr(*iter);
+        else
+            ++iter;
+    }
+
+    close_all_connections();
+}
+
+
 int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 (
  boost::function< void ( std::string ) > reportFunction,
- boost::function< void ( int ) > progressFunction
+ boost::function< bool ( unsigned int ) > progressFunction
 )
 {
     drop_every_connection();
 
+    unsigned int current_prog = 0;
+
+    if ( progressFunction )
+        progressFunction(current_prog);
+
     std::vector<std::string> available_com_ports;
     load_com_ports_platform_specific( &available_com_ports );
 
-    if ( progressFunction )
-        progressFunction(5);
+    unsigned int prog_increment = 100/((available_com_ports.size()*5)+1); // 5 is the number of possible xid bauds
+    bool scanning_canceled = false;
 
     for(std::vector<std::string>::iterator iter = available_com_ports.begin(),
         end = available_com_ports.end();
-        iter != end; ++iter)
+        iter != end && !scanning_canceled; ++iter)
     {
         std::vector<boost::shared_ptr< cedrus::xid_device_config_t> > config_candidates;
 
@@ -169,6 +191,18 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
         // get an XID device's product/device and model IDs.
         for(int i = 0; i < num_bauds && !device_found; ++i)
         {
+            // Update progress
+            current_prog += prog_increment;
+            if ( progressFunction )
+            {
+                if ( progressFunction(current_prog) )
+                {
+                    drop_every_connection();
+                    scanning_canceled = true;
+                    break;
+                }
+            }
+
             boost::shared_ptr<cedrus::xid_con_t> xid_con(new xid_con_t(*iter, baud_rate[i]));
 
             if(xid_con->open() == XID_NO_ERR)
@@ -180,8 +214,6 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
                 if( boost::starts_with( info, "_xid" ) )
                 {
-                    if ( progressFunction )
-                        progressFunction(70);
                     device_found = true;
                     bool mode_changed = false;
 
@@ -214,7 +246,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                         devices_.push_back( matched_dev );
 
                         if ( mode_changed && reportFunction )
-                            reportFunction( matched_dev-> get_device_config().get_device_name() );
+                            reportFunction( matched_dev->get_device_config()->get_device_name() );
                     }
                 }
             }
@@ -222,6 +254,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
             xid_con->close();
         }
     }
+
     if ( progressFunction )
         progressFunction(100);
 
