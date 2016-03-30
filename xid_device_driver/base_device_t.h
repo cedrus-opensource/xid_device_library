@@ -93,6 +93,8 @@ namespace cedrus
 
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
 
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_vk_drop_delay( unsigned int delay );
+
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_trigger_default();
 
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_trigger_default( bool default_on );

@@ -114,6 +114,9 @@ namespace cedrus
         // a1 deprecated in XID 2.0
         static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
 
+        // b3
+        static void set_vk_drop_delay( boost::shared_ptr<xid_con_t> xid_con, unsigned int delay );
+
         // _f4
         static int get_trigger_default( boost::shared_ptr<xid_con_t> xid_con );
 

@@ -79,6 +79,8 @@ namespace cedrus
 
         virtual void set_accessory_connector_mode( int mode );
 
+        virtual void set_vk_drop_delay( unsigned int delay );
+
         virtual void set_device_protocol( int protocol );
 
         virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const;

@@ -102,6 +102,11 @@ void cedrus::xid_device_t::set_accessory_connector_mode( int mode )
     xid_glossary::set_accessory_connector_mode(xid_con_, mode);
 }
 
+void cedrus::xid_device_t::set_vk_drop_delay( unsigned int delay )
+{
+    xid_glossary::set_vk_drop_delay(xid_con_, delay);
+}
+
 void cedrus::xid_device_t::set_device_protocol( int protocol )
 {
     xid_glossary::set_device_protocol(xid_con_, protocol);

@@ -147,6 +147,11 @@ void cedrus::base_device_t::set_accessory_connector_mode( int /*mode*/ )
     // nothing
 }
 
+void cedrus::base_device_t::set_vk_drop_delay( unsigned int /*delay*/ )
+{
+    // nothing
+}
+
 int cedrus::base_device_t::get_trigger_default( void )
 {
     return false;

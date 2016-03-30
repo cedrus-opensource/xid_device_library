@@ -527,6 +527,15 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
     xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), &bytes_written);
 }
 
+void cedrus::xid_glossary::set_vk_drop_delay( boost::shared_ptr<xid_con_t> xid_con, unsigned int delay )
+{
+    int bytes_written;
+    std::ostringstream s;
+    s << "b3" << delay;
+
+    xid_con->write((unsigned char*)s.str().c_str(), s.str().length(), &bytes_written);
+}
+
 // This function's intended return is essentially a boolean. However, that prevents us from
 // verifying that the query succeeded, which is why it's an int instead.
 int cedrus::xid_glossary::get_trigger_default( boost::shared_ptr<xid_con_t> xid_con )
