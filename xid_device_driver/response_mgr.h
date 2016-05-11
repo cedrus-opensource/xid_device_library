@@ -95,8 +95,16 @@ namespace cedrus
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
 
+        // Even though the number of keys down should never be negative, this
+        // returns a signed int as a way to check for errors. The count going
+        // negative means that at some point we lost a key press, and that's
+        // serious.
+        int get_number_of_keys_down() const;
+
+        void clear_response_queue();
+
     private:
-    	enum { OS_FILE_ERROR = -1 };
+        enum { OS_FILE_ERROR = -1 };
 
         void adjust_buffer_for_packet_recovery();
         key_state xid_input_found( response &res );
@@ -111,6 +119,7 @@ namespace cedrus
         unsigned char m_input_buffer[XID_PACKET_SIZE];
         int m_xid_packet_index;
 
+        int m_numKeysDown;
         std::queue<response> response_queue_;
         boost::function< cedrus::key_state (response&) > m_response_parsing_function;
     };

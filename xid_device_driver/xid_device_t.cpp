@@ -67,6 +67,16 @@ bool cedrus::xid_device_t::has_queued_responses()
     return m_response_mgr->has_queued_responses();
 }
 
+int cedrus::xid_device_t::get_number_of_keys_down() const
+{
+    return m_response_mgr->get_number_of_keys_down();;
+}
+
+void cedrus::xid_device_t::clear_response_queue()
+{
+    m_response_mgr->clear_response_queue();
+}
+
 cedrus::response cedrus::xid_device_t::get_next_response()
 {
     return m_response_mgr->get_next_response();
@@ -82,9 +92,19 @@ int cedrus::xid_device_t::get_accessory_connector_mode( void )
     return xid_glossary::get_accessory_connector_mode(xid_con_);
 }
 
+void cedrus::xid_device_t::set_output_logic( int mode )
+{
+    xid_glossary::set_output_logic(xid_con_, mode);
+}
+
 void cedrus::xid_device_t::set_accessory_connector_mode( int mode )
 {
     xid_glossary::set_accessory_connector_mode(xid_con_, mode);
+}
+
+void cedrus::xid_device_t::set_vk_drop_delay( unsigned int delay )
+{
+    xid_glossary::set_vk_drop_delay(xid_con_, delay);
 }
 
 void cedrus::xid_device_t::set_device_protocol( int protocol )
@@ -92,9 +112,9 @@ void cedrus::xid_device_t::set_device_protocol( int protocol )
     xid_glossary::set_device_protocol(xid_con_, protocol);
 }
 
-cedrus::xid_device_config_t cedrus::xid_device_t::get_device_config( void )
+const boost::shared_ptr<const cedrus::xid_device_config_t> cedrus::xid_device_t::get_device_config( void ) const
 {
-    return *config_;
+    return config_;
 }
 
 int cedrus::xid_device_t::close_connection( void )

@@ -42,6 +42,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "CedrusAssert.h"
+
 boost::shared_ptr<cedrus::xid_device_config_t> cedrus::xid_device_config_t::config_for_device(
         boost::property_tree::ptree * pt )
 {
@@ -66,11 +68,12 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
 
     boost::split(m_ports_to_ignore,ports_string,boost::is_any_of(regex_string));
 
-    // xid devices support up to 255 ports. In reality, usually only
-    // 2 or 3 are used. This claim is technically true. However, the
-    // XID protocol can only report responses from a maximum of 8 ports.
-    // Just something to consider, I suppose.
-    for(int i = 0; i <= 255; ++i)
+    bool missing_port = false;
+
+    // The XID protocol can report responses from a maximum of 8 ports,
+    // but usually only 2-3 ports are actually defined and only one
+    // of them is for input.
+    for(unsigned int i = 0; i < 8; ++i)
     {
         std::string port_str;
         std::ostringstream s;
@@ -81,8 +84,12 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
             pt->get_child(port_str);
         }
         catch ( boost::property_tree::ptree_bad_path err ) {
+            missing_port = true;
             continue; // The device doesn't support this port
         }
+
+        if ( missing_port )
+            CEDRUS_FAIL("Devconfigs should include a fake port block for the ports they're missing!");
 
         device_port port;
         port.port_name = pt->get(port_str+".PortName", "not_found");
@@ -93,7 +100,7 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
         if ( port.is_response_port )
         {
             // devconfig files have up to 8 key mappings per port
-            for( int j = 0; j < 8; ++j )
+            for( unsigned int j = 0; j < 8; ++j )
             {
                 std::ostringstream s2;
                 s2 << ".XidDeviceKeyMap" << j;
@@ -104,7 +111,7 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
             }
         }
 
-        m_device_ports.insert(std::make_pair(i, port));
+        m_device_ports.push_back(port);
     }
 }
 
@@ -114,40 +121,43 @@ cedrus::xid_device_config_t::~xid_device_config_t(void)
 
 int cedrus::xid_device_config_t::get_mapped_key(int port, int key) const
 {
-    std::map<int,device_port>::const_iterator port_found = m_device_ports.find(port);
+    int mapped_key = -1;
 
-    // The device doesn't have this port, should never happen.
-    if( port_found == m_device_ports.end() )
-        return -1;
+    if ( port < m_device_ports.size() )
+    {
+        mapped_key = m_device_ports[port].key_map[key];
+    }
 
     // Anything that wasn't mapped during the devconfig parsing process will default to -1
-    return port_found->second.key_map[key];
+    return mapped_key;
 }
 
 int cedrus::xid_device_config_t::get_num_lines_on_port(int port) const
 {
     int num_lines = -1;
-    std::map<int,device_port>::const_iterator port_found = m_device_ports.find(port);
 
-    if( port_found != m_device_ports.end() )
-        num_lines = port_found->second.number_of_lines;
+    if ( port < m_device_ports.size() )
+    {
+        num_lines = m_device_ports[port].number_of_lines;
+    }
 
     return num_lines;
 }
 
 std::vector<cedrus::device_port> cedrus::xid_device_config_t::get_vector_of_ports() const
 {
-    std::vector<device_port> vector_of_ports;
+    return m_device_ports;
+}
 
-    std::map<int,device_port>::const_iterator port = m_device_ports.begin();
+const cedrus::device_port * cedrus::xid_device_config_t::get_port_ptr_by_index(unsigned int portNum) const
+{
+    const cedrus::device_port * port_ptr;
+    if ( portNum < m_device_ports.size() )
+        port_ptr = &(m_device_ports[portNum]);
+    else
+        CEDRUS_FAIL("Requested port number doesn't exist!");
 
-    while( port != m_device_ports.end() )
-    {
-        vector_of_ports.push_back(port->second);
-        port++;
-    }
-
-    return vector_of_ports;
+    return port_ptr;
 }
 
 bool cedrus::xid_device_config_t::is_port_on_ignore_list( std::string port_name) const

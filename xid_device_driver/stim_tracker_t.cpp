@@ -57,9 +57,9 @@ void cedrus::stim_tracker_t::set_pulse_duration(unsigned int duration)
     xid_glossary::set_pulse_duration(xid_con_, duration);
 }
 
-cedrus::xid_device_config_t cedrus::stim_tracker_t::get_device_config( void )
+const boost::shared_ptr<const cedrus::xid_device_config_t> cedrus::stim_tracker_t::get_device_config() const
 {
-    return *config_;
+    return config_;
 }
 
 int cedrus::stim_tracker_t::close_connection( void )

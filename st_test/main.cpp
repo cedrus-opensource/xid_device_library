@@ -20,12 +20,13 @@ using namespace cedrus;
 
 int main(int argc, char** argv)
 {
-    xid_device_scanner_t scanner;
     char cCurrentPath[FILENAME_MAX];
-
     GetCurrentDir(cCurrentPath, sizeof(cCurrentPath));
+
+    xid_device_scanner_t scanner(std::string(cCurrentPath) + "/../../../../devconfig");
+
     std::cout << "Detecting XID devices, stand by." << std::endl;
-    scanner.detect_valid_xid_devices(std::string(cCurrentPath) + "/../../../../devconfig");
+    scanner.detect_valid_xid_devices();
 
     if(scanner.device_count() == 0)
     {

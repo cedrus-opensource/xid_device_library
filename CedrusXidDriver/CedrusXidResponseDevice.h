@@ -38,15 +38,13 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
-
 namespace cedrus
 {
     class base_device_t;
+    struct device_port;
 }
 
 using namespace ATL;
-
-
 
 // CCedrusXidResponseDevice
 
@@ -87,14 +85,13 @@ public:
     END_COM_MAP()
 
 
-
-
     // ICedrusXidResponseDevice
 public:
     void set_xid_device(boost::shared_ptr<cedrus::base_device_t> xid_device);
 
 private:
     void set_button_names();
+    void populate_response_collection( std::vector<cedrus::device_port> * portVector, bool isPressPass );
 
     // IResponseDevice Methods
 public:

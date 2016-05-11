@@ -65,17 +65,25 @@ namespace cedrus
 
         virtual bool has_queued_responses();
 
+        virtual int get_number_of_keys_down() const;
+
+        virtual void clear_response_queue();
+
         virtual cedrus::response get_next_response();
 
         virtual void clear_responses();
 
         virtual int get_accessory_connector_mode();
 
+        virtual void set_output_logic( int mode );
+
         virtual void set_accessory_connector_mode( int mode );
+
+        virtual void set_vk_drop_delay( unsigned int delay );
 
         virtual void set_device_protocol( int protocol );
 
-        virtual xid_device_config_t get_device_config();
+        virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const;
         virtual int  open_connection();
         virtual int  close_connection();
         virtual bool has_lost_connection();

@@ -32,7 +32,6 @@
 #ifndef xid_device_scanner_t_H
 #define xid_device_scanner_t_H
 
-
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -46,28 +45,34 @@ namespace cedrus
     class base_device_t;
     class xid_device_t;
     class stim_tracker_t;
+    class xid_device_config_t;
 
     class xid_device_scanner_t
     {
     public:
-        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t(void);
+        CEDRUS_XIDDRIVER_IMPORTEXPORT xid_device_scanner_t(const std::string &config_file_location);
         virtual CEDRUS_XIDDRIVER_IMPORTEXPORT ~xid_device_scanner_t(void);
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT close_all_connections();
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT open_all_connections();
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_every_connection();
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_connection_by_ptr( boost::shared_ptr<cedrus::base_device_t> device );
 
-        /**
-         * Returns the number of valid XID devices connected to the computer
-         *
-         * In the process of scanning for XID devices, this adds each device
-         * to the xid_connections_ vector.
-         *
-         * @returns number of XID devices detected.
-         */
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(const std::string &config_file_location,
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT check_connections_drop_dead_ones();
+
+        bool CEDRUS_XIDDRIVER_IMPORTEXPORT read_in_devconfigs ( const std::string &config_file_location );
+
+        // This does a clean scan for devices.
+        //  reportFunction is for reporting errors during the scanning process
+        //  progressFunction is for reporting progress on a 0-100 scale and the
+        // return value is to signal that we need to cancel the scanning process.
+        // true for stop, false for don't
+        int CEDRUS_XIDDRIVER_IMPORTEXPORT detect_valid_xid_devices(
             boost::function< void ( std::string ) > reportFunction = NULL,
-            boost::function< void ( int ) > progressFunction = NULL);
+            boost::function< bool ( unsigned int ) > progressFunction = NULL );
 
         /**
          * Returns an XID connection object for use by the xid_device_t class.
@@ -80,13 +85,19 @@ namespace cedrus
          * @param[in] i index of the device
          * @returns an xid connection object for use by an instance of xid_device_t.
          */
-        boost::shared_ptr<base_device_t> CEDRUS_XIDDRIVER_IMPORTEXPORT device_connection_at_index(unsigned int i);
+        boost::shared_ptr<base_device_t> CEDRUS_XIDDRIVER_IMPORTEXPORT device_connection_at_index(unsigned int i) const;
 
-        int CEDRUS_XIDDRIVER_IMPORTEXPORT device_count() const;
+        unsigned int CEDRUS_XIDDRIVER_IMPORTEXPORT device_count() const;
+
+        const boost::shared_ptr<const xid_device_config_t> CEDRUS_XIDDRIVER_IMPORTEXPORT devconfig_at_index(unsigned int i) const;
+
+        unsigned int CEDRUS_XIDDRIVER_IMPORTEXPORT devconfig_count() const;
 
     private:
 
         std::vector<boost::shared_ptr<cedrus::base_device_t> > devices_;
+
+        std::vector< boost::shared_ptr<cedrus::xid_device_config_t> > m_masterConfigList;
     };
 } // namespace cedrus
 

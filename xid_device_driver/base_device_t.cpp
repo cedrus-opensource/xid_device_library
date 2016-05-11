@@ -107,6 +107,16 @@ bool cedrus::base_device_t::has_queued_responses()
     return false;
 }
 
+int cedrus::base_device_t::get_number_of_keys_down() const
+{
+    return 0;
+}
+
+void cedrus::base_device_t::clear_response_queue()
+{
+    // nothing
+}
+
 cedrus::response cedrus::base_device_t::get_next_response()
 {
     return cedrus::response();
@@ -127,7 +137,17 @@ int cedrus::base_device_t::get_accessory_connector_device( void )
     return INVALID_RETURN_VALUE;
 }
 
+void cedrus::base_device_t::set_output_logic( int /*mode*/ )
+{
+    // nothing
+}
+
 void cedrus::base_device_t::set_accessory_connector_mode( int /*mode*/ )
+{
+    // nothing
+}
+
+void cedrus::base_device_t::set_vk_drop_delay( unsigned int /*delay*/ )
 {
     // nothing
 }

@@ -9,7 +9,7 @@ XidModelID = 0
 XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
 
 [Port0]
-PortName = Lumina Keys + ST
+PortName = Keys + Scanner Trigger
 NumberOfLines = 5
 UseableAsResponse = Yes
 XidDeviceKeyMap1 = 0

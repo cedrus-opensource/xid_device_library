@@ -2,17 +2,17 @@
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
 
   <Product Name='Cedrus XID Response Extension for Presentation' Id='A1F1DCE7-8D50-46B2-9537-145F77D07D9C' UpgradeCode='D4F4A809-E719-4D95-AE25-B0256A1CA8F0'
-    Language='1033' Codepage='1252' Version='1.0.1' Manufacturer='Cedrus Corporation'>
+    Language='1033' Codepage='1252' Version='1.0.2' Manufacturer='Cedrus Corporation'>
 
     <Package Id='*' Keywords='Installer' Description="Cedrus XID Response Extension for Presentation Installer"
-      Manufacturer='Cedrus Corporation' InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+      Manufacturer='Cedrus Corporation' InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
 	  
 	<Upgrade Id='D4F4A809-E719-4D95-AE25-B0256A1CA8F0'>
       <UpgradeVersion OnlyDetect='yes' Property='SELFFOUND'
         Minimum='1.0.1' IncludeMinimum='yes'
-		Maximum='1.0.1' IncludeMaximum='yes' />
+		Maximum='1.0.2' IncludeMaximum='yes' />
       <UpgradeVersion OnlyDetect='yes' Property='NEWERFOUND'
-        Minimum='1.0.1' IncludeMinimum='no' />
+        Minimum='1.0.3' IncludeMinimum='no' />
     </Upgrade>
 	
 	<CustomAction Id='AlreadyUpdated' Error='[ProductName] is already installed.' />
@@ -40,12 +40,21 @@
 					<File Id='XID_RB_844' Name='XID RB-844.devconfig' DiskId='1' Source='..\devconfig\XID RB-844.devconfig'/>
 					<File Id='XID_Lumina_LP_400' Name='XID Lumina LP-400.devconfig' DiskId='1' Source='..\devconfig\XID Lumina LP-400.devconfig'/>
 					<File Id='XID_Lumina_3G' Name='XID Lumina 3G.devconfig' DiskId='1' Source='..\devconfig\XID Lumina 3G.devconfig'/>
-					<File Id='XID_StimTracker_ST_100' Name='XID StimTracker ST-100.devconfig' DiskId='1' Source='..\devconfig\XID StimTracker ST-100.devconfig'/>
 					<File Id='XID_SV_1' Name='XID SV-1.devconfig' DiskId='1' Source='..\devconfig\XID SV-1.devconfig'/>
 				</Component>
 			</Directory>
 		</Directory>
     </Directory>
+
+	<DirectoryRef Id="TARGETDIR">
+		<Merge Id="VC_Redist_ATL" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_ATL_x86.msm" DiskId="1" Language="0"/>
+		<Merge Id="VC_Redist_MFC" SourceFile="$(env.ProgramFiles)\Common Files\Merge Modules\Microsoft_VC100_MFC_x86.msm" DiskId="1" Language="0"/>
+    </DirectoryRef>
+
+    <Feature Id="VC_Redist" Title="Visual C++ Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+		<MergeRef Id="VC_Redist_ATL"/>
+		<MergeRef Id="VC_Redist_MFC"/>
+    </Feature>
 	
 	<Feature Id='Complete' Level='1'>
       <ComponentGroupRef Id='dlls_to_include' />
@@ -64,7 +73,7 @@
 			<Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="234" TabSkip="no" Text="!(loc.WelcomeDlgBitmap)" />
 			<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="yes" Text="!(loc.WixUIBack)" />
 			<Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
-			<Control Id="Description" Type="Text" X="135" Y="80" Width="220" Height="60" Transparent="yes" NoPrefix="yes" Text="Copyright 2014 Cedrus Corporation. All rights reserved. Licensed for use, redistribution and modification under the BSD License. See the COPYING file in the installation destination for the full license." >
+			<Control Id="Description" Type="Text" X="135" Y="80" Width="220" Height="60" Transparent="yes" NoPrefix="yes" Text="Copyright 2016 Cedrus Corporation. All rights reserved. Licensed for use, redistribution and modification under the BSD License. See the COPYING file in the installation destination for the full license." >
 				<Condition Action="show">NOT Installed OR NOT PATCH</Condition>
 				<Condition Action="hide">Installed AND PATCH</Condition>
 			</Control>
