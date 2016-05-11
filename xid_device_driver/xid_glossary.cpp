@@ -150,36 +150,31 @@ it will at least zero our product_id_return buffer" );
     CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
 
     // Model IDs are meaningless for non-RB devices
-    if ( *product_id == PRODUCT_ID_RB )
+    char model_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
+    int bytes_count;
+
+    if ( pst_proof )
     {
-        char model_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
-        int bytes_count;
-
-        if ( pst_proof )
-        {
-            bytes_count = xid_con->send_xid_command_pst_proof(
-                "_d3",
-                model_id_return,
-                sizeof(model_id_return));
-        }
-        else
-        {
-            bytes_count = xid_con->send_xid_command(
-                "_d3",
-                model_id_return,
-                sizeof(model_id_return));
-        }
-
-        CEDRUS_ASSERT( bytes_count >= 1 || model_id_return[0] == 0,
-            "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
-it will at least zero our buffer" );
-
-        *model_id = (int)(model_id_return[0]);
-
-        CEDRUS_ASSERT( *model_id >= 49 && *model_id <= 52, "_d3 command's result value must be between '1' and '4'" );
+        bytes_count = xid_con->send_xid_command_pst_proof(
+            "_d3",
+            model_id_return,
+            sizeof(model_id_return));
     }
     else
-        *model_id = 0;
+    {
+        bytes_count = xid_con->send_xid_command(
+            "_d3",
+            model_id_return,
+            sizeof(model_id_return));
+    }
+
+    CEDRUS_ASSERT( bytes_count >= 1 || model_id_return[0] == 0,
+        "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
+        it will at least zero our buffer" );
+
+    *model_id = (int)(model_id_return[0]);
+
+    CEDRUS_ASSERT( *model_id >= 49 && *model_id <= 69, "_d3 command's result value must be between '1' and 'E'" );
 }
 
 int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con )

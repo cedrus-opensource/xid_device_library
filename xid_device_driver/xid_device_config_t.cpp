@@ -173,17 +173,15 @@ int cedrus::xid_device_config_t::get_model_id() const
 bool cedrus::xid_device_config_t::does_config_match_device( int device_id, int model_id, int major_firmware_ver ) const
 {
     bool does_match = false;
-    if ( m_product_id == device_id && m_major_firmware_ver == major_firmware_ver)
+    if ( m_product_id == device_id && m_model_id == model_id && m_major_firmware_ver == major_firmware_ver)
     {
-        //per XID spec, '0' is Lumina, '1' is SV1, '2' is an RB
-        if ( static_cast<char>(m_product_id) == '2' )
-        {
-            if ( m_model_id == model_id )
-                does_match = true;
-        }
-        else
-            does_match = true;
+        does_match = true;
     }
+    // This device is a c-pod claiming it's a Lumina 3G
+    else if ( static_cast<char>(device_id) == '0' &&
+        static_cast<char>(model_id) == 'A' &&
+        static_cast<char>(major_firmware_ver) == 1 )
+        does_match = true;
 
     return does_match;
 }
