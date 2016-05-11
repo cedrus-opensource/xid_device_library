@@ -102,7 +102,7 @@ namespace cedrus
         boost::shared_ptr<xid_con_t> xid_con_;
 
     private:
-        char lines_state_;
+        unsigned int lines_state_;
         const boost::shared_ptr<const cedrus::xid_device_config_t> config_;
         const boost::shared_ptr<cedrus::response_mgr> m_response_mgr;
     };

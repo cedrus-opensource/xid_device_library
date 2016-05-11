@@ -136,9 +136,6 @@ namespace cedrus
         static void set_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con, int time );
 
 private:
-        // ah or mh
-        static void set_digital_output_lines( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines, char product_specific_prefix );
-
         // _d4
         static int get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con, bool pst_proof );
 

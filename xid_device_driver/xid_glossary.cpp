@@ -334,30 +334,34 @@ void cedrus::xid_glossary::set_digital_output_lines_xid (
     boost::shared_ptr<xid_con_t> xid_con,
     unsigned int lines)
 {
-    set_digital_output_lines(xid_con, lines, XID_COMMAND_PREFIX);
+    if(lines > 65535)
+        return;
+
+    char set_lines_cmd[3];
+
+    set_lines_cmd[0] = XID_COMMAND_PREFIX;
+    set_lines_cmd[1] = 'h';
+    set_lines_cmd[2] = lines & 0x000000ff;
+
+    int bytes_written;
+    xid_con->write((unsigned char*)set_lines_cmd, 3, &bytes_written);
 }
 
 void cedrus::xid_glossary::set_digital_output_lines_st (
     boost::shared_ptr<xid_con_t> xid_con,
     unsigned int lines)
 {
-    set_digital_output_lines(xid_con, lines, ST_COMMAND_PREFIX);
-}
-
-void cedrus::xid_glossary::set_digital_output_lines(
-    boost::shared_ptr<xid_con_t> xid_con,
-    unsigned int lines,
-    char product_specific_char)
-{
-    if(lines > 255)
+    if(lines > 65535)
         return;
 
+    unsigned int mask = lines;
     char set_lines_cmd[4];
 
-    set_lines_cmd[0] = product_specific_char;
+    set_lines_cmd[0] = ST_COMMAND_PREFIX;
     set_lines_cmd[1] = 'h';
-    set_lines_cmd[2] = lines;
-    set_lines_cmd[3] = '\0';
+    set_lines_cmd[2] = mask & 0x000000ff;
+    mask >>= 8;
+    set_lines_cmd[3] = mask & 0x000000ff;
 
     int bytes_written;
     xid_con->write((unsigned char*)set_lines_cmd, 4, &bytes_written);

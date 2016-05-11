@@ -73,13 +73,12 @@ namespace cedrus
         virtual int get_major_firmware_version();
         virtual int get_minor_firmware_version();
         virtual std::string get_internal_product_name();
-        virtual void raise_lines(unsigned int lines_bitmask,
-            bool leave_remaining_lines = false);
+        virtual void raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false);
         virtual void clear_lines();
         virtual void restore_factory_defaults();
 
     private:
-        char lines_state_;
+        unsigned int lines_state_;
 
     protected:
         const boost::shared_ptr<xid_con_t> xid_con_;
