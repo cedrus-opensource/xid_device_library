@@ -12,6 +12,11 @@ XidModelID = 67
 XidIgnoreSerialPorts = /dev/cu.modem,/dev/cu.Bluetooth-PDA-Sync,/dev/cu.KeySerial1,/dev/cu.KeySerial2,/dev/cu.MotorolaPhone-Dial-UpNe-1,/dev/cu.MotorolaPhone-Dial-UpNe-2
 
 [Port0]
+PortName = UNUSED PORT
+NumberOfLines = 0
+UseableAsResponse = No
+
+[Port1]
 PortName = Event Marker
 NumberOfLines = 8
 UseableAsResponse = No
