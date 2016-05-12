@@ -257,6 +257,8 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
                         if ( mode_changed && reportFunction )
                             reportFunction( matched_dev->get_device_config()->get_device_name() );
+
+                        break;
                     }
                 }
             }
