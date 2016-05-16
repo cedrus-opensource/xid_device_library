@@ -142,12 +142,14 @@ void cedrus::xid_device_scanner_t::drop_connection_by_ptr( boost::shared_ptr<ced
 void cedrus::xid_device_scanner_t::check_connections_drop_dead_ones()
 {
     close_all_connections();
-
-    for( std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin();
-        iter != devices_.end(); )
+    std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin();
+    while( iter != devices_.end() )
     {
         if( (*iter)->open_connection() != XID_NO_ERR )
-            drop_connection_by_ptr(*iter);
+        {
+            (*iter)->close_connection();
+            iter = devices_.erase(iter);
+        }
         else
             ++iter;
     }
