@@ -50,12 +50,6 @@
 
 #include <sstream>
 
-//#ifdef __APPLE__
-//#   include "xid_device_scanner_helper_mac.h"
-//#elif defined(_WIN32)
-#   include "xid_device_scanner_helper_win.h"
-//#endif
-
 cedrus::xid_device_scanner_t::xid_device_scanner_t( const std::string &config_file_location )
 {
     read_in_devconfigs(config_file_location);
@@ -97,6 +91,41 @@ bool cedrus::xid_device_scanner_t::read_in_devconfigs ( const std::string &confi
     }
 
     return true;
+}
+
+void cedrus::xid_device_scanner_t::load_com_ports( std::vector<DWORD> * available_com_ports )
+{
+    available_com_ports->clear();
+
+    FT_STATUS status;
+    DWORD num_devs;
+
+    // create the device information list
+    status = FT_CreateDeviceInfoList(&num_devs);
+
+    if (num_devs > 0)
+    {
+        // allocate storage for list based on numDevs
+        FT_DEVICE_LIST_INFO_NODE * dev_info = (FT_DEVICE_LIST_INFO_NODE*)malloc(sizeof(FT_DEVICE_LIST_INFO_NODE)*num_devs);
+        // get the device information list
+        status = FT_GetDeviceInfoList(dev_info, &num_devs);
+
+        if ( status == FT_OK )
+        {
+            for ( unsigned int i = 0; i < num_devs; i++ )
+            {
+                cedrus::xid_con_t conn(dev_info[i].LocId);
+
+                if(conn.open() == XID_NO_ERR)
+                {
+                    conn.close();
+                    available_com_ports->push_back(dev_info[i].LocId);
+                }
+            }
+        }
+
+        free(dev_info);
+    }
 }
 
 void cedrus::xid_device_scanner_t::close_all_connections()
@@ -168,7 +197,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
         progressFunction(current_prog);
 
     std::vector<DWORD> available_com_ports;
-    load_com_ports_platform_specific( &available_com_ports );
+    load_com_ports( &available_com_ports );
 
     unsigned int prog_increment = 100/((available_com_ports.size()*5)+1); // 5 is the number of possible xid bauds
     bool scanning_canceled = false;

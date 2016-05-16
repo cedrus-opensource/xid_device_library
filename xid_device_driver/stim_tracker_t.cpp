@@ -37,8 +37,8 @@
 cedrus::stim_tracker_t::stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
             boost::shared_ptr<const xid_device_config_t> dev_config)
-    : xid_con_(xid_con),
-      config_(dev_config)
+    : m_xidCon(xid_con),
+      m_config(dev_config)
 {
     clear_lines();
 }
@@ -49,63 +49,63 @@ cedrus::stim_tracker_t::~stim_tracker_t(void)
 
 unsigned int cedrus::stim_tracker_t::get_pulse_duration( void )
 {
-    return xid_glossary::get_pulse_duration(xid_con_);
+    return xid_glossary::get_pulse_duration(m_xidCon);
 }
 
 void cedrus::stim_tracker_t::set_pulse_duration(unsigned int duration)
 {
-    xid_glossary::set_pulse_duration(xid_con_, duration);
+    xid_glossary::set_pulse_duration(m_xidCon, duration);
 }
 
 const boost::shared_ptr<const cedrus::xid_device_config_t> cedrus::stim_tracker_t::get_device_config() const
 {
-    return config_;
+    return m_config;
 }
 
 int cedrus::stim_tracker_t::close_connection( void )
 {
-    return xid_con_->close();
+    return m_xidCon->close();
 }
 
 int cedrus::stim_tracker_t::open_connection( void )
 {
-    return xid_con_->open();
+    return m_xidCon->open();
 }
 
 bool cedrus::stim_tracker_t::has_lost_connection( void )
 {
-    return xid_con_->has_lost_connection();
+    return m_xidCon->has_lost_connection();
 }
 
 int cedrus::stim_tracker_t::get_baud_rate( void )
 {
-    return xid_con_->get_baud_rate();
+    return m_xidCon->get_baud_rate();
 }
 
-void cedrus::stim_tracker_t::set_baud_rate( int rate )
+void cedrus::stim_tracker_t::set_baud_rate( unsigned char rate )
 {
-    xid_con_->set_baud_rate(rate);
-    xid_glossary::set_device_baud_rate(xid_con_, rate);
+    m_xidCon->set_baud_rate(rate);
+    xid_glossary::set_device_baud_rate(m_xidCon, rate);
 }
 
 void cedrus::stim_tracker_t::get_product_and_model_id( int *product_id, int *model_id )
 {
-    xid_glossary::get_product_and_model_id(xid_con_, product_id, model_id);
+    xid_glossary::get_product_and_model_id(m_xidCon, product_id, model_id);
 }
 
 int cedrus::stim_tracker_t::get_major_firmware_version( void )
 {
-    return xid_glossary::get_major_firmware_version(xid_con_);
+    return xid_glossary::get_major_firmware_version(m_xidCon);
 }
 
 int cedrus::stim_tracker_t::get_minor_firmware_version( void )
 {
-    return xid_glossary::get_minor_firmware_version(xid_con_);
+    return xid_glossary::get_minor_firmware_version(m_xidCon);
 }
 
 std::string cedrus::stim_tracker_t::get_internal_product_name( void )
 {
-    return xid_glossary::get_internal_product_name(xid_con_);
+    return xid_glossary::get_internal_product_name(m_xidCon);
 }
 
 void cedrus::stim_tracker_t::raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines)
@@ -113,20 +113,20 @@ void cedrus::stim_tracker_t::raise_lines(unsigned int lines_bitmask, bool leave_
     unsigned int output_lines = lines_bitmask;
 
     if(leave_remaining_lines)
-        output_lines |= lines_state_;
+        output_lines |= m_linesState;
 
-    xid_glossary::set_digital_output_lines_st(xid_con_, output_lines);
+    xid_glossary::set_digital_output_lines_st(m_xidCon, output_lines);
 
-    lines_state_ = output_lines;
+    m_linesState = output_lines;
 }
 
 void cedrus::stim_tracker_t::clear_lines( void )
 {
-    xid_glossary::set_digital_output_lines_st(xid_con_, 0);
-    lines_state_ = 0;
+    xid_glossary::set_digital_output_lines_st(m_xidCon, 0);
+    m_linesState = 0;
 }
 
 void cedrus::stim_tracker_t::restore_factory_defaults( void )
 {
-    xid_glossary::restore_factory_defaults(xid_con_);
+    xid_glossary::restore_factory_defaults(m_xidCon);
 }

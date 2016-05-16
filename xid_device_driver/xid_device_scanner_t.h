@@ -37,6 +37,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 
+#include "ftd2xx.h"
+
 #include "XidDriverImpExpDefs.h"
 
 namespace cedrus
@@ -56,6 +58,8 @@ namespace cedrus
         void CEDRUS_XIDDRIVER_IMPORTEXPORT close_all_connections();
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT open_all_connections();
+
+        void CEDRUS_XIDDRIVER_IMPORTEXPORT load_com_ports( std::vector<DWORD> * available_com_ports );
 
         void CEDRUS_XIDDRIVER_IMPORTEXPORT drop_every_connection();
 

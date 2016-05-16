@@ -123,7 +123,7 @@ namespace cedrus
          *
          * @returns true if the read was successful, false otherwise.
          */
-        bool read( unsigned char *in_buffer, int bytes_to_read, DWORD *bytes_read);
+        bool read( unsigned char *in_buffer, DWORD bytes_to_read, LPDWORD bytes_read);
 
         /**
          * Write data to the device.
@@ -137,27 +137,27 @@ namespace cedrus
          */
         bool write(
             unsigned char * const in_buffer,
-            int bytes_to_write,
-            int *bytes_written);
+            DWORD bytes_to_write,
+            LPDWORD bytes_written);
 
-        int send_xid_command(
+        DWORD send_xid_command(
             const char in_command[],
-            char out_response[],
-            int max_out_response_size);
+            unsigned char out_response[],
+            unsigned int max_out_response_size);
 
-        int send_xid_command_slow(
+        DWORD send_xid_command_slow(
             const char in_command[],
-            char out_response[],
-            int max_out_response_size);
+            unsigned char out_response[],
+            unsigned int max_out_response_size);
 
-        int send_xid_command_pst_proof(
+        DWORD send_xid_command_pst_proof(
             const char in_command[],
-            char out_response[],
-            int max_out_response_size);
+            unsigned char out_response[],
+            unsigned int max_out_response_size);
 
         int get_baud_rate () const;
 
-        void set_baud_rate ( int rate );
+        void set_baud_rate ( unsigned char rate );
 
         bool has_lost_connection();
 
@@ -177,25 +177,21 @@ namespace cedrus
          * @param[in] num_retries specifies the number of retries we're
          * willing to allow until while we wait for the device to respond
          */
-        int send_xid_command(
+        DWORD send_xid_command(
             const char in_command[],
-            char out_response[],
-            int max_out_response_size,
-            int num_retries);
+            unsigned char out_response[],
+            unsigned int max_out_response_size,
+            unsigned int num_retries);
 
-        DWORD baud_rate_;
-        BYTE byte_size_;
-        BYTE bit_parity_;
-        BYTE stop_bits_;
+        DWORD m_baudRate;
+        BYTE m_byteSize;
+        BYTE m_bitParity;
+        BYTE m_stopBits;
         DWORD m_location;
 
         bool m_connection_dead;
 
-        struct DarwinConnPimpl;
-        boost::shared_ptr<DarwinConnPimpl> m_darwinPimpl;
-
-        struct WindowsConnPimpl;
-        boost::shared_ptr<WindowsConnPimpl> m_winPimpl;
+        FT_HANDLE m_deviceHandle;
     };
 } // namespace cedrus
 

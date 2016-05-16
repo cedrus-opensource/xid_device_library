@@ -101,13 +101,13 @@ namespace cedrus
 
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_trigger_debounce_time();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_trigger_debounce_time( int time );
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_trigger_debounce_time( unsigned char time );
 
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_button_debounce_time();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_button_debounce_time( int time );
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_button_debounce_time( unsigned char time );
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_protocol( int protocol );
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_protocol( unsigned char protocol );
 
         // Every device needs these.
         virtual const boost::shared_ptr<const xid_device_config_t> CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config() const = 0;
@@ -115,7 +115,7 @@ namespace cedrus
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection() = 0;
         virtual bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_lost_connection() = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate() = 0;
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate( int rate ) = 0;
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate( unsigned char rate ) = 0;
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_and_model_id( int *product_id, int *model_id ) = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_major_firmware_version() = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_minor_firmware_version() = 0;

@@ -50,10 +50,10 @@ namespace cedrus
 
     virtual int get_outpost_model();
     virtual int get_light_sensor_mode();
-    virtual void set_light_sensor_mode( int mode );
-    virtual void set_light_sensor_threshold( int threshold );
+    virtual void set_light_sensor_mode( unsigned char mode );
+    virtual void set_light_sensor_threshold( unsigned char threshold );
     virtual int get_light_sensor_threshold();
-    virtual void set_scanner_trigger_filter( int mode );
+    virtual void set_scanner_trigger_filter( unsigned char mode );
     virtual int get_accessory_connector_mode( void );
     virtual int get_accessory_connector_device( void );
 

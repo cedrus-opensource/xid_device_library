@@ -68,7 +68,7 @@ namespace cedrus
         virtual int close_connection();
         virtual bool has_lost_connection();
         virtual int get_baud_rate();
-        virtual void set_baud_rate( int rate );
+        virtual void set_baud_rate( unsigned char rate );
         virtual void get_product_and_model_id( int *product_id, int *model_id );
         virtual int get_major_firmware_version();
         virtual int get_minor_firmware_version();
@@ -78,10 +78,10 @@ namespace cedrus
         virtual void restore_factory_defaults();
 
     private:
-        unsigned int lines_state_;
+        unsigned int m_linesState;
 
-        const boost::shared_ptr<xid_con_t> xid_con_;
-        const boost::shared_ptr<const xid_device_config_t> config_;
+        const boost::shared_ptr<xid_con_t> m_xidCon;
+        const boost::shared_ptr<const xid_device_config_t> m_config;
     };
 } // namespace cedrus
 

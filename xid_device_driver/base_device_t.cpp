@@ -167,7 +167,7 @@ int cedrus::base_device_t::get_trigger_debounce_time( void )
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_trigger_debounce_time( int /*time*/ )
+void cedrus::base_device_t::set_trigger_debounce_time( unsigned char /*time*/ )
 {
     // nothing
 }
@@ -177,12 +177,12 @@ int cedrus::base_device_t::get_button_debounce_time( void )
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_button_debounce_time( int /*time*/ )
+void cedrus::base_device_t::set_button_debounce_time( unsigned char /*time*/ )
 {
     // nothing
 }
 
-void cedrus::base_device_t::set_device_protocol( int /*protocol*/ )
+void cedrus::base_device_t::set_device_protocol( unsigned char /*protocol*/ )
 {
     // nothing
 }

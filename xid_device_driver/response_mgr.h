@@ -120,7 +120,7 @@ namespace cedrus
         int m_xid_packet_index;
 
         int m_numKeysDown;
-        std::queue<response> response_queue_;
+        std::queue<response> m_responseQueue;
         boost::function< cedrus::key_state (response&) > m_response_parsing_function;
     };
 } // namespace cedrus

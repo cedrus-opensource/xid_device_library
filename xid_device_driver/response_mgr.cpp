@@ -228,7 +228,7 @@ void cedrus::response_mgr::check_for_keypress(boost::shared_ptr<interface_xid_co
     {
         res.key = dev_config->get_mapped_key(res.port, res.key);
 
-        response_queue_.push(res);
+        m_responseQueue.push(res);
 
         if (res.was_pressed)
             ++m_numKeysDown;
@@ -260,7 +260,7 @@ void cedrus::response_mgr::adjust_buffer_for_packet_recovery()
 
 bool cedrus::response_mgr::has_queued_responses() const
 {
-    return !response_queue_.empty();
+    return !m_responseQueue.empty();
 }
 
 // If there are no processed responses, this will return a default response
@@ -271,8 +271,8 @@ cedrus::response cedrus::response_mgr::get_next_response()
     response res;
     if ( has_queued_responses() )
     {
-        res = response_queue_.front();
-        response_queue_.pop();
+        res = m_responseQueue.front();
+        m_responseQueue.pop();
     }
 
     return res;
@@ -286,7 +286,7 @@ int cedrus::response_mgr::get_number_of_keys_down() const
 void cedrus::response_mgr::clear_response_queue()
 {
     // This is how you clear a queue, evidently.
-    response_queue_ = std::queue<response>();
+    m_responseQueue = std::queue<response>();
 
     // We probably want to zero out the keypress counter.
     m_numKeysDown = 0;

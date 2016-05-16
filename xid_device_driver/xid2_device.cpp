@@ -46,32 +46,32 @@ cedrus::xid2_device::~xid2_device(void)
 
 int cedrus::xid2_device::get_outpost_model( void )
 {
-    return xid_glossary::get_outpost_model(xid_con_);
+    return xid_glossary::get_outpost_model(m_xidCon);
 }
 
 int cedrus::xid2_device::get_light_sensor_mode( void )
 {
-    return xid_glossary::get_light_sensor_mode(xid_con_);
+    return xid_glossary::get_light_sensor_mode(m_xidCon);
 }
 
-void cedrus::xid2_device::set_light_sensor_mode( int mode )
+void cedrus::xid2_device::set_light_sensor_mode( unsigned char mode )
 {
-    xid_glossary::set_light_sensor_mode(xid_con_, mode);
+    xid_glossary::set_light_sensor_mode(m_xidCon, mode);
 }
 
-void cedrus::xid2_device::set_light_sensor_threshold( int threshold )
+void cedrus::xid2_device::set_light_sensor_threshold( unsigned char threshold )
 {
-    xid_glossary::set_light_sensor_threshold(xid_con_, threshold);
+    xid_glossary::set_light_sensor_threshold(m_xidCon, threshold);
 }
 
 int cedrus::xid2_device::get_light_sensor_threshold( void )
 {
-    return xid_glossary::get_light_sensor_threshold(xid_con_);
+    return xid_glossary::get_light_sensor_threshold(m_xidCon);
 }
 
-void cedrus::xid2_device::set_scanner_trigger_filter( int mode )
+void cedrus::xid2_device::set_scanner_trigger_filter( unsigned char mode )
 {
-    xid_glossary::set_scanner_trigger_filter(xid_con_, mode);
+    xid_glossary::set_scanner_trigger_filter(m_xidCon, mode);
 }
 
 int cedrus::xid2_device::get_accessory_connector_mode( void )
@@ -81,5 +81,5 @@ int cedrus::xid2_device::get_accessory_connector_mode( void )
 
 int cedrus::xid2_device::get_accessory_connector_device( void )
 {
-    return xid_glossary::get_accessory_connector_device(xid_con_);
+    return xid_glossary::get_accessory_connector_device(m_xidCon);
 }
