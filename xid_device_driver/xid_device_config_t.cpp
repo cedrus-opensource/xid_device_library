@@ -144,14 +144,14 @@ int cedrus::xid_device_config_t::get_num_lines_on_port(int port) const
     return num_lines;
 }
 
-std::vector<cedrus::device_port> cedrus::xid_device_config_t::get_vector_of_ports() const
+const std::vector<cedrus::device_port> * cedrus::xid_device_config_t::get_vector_of_ports() const
 {
-    return m_device_ports;
+    return &m_device_ports;
 }
 
 const cedrus::device_port * cedrus::xid_device_config_t::get_port_ptr_by_index(unsigned int portNum) const
 {
-    const cedrus::device_port * port_ptr;
+    const cedrus::device_port * port_ptr = nullptr;
     if ( portNum < m_device_ports.size() )
         port_ptr = &(m_device_ports[portNum]);
     else

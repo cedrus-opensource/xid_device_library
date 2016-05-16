@@ -118,7 +118,7 @@ namespace cedrus
 
         int get_num_lines_on_port(int port) const;
 
-        std::vector<device_port> get_vector_of_ports() const;
+        const std::vector<device_port> * get_vector_of_ports() const;
 
         const cedrus::device_port * get_port_ptr_by_index(unsigned int portNum) const;
 
