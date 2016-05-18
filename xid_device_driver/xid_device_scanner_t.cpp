@@ -208,20 +208,6 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
         end = available_com_ports.end();
         iter != end && !scanning_canceled; ++iter)
     {
-        std::vector<boost::shared_ptr< cedrus::xid_device_config_t> > config_candidates;
-
-        // If a config is for a device that can potentially be on this port, it's a candidate. This step
-        // is important because "dry" port scans are very time consuming!
-        BOOST_FOREACH(boost::shared_ptr<cedrus::xid_device_config_t> const config, m_masterConfigList)
-        {
-            // This may possibly be no longer needed with the FTDI library.
-            //if ( !config->is_port_on_ignore_list( *iter ) )
-                config_candidates.push_back(config);
-        }
-
-        if ( config_candidates.empty() )
-            continue;
-
         bool device_found = false;
         const int baud_rate[] = { 115200, 19200, 9600, 57600, 38400 };
         const int num_bauds   = sizeof(baud_rate)/sizeof(int);
@@ -277,7 +263,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                         create_device( product_id,
                                        model_id,
                                        major_firmware_version,
-                                       config_candidates,
+                                       m_masterConfigList,
                                        xid_con );
 
                     if ( matched_dev )

@@ -84,8 +84,6 @@ namespace cedrus
          */
         int get_mapped_key(int port, int key) const;
 
-        bool is_port_on_ignore_list( std::string port_name ) const;
-
         /**
          * Returns the name of the device
          *
@@ -131,7 +129,6 @@ namespace cedrus
         int m_model_id;
 
         std::vector<device_port> m_device_ports;
-        std::vector<std::string> m_ports_to_ignore;
     };
 } // namespace cedrus
 

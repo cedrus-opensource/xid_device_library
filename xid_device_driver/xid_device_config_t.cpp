@@ -63,11 +63,6 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
     m_product_id = pt->get<int>("DeviceInfo.XidProductID", (int) INVALID_RETURN_VALUE );
     m_model_id = pt->get<int>("DeviceInfo.XidModelID", (int) INVALID_RETURN_VALUE );
 
-    std::string regex_string(",");
-    std::string ports_string = pt->get("DeviceOptions.XidIgnoreSerialPorts", "not_found");
-
-    boost::split(m_ports_to_ignore,ports_string,boost::is_any_of(regex_string));
-
     bool missing_port = false;
 
     // The XID protocol can report responses from a maximum of 8 ports,
@@ -158,11 +153,6 @@ const cedrus::device_port * cedrus::xid_device_config_t::get_port_ptr_by_index(u
         CEDRUS_FAIL("Requested port number doesn't exist!");
 
     return port_ptr;
-}
-
-bool cedrus::xid_device_config_t::is_port_on_ignore_list( std::string port_name) const
-{
-    return std::find(m_ports_to_ignore.begin(), m_ports_to_ignore.end(), port_name) != m_ports_to_ignore.end();
 }
 
 std::string cedrus::xid_device_config_t::get_device_name() const
