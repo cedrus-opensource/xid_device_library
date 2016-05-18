@@ -114,13 +114,7 @@ void cedrus::xid_device_scanner_t::load_com_ports( std::vector<DWORD> * availabl
         {
             for ( unsigned int i = 0; i < num_devs; i++ )
             {
-                cedrus::xid_con_t conn(dev_info[i].LocId);
-
-                if(conn.open() == XID_NO_ERR)
-                {
-                    conn.close();
-                    available_com_ports->push_back(dev_info[i].LocId);
-                }
+                available_com_ports->push_back(dev_info[i].LocId);
             }
         }
 
