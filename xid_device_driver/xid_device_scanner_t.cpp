@@ -165,13 +165,33 @@ void cedrus::xid_device_scanner_t::check_connections_drop_dead_ones()
     std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin();
     while( iter != devices_.end() )
     {
-        if( (*iter)->open_connection() != XID_NO_ERR )
+        bool drop_connection = (*iter)->open_connection() != XID_NO_ERR;
+
+        // If the connection held up, we still need to verify the device is still
+        // the same. XID devices are largely interchangeable as far as the library
+        // is concerned, and sending commands to the wrong one can make things
+        // very confusing.
+        if ( !drop_connection )
+        {
+            int product_id;
+            int model_id;
+            (*iter)->get_product_and_model_id(&product_id, &model_id);
+
+            int major_firmware_version = (*iter)->get_major_firmware_version();
+
+            if ( (*iter)->get_device_config()->does_config_match_device(product_id, model_id, major_firmware_version) )
+            {
+                ++iter;
+            }
+            else
+                drop_connection = true; // The device is not what we thought it was.
+        }
+
+        if( drop_connection )
         {
             (*iter)->close_connection();
             iter = devices_.erase(iter);
         }
-        else
-            ++iter;
     }
 
     close_all_connections();
