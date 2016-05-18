@@ -53,15 +53,22 @@ cedrus::xid_con_t::xid_con_t(
 
 cedrus::xid_con_t::~xid_con_t(void)
 {
-    if(m_deviceHandle != 0)
+    if(m_deviceHandle != nullptr)
         close();
 }
 
 bool cedrus::xid_con_t::close()
 {
-    bool status = ( FT_Close(m_deviceHandle) == FT_OK );
-    m_deviceHandle = 0;
-    return status;
+    DWORD close_status = FT_OK;
+
+    // Don't bother if the handle is already null
+    if ( m_deviceHandle != nullptr )
+    {
+        close_status = FT_Close(m_deviceHandle);
+        m_deviceHandle = nullptr;
+    }
+
+    return close_status == FT_OK;
 }
 
 bool cedrus::xid_con_t::flush_write_to_device_buffer()
@@ -78,6 +85,9 @@ int cedrus::xid_con_t::open()
 {
     int status = XID_NO_ERR;
 
+    // Erring on the side of caution in case we already have a handle.
+    close();
+
     DWORD open_success = FT_OpenEx(
               (PVOID)m_location,
               FT_OPEN_BY_LOCATION,
@@ -85,11 +95,11 @@ int cedrus::xid_con_t::open()
 
     if( open_success != FT_OK )
     {
-        m_deviceHandle = 0;
         status = XID_PORT_NOT_AVAILABLE;
     }
     else
     {
+        m_connection_dead = false;
         if ( !setup_com_port() )
             status = XID_ERROR_SETTING_UP_PORT;
 

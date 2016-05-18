@@ -252,7 +252,6 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
 
                     int product_id;
                     int model_id;
-
                     int major_firmware_version = xid_glossary_pst_proof::get_major_firmware_version(xid_con);
 
                     //What device is it? Get product/model ID, find the corresponding config
@@ -277,15 +276,11 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                     }
                 }
             }
-
-            xid_con->close();
         }
     }
 
     if ( progressFunction )
         progressFunction(100);
-
-    close_all_connections();
 
     return devices_.size();
 }
