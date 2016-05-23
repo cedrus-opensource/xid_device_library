@@ -120,8 +120,8 @@ namespace cedrus
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_major_firmware_version() = 0;
         virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_minor_firmware_version() = 0;
         virtual std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_internal_product_name() = 0;
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask,
-            bool leave_remaining_lines = false) = 0;
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false) = 0;
+        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT lower_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false) = 0;
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines() = 0;
         virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT restore_factory_defaults() = 0;
     };

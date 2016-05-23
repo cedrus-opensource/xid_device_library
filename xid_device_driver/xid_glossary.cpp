@@ -327,9 +327,6 @@ void cedrus::xid_glossary::set_scanner_trigger_filter( boost::shared_ptr<xid_con
 
 void cedrus::xid_glossary::set_digital_output_lines_xid ( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines )
 {
-    if(lines > 65535)
-        return;
-
     char set_lines_cmd[3];
 
     set_lines_cmd[0] = XID_COMMAND_PREFIX;
@@ -342,9 +339,6 @@ void cedrus::xid_glossary::set_digital_output_lines_xid ( boost::shared_ptr<xid_
 
 void cedrus::xid_glossary::set_digital_output_lines_st ( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines )
 {
-    if(lines > 65535)
-        return;
-
     unsigned int mask = lines;
     char set_lines_cmd[4];
 

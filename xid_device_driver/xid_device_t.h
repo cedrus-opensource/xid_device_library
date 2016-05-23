@@ -102,7 +102,8 @@ namespace cedrus
         virtual void set_button_debounce_time( unsigned char time );
         virtual void restore_factory_defaults();
 
-        virtual void raise_lines ( unsigned int lines_bitmask, bool leave_remaining_lines = false);
+        virtual void raise_lines( unsigned int lines_bitmask, bool leave_remaining_lines = false );
+        virtual void lower_lines( unsigned int lines_bitmask, bool leave_remaining_lines = false );
 
     protected:
         boost::shared_ptr<xid_con_t> m_xidCon;

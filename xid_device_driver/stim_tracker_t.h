@@ -74,6 +74,7 @@ namespace cedrus
         virtual int get_minor_firmware_version();
         virtual std::string get_internal_product_name();
         virtual void raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false);
+        virtual void lower_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false);
         virtual void clear_lines();
         virtual void restore_factory_defaults();
 

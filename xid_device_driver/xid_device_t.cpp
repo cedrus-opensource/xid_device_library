@@ -177,6 +177,18 @@ void cedrus::xid_device_t::raise_lines(unsigned int lines_bitmask, bool leave_re
     m_linesState = output_lines;
 }
 
+void cedrus::xid_device_t::lower_lines( unsigned int lines_bitmask, bool leave_remaining_lines )
+{
+    unsigned int output_lines = ~lines_bitmask;
+
+    if(leave_remaining_lines)
+        output_lines &= m_linesState;
+
+    xid_glossary::set_digital_output_lines_xid(m_xidCon, output_lines);
+
+    m_linesState = output_lines;
+}
+
 void cedrus::xid_device_t::clear_lines( void )
 {
     xid_glossary::set_digital_output_lines_xid(m_xidCon, 0);
