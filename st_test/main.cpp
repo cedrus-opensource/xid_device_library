@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 
     std::cout << "Found the following devices:" << std::endl;
     for (int i = 0; i < scanner.device_count(); i++)
-        std::cout << scanner.device_connection_at_index(i)->get_device_config().get_device_name() << std::endl;
+        std::cout << scanner.device_connection_at_index(i)->get_device_config()->get_device_name() << std::endl;
 
     for (int i = 0; i < scanner.device_count(); i++)
         scanner.device_connection_at_index(i)->open_connection();
