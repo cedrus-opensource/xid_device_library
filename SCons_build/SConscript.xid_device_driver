@@ -41,13 +41,12 @@ cxxflags = []
 frameworks = []
 if sys.platform == 'win32':
     lib_dependencies = ['ftd2xx']
+    env.Install( str( env.subst('$STAGING_DIR')), env.subst('ftd2xx.dll') )
 if sys.platform == 'darwin':
     lib_dependencies = ['ftd2xx.1.2.2']
+    env.Install( str( env.subst('$STAGING_DIR')), env.subst('libftd2xx.1.2.2.dylib') )
 lib_path = ['.']
-# can these go inside a helper?
 linkflags = []
-
-ftdi_lib = env.Install( str( env.subst('$STAGING_DIR')), env.subst('ftd2xx.dll') )
 
 if sys.platform == 'win32':
     linkflags = [ '/SUBSYSTEM:WINDOWS',  '/VERSION:4.5', '/MANIFEST', '/INCREMENTAL', ]
@@ -67,5 +66,3 @@ staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
     lib_path,
     linkflags
 )
-
-env.Depends(staged_binary, ftdi_lib)

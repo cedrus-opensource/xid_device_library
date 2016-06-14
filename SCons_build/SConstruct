@@ -10,7 +10,6 @@ import sys
 
 env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
 
-
 prefix_for_sconscripts_in_other_repo = '../../'
 
 # next line should compute a path like: /Users/kkheller/Documents/repositories/cloned_Xidon
@@ -30,7 +29,6 @@ projects = [
     #'SConscript.TestXidLib', # this is commented-out for the general public. the SConscript can be enabled at Cedrus.
 ]
 
-
 env.Replace(
     CEDRUS_LISTING_OF_BUILD_SCONSCRIPTS = projects,
     TARGET_ARCH='x86'
@@ -38,7 +36,6 @@ env.Replace(
 
 if GetOption('build_mode') == 'opt':
     env.AppendUnique( CPPDEFINES = [ 'CEDRUS_DISABLE_ASSERT' ] )
-
 
 env[ 'CURRENT_CEDRUS_REPO_ROOT' ] = sys.path[0] + '/../'
 print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
@@ -51,7 +48,8 @@ print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
 # successfully be able to pull in source files from 'Common/src/'.
 env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
 
-# set boost and wx versions
+# set boost and wx versions. we don't actually use wx here, but
+# GetDefaultSetupForCurrentSystemAndCommandLine will complain if we don't set a version
 env['BOOST_VERSION'] = '1_49'
 if env['PLATFORM'] == 'darwin':
     env['BOOST_VERSION'] = '1_58'
@@ -62,10 +60,8 @@ env['WX_VERSION'] = '2.9'
 env['WIN_WX_VERSION'] = env['WX_VERSION'].replace('.','')
 
 total_complete_staging = []
-
 boostSetup = CedrusBoostSettings(env)
 total_complete_staging += boostSetup.publish_all_libs_to_staging()
-
 env['CEDRUS_COMPLETE_THIRD_PARTY_STAGING'] = total_complete_staging
 
 def BuildEnvironmentSConscripts(masterConfig):
