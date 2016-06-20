@@ -2,7 +2,7 @@
 MajorFirmwareVersion = 1
 DeviceName = Lumina LP-400
 XidProductID = 48
-XidModelID = 0
+XidModelID = 69
 
 [Port0]
 PortName = Keys + Scanner Trigger
