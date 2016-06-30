@@ -434,17 +434,17 @@ void cedrus::xid_glossary::get_product_and_model_id(boost::shared_ptr<xid_con_t>
 
 unsigned int cedrus::xid_glossary::get_pulse_duration( boost::shared_ptr<xid_con_t> xid_con )
 {
-    char return_info[6];
+    unsigned char return_info[7];
     xid_con->send_xid_command(
         "_mp",
         return_info,
         sizeof(return_info));
 
     unsigned int dur = adjust_endianness_chars_to_uint
-        ( return_info[2],
-          return_info[3],
+        ( return_info[3],
           return_info[4],
-          return_info[5] );
+          return_info[5],
+          return_info[6] );
 
     return dur;
 }
