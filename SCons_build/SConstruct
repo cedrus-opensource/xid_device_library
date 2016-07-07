@@ -22,6 +22,8 @@ os.environ['QT_BINARIES_REPO'] = outer_repo_root_dir + 'qt-binaries'
 if sys.platform == 'darwin':
     os.environ['BOOST'] =  outer_repo_root_dir + 'binaries_boost/install'
     #os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
+if sys.platform == 'win32':
+    os.environ['BOOST_ROOT'] =  outer_repo_root_dir + 'binaries_boost/install'
 
 projects = [
     'SConscript.xid_device_driver',
@@ -50,9 +52,7 @@ env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
 
 # set boost and wx versions. we don't actually use wx here, but
 # GetDefaultSetupForCurrentSystemAndCommandLine will complain if we don't set a version
-env['BOOST_VERSION'] = '1_49'
-if env['PLATFORM'] == 'darwin':
-    env['BOOST_VERSION'] = '1_58'
+env['BOOST_VERSION'] = '1_58'
 
 env['WX_VERSION'] = '2.9'
 
