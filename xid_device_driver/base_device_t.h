@@ -47,6 +47,12 @@ namespace cedrus
     class CEDRUS_XIDDRIVER_IMPORTEXPORT base_device_t : public read_only_device, boost::noncopyable
     {
     public:
+        struct product_and_model_id
+        {
+            product_and_model_id() : product_id(-1), model_id(-1) { }
+            int product_id;
+            int model_id;
+        };
 
         virtual ~base_device_t();
 
@@ -118,6 +124,7 @@ namespace cedrus
         virtual int get_baud_rate() = 0;
         virtual void set_baud_rate( unsigned char rate ) = 0;
         virtual void get_product_and_model_id( int *product_id, int *model_id ) = 0;
+        product_and_model_id get_product_and_model_id();
         virtual int get_major_firmware_version() = 0;
         virtual int get_minor_firmware_version() = 0;
         virtual std::string get_internal_product_name() = 0;

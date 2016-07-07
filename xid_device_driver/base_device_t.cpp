@@ -186,3 +186,10 @@ void cedrus::base_device_t::set_device_protocol( unsigned char /*protocol*/ )
 {
     // nothing
 }
+
+cedrus::base_device_t::product_and_model_id cedrus::base_device_t::get_product_and_model_id()
+{
+    product_and_model_id pm_id;
+    get_product_and_model_id(&pm_id.product_id, &pm_id.model_id);
+    return pm_id;
+}

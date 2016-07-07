@@ -48,17 +48,24 @@ namespace cedrus
             port_name(""),
             port_number(-1),
             number_of_lines(-1),
+            key_map(8, -1),
             is_response_port(false)
         {
-            // initialize all mappings to -1
-            memset( key_map, -1, sizeof(key_map) );
         }
 
         std::string port_name;
         int port_number;
         int number_of_lines;
-        int key_map[8];
+        std::vector<int> key_map;
         bool is_response_port;
+
+        bool operator==( const device_port& other ) const
+        {
+            return ( port_name == other.port_name &&
+                     port_number == other.port_number &&
+                     number_of_lines == other.number_of_lines &&
+                     key_map == other.key_map );
+        }
     };
 
     /**
