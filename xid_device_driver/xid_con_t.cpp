@@ -73,12 +73,12 @@ bool cedrus::xid_con_t::close()
 
 bool cedrus::xid_con_t::flush_write_to_device_buffer()
 {
-    return (FT_Purge(m_deviceHandle, FT_PURGE_RX) == FT_OK);
+    return (FT_Purge(m_deviceHandle, FT_PURGE_TX) == FT_OK);
 }
 
 bool cedrus::xid_con_t::flush_read_from_device_buffer()
 {
-    return (FT_Purge(m_deviceHandle, FT_PURGE_TX) == FT_OK);
+    return (FT_Purge(m_deviceHandle, FT_PURGE_RX) == FT_OK);
 }
 
 int cedrus::xid_con_t::open()
