@@ -91,7 +91,7 @@ namespace cedrus
         static std::string get_device_protocol( boost::shared_ptr<xid_con_t> xid_con );
 
         // c1
-        static void set_device_protocol( boost::shared_ptr<xid_con_t> xid_con, int protocol );
+        static void set_device_protocol( boost::shared_ptr<xid_con_t> xid_con, unsigned char protocol );
 
         // f1
         static void set_device_baud_rate( boost::shared_ptr<xid_con_t> xid_con, unsigned char rate );
@@ -109,13 +109,13 @@ namespace cedrus
         static int get_accessory_connector_device( boost::shared_ptr<xid_con_t> xid_con );
 
         // a0 deprecated in XID 2.0
-        static void set_output_logic( boost::shared_ptr<xid_con_t> xid_con, int mode );
+        static void set_output_logic( boost::shared_ptr<xid_con_t> xid_con, unsigned char mode );
 
         // a1 deprecated in XID 2.0
-        static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, int mode );
+        static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, unsigned char mode );
 
         // b3
-        static void set_vk_drop_delay( boost::shared_ptr<xid_con_t> xid_con, unsigned int delay );
+        static void set_vk_drop_delay( boost::shared_ptr<xid_con_t> xid_con, unsigned char delay );
 
         // _f4
         static int get_trigger_default( boost::shared_ptr<xid_con_t> xid_con );
