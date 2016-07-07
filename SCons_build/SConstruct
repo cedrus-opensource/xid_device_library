@@ -25,6 +25,8 @@ if sys.platform == 'darwin':
 if sys.platform == 'win32':
     os.environ['BOOST_ROOT'] =  outer_repo_root_dir + 'binaries_boost/install'
 
+os.environ['PYTHON'] =  outer_repo_root_dir + 'Python27'
+
 projects = [
     'SConscript.xid_device_driver',
     'SConscript.st_tester',

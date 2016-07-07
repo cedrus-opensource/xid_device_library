@@ -4,3 +4,6 @@
 [submodule "binaries_boost"]
 	path = binaries_boost
 	url = git@github.com:cedrus/binaries_boost.git
+[submodule "Python27"]
+	path = Python27
+	url = git@github.com:cedrus/Python27.git

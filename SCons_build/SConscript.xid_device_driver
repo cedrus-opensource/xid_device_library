@@ -33,19 +33,24 @@ inputs = [
     prefix + 'xid_device_driver/xid_device_t.cpp',
     prefix + 'xid_device_driver/xid2_device.cpp',
     prefix + 'xid_device_driver/stim_tracker_t.cpp',
+    prefix + 'xid_device_driver/py_binding.cpp',
 ]
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
 include_path = [ prefix + 'scons_helpers/cpp_src/' ]
 cxxflags = []
 frameworks = []
+lib_path = []
+
 if sys.platform == 'win32':
     lib_dependencies = ['ftd2xx']
     env.Install( str( env.subst('$STAGING_DIR')), env.subst('ftd2xx.dll') )
+    include_path.append( os.getenv('PYTHON','')+'/include/' )
+    lib_path.append( os.getenv('PYTHON','')+'/libs/' )
 if sys.platform == 'darwin':
     lib_dependencies = ['ftd2xx.1.2.2']
     env.Install( str( env.subst('$STAGING_DIR')), env.subst('libftd2xx.1.2.2.dylib') )
-lib_path = ['.']
+
 linkflags = []
 
 if sys.platform == 'win32':
