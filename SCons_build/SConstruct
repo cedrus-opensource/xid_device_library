@@ -10,10 +10,10 @@ import sys
 
 env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
 
-prefix_for_sconscripts_in_other_repo = '../../'
+prefix_for_sconscripts_in_other_repo = '..'
 
-# next line should compute a path like: /Users/kkheller/Documents/repositories/cloned_Xidon
-# (it should be where you CLONED the project: git@github.com:cedrus/Xidon.git)
+# next line should compute a path like: /Users/ematsak/Documents/repositories/xid_device_library
+# (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)
 outer_repo_root_dir = os.path.abspath( os.getcwd() + os.path.sep + prefix_for_sconscripts_in_other_repo )
 outer_repo_root_dir += os.path.sep
 os.environ['QT_BINARIES_REPO'] = outer_repo_root_dir + 'qt-binaries'
@@ -21,12 +21,12 @@ os.environ['QT_BINARIES_REPO'] = outer_repo_root_dir + 'qt-binaries'
 # this is darwin-only because we have NOT YET re-configured the MSVC build to use boost-from-git, and gtest-from-git
 if sys.platform == 'darwin':
     os.environ['BOOST'] =  outer_repo_root_dir + 'binaries_boost/install'
-    os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
+    #os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
 
 projects = [
     'SConscript.xid_device_driver',
     'SConscript.st_tester',
-    #'SConscript.TestXidLib', # this is commented-out for the general public. the SConscript can be enabled at Cedrus.
+    #'SConscript.TestXidLib', # this is commented out for the general public. the SConscript can be enabled at Cedrus.
 ]
 
 env.Replace(

@@ -1,3 +1,6 @@
 [submodule "scons_helpers"]
 	path = scons_helpers
 	url = git@github.com:cedrus-opensource/scons_helpers.git
+[submodule "binaries_boost"]
+	path = binaries_boost
+	url = git@github.com:cedrus/binaries_boost.git
