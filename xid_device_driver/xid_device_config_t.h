@@ -70,6 +70,7 @@ namespace cedrus
     {
     private:
         xid_device_config_t(boost::property_tree::ptree * pt);
+
     public:
         // This is exported for testing purposes only!
         static boost::shared_ptr<xid_device_config_t> config_for_device(boost::property_tree::ptree * pt);

@@ -66,7 +66,7 @@ namespace cedrus
         int reaction_time;
     };
 
-    class response_mgr : private boost::noncopyable
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT response_mgr : private boost::noncopyable
     {
     public:
         enum
@@ -75,10 +75,10 @@ namespace cedrus
         };
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        CEDRUS_XIDDRIVER_IMPORTEXPORT response_mgr(int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config);
+         response_mgr(int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        CEDRUS_XIDDRIVER_IMPORTEXPORT ~response_mgr();
+        ~response_mgr();
 
         /**
          * Checks the device to see if an event response has been sent.
@@ -87,13 +87,13 @@ namespace cedrus
          * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
          */
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        void CEDRUS_XIDDRIVER_IMPORTEXPORT check_for_keypress(boost::shared_ptr<interface_xid_con> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config);
+        void check_for_keypress(boost::shared_ptr<interface_xid_con> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses() const;
+        bool has_queued_responses() const;
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
+        response get_next_response();
 
         // Even though the number of keys down should never be negative, this
         // returns a signed int as a way to check for errors. The count going

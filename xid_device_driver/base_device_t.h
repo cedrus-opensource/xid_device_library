@@ -44,86 +44,87 @@ namespace cedrus
 {
     class xid_con_t;
 
-    class base_device_t : public read_only_device, boost::noncopyable
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT base_device_t : public read_only_device, boost::noncopyable
     {
     public:
+
         virtual ~base_device_t();
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_outpost_model();
+        virtual int get_outpost_model();
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_hardware_generation();
+        virtual int get_hardware_generation();
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_light_sensor_mode();
+        virtual int get_light_sensor_mode();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_light_sensor_mode( int mode );
+        virtual void set_light_sensor_mode( int mode );
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_light_sensor_threshold( int threshold );
+        virtual void set_light_sensor_threshold( int threshold );
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_light_sensor_threshold();
+        virtual int get_light_sensor_threshold();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_scanner_trigger_filter( int mode );
+        virtual void set_scanner_trigger_filter( int mode );
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT reset_rt_timer();
+        virtual void reset_rt_timer();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT reset_base_timer();
+        virtual void reset_base_timer();
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT query_base_timer();
+        virtual int query_base_timer();
 
-        virtual unsigned int CEDRUS_XIDDRIVER_IMPORTEXPORT get_pulse_duration();
+        virtual unsigned int get_pulse_duration();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_pulse_duration(unsigned int duration);
+        virtual void set_pulse_duration( unsigned int duration );
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT poll_for_response();
+        virtual void poll_for_response();
 
-        virtual bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_queued_responses();
+        virtual bool has_queued_responses();
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_number_of_keys_down() const;
+        virtual int get_number_of_keys_down() const;
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_response_queue();
+        virtual void clear_response_queue();
 
-        virtual cedrus::response CEDRUS_XIDDRIVER_IMPORTEXPORT get_next_response();
+        virtual cedrus::response get_next_response();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_responses();
+        virtual void clear_responses();
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_mode( void );
+        virtual int get_accessory_connector_mode( void );
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_accessory_connector_device();
+        virtual int get_accessory_connector_device();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_output_logic( int mode );
+        virtual void set_output_logic( int mode );
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_accessory_connector_mode( int mode );
+        virtual void set_accessory_connector_mode( int mode );
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_vk_drop_delay( unsigned int delay );
+        virtual void set_vk_drop_delay( unsigned int delay );
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_trigger_default();
+        virtual int get_trigger_default();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_trigger_default( bool default_on );
+        virtual void set_trigger_default( bool default_on );
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_trigger_debounce_time();
+        virtual int get_trigger_debounce_time();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_trigger_debounce_time( unsigned char time );
+        virtual void set_trigger_debounce_time( unsigned char time );
 
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_button_debounce_time();
+        virtual int  get_button_debounce_time();
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_button_debounce_time( unsigned char time );
+        virtual void set_button_debounce_time( unsigned char time );
 
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_device_protocol( unsigned char protocol );
+        virtual void set_device_protocol( unsigned char protocol );
 
         // Every device needs these.
-        virtual const boost::shared_ptr<const xid_device_config_t> CEDRUS_XIDDRIVER_IMPORTEXPORT get_device_config() const = 0;
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT open_connection() = 0;
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT close_connection() = 0;
-        virtual bool CEDRUS_XIDDRIVER_IMPORTEXPORT has_lost_connection() = 0;
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_baud_rate() = 0;
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT set_baud_rate( unsigned char rate ) = 0;
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT get_product_and_model_id( int *product_id, int *model_id ) = 0;
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_major_firmware_version() = 0;
-        virtual int CEDRUS_XIDDRIVER_IMPORTEXPORT get_minor_firmware_version() = 0;
-        virtual std::string CEDRUS_XIDDRIVER_IMPORTEXPORT get_internal_product_name() = 0;
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false) = 0;
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT lower_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false) = 0;
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT clear_lines() = 0;
-        virtual void CEDRUS_XIDDRIVER_IMPORTEXPORT restore_factory_defaults() = 0;
+        virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const = 0;
+        virtual int open_connection() = 0;
+        virtual int close_connection() = 0;
+        virtual bool has_lost_connection() = 0;
+        virtual int get_baud_rate() = 0;
+        virtual void set_baud_rate( unsigned char rate ) = 0;
+        virtual void get_product_and_model_id( int *product_id, int *model_id ) = 0;
+        virtual int get_major_firmware_version() = 0;
+        virtual int get_minor_firmware_version() = 0;
+        virtual std::string get_internal_product_name() = 0;
+        virtual void raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false) = 0;
+        virtual void lower_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false) = 0;
+        virtual void clear_lines() = 0;
+        virtual void restore_factory_defaults() = 0;
     };
 
 } // namespace cedrus

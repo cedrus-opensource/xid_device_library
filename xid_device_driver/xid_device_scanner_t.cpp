@@ -55,10 +55,6 @@ cedrus::xid_device_scanner_t::xid_device_scanner_t( const std::string &config_fi
     read_in_devconfigs(config_file_location);
 }
 
-cedrus::xid_device_scanner_t::~xid_device_scanner_t(void)
-{
-}
-
 bool cedrus::xid_device_scanner_t::read_in_devconfigs ( const std::string &config_file_location )
 {
     try {
