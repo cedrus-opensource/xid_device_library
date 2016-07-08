@@ -51,6 +51,17 @@ if sys.platform == 'darwin':
     lib_dependencies = ['ftd2xx.1.2.2']
     env.Install( str( env.subst('$STAGING_DIR')), env.subst('libftd2xx.1.2.2.dylib') )
 
+name_of_pyd = str(env.subst('$STAGING_DIR') + os.path.sep + "xid.pyd")
+name_of_test = 'xid_commands.py'
+
+# Clean up potentially outdated versions of the .pyd and the test
+Execute( Delete(name_of_pyd) )
+Execute( Delete( str(env.subst('$STAGING_DIR')) + os.path.sep + name_of_test ) )
+
+# Install fresh ones by copying the .dll as xid.pyd and replacing the test.
+env.InstallAs( name_of_pyd, str(env.subst('$STAGING_DIR') + os.path.sep + project_target_name + ".dll") )
+env.Install( str( env.subst('$STAGING_DIR')), Dir('#').abspath + '/../' + os.path.sep + 'Tests' + os.path.sep + name_of_test )
+
 linkflags = []
 
 if sys.platform == 'win32':
