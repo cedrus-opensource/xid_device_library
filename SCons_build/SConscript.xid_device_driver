@@ -13,6 +13,7 @@ Import('env')
 boost = CedrusBoost.CedrusBoostSettings(env)
 boost.need_boost_filesystem()
 boost.need_boost_system()
+boost.need_boost_python()
 
 project_target_name = 'xid_device_driver'
 
@@ -37,32 +38,43 @@ inputs = [
 ]
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
-include_path = [ prefix + 'scons_helpers/cpp_src/' ]
 cxxflags = []
 frameworks = []
+
+include_path = [ prefix + 'scons_helpers/cpp_src/']
 lib_path = []
 
-print '%%%%%%%%%'
-print os.getenv('PYTHON','')
+staging_dir = str(env.subst('$STAGING_DIR'))
+
+name_of_pyd = staging_dir + os.path.sep + "xid"
+project_target = staging_dir + os.path.sep
+
+python_path = os.getenv('PYTHON','')
+
 if sys.platform == 'win32':
     lib_dependencies = ['ftd2xx']
-    env.Install( str( env.subst('$STAGING_DIR')), env.subst('ftd2xx.dll') )
-    include_path.append( os.getenv('PYTHON','')+'/win32/include/' )
-    lib_path.append( os.getenv('PYTHON','')+'/win32/libs/' )
+    include_path.append( python_path +'/win32/include/' )
+    lib_path.append( python_path + '/win32/libs/' )
+    env.Install( staging_dir, env.subst('ftd2xx.dll') )
+    project_target += project_target_name + ".dll"
+    name_of_pyd += ".pyd"
+
 if sys.platform == 'darwin':
-    lib_dependencies = ['ftd2xx.1.2.2']
-    env.Install( str( env.subst('$STAGING_DIR')), env.subst('libftd2xx.1.2.2.dylib') )
+    lib_dependencies = ['ftd2xx.1.2.2', 'libpython2.7']
+    include_path.append( python_path +'/osx/include/' )
+    lib_path.append( python_path +'/osx/libs/' )
+    env.Install( staging_dir, env.subst('libftd2xx.1.2.2.dylib') )
+    project_target += "lib" + project_target_name + ".dylib"
+    name_of_pyd += ".so"
 
-name_of_pyd = str(env.subst('$STAGING_DIR') + os.path.sep + "xid.pyd")
-name_of_test = 'xid_commands.py'
-
-# Clean up potentially outdated versions of the .pyd and the test
+# Clean up potentially outdated versions of the XID Python extension and the test
 Execute( Delete(name_of_pyd) )
-Execute( Delete( str(env.subst('$STAGING_DIR')) + os.path.sep + name_of_test ) )
+name_of_test = 'xid_commands.py'
+Execute( Delete( staging_dir + os.path.sep + name_of_test ) )
 
-# Install fresh ones by copying the .dll as xid.pyd and replacing the test.
-env.InstallAs( name_of_pyd, str(env.subst('$STAGING_DIR') + os.path.sep + project_target_name + ".dll") )
-env.Install( str( env.subst('$STAGING_DIR')), Dir('#').abspath + '/../' + os.path.sep + 'Tests' + os.path.sep + name_of_test )
+# Install fresh ones by copying the XID library file as XID Python extension and replacing the test.
+env.InstallAs( name_of_pyd, project_target )
+env.Install( staging_dir, Dir('#').abspath + '/../' + os.path.sep + 'Tests' + os.path.sep + name_of_test )
 
 linkflags = []
 
