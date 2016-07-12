@@ -42,11 +42,13 @@ cxxflags = []
 frameworks = []
 lib_path = []
 
+print '%%%%%%%%%'
+print os.getenv('PYTHON','')
 if sys.platform == 'win32':
     lib_dependencies = ['ftd2xx']
     env.Install( str( env.subst('$STAGING_DIR')), env.subst('ftd2xx.dll') )
-    include_path.append( os.getenv('PYTHON','')+'/include/' )
-    lib_path.append( os.getenv('PYTHON','')+'/libs/' )
+    include_path.append( os.getenv('PYTHON','')+'/win32/include/' )
+    lib_path.append( os.getenv('PYTHON','')+'/win32/libs/' )
 if sys.platform == 'darwin':
     lib_dependencies = ['ftd2xx.1.2.2']
     env.Install( str( env.subst('$STAGING_DIR')), env.subst('libftd2xx.1.2.2.dylib') )
