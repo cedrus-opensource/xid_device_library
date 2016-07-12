@@ -9,7 +9,8 @@ if _platform != "darwin" and _platform != "win32":
 import time
 import xid
 
-xds = xid.xid_device_scanner("c:/Users/cedrusdev/source/py_xid/xid_device_library/devconfig")
+# Edit this to match your devconfig location!
+xds = xid.xid_device_scanner("c:/Users/cedrusdev/source/xid_device_library/devconfig")
 
 print ("Detecting XID devices, stand by.")
 xds.detect_valid_xid_devices()
@@ -110,7 +111,7 @@ for d in xrange (0, xds.device_count()):
 print("Raising all lines:")
 raise_lines(255)
 
-sleep_sec = 1
+sleep_sec = .5
 time.sleep(sleep_sec)
 
 print("Clearing lines")
@@ -251,7 +252,6 @@ for d in xrange (0, xds.device_count()):
 
 lines_bitmask = 1
 sleep_flash = 1*sleep_sec
-#while True:
 for d in xrange (0, 12):
 	print "raise lines bitmask = ", lines_bitmask
 	for d in xrange (0, xds.device_count()):
