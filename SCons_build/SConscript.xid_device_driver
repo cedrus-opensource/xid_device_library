@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import CedrusBoost
+import imp
 import CedrusSConsDefaultEnvironments
 import CedrusSConsHelperFunctions
 
@@ -9,8 +10,21 @@ import sys
 
 Import('env')
 
-# this line is a keeper:
-boost = CedrusBoost.CedrusBoostSettings(env)
+# should compute a path like: /Users/ematsak/source/xid_device_library
+# (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)
+env.SetDefault(XIDLIB_OUTER_REPO_DIR = os.path.abspath(os.getcwd()) + os.path.sep + '..' + os.path.sep )
+outer_repo_root_dir = env['XIDLIB_OUTER_REPO_DIR']
+
+# Normally we'd go "import CedrusBoost" at the top and be done with it. However, there can
+# be complications there when we're running this SConscript as a dependency for a
+# different Cedrus project. We're erring on the side of caution and making absolutely sure
+# we import our own CedrusBoost module.
+cedrusboost_xidlib = imp.load_source('CedrusBoost_xidlib', outer_repo_root_dir + 'scons_helpers/scons/CedrusBoost.py')
+
+os.environ['BOOST'] = outer_repo_root_dir + 'binaries_boost/install'
+#os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
+
+boost = cedrusboost_xidlib.CedrusBoostSettings(env)
 boost.need_boost_filesystem()
 boost.need_boost_system()
 boost.need_boost_python()
@@ -49,7 +63,7 @@ staging_dir = str(env.subst('$STAGING_DIR'))
 name_of_pyd = staging_dir + os.path.sep + "xid"
 project_target = staging_dir + os.path.sep
 
-python_path = os.getenv('PYTHON','')
+python_path = outer_repo_root_dir + 'Python27'
 
 if sys.platform == 'win32':
     lib_dependencies = ['ftd2xx']
@@ -74,7 +88,7 @@ Execute( Delete( staging_dir + os.path.sep + name_of_test ) )
 
 # Install fresh ones by copying the XID library file as XID Python extension and replacing the test.
 env.InstallAs( name_of_pyd, project_target )
-env.Install( staging_dir, Dir('#').abspath + '/../' + os.path.sep + 'Tests' + os.path.sep + name_of_test )
+env.Install( staging_dir, outer_repo_root_dir + 'Tests' + os.path.sep + name_of_test )
 
 linkflags = []
 
@@ -83,6 +97,11 @@ if sys.platform == 'win32':
 
 elif sys.platform == 'darwin':
     frameworks = ['CoreFoundation', 'IOKit']
+
+# This will be used in CedrusSConsHelperFunctions
+total_complete_staging = []
+total_complete_staging += boost.publish_all_libs_to_staging()
+env.Append(CEDRUS_COMPLETE_THIRD_PARTY_STAGING = total_complete_staging)
 
 staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
     env,
@@ -96,3 +115,9 @@ staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
     lib_path,
     linkflags
 )
+
+# This only serves to let an OSX app know what to include in the app bundle. This could
+# be made darwin-only but there isn't really harm in always returning this information.
+required_libs_for_copying = list(env['LIBS'])
+required_libs_for_copying.remove('libpython2.7') # don't actually need to copy dylibs for this one
+Return('required_libs_for_copying')

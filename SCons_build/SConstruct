@@ -10,22 +10,13 @@ import sys
 
 env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
 
-prefix_for_sconscripts_in_other_repo = '..'
-
-# next line should compute a path like: /Users/ematsak/Documents/repositories/xid_device_library
+# should compute a path like: /Users/ematsak/source/xid_device_library
 # (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)
-outer_repo_root_dir = os.path.abspath( os.getcwd() + os.path.sep + prefix_for_sconscripts_in_other_repo )
-outer_repo_root_dir += os.path.sep
-os.environ['QT_BINARIES_REPO'] = outer_repo_root_dir + 'qt-binaries'
+outer_repo_root_dir = os.path.abspath( os.getcwd() ) + os.path.sep + '..' + os.path.sep
+env['XIDLIB_OUTER_REPO_DIR'] = outer_repo_root_dir
 
-# this is darwin-only because we have NOT YET re-configured the MSVC build to use boost-from-git, and gtest-from-git
-if sys.platform == 'darwin':
-    os.environ['BOOST'] =  outer_repo_root_dir + 'binaries_boost/install'
-    #os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
-if sys.platform == 'win32':
-    os.environ['BOOST_ROOT'] =  outer_repo_root_dir + 'binaries_boost/install'
-
-os.environ['PYTHON'] =  outer_repo_root_dir + 'Python27'
+os.environ['BOOST'] =  outer_repo_root_dir + 'binaries_boost/install'
+#os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
 
 projects = [
     'SConscript.xid_device_driver',
@@ -55,16 +46,7 @@ env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
 # set boost and wx versions. we don't actually use wx here, but
 # GetDefaultSetupForCurrentSystemAndCommandLine will complain if we don't set a version
 env['BOOST_VERSION'] = '1_58'
-
-env['WX_VERSION'] = '2.9'
-
-# windows doesn't have a . in the version string for wxwidgets, so remove it
-env['WIN_WX_VERSION'] = env['WX_VERSION'].replace('.','')
-
-total_complete_staging = []
-boostSetup = CedrusBoostSettings(env)
-total_complete_staging += boostSetup.publish_all_libs_to_staging()
-env['CEDRUS_COMPLETE_THIRD_PARTY_STAGING'] = total_complete_staging
+env['WX_VERSION'] = 'NONE'
 
 def BuildEnvironmentSConscripts(masterConfig):
 

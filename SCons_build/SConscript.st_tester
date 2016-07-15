@@ -25,6 +25,9 @@ linkflags = []
 if sys.platform == 'win32':
     linkflags = [ '/SUBSYSTEM:CONSOLE',  '/VERSION:1.0', '/MANIFEST', '/INCREMENTAL', ]
 
+# CedrusSConsHelperFunctions needs this variable set, even if it's empty.
+env.SetDefault(CEDRUS_COMPLETE_THIRD_PARTY_STAGING = [])
+
 CedrusSConsHelperFunctions.DeclareSConsSimpleProgramBuild(
     env,
     project_target_name,
