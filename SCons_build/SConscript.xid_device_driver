@@ -2,7 +2,6 @@
 
 import CedrusBoost
 import imp
-import CedrusSConsDefaultEnvironments
 import CedrusSConsHelperFunctions
 
 import os
@@ -101,7 +100,7 @@ elif sys.platform == 'darwin':
 # This will be used in CedrusSConsHelperFunctions
 total_complete_staging = []
 total_complete_staging += boost.publish_all_libs_to_staging()
-env.Append(CEDRUS_COMPLETE_THIRD_PARTY_STAGING = total_complete_staging)
+env.AppendUnique(CEDRUS_COMPLETE_THIRD_PARTY_STAGING = total_complete_staging)
 
 staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
     env,
