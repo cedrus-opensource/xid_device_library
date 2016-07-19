@@ -2,7 +2,7 @@
 MajorFirmwareVersion = 1
 DeviceName = SV-1 Voice Key
 XidProductID = 49
-XidModelID = 0
+XidModelID = 66
 
 # The SV-1 doesn't use port 0. Having a fake blank port simplifies some math for us.
 [Port0]
