@@ -1,27 +1,45 @@
 #!/usr/bin/env python
 
-import CedrusBoost
 import imp
 import CedrusSConsHelperFunctions
+import CedrusSConsDefaultEnvironments
 
 import os
 import sys
 
 Import('env')
 
+# This is silly and just feels wrong to do, frankly. Seems like there should be a better way.
+# We're doing this here because inheriting these from SuperLab can be dangerous and this
+# seems like an alright idea in general. I just don't know, though.
+env.Replace(
+CXXFLAGS = [],
+LIB_PATH = [],
+CCPCHFLAGS = []
+)
+
+# set boost and wx versions. we don't actually use wx here, but some of the helper code relies on it
+env['BOOST_VERSION'] = '1_58'
+env['WX_VERSION'] = 'NONE'
+#os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
+
+env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLine( env )
+
 # should compute a path like: /Users/ematsak/source/xid_device_library
 # (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)
 env.SetDefault(XIDLIB_OUTER_REPO_DIR = os.path.abspath(os.getcwd()) + os.path.sep + '..' + os.path.sep )
 outer_repo_root_dir = env['XIDLIB_OUTER_REPO_DIR']
+
+if sys.platform == 'win32':
+    os.environ['BOOST_ROOT'] = outer_repo_root_dir + 'binaries_boost/install'
+if sys.platform == 'darwin':
+    os.environ['BOOST'] = outer_repo_root_dir + 'binaries_boost/install'
 
 # Normally we'd go "import CedrusBoost" at the top and be done with it. However, there can
 # be complications there when we're running this SConscript as a dependency for a
 # different Cedrus project. We're erring on the side of caution and making absolutely sure
 # we import our own CedrusBoost module.
 cedrusboost_xidlib = imp.load_source('CedrusBoost_xidlib', outer_repo_root_dir + 'scons_helpers/scons/CedrusBoost.py')
-
-os.environ['BOOST'] = outer_repo_root_dir + 'binaries_boost/install'
-#os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
 
 boost = cedrusboost_xidlib.CedrusBoostSettings(env)
 boost.need_boost_filesystem()
@@ -118,5 +136,8 @@ staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
 # This only serves to let an OSX app know what to include in the app bundle. This could
 # be made darwin-only but there isn't really harm in always returning this information.
 required_libs_for_copying = list(env['LIBS'])
-required_libs_for_copying.remove('libpython2.7') # don't actually need to copy dylibs for this one
+
+ # don't actually need to copy dylibs for this one
+if 'libpython2.7' in required_libs_for_copying: required_libs_for_copying.remove('libpython2.7')
+
 Return('required_libs_for_copying')

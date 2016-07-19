@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
-import CedrusBoost
 import CedrusSConsDefaultEnvironments
 import CedrusSConsHelperFunctions
-from CedrusBoost import CedrusBoostSettings
 
 import os
 import sys
@@ -15,7 +13,6 @@ env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
 outer_repo_root_dir = os.path.abspath( os.getcwd() ) + os.path.sep + '..' + os.path.sep
 env['XIDLIB_OUTER_REPO_DIR'] = outer_repo_root_dir
 
-os.environ['BOOST'] =  outer_repo_root_dir + 'binaries_boost/install'
 #os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
 
 projects = [
@@ -35,18 +32,7 @@ if GetOption('build_mode') == 'opt':
 env[ 'CURRENT_CEDRUS_REPO_ROOT' ] = sys.path[0] + '/../'
 print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
 
-# this next line makes it so that the 'inputs' collection in any of
-# our SConscript files ('inputs' is the second argument to things like
-# env.SharedLibrary) can contain source files from *EITHER*
-# 'Licenser/src/' *OR* 'Common/src/' *OR BOTH*.  Put another way:
-# without this next line, Licenser SConscript files might not
-# successfully be able to pull in source files from 'Common/src/'.
 env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
-
-# set boost and wx versions. we don't actually use wx here, but
-# GetDefaultSetupForCurrentSystemAndCommandLine will complain if we don't set a version
-env['BOOST_VERSION'] = '1_58'
-env['WX_VERSION'] = 'NONE'
 
 def BuildEnvironmentSConscripts(masterConfig):
 

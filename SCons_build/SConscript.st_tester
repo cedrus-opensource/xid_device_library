@@ -9,6 +9,17 @@ import sys
 
 Import('env')
 
+env.SetDefault(XIDLIB_OUTER_REPO_DIR = os.path.abspath(os.getcwd()) + os.path.sep + '..' + os.path.sep )
+outer_repo_root_dir = env['XIDLIB_OUTER_REPO_DIR']
+
+if sys.platform == 'win32':
+    os.environ['BOOST_ROOT'] = outer_repo_root_dir + 'binaries_boost/install'
+if sys.platform == 'darwin':
+    os.environ['BOOST'] = outer_repo_root_dir + 'binaries_boost/install'
+
+env['BOOST_VERSION'] = '1_58'
+env['WX_VERSION'] = 'NONE'
+
 boost = CedrusBoost.CedrusBoostSettings(env)
 
 project_target_name = 'st_tester'
