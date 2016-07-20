@@ -14,7 +14,7 @@ outer_repo_root_dir = os.path.abspath( os.getcwd() ) + os.path.sep + '..' + os.p
 env['XIDLIB_OUTER_REPO_DIR'] = outer_repo_root_dir
 
 #os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
-
+env['WX_VERSION'] = 'NONE'
 projects = [
     'SConscript.xid_device_driver',
     'SConscript.st_tester',
