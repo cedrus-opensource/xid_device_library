@@ -401,7 +401,7 @@ void cedrus::xid_glossary::set_device_protocol( boost::shared_ptr<xid_con_t> xid
     unsigned char set_device_protocol_cmd[3];
     set_device_protocol_cmd[0] = 'c';
     set_device_protocol_cmd[1] = '1';
-    set_device_protocol_cmd[2] = protocol;
+    set_device_protocol_cmd[2] = protocol+'0';
 
     xid_con->write(set_device_protocol_cmd, 3, &bytes_written);
 }
