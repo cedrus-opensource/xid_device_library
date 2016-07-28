@@ -47,6 +47,16 @@ cedrus::stim_tracker_t::~stim_tracker_t(void)
 {
 }
 
+unsigned int cedrus::stim_tracker_t::query_base_timer()
+{
+    return xid_glossary::query_base_timer(m_xidCon);
+}
+
+void cedrus::stim_tracker_t::reset_base_timer()
+{
+    return xid_glossary::reset_base_timer(m_xidCon);
+}
+
 unsigned int cedrus::stim_tracker_t::get_pulse_duration( void )
 {
     return xid_glossary::get_pulse_duration(m_xidCon);
@@ -86,6 +96,11 @@ void cedrus::stim_tracker_t::set_baud_rate( unsigned char rate )
 {
     m_xidCon->set_baud_rate(rate);
     xid_glossary::set_device_baud_rate(m_xidCon, rate);
+}
+
+std::string cedrus::stim_tracker_t::get_device_protocol()
+{
+    return xid_glossary::get_device_protocol(m_xidCon);
 }
 
 void cedrus::stim_tracker_t::get_product_and_model_id( int *product_id, int *model_id )

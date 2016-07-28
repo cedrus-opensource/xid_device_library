@@ -49,6 +49,11 @@ int cedrus::xid2_device::get_outpost_model( void )
     return xid_glossary::get_outpost_model(m_xidCon);
 }
 
+int cedrus::xid2_device::get_hardware_generation()
+{
+    return xid_glossary::get_hardware_generation(m_xidCon);
+}
+
 int cedrus::xid2_device::get_light_sensor_mode( void )
 {
     return xid_glossary::get_light_sensor_mode(m_xidCon);

@@ -76,7 +76,7 @@ void cedrus::xid_glossary::reset_base_timer( boost::shared_ptr<xid_con_t> xid_co
     xid_con->write((unsigned char*)"e1", 2, &bytes_written);
 }
 
-int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con )
+unsigned int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con )
 {
     unsigned char return_info[6];
     int read = xid_con->send_xid_command(
@@ -499,6 +499,18 @@ it will at least zero our buffer" );
         : static_cast<int>( INVALID_RETURN_VALUE );
 }
 
+int cedrus::xid_glossary::get_output_logic( boost::shared_ptr<xid_con_t> xid_con )
+{
+    unsigned char output_logic[4];
+
+    xid_con->send_xid_command(
+        "_a0",
+        output_logic,
+        sizeof(output_logic));
+
+    return output_logic[3]-'0';
+}
+
 void cedrus::xid_glossary::set_output_logic( boost::shared_ptr<xid_con_t> xid_con, unsigned char mode )
 {
     DWORD bytes_written;
@@ -519,6 +531,18 @@ void cedrus::xid_glossary::set_accessory_connector_mode( boost::shared_ptr<xid_c
     set_accessory_connector_mode_cmd[2] = mode + '0';
 
     xid_con->write(set_accessory_connector_mode_cmd, 3, &bytes_written);
+}
+
+int cedrus::xid_glossary::get_vk_drop_delay( boost::shared_ptr<xid_con_t> xid_con )
+{
+    unsigned char vk_drop_delay[4];
+
+    xid_con->send_xid_command(
+        "_b3",
+        vk_drop_delay,
+        sizeof(vk_drop_delay));
+
+    return vk_drop_delay[3];
 }
 
 void cedrus::xid_glossary::set_vk_drop_delay( boost::shared_ptr<xid_con_t> xid_con, unsigned char delay )

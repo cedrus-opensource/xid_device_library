@@ -92,6 +92,11 @@ int cedrus::xid_device_t::get_accessory_connector_mode( void )
     return xid_glossary::get_accessory_connector_mode(m_xidCon);
 }
 
+int cedrus::xid_device_t::get_output_logic()
+{
+    return xid_glossary::get_output_logic(m_xidCon);
+}
+
 void cedrus::xid_device_t::set_output_logic( int mode )
 {
     xid_glossary::set_output_logic(m_xidCon, mode);
@@ -102,12 +107,17 @@ void cedrus::xid_device_t::set_accessory_connector_mode( int mode )
     xid_glossary::set_accessory_connector_mode(m_xidCon, mode);
 }
 
-void cedrus::xid_device_t::set_vk_drop_delay( unsigned int delay )
+int cedrus::xid_device_t::get_vk_drop_delay()
+{
+    return xid_glossary::get_vk_drop_delay(m_xidCon);
+}
+
+void cedrus::xid_device_t::set_vk_drop_delay( unsigned char delay )
 {
     xid_glossary::set_vk_drop_delay(m_xidCon, delay);
 }
 
-void cedrus::xid_device_t::set_device_protocol( int protocol )
+void cedrus::xid_device_t::set_device_protocol( unsigned char protocol )
 {
     xid_glossary::set_device_protocol(m_xidCon, protocol);
 }
@@ -145,22 +155,27 @@ void cedrus::xid_device_t::set_baud_rate( unsigned char rate )
     xid_glossary::set_device_baud_rate(m_xidCon, rate);
 }
 
+std::string cedrus::xid_device_t::get_device_protocol()
+{
+    return xid_glossary::get_device_protocol(m_xidCon);
+}
+
 void cedrus::xid_device_t::get_product_and_model_id( int *product_id, int *model_id )
 {
     xid_glossary::get_product_and_model_id(m_xidCon, product_id, model_id);
 }
 
-int cedrus::xid_device_t::get_major_firmware_version( void )
+int cedrus::xid_device_t::get_major_firmware_version()
 {
     return xid_glossary::get_major_firmware_version(m_xidCon);
 }
 
-int cedrus::xid_device_t::get_minor_firmware_version( void )
+int cedrus::xid_device_t::get_minor_firmware_version()
 {
     return xid_glossary::get_minor_firmware_version(m_xidCon);
 }
 
-std::string cedrus::xid_device_t::get_internal_product_name( void )
+std::string cedrus::xid_device_t::get_internal_product_name()
 {
     return xid_glossary::get_internal_product_name(m_xidCon);
 }
@@ -200,7 +215,7 @@ void cedrus::xid_device_t::reset_base_timer()
     xid_glossary::reset_base_timer(m_xidCon);
 }
 
-int cedrus::xid_device_t::query_base_timer()
+unsigned int cedrus::xid_device_t::query_base_timer()
 {
     return xid_glossary::query_base_timer( m_xidCon );
 }

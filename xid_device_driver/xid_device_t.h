@@ -59,7 +59,7 @@ namespace cedrus
 
         virtual void reset_base_timer();
 
-        virtual int query_base_timer();
+        virtual unsigned int query_base_timer();
 
         virtual void poll_for_response();
 
@@ -75,13 +75,17 @@ namespace cedrus
 
         virtual int get_accessory_connector_mode();
 
+        virtual int get_output_logic();
+
         virtual void set_output_logic( int mode );
 
         virtual void set_accessory_connector_mode( int mode );
 
-        virtual void set_vk_drop_delay( unsigned int delay );
+        virtual int cedrus::xid_device_t::get_vk_drop_delay();
 
-        virtual void set_device_protocol( int protocol );
+        virtual void set_vk_drop_delay( unsigned char delay );
+
+        virtual void set_device_protocol( unsigned char protocol );
 
         virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const;
         virtual int  open_connection();
@@ -89,6 +93,7 @@ namespace cedrus
         virtual bool has_lost_connection();
         virtual int  get_baud_rate();
         virtual void set_baud_rate( unsigned char rate );
+        virtual std::string get_device_protocol();
         virtual void get_product_and_model_id( int *product_id, int *model_id );
         virtual int  get_major_firmware_version();
         virtual int  get_minor_firmware_version();

@@ -49,6 +49,7 @@ namespace cedrus
         virtual ~xid2_device(void);
 
     virtual int get_outpost_model();
+    virtual int get_hardware_generation();
     virtual int get_light_sensor_mode();
     virtual void set_light_sensor_mode( unsigned char mode );
     virtual void set_light_sensor_threshold( unsigned char threshold );

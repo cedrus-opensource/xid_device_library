@@ -54,14 +54,17 @@ namespace cedrus
             boost::shared_ptr<const xid_device_config_t> dev_config);
         virtual ~stim_tracker_t(void);
 
-        unsigned int get_pulse_duration( void );
+        virtual unsigned int query_base_timer();
+        virtual void reset_base_timer();
+
+        virtual unsigned int get_pulse_duration( void );
         /**
          * Set the pulse duration when raise_lines() is called.  This is how
          * long the line will be active.
          *
          * @param[in] duration Length of time in miliseconds
          */
-        void set_pulse_duration(unsigned int duration);
+        virtual void set_pulse_duration(unsigned int duration);
 
         virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const;
         virtual int open_connection();
@@ -69,6 +72,7 @@ namespace cedrus
         virtual bool has_lost_connection();
         virtual int get_baud_rate();
         virtual void set_baud_rate( unsigned char rate );
+        virtual std::string get_device_protocol();
         virtual void get_product_and_model_id( int *product_id, int *model_id );
         virtual int get_major_firmware_version();
         virtual int get_minor_firmware_version();

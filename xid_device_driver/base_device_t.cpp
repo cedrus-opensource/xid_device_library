@@ -52,12 +52,12 @@ int cedrus::base_device_t::get_light_sensor_mode()
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_light_sensor_mode( int /*mode*/ )
+void cedrus::base_device_t::set_light_sensor_mode( unsigned char /*mode*/ )
 {
     // nothing
 }
 
-void cedrus::base_device_t::set_light_sensor_threshold( int /*threshold*/ )
+void cedrus::base_device_t::set_light_sensor_threshold( unsigned char /*threshold*/ )
 {
     // nothing
 }
@@ -67,7 +67,7 @@ int cedrus::base_device_t::get_light_sensor_threshold()
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::base_device_t::set_scanner_trigger_filter( int /*mode*/ )
+void cedrus::base_device_t::set_scanner_trigger_filter( unsigned char /*mode*/ )
 {
     // nothing
 }
@@ -82,9 +82,9 @@ void cedrus::base_device_t::reset_base_timer()
     // nothing
 }
 
-int cedrus::base_device_t::query_base_timer()
+unsigned int cedrus::base_device_t::query_base_timer()
 {
-    return INVALID_RETURN_VALUE;
+    return 0;
 }
 
 unsigned int cedrus::base_device_t::get_pulse_duration()
@@ -127,12 +127,17 @@ void cedrus::base_device_t::clear_responses()
     // nothing
 }
 
-int cedrus::base_device_t::get_accessory_connector_mode( void )
+int cedrus::base_device_t::get_accessory_connector_mode()
 {
     return INVALID_RETURN_VALUE;
 }
 
-int cedrus::base_device_t::get_accessory_connector_device( void )
+int cedrus::base_device_t::get_accessory_connector_device()
+{
+    return INVALID_RETURN_VALUE;
+}
+
+int cedrus::base_device_t::get_output_logic()
 {
     return INVALID_RETURN_VALUE;
 }
@@ -146,8 +151,12 @@ void cedrus::base_device_t::set_accessory_connector_mode( int /*mode*/ )
 {
     // nothing
 }
+int cedrus::base_device_t::get_vk_drop_delay()
+{
+    return INVALID_RETURN_VALUE;
+}
 
-void cedrus::base_device_t::set_vk_drop_delay( unsigned int /*delay*/ )
+void cedrus::base_device_t::set_vk_drop_delay( unsigned char /*delay*/ )
 {
     // nothing
 }

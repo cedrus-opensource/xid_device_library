@@ -62,19 +62,19 @@ namespace cedrus
 
         virtual int get_light_sensor_mode();
 
-        virtual void set_light_sensor_mode( int mode );
+        virtual void set_light_sensor_mode( unsigned char mode );
 
-        virtual void set_light_sensor_threshold( int threshold );
+        virtual void set_light_sensor_threshold( unsigned char threshold );
 
         virtual int get_light_sensor_threshold();
 
-        virtual void set_scanner_trigger_filter( int mode );
+        virtual void set_scanner_trigger_filter( unsigned char mode );
 
         virtual void reset_rt_timer();
 
         virtual void reset_base_timer();
 
-        virtual int query_base_timer();
+        virtual unsigned int query_base_timer();
 
         virtual unsigned int get_pulse_duration();
 
@@ -96,11 +96,15 @@ namespace cedrus
 
         virtual int get_accessory_connector_device();
 
+        virtual int get_output_logic();
+
         virtual void set_output_logic( int mode );
 
         virtual void set_accessory_connector_mode( int mode );
 
-        virtual void set_vk_drop_delay( unsigned int delay );
+        virtual int get_vk_drop_delay();
+
+        virtual void set_vk_drop_delay( unsigned char delay );
 
         virtual int get_trigger_default();
 
@@ -123,6 +127,7 @@ namespace cedrus
         virtual bool has_lost_connection() = 0;
         virtual int get_baud_rate() = 0;
         virtual void set_baud_rate( unsigned char rate ) = 0;
+        virtual std::string get_device_protocol()=0;
         virtual void get_product_and_model_id( int *product_id, int *model_id ) = 0;
         product_and_model_id get_product_and_model_id();
         virtual int get_major_firmware_version() = 0;
