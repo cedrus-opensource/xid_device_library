@@ -187,7 +187,7 @@ BOOST_PYTHON_MODULE( xid )
         .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_device_name) )
         .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_product_id) )
         .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_model_id) )
-        .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_num_lines_on_port), py::arg( "port" ) )
+        .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_major_version) )
         .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_vector_of_ports),
                                  py::return_value_policy<py::reference_existing_object>() )
 

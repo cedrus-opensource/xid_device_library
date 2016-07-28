@@ -127,18 +127,6 @@ int cedrus::xid_device_config_t::get_mapped_key(int port, int key) const
     return mapped_key;
 }
 
-int cedrus::xid_device_config_t::get_num_lines_on_port(int port) const
-{
-    int num_lines = -1;
-
-    if ( port < m_device_ports.size() )
-    {
-        num_lines = m_device_ports[port].number_of_lines;
-    }
-
-    return num_lines;
-}
-
 const std::vector<cedrus::device_port> * cedrus::xid_device_config_t::get_vector_of_ports() const
 {
     return &m_device_ports;
@@ -168,6 +156,11 @@ int cedrus::xid_device_config_t::get_product_id() const
 int cedrus::xid_device_config_t::get_model_id() const
 {
     return m_model_id;
+}
+
+int cedrus::xid_device_config_t::get_major_version() const
+{
+    return m_major_firmware_ver;
 }
 
 bool cedrus::xid_device_config_t::does_config_match_device( int device_id, int model_id, int major_firmware_ver ) const

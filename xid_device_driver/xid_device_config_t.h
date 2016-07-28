@@ -122,7 +122,7 @@ namespace cedrus
          */
         int get_model_id() const;
 
-        int get_num_lines_on_port(int port) const;
+        int get_major_version() const;
 
         const std::vector<device_port> * get_vector_of_ports() const;
 
@@ -130,7 +130,7 @@ namespace cedrus
 
         bool does_config_match_device( int device_id, int model_id, int major_firmware_ver ) const;
 
-    public:
+    private:
         std::string m_device_name;
         int m_major_firmware_ver;
         int m_product_id;

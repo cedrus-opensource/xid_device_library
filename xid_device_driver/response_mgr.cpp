@@ -16,7 +16,7 @@ namespace
     )
     {
         const bool prod_is_lumina3g_21 = ( dev_config->get_product_id() == cedrus::PRODUCT_ID_LUMINA );
-        const bool maj_fw_is_lumina3g_21 = ( dev_config->m_major_firmware_ver == 2 );
+        const bool maj_fw_is_lumina3g_21 = ( dev_config->get_major_version() == 2 );
         const bool min_fw_is_lumina3g_21 = ( minor_firmware_ver == 1 );
 
         return ( prod_is_lumina3g_21 && maj_fw_is_lumina3g_21 && min_fw_is_lumina3g_21 );
