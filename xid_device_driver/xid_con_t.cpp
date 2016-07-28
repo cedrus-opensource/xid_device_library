@@ -222,7 +222,7 @@ bool cedrus::xid_con_t::write(
         sensitive use for the library is reading responses, and no writing
         takes place at that time.
         */
-        SLEEP_FUNC(INTERBYTE_DELAY);
+        SLEEP_FUNC(INTERBYTE_DELAY*SLEEP_INC);
 
         if(written == bytes_to_write)
             break;
@@ -283,7 +283,7 @@ DWORD cedrus::xid_con_t::send_xid_command(
     unsigned int max_out_response_size)
 {
     // 15 has been determined to be enough for most commands
-    return send_xid_command(in_command, out_response, max_out_response_size, 25);
+    return send_xid_command(in_command, out_response, max_out_response_size, 100);
 }
 
 DWORD cedrus::xid_con_t::send_xid_command_slow(
@@ -293,7 +293,7 @@ DWORD cedrus::xid_con_t::send_xid_command_slow(
 {
     // Some commands, like _aa apparently need some extra leeway. 50 has been
     // enough thus far.
-    return send_xid_command(in_command, out_response, max_out_response_size, 50);
+    return send_xid_command(in_command, out_response, max_out_response_size, 200);
 }
 
 
