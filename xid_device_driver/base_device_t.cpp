@@ -37,17 +37,17 @@
 cedrus::base_device_t::~base_device_t()
 {}
 
-int cedrus::base_device_t::get_outpost_model( void )
+int cedrus::base_device_t::get_outpost_model()
 {
     return INVALID_RETURN_VALUE;
 }
 
-int cedrus::base_device_t::get_hardware_generation( void )
+int cedrus::base_device_t::get_hardware_generation()
 {
     return INVALID_RETURN_VALUE;
 }
 
-int cedrus::base_device_t::get_light_sensor_mode( void )
+int cedrus::base_device_t::get_light_sensor_mode()
 {
     return INVALID_RETURN_VALUE;
 }
@@ -72,12 +72,12 @@ void cedrus::base_device_t::set_scanner_trigger_filter( int /*mode*/ )
     // nothing
 }
 
-void cedrus::base_device_t::reset_rt_timer( void )
+void cedrus::base_device_t::reset_rt_timer()
 {
     // nothing
 }
 
-void cedrus::base_device_t::reset_base_timer( void )
+void cedrus::base_device_t::reset_base_timer()
 {
     // nothing
 }
@@ -87,7 +87,7 @@ int cedrus::base_device_t::query_base_timer()
     return INVALID_RETURN_VALUE;
 }
 
-unsigned int cedrus::base_device_t::get_pulse_duration( void )
+unsigned int cedrus::base_device_t::get_pulse_duration()
 {
     return 0;
 }
@@ -152,7 +152,7 @@ void cedrus::base_device_t::set_vk_drop_delay( unsigned int /*delay*/ )
     // nothing
 }
 
-int cedrus::base_device_t::get_trigger_default( void )
+int cedrus::base_device_t::get_trigger_default()
 {
     return false;
 }
@@ -162,7 +162,7 @@ void cedrus::base_device_t::set_trigger_default( bool /*default_on*/ )
     // nothing
 }
 
-int cedrus::base_device_t::get_trigger_debounce_time( void )
+int cedrus::base_device_t::get_trigger_debounce_time()
 {
     return INVALID_RETURN_VALUE;
 }
@@ -172,7 +172,7 @@ void cedrus::base_device_t::set_trigger_debounce_time( unsigned char /*time*/ )
     // nothing
 }
 
-int cedrus::base_device_t::get_button_debounce_time( void )
+int cedrus::base_device_t::get_button_debounce_time()
 {
     return INVALID_RETURN_VALUE;
 }

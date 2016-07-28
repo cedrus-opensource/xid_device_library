@@ -92,7 +92,7 @@ namespace cedrus
 
         virtual void clear_responses();
 
-        virtual int get_accessory_connector_mode( void );
+        virtual int get_accessory_connector_mode();
 
         virtual int get_accessory_connector_device();
 
