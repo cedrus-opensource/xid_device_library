@@ -6,7 +6,8 @@ import CedrusSConsHelperFunctions
 import os
 import sys
 
-env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup()
+env_settings = {'MSVC_VERSION': '14.0'}
+env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup(env_settings)
 
 # should compute a path like: /Users/ematsak/source/xid_device_library
 # (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)

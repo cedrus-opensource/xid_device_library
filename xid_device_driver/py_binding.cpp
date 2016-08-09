@@ -39,6 +39,20 @@ int detect_valid_xid_devices_def( cedrus::xid_device_scanner_t& self )
 
 } // anonymous namespace
 
+/*
+boost::get_pointer() specialization for cedrus::base_device_t const volatile *
+to avoid VC 14.0 link error.
+*/
+namespace boost {
+
+template <>
+cedrus::base_device_t const volatile* get_pointer(class cedrus::base_device_t const volatile* bd)
+{
+    return bd;
+}
+
+} // namespace boost
+
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS( base_device_t_overloads, raise_lines, 1, 2 )
 
 

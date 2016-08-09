@@ -18,17 +18,18 @@ LIB_PATH = [],
 CCPCHFLAGS = []
 )
 
-# set boost and wx versions. we don't actually use wx here, but some of the helper code relies on it
-env['BOOST_VERSION'] = '1_58'
-env['WX_VERSION'] = 'NONE'
-#os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
-
-env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLine( env )
-
 # should compute a path like: /Users/ematsak/source/xid_device_library
 # (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)
 env.SetDefault(XIDLIB_OUTER_REPO_DIR = os.path.abspath(os.getcwd()) + os.path.sep + '..' + os.path.sep )
 outer_repo_root_dir = env['XIDLIB_OUTER_REPO_DIR']
+
+# set boost and wx versions. we don't actually use wx here, but some of the helper code relies on it
+env['BOOST_VERSION'] = '1_58'
+env['BOOST_DIR'] = outer_repo_root_dir + "binaries_boost" + os.path.sep + env['BOOST_VERSION']
+env['WX_VERSION'] = 'NONE'
+#os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
+
+env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLine( env )
 
 if sys.platform == 'win32':
     os.environ['BOOST_ROOT'] = outer_repo_root_dir + 'binaries_boost/install'
