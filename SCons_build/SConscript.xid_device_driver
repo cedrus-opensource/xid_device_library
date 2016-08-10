@@ -31,11 +31,6 @@ env['WX_VERSION'] = 'NONE'
 
 env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLine( env )
 
-if sys.platform == 'win32':
-    os.environ['BOOST_ROOT'] = outer_repo_root_dir + 'binaries_boost/install'
-if sys.platform == 'darwin':
-    os.environ['BOOST'] = outer_repo_root_dir + 'binaries_boost/install'
-
 # Normally we'd go "import CedrusBoost" at the top and be done with it. However, there can
 # be complications there when we're running this SConscript as a dependency for a
 # different Cedrus project. We're erring on the side of caution and making absolutely sure
