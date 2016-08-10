@@ -81,7 +81,7 @@ namespace cedrus
 
         virtual void set_accessory_connector_mode( int mode );
 
-        virtual int cedrus::xid_device_t::get_vk_drop_delay();
+        virtual int get_vk_drop_delay();
 
         virtual void set_vk_drop_delay( unsigned char delay );
 
