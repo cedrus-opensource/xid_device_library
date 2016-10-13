@@ -64,7 +64,6 @@ def print_dev_info(dev_con):
     print "get_internal_product_name():"
     internal_name = dev_con.get_internal_product_name()
     print internal_name
-    print '%-20s%-20s' % ("get_internal_product_name(): ", dev_con.get_internal_product_name())
     print "These two commands only work with XID2.0 devices:"
     print '%-20s%-20s' % ("get_outpost_model() : ", dev_con.get_outpost_model())
     print '%-20s%-20s' % ("get_hardware_generation(): ", dev_con.get_hardware_generation())
@@ -146,9 +145,13 @@ def run_button_tests(dev_con):
 print("Found the following devices:")
 print_dev_names()
 
-for d in xrange (0,  xds.device_count()):
-    dev_con = xds.device_connection_at_index(d)
+for device_index in xrange (0,  xds.device_count()):
+    print "========================================================"
+    print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    print "========================================================"
+    dev_con = xds.device_connection_at_index(device_index)
     dev_cfg = dev_con.get_device_config()
+    is_StimTracker_or_C_Pod = dev_cfg.get_product_id() == 83 or dev_cfg.get_product_id() == 52
 
     # Printing device and port information
     print_dev_info(dev_con)
@@ -199,7 +202,7 @@ for d in xrange (0,  xds.device_count()):
 
     # These calls do nothing for StimTracker! They're not implemented in the library
     # and actually sending these bytes to it doesn't result in anything noteworthy.
-    if dev_cfg.get_product_id() != 83:
+    if not is_StimTracker_or_C_Pod:
         print "Testing protocol commands..."
         print '%-20s%-20s' % ("get_device_protocol(): ", dev_con.get_device_protocol())
         print "Calling set_device_protocol(3)"
@@ -221,7 +224,7 @@ for d in xrange (0,  xds.device_count()):
 
     # Non-StimTracker devices will actually record and store pulse duration, but
     # have no way of taking advantage of it.
-    if dev_cfg.get_product_id() == 83:
+    if is_StimTracker_or_C_Pod:
         print '%-20s%-20s' % ("get_pulse_duration(): ", dev_con.get_pulse_duration())
         print "Calling set_pulse_duration(500)"
         dev_con.set_pulse_duration(500)
@@ -272,7 +275,7 @@ for d in xrange (0,  xds.device_count()):
     else:
         # These are some more of those commands StimTracker will actually take, store
         # and then do nothing with. May as well not bother.
-        if dev_cfg.get_product_id() != 83:
+        if not is_StimTracker_or_C_Pod:
             acc_conn_mode = dev_con.get_accessory_connector_mode();
             print '%-20s%-20s' % ("get_accessory_connector_mode(): ", acc_conn_mode)
             print "Inverting accessory connector mode with set_accessory_connector_mode()"
@@ -303,32 +306,25 @@ for d in xrange (0,  xds.device_count()):
             dev_con.set_output_logic(output_logic)
     print
 
-    print "Calling reset_rt_timer() You should be able to see the effects momentarily."
-    dev_con.reset_rt_timer()
-
-    # The StimTracker ST-100 has no buttons to press and cannot return responses.
-    if dev_cfg.get_product_id() != 83:
+    # StimTracker ST-100 has no buttons to press and cannot return responses.
+    if not is_StimTracker_or_C_Pod:
+        print "Calling reset_rt_timer() You should be able to see the effects momentarily."
+        dev_con.reset_rt_timer()
+        print
         run_button_tests(dev_con)
+    print("Performing line output test...")
 
-print("Performing line output test...")
-
-for d in xrange (0, xds.device_count()):
-    dev_con = xds.device_connection_at_index(d)
     dev_con.set_pulse_duration(300)
-
-lines_bitmask = 1
-sleep_flash = .5
-print str(sleep_flash*1000) + "ms between line changes"
-for d in xrange (0, 16):
-    print "raise lines bitmask = ", lines_bitmask
-    for d in xrange (0, xds.device_count()):
-        xds.device_connection_at_index(d).raise_lines(lines_bitmask)
-
-    lines_bitmask = lines_bitmask << 1
-    if lines_bitmask > 255:
-        lines_bitmask = 1
-
-    time.sleep(sleep_flash)
+    lines_bitmask = 1
+    sleep_flash = .3
+    print str(sleep_flash*1000) + "ms between line changes"
+    for bm in xrange (0, 16):
+        print "raise lines bitmask: ", lines_bitmask
+        xds.device_connection_at_index(device_index).raise_lines(lines_bitmask)
+        lines_bitmask = lines_bitmask << 1
+        if lines_bitmask > 255:
+            lines_bitmask = 1
+        time.sleep(sleep_flash)
 
 print("Clearing lines on all devices...")
 print "Calling restore_factory_defaults() on all devices..."
