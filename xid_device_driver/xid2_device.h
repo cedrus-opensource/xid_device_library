@@ -32,7 +32,6 @@
 #ifndef XID2_DEVICE_H
 #define XID2_DEVICE_H
 
-
 #include "xid_device_t.h"
 
 #include <boost/shared_ptr.hpp>
@@ -57,7 +56,6 @@ namespace cedrus
     virtual void set_scanner_trigger_filter( unsigned char mode );
     virtual int get_accessory_connector_mode( void );
     virtual int get_accessory_connector_device( void );
-
     };
 } // namespace cedrus
 

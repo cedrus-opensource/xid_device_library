@@ -34,7 +34,6 @@
 
 #include "XidDriverImpExpDefs.h"
 
-#include "xid_device_config_t.h"
 #include "response_mgr.h"
 #include "read_only_device.h"
 
@@ -43,6 +42,7 @@
 namespace cedrus
 {
     class xid_con_t;
+    class xid_device_config_t;
 
     class CEDRUS_XIDDRIVER_IMPORTEXPORT base_device_t : public read_only_device, boost::noncopyable
     {
@@ -54,71 +54,73 @@ namespace cedrus
             int model_id;
         };
 
-        virtual ~base_device_t();
+        virtual ~base_device_t()
+        {
+        }
 
-        virtual int get_outpost_model();
+        virtual int get_outpost_model()=0;
 
-        virtual int get_hardware_generation();
+        virtual int get_hardware_generation()=0;
 
-        virtual int get_light_sensor_mode();
+        virtual int get_light_sensor_mode()=0;
 
-        virtual void set_light_sensor_mode( unsigned char mode );
+        virtual void set_light_sensor_mode( unsigned char mode )=0;
 
-        virtual void set_light_sensor_threshold( unsigned char threshold );
+        virtual void set_light_sensor_threshold( unsigned char threshold )=0;
 
-        virtual int get_light_sensor_threshold();
+        virtual int get_light_sensor_threshold()=0;
 
-        virtual void set_scanner_trigger_filter( unsigned char mode );
+        virtual void set_scanner_trigger_filter( unsigned char mode )=0;
 
-        virtual void reset_rt_timer();
+        virtual void reset_rt_timer()=0;
 
-        virtual void reset_base_timer();
+        virtual void reset_base_timer()=0;
 
-        virtual unsigned int query_base_timer();
+        virtual unsigned int query_base_timer()=0;
 
-        virtual unsigned int get_pulse_duration();
+        virtual unsigned int get_pulse_duration()=0;
 
-        virtual void set_pulse_duration( unsigned int duration );
+        virtual void set_pulse_duration( unsigned int duration )=0;
 
-        virtual void poll_for_response();
+        virtual void poll_for_response()=0;
 
-        virtual bool has_queued_responses();
+        virtual bool has_queued_responses()=0;
 
-        virtual int get_number_of_keys_down() const;
+        virtual int get_number_of_keys_down() const=0;
 
-        virtual void clear_response_queue();
+        virtual void clear_response_queue()=0;
 
-        virtual cedrus::response get_next_response();
+        virtual cedrus::response get_next_response()=0;
 
-        virtual void clear_responses();
+        virtual void clear_responses()=0;
 
-        virtual int get_accessory_connector_mode();
+        virtual int get_accessory_connector_mode()=0;
 
-        virtual int get_accessory_connector_device();
+        virtual int get_accessory_connector_device()=0;
 
-        virtual int get_output_logic();
+        virtual int get_output_logic()=0;
 
-        virtual void set_output_logic( int mode );
+        virtual void set_output_logic( int mode )=0;
 
-        virtual void set_accessory_connector_mode( int mode );
+        virtual void set_accessory_connector_mode( int mode )=0;
 
-        virtual int get_vk_drop_delay();
+        virtual int get_vk_drop_delay()=0;
 
-        virtual void set_vk_drop_delay( unsigned char delay );
+        virtual void set_vk_drop_delay( unsigned char delay )=0;
 
-        virtual int get_trigger_default();
+        virtual int get_trigger_default()=0;
 
-        virtual void set_trigger_default( bool default_on );
+        virtual void set_trigger_default( bool default_on )=0;
 
-        virtual int get_trigger_debounce_time();
+        virtual int get_trigger_debounce_time()=0;
 
-        virtual void set_trigger_debounce_time( unsigned char time );
+        virtual void set_trigger_debounce_time( unsigned char time )=0;
 
-        virtual int  get_button_debounce_time();
+        virtual int  get_button_debounce_time()=0;
 
-        virtual void set_button_debounce_time( unsigned char time );
+        virtual void set_button_debounce_time( unsigned char time )=0;
 
-        virtual void set_device_protocol( unsigned char protocol );
+        virtual void set_device_protocol( unsigned char protocol )=0;
 
         // Every device needs these.
         virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const = 0;
@@ -129,7 +131,7 @@ namespace cedrus
         virtual void set_baud_rate( unsigned char rate ) = 0;
         virtual std::string get_device_protocol()=0;
         virtual void get_product_and_model_id( int *product_id, int *model_id ) = 0;
-        product_and_model_id get_product_and_model_id();
+        virtual product_and_model_id get_product_and_model_id()=0;
         virtual int get_major_firmware_version() = 0;
         virtual int get_minor_firmware_version() = 0;
         virtual std::string get_internal_product_name() = 0;

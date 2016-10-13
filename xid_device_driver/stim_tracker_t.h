@@ -32,61 +32,25 @@
 #ifndef STIM_TRACKER_T_H
 #define STIM_TRACKER_T_H
 
-#include "base_device_t.h"
+#include "BaseDeviceImpl.h"
 #include <boost/shared_ptr.hpp>
 
 namespace cedrus
 {
-    class stim_tracker_t : public base_device_t
+    class stim_tracker_t : public BaseDeviceImpl
     {
     public:
-        /**
-         * stim_tracker_t constructor
-         *
-         * @param[in] xid_con xid_con_t object to use
-         * @param[in] devconfig_path path to devconfig files.  Defaults to an
-         * empty string. If no path is used, very conservative default values
-         * are used and reults may not be what you expect.  It's highly
-         * recommended to use the devconfig files.
-         */
         stim_tracker_t(
             boost::shared_ptr<xid_con_t> xid_con,
             boost::shared_ptr<const xid_device_config_t> dev_config);
         virtual ~stim_tracker_t(void);
 
-        virtual unsigned int query_base_timer();
-        virtual void reset_base_timer();
-
         virtual unsigned int get_pulse_duration( void );
-        /**
-         * Set the pulse duration when raise_lines() is called.  This is how
-         * long the line will be active.
-         *
-         * @param[in] duration Length of time in miliseconds
-         */
         virtual void set_pulse_duration(unsigned int duration);
 
-        virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const;
-        virtual int open_connection();
-        virtual int close_connection();
-        virtual bool has_lost_connection();
-        virtual int get_baud_rate();
-        virtual void set_baud_rate( unsigned char rate );
-        virtual std::string get_device_protocol();
-        virtual void get_product_and_model_id( int *product_id, int *model_id );
-        virtual int get_major_firmware_version();
-        virtual int get_minor_firmware_version();
-        virtual std::string get_internal_product_name();
         virtual void raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false);
         virtual void lower_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false);
         virtual void clear_lines();
-        virtual void restore_factory_defaults();
-
-    private:
-        unsigned int m_linesState;
-
-        const boost::shared_ptr<xid_con_t> m_xidCon;
-        const boost::shared_ptr<const xid_device_config_t> m_config;
     };
 } // namespace cedrus
 

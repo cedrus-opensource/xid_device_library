@@ -39,8 +39,7 @@
 cedrus::xid_device_t::xid_device_t(
     boost::shared_ptr<xid_con_t> xid_con,
     boost::shared_ptr<const xid_device_config_t> dev_config)
-    : m_xidCon(xid_con),
-      m_config(dev_config),
+    : BaseDeviceImpl(xid_con, dev_config),
       m_response_mgr(new response_mgr(get_minor_firmware_version(), dev_config))
 {
     clear_lines();
@@ -117,69 +116,6 @@ void cedrus::xid_device_t::set_vk_drop_delay( unsigned char delay )
     xid_glossary::set_vk_drop_delay(m_xidCon, delay);
 }
 
-void cedrus::xid_device_t::set_device_protocol( unsigned char protocol )
-{
-    xid_glossary::set_device_protocol(m_xidCon, protocol);
-}
-
-const boost::shared_ptr<const cedrus::xid_device_config_t> cedrus::xid_device_t::get_device_config( void ) const
-{
-    return m_config;
-}
-
-int cedrus::xid_device_t::close_connection( void )
-{
-    return m_xidCon->close();
-}
-
-int cedrus::xid_device_t::open_connection( void )
-{
-    return m_xidCon->open();
-}
-
-bool cedrus::xid_device_t::has_lost_connection( void )
-{
-    return m_xidCon->has_lost_connection();
-}
-
-int cedrus::xid_device_t::get_baud_rate( void )
-{
-    return m_xidCon->get_baud_rate();
-}
-
-void cedrus::xid_device_t::set_baud_rate( unsigned char rate )
-{
-    //CEDRUS_ASSERT( 1 == 2, "here is set_baud_rate" ); // <--- JUST A SAMPLE FOR SYNTAX
-
-    m_xidCon->set_baud_rate(rate);
-    xid_glossary::set_device_baud_rate(m_xidCon, rate);
-}
-
-std::string cedrus::xid_device_t::get_device_protocol()
-{
-    return xid_glossary::get_device_protocol(m_xidCon);
-}
-
-void cedrus::xid_device_t::get_product_and_model_id( int *product_id, int *model_id )
-{
-    xid_glossary::get_product_and_model_id(m_xidCon, product_id, model_id);
-}
-
-int cedrus::xid_device_t::get_major_firmware_version()
-{
-    return xid_glossary::get_major_firmware_version(m_xidCon);
-}
-
-int cedrus::xid_device_t::get_minor_firmware_version()
-{
-    return xid_glossary::get_minor_firmware_version(m_xidCon);
-}
-
-std::string cedrus::xid_device_t::get_internal_product_name()
-{
-    return xid_glossary::get_internal_product_name(m_xidCon);
-}
-
 void cedrus::xid_device_t::raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines)
 {
     unsigned int output_lines = lines_bitmask;
@@ -208,16 +144,6 @@ void cedrus::xid_device_t::clear_lines( void )
 {
     xid_glossary::set_digital_output_lines_xid(m_xidCon, 0);
     m_linesState = 0;
-}
-
-void cedrus::xid_device_t::reset_base_timer()
-{
-    xid_glossary::reset_base_timer(m_xidCon);
-}
-
-unsigned int cedrus::xid_device_t::query_base_timer()
-{
-    return xid_glossary::query_base_timer( m_xidCon );
 }
 
 int cedrus::xid_device_t::get_trigger_default( void )
@@ -250,7 +176,3 @@ void cedrus::xid_device_t::set_button_debounce_time( unsigned char time )
     xid_glossary::set_button_debounce_time(m_xidCon, time);
 }
 
-void cedrus::xid_device_t::restore_factory_defaults( void )
-{
-    xid_glossary::restore_factory_defaults(m_xidCon);
-}

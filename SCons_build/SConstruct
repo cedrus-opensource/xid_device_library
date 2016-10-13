@@ -18,7 +18,7 @@ env['XIDLIB_OUTER_REPO_DIR'] = outer_repo_root_dir
 env['WX_VERSION'] = 'NONE'
 projects = [
     'SConscript.xid_device_driver',
-    'SConscript.st_tester',
+    #'SConscript.st_tester',
     #'SConscript.TestXidLib', # this is commented out for the general public. the SConscript can be enabled at Cedrus.
 ]
 

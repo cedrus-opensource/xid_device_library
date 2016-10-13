@@ -81,7 +81,7 @@ void cedrus::xid2_device::set_scanner_trigger_filter( unsigned char mode )
 
 int cedrus::xid2_device::get_accessory_connector_mode( void )
 {
-    return INVALID_RETURN_VALUE;
+    return xid_glossary::get_accessory_connector_mode(m_xidCon);
 }
 
 int cedrus::xid2_device::get_accessory_connector_device( void )

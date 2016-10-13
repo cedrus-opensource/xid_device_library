@@ -4,6 +4,7 @@
 #include "xid_device_t.h"
 #include "xid2_device.h"
 #include "stim_tracker_t.h"
+#include "xid_device_config_t.h"
 
 #include <boost/foreach.hpp>
 

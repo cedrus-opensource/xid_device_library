@@ -1,6 +1,7 @@
 #include "xid_device_scanner_t.h"
 #include "base_device_t.h"
 #include "interface_xid_con.h"
+#include "xid_device_config_t.h"
 
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
