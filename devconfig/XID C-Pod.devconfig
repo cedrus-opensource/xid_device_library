@@ -1,10 +1,10 @@
 [DeviceInfo]
 MajorFirmwareVersion = 1
 DeviceName = C-Pod
+# 52 is the integer value of the char '4'
+XidProductID = 52
 # 48 is the integer value of the char '0'
-XidProductID = 48
-# 65 is the integer value of the char 'A'
-XidModelID = 65
+XidModelID = 48
 
 [Port0]
 PortName = Event Marker

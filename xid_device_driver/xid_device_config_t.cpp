@@ -170,11 +170,6 @@ bool cedrus::xid_device_config_t::does_config_match_device( int device_id, int m
     {
         does_match = true;
     }
-    // This device is a c-pod claiming it's a Lumina 3G
-    else if ( static_cast<char>(device_id) == '0' &&
-        static_cast<char>(model_id) == 'A' &&
-        static_cast<char>(major_firmware_ver) == 1 )
-        does_match = true;
 
     return does_match;
 }

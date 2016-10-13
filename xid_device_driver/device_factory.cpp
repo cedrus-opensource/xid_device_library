@@ -25,10 +25,7 @@ cedrus::create_device
         if ( config->does_config_match_device(product_id, model_id, major_firmware_version) )
         {
             // StimTracker or a c-pod
-            if( product_id == 'S' ||
-                (static_cast<char>(product_id) == '0' &&
-                static_cast<char>(model_id) == 'A' &&
-                static_cast<char>(major_firmware_version) == 1) )
+            if( product_id == 'S' || static_cast<char>(product_id) == '4' )
             {
                 result.reset(new stim_tracker_t(xid_con, config));
             }
