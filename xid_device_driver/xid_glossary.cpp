@@ -78,24 +78,26 @@ void cedrus::xid_glossary::reset_base_timer( boost::shared_ptr<xid_con_t> xid_co
 
 unsigned int cedrus::xid_glossary::query_base_timer( boost::shared_ptr<xid_con_t> xid_con )
 {
+    unsigned int base_timer = 0;
     unsigned char return_info[6];
     int read = xid_con->send_xid_command(
         "e3",
         return_info,
         sizeof(return_info));
 
+    CEDRUS_ASSERT( boost::starts_with( return_info , "e3" ), "query_base_timer xid query result must start with e3" );
     bool valid_response = (read == 6);
 
     if(valid_response)
     {
-        return adjust_endianness_chars_to_uint
+        base_timer = adjust_endianness_chars_to_uint
             ( return_info[2],
               return_info[3],
               return_info[4],
               return_info[5] );
     }
 
-    return XID_GENERAL_ERROR;
+    return base_timer;
 }
 
 void cedrus::xid_glossary::reset_rt_timer( boost::shared_ptr<xid_con_t> xid_con )
@@ -147,7 +149,7 @@ it will at least zero our product_id_return buffer" );
     // the preceding assertion makes sure we don't read GARBAGE from product_id_return[0] here:
     *product_id = (int)(product_id_return[0]);
 
-    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 50 || *product_id == 83, "_d2 command's result value must be between '0' and '2', or be 'S'" );
+    CEDRUS_ASSERT( *product_id >= 48 && *product_id <= 52 || *product_id == 83, "_d2 command's result value must be between '0' and '4', or be 'S'" );
 
     // Model IDs are meaningless for non-RB devices
     unsigned char model_id_return[1]; // we rely on send_xid_command to zero-initialize this buffer
@@ -174,7 +176,7 @@ it will at least zero our product_id_return buffer" );
 
     *model_id = (int)(model_id_return[0]);
 
-    CEDRUS_ASSERT( *model_id >= 49 && *model_id <= 69, "_d3 command's result value must be between '1' and 'E'" );
+    CEDRUS_ASSERT( *model_id >= 48 && *model_id <= 69, "_d3 command's result value must be between '0' and 'E'" );
 }
 
 int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con )
@@ -429,6 +431,8 @@ unsigned int cedrus::xid_glossary::get_pulse_duration( boost::shared_ptr<xid_con
         "_mp",
         return_info,
         sizeof(return_info));
+
+    CEDRUS_ASSERT( boost::starts_with( return_info , "_mp" ), "get_pulse_duration's return value must start with _mp" );
 
     unsigned int dur = adjust_endianness_chars_to_uint
         ( return_info[3],
