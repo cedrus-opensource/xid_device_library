@@ -58,7 +58,7 @@ if sys.platform == 'win32':
 
 boost = CedrusBoost.CedrusBoostSettings(env)
 
-qt_cedrus = CedrusQt.CedrusQtSettings(env,project_target_name)
+qt_cedrus = CedrusQt.CedrusQtSettings(env)
 qt_cedrus.need_qt_basics()
 
 need = []
