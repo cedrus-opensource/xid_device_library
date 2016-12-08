@@ -1,0 +1,12 @@
+[DeviceInfo]
+MajorFirmwareVersion = 1
+DeviceName = C-Pod for Neuroscan
+# 52 is the integer value of the char '4'
+XidProductID = 52
+# 72 is the integer value of the char 'H'
+XidModelID = 72
+
+[Port0]
+PortName = Event Marker
+NumberOfLines = 16
+UseableAsResponse = No

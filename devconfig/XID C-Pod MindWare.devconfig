@@ -1,0 +1,12 @@
+[DeviceInfo]
+MajorFirmwareVersion = 1
+DeviceName = C-Pod for MindWare
+# 52 is the integer value of the char '4'
+XidProductID = 52
+# 71 is the integer value of the char 'G'
+XidModelID = 71
+
+[Port0]
+PortName = Event Marker
+NumberOfLines = 8
+UseableAsResponse = No

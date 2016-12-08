@@ -1,0 +1,12 @@
+[DeviceInfo]
+MajorFirmwareVersion = 1
+DeviceName = C-Pod for Biosemi
+# 52 is the integer value of the char '4'
+XidProductID = 52
+# 70 is the integer value of the char 'F'
+XidModelID = 70
+
+[Port0]
+PortName = Event Marker
+NumberOfLines = 16
+UseableAsResponse = No

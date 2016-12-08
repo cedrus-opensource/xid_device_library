@@ -1,0 +1,12 @@
+[DeviceInfo]
+MajorFirmwareVersion = 1
+DeviceName = C-Pod for ANT Neuro
+# 52 is the integer value of the char '4'
+XidProductID = 52
+# 67 is the integer value of the char 'C'
+XidModelID = 67
+
+[Port0]
+PortName = Event Marker
+NumberOfLines = 8
+UseableAsResponse = No
