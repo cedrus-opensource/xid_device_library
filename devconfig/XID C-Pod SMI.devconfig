@@ -1,6 +1,6 @@
 [DeviceInfo]
-MajorFirmwareVersion = 1
-DeviceName = C-Pod for SMI
+MajorFirmwareVersion = 2
+DeviceName = c-pod for SMI
 # 52 is the integer value of the char '4'
 XidProductID = 52
 # 74 is the integer value of the char 'J'

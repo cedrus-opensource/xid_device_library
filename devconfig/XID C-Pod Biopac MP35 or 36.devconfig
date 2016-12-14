@@ -1,6 +1,6 @@
 [DeviceInfo]
-MajorFirmwareVersion = 1
-DeviceName = C-Pod for Biopac MP35/36
+MajorFirmwareVersion = 2
+DeviceName = c-pod for Biopac MP35/36
 # 52 is the integer value of the char '4'
 XidProductID = 52
 # 68 is the integer value of the char 'D'

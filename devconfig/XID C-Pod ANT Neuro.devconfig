@@ -1,6 +1,6 @@
 [DeviceInfo]
-MajorFirmwareVersion = 1
-DeviceName = C-Pod for ANT Neuro
+MajorFirmwareVersion = 2
+DeviceName = c-pod for ANT Neuro
 # 52 is the integer value of the char '4'
 XidProductID = 52
 # 67 is the integer value of the char 'C'
