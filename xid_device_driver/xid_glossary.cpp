@@ -172,11 +172,23 @@ it will at least zero our product_id_return buffer" );
 
     CEDRUS_ASSERT( bytes_count >= 1 || model_id_return[0] == 0,
         "in the case where send_xid_command neglected to store ANY BYTES, we are relying on a GUARANTEE that \
-        it will at least zero our buffer" );
+it will at least zero our buffer" );
 
     *model_id = (int)(model_id_return[0]);
 
-    CEDRUS_ASSERT( *model_id >= 48 && *model_id <= 69, "_d3 command's result value must be between '0' and 'E'" );
+    CEDRUS_ASSERT( *model_id >= 48 && *model_id <= 103, "_d3 command's result value must be between '0' and 'g'" );
+}
+
+void cedrus::xid_glossary::set_model_id(boost::shared_ptr<xid_con_t> xid_con, unsigned char model)
+{
+    char set_model_cmd[3];
+
+    set_model_cmd[0] = 'd';
+    set_model_cmd[1] = '3';
+    set_model_cmd[2] = model;
+
+    DWORD bytes_written;
+    xid_con->write((unsigned char*)set_model_cmd, 3, &bytes_written);
 }
 
 int cedrus::xid_glossary::get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con )
@@ -352,6 +364,30 @@ void cedrus::xid_glossary::set_digital_output_lines_st ( boost::shared_ptr<xid_c
 
     DWORD bytes_written;
     xid_con->write((unsigned char*)set_lines_cmd, 4, &bytes_written);
+}
+
+int cedrus::xid_glossary::get_number_of_lines(boost::shared_ptr<xid_con_t> xid_con)
+{
+    unsigned char gen_return[4];
+
+    xid_con->send_xid_command(
+        "_ml",
+        gen_return,
+        sizeof(gen_return));
+
+    return gen_return[3];
+}
+
+void cedrus::xid_glossary::set_number_of_lines(boost::shared_ptr<xid_con_t> xid_con, unsigned int lines)
+{
+    unsigned char set_number_of_lines_cmd[3];
+
+    set_number_of_lines_cmd[0] = 'm';
+    set_number_of_lines_cmd[1] = 'l';
+    set_number_of_lines_cmd[2] = lines;
+
+    DWORD bytes_written;
+    xid_con->write((unsigned char*)set_number_of_lines_cmd, 3, &bytes_written);
 }
 
 std::string cedrus::xid_glossary::get_device_protocol( boost::shared_ptr<xid_con_t> xid_con, bool pst_proof )
@@ -558,6 +594,12 @@ void cedrus::xid_glossary::set_vk_drop_delay( boost::shared_ptr<xid_con_t> xid_c
     set_vk_drop_delay_cmd[2] = delay;
 
     xid_con->write(set_vk_drop_delay_cmd, 3, &bytes_written);
+}
+
+void cedrus::xid_glossary::reprogram_flash(boost::shared_ptr<xid_con_t> xid_con)
+{
+    DWORD bytes_written;
+    xid_con->write((unsigned char*)"f3", 2, &bytes_written);
 }
 
 // This function's intended return is essentially a boolean. However, that prevents us from

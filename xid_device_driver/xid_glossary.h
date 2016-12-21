@@ -54,6 +54,9 @@ namespace cedrus
         // _d2 and _d3
         static void get_product_and_model_id( boost::shared_ptr<xid_con_t> xid_con, int *product_id, int *model_id );
 
+        // d3
+        static void set_model_id(boost::shared_ptr<xid_con_t> xid_con, unsigned char model);
+
         // _d4
         static int get_major_firmware_version( boost::shared_ptr<xid_con_t> xid_con );
 
@@ -86,6 +89,12 @@ namespace cedrus
 
         // mh
         static void set_digital_output_lines_st( boost::shared_ptr<xid_con_t> xid_con, unsigned int lines );
+
+        // _ml
+        static int get_number_of_lines(boost::shared_ptr<xid_con_t> xid_con);
+
+        // ml
+        static void set_number_of_lines(boost::shared_ptr<xid_con_t> xid_con, unsigned int lines);
 
         // _c1
         static std::string get_device_protocol( boost::shared_ptr<xid_con_t> xid_con );
@@ -128,6 +137,9 @@ namespace cedrus
 
         // b3
         static void set_vk_drop_delay( boost::shared_ptr<xid_con_t> xid_con, unsigned char delay );
+
+        // f3
+        static void reprogram_flash(boost::shared_ptr<xid_con_t> xid_con);
 
         // _f4
         static int get_trigger_default( boost::shared_ptr<xid_con_t> xid_con );

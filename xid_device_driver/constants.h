@@ -65,7 +65,8 @@ namespace cedrus
     {
         PRODUCT_ID_LUMINA = 48, // '0'
         PRODUCT_ID_SV1    = 49, // '1'
-        PRODUCT_ID_RB     = 50  // '2'
+        PRODUCT_ID_RB     = 50, // '2'
+        PRODUCT_ID_CPOD   = 52
     };
 
 } // namespace cedrus

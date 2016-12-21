@@ -74,6 +74,10 @@ namespace cedrus
 
         virtual void set_pulse_duration( unsigned int duration );
 
+        virtual int get_number_of_lines();
+
+        virtual void set_number_of_lines(unsigned int lines);
+
         virtual void poll_for_response();
 
         virtual bool has_queued_responses();
@@ -100,6 +104,8 @@ namespace cedrus
 
         virtual void set_vk_drop_delay( unsigned char delay );
 
+        virtual void reprogram_flash();
+
         virtual int get_trigger_default();
 
         virtual void set_trigger_default( bool default_on );
@@ -123,6 +129,7 @@ namespace cedrus
         virtual void set_baud_rate( unsigned char rate );
         virtual std::string get_device_protocol();
         virtual void get_product_and_model_id( int *product_id, int *model_id );
+        virtual void set_model_id( unsigned char model );
         virtual int get_major_firmware_version();
         virtual int get_minor_firmware_version();
         virtual std::string get_internal_product_name();

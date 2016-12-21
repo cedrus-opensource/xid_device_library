@@ -203,6 +203,16 @@ void cedrus::BaseDeviceImpl::set_pulse_duration(unsigned int /*duration*/)
     // nothing
 }
 
+int cedrus::BaseDeviceImpl::get_number_of_lines()
+{
+    return INVALID_RETURN_VALUE;
+}
+
+void cedrus::BaseDeviceImpl::set_number_of_lines(unsigned int lines)
+{
+    // nothing
+}
+
 void cedrus::BaseDeviceImpl::poll_for_response()
 {
     // nothing
@@ -267,6 +277,11 @@ void cedrus::BaseDeviceImpl::set_vk_drop_delay( unsigned char /*delay*/ )
     // nothing
 }
 
+void cedrus::BaseDeviceImpl::reprogram_flash()
+{
+    xid_glossary::reprogram_flash(m_xidCon);
+}
+
 int cedrus::BaseDeviceImpl::get_trigger_default()
 {
     return false;
@@ -307,4 +322,9 @@ cedrus::BaseDeviceImpl::product_and_model_id cedrus::BaseDeviceImpl::get_product
     product_and_model_id pm_id;
     get_product_and_model_id(&pm_id.product_id, &pm_id.model_id);
     return pm_id;
+}
+
+void cedrus::BaseDeviceImpl::set_model_id( unsigned char model )
+{
+    xid_glossary::set_model_id(m_xidCon, model);
 }
