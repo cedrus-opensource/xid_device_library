@@ -62,6 +62,7 @@ inputs = [
     prefix + 'xid_device_driver/xid_device_t.cpp',
     prefix + 'xid_device_driver/xid2_device.cpp',
     prefix + 'xid_device_driver/stim_tracker_t.cpp',
+    prefix + 'xid_device_driver/StimTracker2.cpp',
 ]
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
