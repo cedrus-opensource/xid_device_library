@@ -42,9 +42,6 @@ cedrus::BaseDeviceImpl::BaseDeviceImpl(
     : m_xidCon(xid_con),
       m_config(dev_config)
 {
-    clear_lines();
-    reset_rt_timer();
-    reset_base_timer();
 }
 
 cedrus::BaseDeviceImpl::~BaseDeviceImpl()
@@ -132,12 +129,6 @@ void cedrus::BaseDeviceImpl::lower_lines( unsigned int lines_bitmask, bool leave
     m_linesState = output_lines;
 }
 
-void cedrus::BaseDeviceImpl::clear_lines( void )
-{
-    xid_glossary::set_digital_output_lines_st(m_xidCon, 0);
-    m_linesState = 0;
-}
-
 void cedrus::BaseDeviceImpl::reset_base_timer()
 {
     return xid_glossary::reset_base_timer(m_xidCon);
@@ -208,7 +199,7 @@ int cedrus::BaseDeviceImpl::get_number_of_lines()
     return INVALID_RETURN_VALUE;
 }
 
-void cedrus::BaseDeviceImpl::set_number_of_lines(unsigned int lines)
+void cedrus::BaseDeviceImpl::set_number_of_lines(unsigned int /*lines*/)
 {
     // nothing
 }
