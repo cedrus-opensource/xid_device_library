@@ -56,6 +56,7 @@ namespace cedrus
     virtual void set_scanner_trigger_filter( unsigned char mode );
     virtual int get_accessory_connector_mode( void );
     virtual int get_accessory_connector_device( void );
+    virtual void connect_to_mpod(unsigned int mpod, unsigned int action);
     };
 } // namespace cedrus
 

@@ -126,6 +126,9 @@ namespace cedrus
         // a1 deprecated in XID 2.0
         static void set_accessory_connector_mode( boost::shared_ptr<xid_con_t> xid_con, unsigned char mode );
 
+        // aq
+        static void connect_to_mpod(boost::shared_ptr<xid_con_t> xid_con, unsigned int mpod, unsigned int action);
+
         // _a6
         static int get_ac_debouncing_time( boost::shared_ptr<xid_con_t> xid_con );
 

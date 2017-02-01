@@ -88,3 +88,8 @@ int cedrus::xid2_device::get_accessory_connector_device( void )
 {
     return xid_glossary::get_accessory_connector_device(m_xidCon);
 }
+
+void cedrus::xid2_device::connect_to_mpod(unsigned int mpod, unsigned int action)
+{
+    xid_glossary::connect_to_mpod(m_xidCon, mpod, action);
+}

@@ -308,6 +308,11 @@ void cedrus::BaseDeviceImpl::set_device_protocol( unsigned char /*protocol*/ )
     // nothing
 }
 
+void cedrus::BaseDeviceImpl::connect_to_mpod(unsigned int mpod, unsigned int action)
+{
+    xid_glossary::connect_to_mpod(m_xidCon, mpod, action);
+}
+
 cedrus::BaseDeviceImpl::product_and_model_id cedrus::BaseDeviceImpl::get_product_and_model_id()
 {
     product_and_model_id pm_id;

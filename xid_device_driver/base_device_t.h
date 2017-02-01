@@ -128,6 +128,8 @@ namespace cedrus
 
         virtual void set_device_protocol( unsigned char protocol )=0;
 
+        virtual void connect_to_mpod(unsigned int mpod, unsigned int action) = 0;
+
         // Every device needs these.
         virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const = 0;
         virtual int open_connection() = 0;

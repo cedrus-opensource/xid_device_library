@@ -120,6 +120,8 @@ namespace cedrus
 
         virtual void set_device_protocol( unsigned char protocol );
 
+        virtual void connect_to_mpod(unsigned int mpod, unsigned int action);
+
         // Every device needs these.
         virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const;
         virtual int open_connection();
@@ -134,14 +136,14 @@ namespace cedrus
         virtual int get_minor_firmware_version();
         virtual std::string get_internal_product_name();
         virtual void restore_factory_defaults();
-        
+
         // Implementations of these will differ
         virtual void raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false)=0;
         virtual void lower_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false)=0;
         virtual void clear_lines()=0;
-        
+
         virtual product_and_model_id get_product_and_model_id();
-        
+
     protected:
         unsigned int m_linesState;
         boost::shared_ptr<xid_con_t> m_xidCon;

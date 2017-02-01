@@ -724,3 +724,15 @@ void cedrus::xid_glossary::set_ac_debouncing_time( boost::shared_ptr<xid_con_t> 
 
     xid_con->write(set_debouncing_time_cmd, 3, &bytes_written);
 }
+
+void cedrus::xid_glossary::connect_to_mpod(boost::shared_ptr<xid_con_t> xid_con, unsigned int mpod, unsigned int action)
+{
+    DWORD bytes_written;
+    unsigned char connect_to_mpod_cmd[4];
+    connect_to_mpod_cmd[0] = 'a';
+    connect_to_mpod_cmd[1] = 'q';
+    connect_to_mpod_cmd[2] = '0' + mpod;
+    connect_to_mpod_cmd[3] = '0' + action;
+
+    xid_con->write(connect_to_mpod_cmd, 4, &bytes_written);
+}
