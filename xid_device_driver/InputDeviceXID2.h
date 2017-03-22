@@ -29,43 +29,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef READ_ONLY_DEVICE_H
-#define READ_ONLY_DEVICE_H
+#ifndef XID2_INPUT_DEVICE_H
+#define XID2_INPUT_DEVICE_H
 
-#include "XidDriverImpExpDefs.h"
+#include "InputDevice.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace cedrus
 {
-    class read_only_device
+    class InputDeviceXID2 : public InputDevice
     {
     public:
-        virtual ~read_only_device()
-        {
-        };
+        InputDeviceXID2(
+            boost::shared_ptr<Connection> xidCon,
+            boost::shared_ptr<const DeviceConfig> devConfig
+            );
+        virtual ~InputDeviceXID2(void);
 
-        virtual int get_hardware_generation() = 0;
-
-        virtual int get_light_sensor_mode() = 0;
-
-        virtual int get_light_sensor_threshold() = 0;
-
-        virtual unsigned int get_pulse_duration() = 0;
-
-        virtual int get_accessory_connector_mode( void ) = 0;
-
-        virtual int get_accessory_connector_device() = 0;
-        
-        virtual int get_outpost_model() = 0;
-
-        // Every device needs these.
-        virtual const boost::shared_ptr<const xid_device_config_t> get_device_config() const = 0;
-        virtual int get_baud_rate() = 0;
-        virtual void get_product_and_model_id( int *product_id, int *model_id ) = 0;
-        virtual int get_major_firmware_version() = 0;
-        virtual int get_minor_firmware_version() = 0;
-        virtual std::string get_internal_product_name() = 0;
+    virtual int GetOutpostModel();
+    virtual int GetHardwareGeneration();
+    virtual int GetLightSensorMode();
+    virtual void SetLightSensorMode( unsigned char mode );
+    virtual void SetLightSensorThreshold( unsigned char threshold );
+    virtual int GetLightSensorThreshold();
+    virtual void SetScannerTriggerFilter( unsigned char mode );
+    virtual int GetAccessoryConnectorMode();
+    virtual int GetAccessoryConnectorDevice();
+    virtual void ConnectToMpod(unsigned int mpod, unsigned int action);
     };
-
 } // namespace cedrus
 
-#endif
+#endif // XID2_INPUT_DEVICE_H

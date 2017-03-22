@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "xid_device_config_t.h"
+#include "DeviceConfig.h"
 
 #include "constants.h"
 
@@ -44,24 +44,24 @@
 
 #include "CedrusAssert.h"
 
-boost::shared_ptr<cedrus::xid_device_config_t> cedrus::xid_device_config_t::config_for_device(
+boost::shared_ptr<cedrus::DeviceConfig> cedrus::DeviceConfig::ConfigForDevice(
         boost::property_tree::ptree * pt )
 {
-    boost::shared_ptr<xid_device_config_t> devconfig;
+    boost::shared_ptr<DeviceConfig> devconfig;
 
-    devconfig.reset(new xid_device_config_t(pt));
+    devconfig.reset(new DeviceConfig(pt));
 
     return devconfig;
 }
 
-cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * pt )
+cedrus::DeviceConfig::DeviceConfig( boost::property_tree::ptree * pt )
 {
     std::string digital_output_command;
 
-    m_major_firmware_ver = pt->get<int>("DeviceInfo.MajorFirmwareVersion", (int) INVALID_RETURN_VALUE );
-    m_device_name = pt->get<std::string>("DeviceInfo.DeviceName", "" );
-    m_product_id = pt->get<int>("DeviceInfo.XidProductID", (int) INVALID_RETURN_VALUE );
-    m_model_id = pt->get<int>("DeviceInfo.XidModelID", (int) INVALID_RETURN_VALUE );
+    m_MajorFirmwareVer = pt->get<int>("DeviceInfo.MajorFirmwareVersion", (int) INVALID_RETURN_VALUE );
+    m_DeviceName = pt->get<std::string>("DeviceInfo.DeviceName", "" );
+    m_ProductID = pt->get<int>("DeviceInfo.XidProductID", (int) INVALID_RETURN_VALUE );
+    m_ModelID = pt->get<int>("DeviceInfo.XidModelID", (int) INVALID_RETURN_VALUE );
 
     bool missing_port = false;
 
@@ -86,13 +86,13 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
         if ( missing_port )
             CEDRUS_FAIL("Devconfigs should include a fake port block for the ports they're missing!");
 
-        device_port port;
-        port.port_name = pt->get(port_str+".PortName", "not_found");
-        port.port_number = i;
-        port.number_of_lines = pt->get(port_str+".NumberOfLines", -1);
-        port.is_response_port = pt->get(port_str+".UseableAsResponse", "not_found") == "Yes";
+        DevicePort port;
+        port.portName = pt->get(port_str+".PortName", "not_found");
+        port.portNumber = i;
+        port.numberOfLines = pt->get(port_str+".NumberOfLines", -1);
+        port.isResponsePort = pt->get(port_str+".UseableAsResponse", "not_found") == "Yes";
 
-        if ( port.is_response_port )
+        if ( port.isResponsePort )
         {
             // devconfig files have up to 8 key mappings per port
             for( unsigned int j = 0; j < 8; ++j )
@@ -102,71 +102,71 @@ cedrus::xid_device_config_t::xid_device_config_t( boost::property_tree::ptree * 
                 std::string key_name = s2.str().c_str();
 
                 int key_num = pt->get(port_str+key_name, -1);
-                port.key_map[j] = key_num;
+                port.keyMap[j] = key_num;
             }
         }
 
-        m_device_ports.push_back(port);
+        m_DevicePorts.push_back(port);
     }
 }
 
-cedrus::xid_device_config_t::~xid_device_config_t(void)
+cedrus::DeviceConfig::~DeviceConfig(void)
 {
 }
 
-int cedrus::xid_device_config_t::get_mapped_key(int port, int key) const
+int cedrus::DeviceConfig::GetMappedKey(int port, int key) const
 {
     int mapped_key = -1;
 
-    if ( port < m_device_ports.size() )
+    if ( port < m_DevicePorts.size() )
     {
-        mapped_key = m_device_ports[port].key_map[key];
+        mapped_key = m_DevicePorts[port].keyMap[key];
     }
 
     // Anything that wasn't mapped during the devconfig parsing process will default to -1
     return mapped_key;
 }
 
-const std::vector<cedrus::device_port> * cedrus::xid_device_config_t::get_vector_of_ports() const
+const std::vector<cedrus::DevicePort> * cedrus::DeviceConfig::GetVectorOfPorts() const
 {
-    return &m_device_ports;
+    return &m_DevicePorts;
 }
 
-const cedrus::device_port * cedrus::xid_device_config_t::get_port_ptr_by_index(unsigned int portNum) const
+const cedrus::DevicePort * cedrus::DeviceConfig::GetPortPtrByIndex(unsigned int portNum) const
 {
-    const cedrus::device_port * port_ptr = nullptr;
-    if ( portNum < m_device_ports.size() )
-        port_ptr = &(m_device_ports[portNum]);
+    const cedrus::DevicePort * port_ptr = nullptr;
+    if ( portNum < m_DevicePorts.size() )
+        port_ptr = &(m_DevicePorts[portNum]);
     else
         CEDRUS_FAIL("Requested port number doesn't exist!");
 
     return port_ptr;
 }
 
-std::string cedrus::xid_device_config_t::get_device_name() const
+std::string cedrus::DeviceConfig::GetDeviceName() const
 {
-    return m_device_name;
+    return m_DeviceName;
 }
 
-int cedrus::xid_device_config_t::get_product_id() const
+int cedrus::DeviceConfig::GetProductID() const
 {
-    return m_product_id;
+    return m_ProductID;
 }
 
-int cedrus::xid_device_config_t::get_model_id() const
+int cedrus::DeviceConfig::GetModelID() const
 {
-    return m_model_id;
+    return m_ModelID;
 }
 
-int cedrus::xid_device_config_t::get_major_version() const
+int cedrus::DeviceConfig::GetMajorVersion() const
 {
-    return m_major_firmware_ver;
+    return m_MajorFirmwareVer;
 }
 
-bool cedrus::xid_device_config_t::does_config_match_device( int device_id, int model_id, int major_firmware_ver ) const
+bool cedrus::DeviceConfig::DoesConfigMatchDevice( int deviceID, int modelID, int majorFirmwareVer ) const
 {
     bool does_match = false;
-    if ( m_product_id == device_id && m_model_id == model_id && m_major_firmware_ver == major_firmware_ver)
+    if ( m_ProductID == deviceID && m_ModelID == modelID && m_MajorFirmwareVer == majorFirmwareVer)
     {
         does_match = true;
     }

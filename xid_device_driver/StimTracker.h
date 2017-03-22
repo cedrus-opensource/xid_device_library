@@ -29,28 +29,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef STIM_TRACKER_T_H
-#define STIM_TRACKER_T_H
+#ifndef STIM_TRACKER_H
+#define STIM_TRACKER_H
 
-#include "BaseDeviceImpl.h"
+#include "XIDDeviceImpl.h"
 #include <boost/shared_ptr.hpp>
 
 namespace cedrus
 {
-    class stim_tracker_t : public BaseDeviceImpl
+    class StimTracker : public XIDDeviceImpl
     {
     public:
-        stim_tracker_t(
-            boost::shared_ptr<xid_con_t> xid_con,
-            boost::shared_ptr<const xid_device_config_t> dev_config);
-        virtual ~stim_tracker_t(void);
+        StimTracker(
+            boost::shared_ptr<Connection> xidCon,
+            boost::shared_ptr<const DeviceConfig> devConfig);
+        virtual ~StimTracker();
 
-        virtual unsigned int get_pulse_duration( void );
-        virtual void set_pulse_duration(unsigned int duration);
+        virtual unsigned int GetPulseDuration();
+        virtual void SetPulseDuration(unsigned int duration);
 
-        virtual void raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false);
-        virtual void lower_lines(unsigned int lines_bitmask, bool leave_remaining_lines = false);
-        virtual void clear_lines();
+        virtual void RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines = false);
+        virtual void LowerLines(unsigned int linesBitmask, bool leaveRemainingLines = false);
+        virtual void ClearLines();
     };
 } // namespace cedrus
 

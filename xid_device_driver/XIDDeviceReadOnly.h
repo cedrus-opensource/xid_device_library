@@ -29,67 +29,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "xid2_device.h"
+#ifndef READ_ONLY_DEVICE_H
+#define READ_ONLY_DEVICE_H
 
-#include "xid_glossary.h"
+#include "XidDriverImpExpDefs.h"
 
-cedrus::xid2_device::xid2_device(
-    boost::shared_ptr<xid_con_t> xid_con,
-    boost::shared_ptr<const xid_device_config_t> dev_config)
-    : xid_device_t(xid_con, dev_config)
+namespace cedrus
 {
-}
+    class XIDDeviceReadOnly
+    {
+    public:
+        virtual ~XIDDeviceReadOnly()
+        {
+        };
 
-cedrus::xid2_device::~xid2_device(void)
-{
-}
+        virtual int GetHardwareGeneration() = 0;
 
-int cedrus::xid2_device::get_outpost_model( void )
-{
-    return xid_glossary::get_outpost_model(m_xidCon);
-}
+        virtual int GetLightSensorMode() = 0;
 
-int cedrus::xid2_device::get_hardware_generation()
-{
-    return xid_glossary::get_hardware_generation(m_xidCon);
-}
+        virtual int GetLightSensorThreshold() = 0;
 
-int cedrus::xid2_device::get_light_sensor_mode( void )
-{
-    return xid_glossary::get_light_sensor_mode(m_xidCon);
-}
+        virtual unsigned int GetPulseDuration() = 0;
 
-void cedrus::xid2_device::set_light_sensor_mode( unsigned char mode )
-{
-    xid_glossary::set_light_sensor_mode(m_xidCon, mode);
-}
+        virtual int GetAccessoryConnectorMode(void) = 0;
 
-void cedrus::xid2_device::set_light_sensor_threshold( unsigned char threshold )
-{
-    xid_glossary::set_light_sensor_threshold(m_xidCon, threshold);
-}
+        virtual int GetAccessoryConnectorDevice() = 0;
 
-int cedrus::xid2_device::get_light_sensor_threshold( void )
-{
-    return xid_glossary::get_light_sensor_threshold(m_xidCon);
-}
+        virtual int GetOutpostModel() = 0;
 
-void cedrus::xid2_device::set_scanner_trigger_filter( unsigned char mode )
-{
-    xid_glossary::set_scanner_trigger_filter(m_xidCon, mode);
-}
+        // Every device needs these.
+        virtual const boost::shared_ptr<const DeviceConfig> GetDeviceConfig() const = 0;
+        virtual int GetBaudRate() = 0;
+        virtual void GetProductAndModelID(int *productID, int *modelID) = 0;
+        virtual int GetMajorFirmwareVersion() = 0;
+        virtual int GetMinorFirmwareVersion() = 0;
+        virtual std::string GetInternalProductName() = 0;
+    };
 
-int cedrus::xid2_device::get_accessory_connector_mode( void )
-{
-    return xid_glossary::get_accessory_connector_mode(m_xidCon);
-}
+} // namespace cedrus
 
-int cedrus::xid2_device::get_accessory_connector_device( void )
-{
-    return xid_glossary::get_accessory_connector_device(m_xidCon);
-}
-
-void cedrus::xid2_device::connect_to_mpod(unsigned int mpod, unsigned int action)
-{
-    xid_glossary::connect_to_mpod(m_xidCon, mpod, action);
-}
+#endif // READ_ONLY_DEVICE_H

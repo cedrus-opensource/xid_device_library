@@ -43,16 +43,16 @@
 
 namespace cedrus
 {
-    class interface_xid_con;
-    class xid_device_config_t;
+    class Interface_Connection;
+    class DeviceConfig;
 
     struct response
     {
         response():
             port(-1),
             key(-1),
-            was_pressed(false),
-            reaction_time(-1){}
+            wasPressed(false),
+            reactionTime(-1){}
 
         //port the response came from. Usualy 0
         int port;
@@ -61,12 +61,12 @@ namespace cedrus
         int key;
 
         //pressed or released?
-        bool was_pressed;
+        bool wasPressed;
 
-        int reaction_time;
+        int reactionTime;
     };
 
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT response_mgr : private boost::noncopyable
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT ResponseManager : private boost::noncopyable
     {
     public:
         enum
@@ -75,53 +75,53 @@ namespace cedrus
         };
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-         response_mgr(int minor_firmware_ver, boost::shared_ptr<const xid_device_config_t> dev_config);
+         ResponseManager(int minorFirmwareVer, boost::shared_ptr<const DeviceConfig> devConfig);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        ~response_mgr();
+        ~ResponseManager();
 
         /**
          * Checks the device to see if an event response has been sent.
          *
-         * @returns key_state if no event was found, NO_KEY_DETECTED is returned.
+         * @returns KeyState if no event was found, NO_KEY_DETECTED is returned.
          * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
          */
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        void check_for_keypress(boost::shared_ptr<interface_xid_con> port_connection, boost::shared_ptr<const xid_device_config_t> dev_config);
+        void CheckForKeypress(boost::shared_ptr<Interface_Connection> portConnection, boost::shared_ptr<const DeviceConfig> devConfig);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        bool has_queued_responses() const;
+        bool HasQueuedResponses() const;
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        response get_next_response();
+        response GetNextResponse();
 
         // Even though the number of keys down should never be negative, this
         // returns a signed int as a way to check for errors. The count going
         // negative means that at some point we lost a key press, and that's
         // serious.
-        int get_number_of_keys_down() const;
+        int GetNumberOfKeysDown() const;
 
-        void clear_response_queue();
+        void ClearResponseQueue();
 
     private:
         enum { OS_FILE_ERROR = -1 };
 
-        void adjust_buffer_for_packet_recovery();
-        key_state xid_input_found( response &res );
-        key_state xid_input_found_lumina3g_21( response &res );
+        void AdjustBufferForPacketRecovery();
+        KeyState XidInputFound( response &res );
+        KeyState XIDInputFoundLumina3G_21( response &res );
 
         enum {XID_PACKET_SIZE = 6};
         enum {INVALID_PACKET_INDEX = -1};
         enum {KEY_RELEASE_BITMASK = 0x10};
 
         // Used by the response parsing logic
-        int m_bytes_in_buffer;
-        unsigned char m_input_buffer[XID_PACKET_SIZE];
-        int m_xid_packet_index;
+        int m_BytesInBuffer;
+        unsigned char m_InputBuffer[XID_PACKET_SIZE];
+        int m_XIDPacketIndex;
 
         int m_numKeysDown;
         std::queue<response> m_responseQueue;
-        boost::function< cedrus::key_state (response&) > m_response_parsing_function;
+        boost::function< cedrus::KeyState (response&) > m_ResponseParsingFunction;
     };
 } // namespace cedrus
 

@@ -1,7 +1,7 @@
-#include "xid_device_scanner_t.h"
-#include "base_device_t.h"
-#include "interface_xid_con.h"
-#include "xid_device_config_t.h"
+#include "XIDDeviceScanner.h"
+#include "XIDDevice.h"
+#include "Interface_Connection.h"
+#include "DeviceConfig.h"
 
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
@@ -10,7 +10,7 @@
 namespace {
 
 /*
-xid_device_scanner::detect_valid_xid_devices has optional parameters:
+XIDDeviceScanner::DetectXIDDevices has optional parameters:
     reportFunction is for reporting errors during the scanning process
     progressFunction is for reporting progress on a 0-100 scale.
 
@@ -19,42 +19,42 @@ to expose this member function to Python.
 */
 
 /*
-Wrap xid_device_scanner::detect_valid_xid_devices( boost::function< void(std::string) >,
+Wrap XIDDeviceScanner::DetectXIDDevices( boost::function< void(std::string) >,
                                                    boost::function< bool(unsigned int) > )
 allowing pass python function as parameters
 */
-int detect_valid_xid_devices( cedrus::xid_device_scanner_t& self,
+int DetectXIDDevices( cedrus::XIDDeviceScanner& self,
                               boost::python::object reportFunction,
                               boost::python::object progressFunction )
 {
-    return self.detect_valid_xid_devices( reportFunction, progressFunction );
+    return self.DetectXIDDevices( reportFunction, progressFunction );
 }
 
 /*
-Wrap xid_device_scanner::detect_valid_xid_devices() without paramters 
+Wrap XIDDeviceScanner::DetectXIDDevices() without paramters 
 */
-int detect_valid_xid_devices_def( cedrus::xid_device_scanner_t& self )
+int DetectXIDDevicesDef( cedrus::XIDDeviceScanner& self )
 {
-    return self.detect_valid_xid_devices();
+    return self.DetectXIDDevices();
 }
 
 } // anonymous namespace
 
 /*
-boost::get_pointer() specialization for cedrus::base_device_t const volatile *
+boost::get_pointer() specialization for cedrus::XIDDevice const volatile *
 to avoid VC 14.0 link error.
 */
 namespace boost {
 
 template <>
-cedrus::base_device_t const volatile* get_pointer(class cedrus::base_device_t const volatile* bd)
+cedrus::XIDDevice const volatile* get_pointer(class cedrus::XIDDevice const volatile* bd)
 {
     return bd;
 }
 
 } // namespace boost
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS( base_device_t_overloads, raise_lines, 1, 2 )
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS( XIDDevice_Overloads, RaiseLines, 1, 2 )
 
 
 BOOST_PYTHON_MODULE( xid )
@@ -68,30 +68,30 @@ BOOST_PYTHON_MODULE( xid )
     namespace py = boost::python;
     using namespace cedrus;
 
-    // Expose std::vector<int> for device_port::key_map.
-    py::class_<std::vector<int> >( "key_vec" )
+    // Expose std::vector<int> for DevicePort::keyMap.
+    py::class_<std::vector<int> >( "KeyVec" )
         .def( py::vector_indexing_suite<std::vector<int> >() )
     ;
 
-    // Expose struct device_port.
-    py::class_<device_port>( "device_port" )
+    // Expose struct DevicePort.
+    py::class_<DevicePort>( "DevicePort" )
         .def( py::init<>() )
-        .def( py::init<device_port>() )
-        .def_readwrite( PY_MEMBER_FUNCTION(device_port, port_name) )
-        .def_readwrite( PY_MEMBER_FUNCTION(device_port, port_number) )
-        .def_readwrite( PY_MEMBER_FUNCTION(device_port, number_of_lines) )
-        .def_readwrite( PY_MEMBER_FUNCTION(device_port, key_map) )
-        .def_readwrite( PY_MEMBER_FUNCTION(device_port, is_response_port) )
+        .def( py::init<DevicePort>() )
+        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, portName) )
+        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, portNumber) )
+        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, numberOfLines) )
+        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, keyMap) )
+        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, isResponsePort) )
     ; 
 
-    py::register_ptr_to_python<device_port*>();
+    py::register_ptr_to_python<DevicePort*>();
 
-    // Expose std::vector<device_port> for return value of xid_device_config_t::get_vector_of_ports()
-    py::class_<std::vector<device_port> >( "device_port_vec" )
-        .def(py::vector_indexing_suite<std::vector<device_port> >())
+    // Expose std::vector<DevicePort> for return value of DeviceConfig::GetVectorOfPorts()
+    py::class_<std::vector<DevicePort> >( "DevicePortVec" )
+        .def(py::vector_indexing_suite<std::vector<DevicePort> >())
     ;
 
-    py::register_ptr_to_python< std::vector<device_port>* >();
+    py::register_ptr_to_python< std::vector<DevicePort>* >();
 
     // Expose struct response.
     py::class_<response>( "response" )
@@ -99,140 +99,140 @@ BOOST_PYTHON_MODULE( xid )
         .def(py::init<response>())
         .add_property( PY_MEMBER_FUNCTION( response, port) )
         .add_property( PY_MEMBER_FUNCTION( response, key) )
-        .add_property( PY_MEMBER_FUNCTION( response, was_pressed) )
-        .add_property( PY_MEMBER_FUNCTION( response, reaction_time) )
+        .add_property( PY_MEMBER_FUNCTION( response, wasPressed) )
+        .add_property( PY_MEMBER_FUNCTION( response, reactionTime) )
     ;
 
-    // Expose interface_xid_con.
-    py::class_<interface_xid_con, boost::noncopyable>( "interface_xid_con", py::no_init )
-        .def( "read", &interface_xid_con::read, py::args( "in_buffer, bytes_to_read, bytes_read" ))
+    // Expose Interface_Connection.
+    py::class_<Interface_Connection, boost::noncopyable>( "Interface_Connection", py::no_init )
+        .def( "Read", &Interface_Connection::Read, py::args( "inBuffer, bytesToRead, bytesRead" ))
     ;
 
-    // Expose class response_mgr.
-    py::class_<response_mgr, boost::noncopyable>( "response_mgr",
-                                                  py::init<int , boost::shared_ptr<const xid_device_config_t> >() )
-        .def( PY_MEMBER_FUNCTION(response_mgr, check_for_keypress), py::args( "port_connection, dev_config" ) )
-        .def( PY_MEMBER_FUNCTION(response_mgr, has_queued_responses) )
-        .def( PY_MEMBER_FUNCTION(response_mgr, get_next_response) )
-        .def( PY_MEMBER_FUNCTION(response_mgr, get_number_of_keys_down) )
-        .def( PY_MEMBER_FUNCTION(response_mgr, clear_response_queue) )
+    // Expose class ResponseManager.
+    py::class_<ResponseManager, boost::noncopyable>( "ResponseManager",
+                                                  py::init<int , boost::shared_ptr<const DeviceConfig> >() )
+        .def( PY_MEMBER_FUNCTION(ResponseManager, CheckForKeypress), py::args( "portConnection, devConfig" ) )
+        .def( PY_MEMBER_FUNCTION(ResponseManager, HasQueuedResponses) )
+        .def( PY_MEMBER_FUNCTION(ResponseManager, GetNextResponse) )
+        .def( PY_MEMBER_FUNCTION(ResponseManager, GetNumberOfKeysDown) )
+        .def( PY_MEMBER_FUNCTION(ResponseManager, ClearResponseQueue) )
     ;
-    py::scope().attr("INVALID_PORT_BITS") = static_cast<int>(response_mgr::INVALID_PORT_BITS);
+    py::scope().attr("INVALID_PORT_BITS") = static_cast<int>(ResponseManager::INVALID_PORT_BITS);
 
-    // Expose interface read_only_device.
-    py::class_<read_only_device, boost::noncopyable>( "read_only_device", py::no_init )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_hardware_generation) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_light_sensor_mode) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_light_sensor_threshold) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_pulse_duration) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_accessory_connector_mode) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_accessory_connector_device) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_outpost_model) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_device_config) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_baud_rate) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_product_and_model_id), py::args( "product_id, model_id" ) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_major_firmware_version) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_minor_firmware_version) )
-        .def( PY_MEMBER_FUNCTION(read_only_device, get_internal_product_name) )
-    ;
-
-    // Expose struct base_device_t::product_and_model_id_t.
-    py::class_<base_device_t::product_and_model_id>("product_and_model_id")
-        .add_property("product_id", &base_device_t::product_and_model_id::product_id)
-        .add_property("model_id", &base_device_t::product_and_model_id::model_id)
+    // Expose interface XIDDeviceReadOnly.
+    py::class_<XIDDeviceReadOnly, boost::noncopyable>( "XIDDeviceReadOnly", py::no_init )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetHardwareGeneration) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetLightSensorMode) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetLightSensorThreshold) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetPulseDuration) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetAccessoryConnectorMode) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetAccessoryConnectorDevice) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetOutpostModel) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetDeviceConfig) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetBaudRate) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetProductAndModelID), py::args( "productID, modelID" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetMajorFirmwareVersion) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetMinorFirmwareVersion) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceReadOnly, GetInternalProductName) )
     ;
 
-    // Expose class base_device_t.
+    // Expose struct XIDDevice::product_and_model_id_t.
+    py::class_<XIDDevice::ProductAndModelID>("ProductAndModelID")
+        .add_property("productID", &XIDDevice::ProductAndModelID::productID)
+        .add_property("modelID", &XIDDevice::ProductAndModelID::modelID)
+    ;
 
-    // Define pointer to member function base_device_t::*get_product_and_model_id which returns 
+    // Expose class XIDDevice.
+
+    // Define pointer to member function XIDDevice::*GetProductAndModelID which returns 
     // product and model IDs to expose it  to Python.
-    // See base_device_t::get_product_and_model_id() exposing below.
-    base_device_t::product_and_model_id (base_device_t::*get_product_and_model_id)() = &base_device_t::get_product_and_model_id;
+    // See XIDDevice::GetProductAndModelID() exposing below.
+    XIDDevice::ProductAndModelID (XIDDevice::*GetProductAndModelID)() = &XIDDevice::GetProductAndModelID;
 
-    py::class_<base_device_t, py::bases<read_only_device>, boost::shared_ptr<base_device_t>, boost::noncopyable >( "base_device_t", py::no_init )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_outpost_model) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_hardware_generation) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_light_sensor_mode) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_light_sensor_mode), py::arg( "mode" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_light_sensor_threshold), py::arg( "threshold" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_light_sensor_threshold) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_scanner_trigger_filter), py::arg( "mode" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, reset_rt_timer) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, reset_base_timer) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, query_base_timer) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_pulse_duration) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_pulse_duration), py::arg( "duration" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, poll_for_response) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, has_queued_responses) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_number_of_keys_down) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, clear_response_queue) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_next_response) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, clear_responses) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_accessory_connector_mode) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_accessory_connector_device) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_output_logic) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_output_logic), py::arg( "mode" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_accessory_connector_mode), py::args( "mode" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_vk_drop_delay) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_vk_drop_delay), py::arg( "delay" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_trigger_default) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_trigger_default), py::arg( "default_on" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_trigger_debounce_time) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_trigger_debounce_time), py::arg( "time" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_button_debounce_time) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_button_debounce_time), py::arg( "time" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_device_protocol ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_device_protocol), py::arg( "protocol" ) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_device_config) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, open_connection) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, close_connection) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, has_lost_connection) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_baud_rate) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, set_baud_rate), py::arg( "rate" ) )
-        .def( "get_product_and_model_id", get_product_and_model_id)
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_major_firmware_version) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_minor_firmware_version) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, get_internal_product_name) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, raise_lines), base_device_t_overloads() )
-        .def( PY_MEMBER_FUNCTION(base_device_t, clear_lines) )
-        .def( PY_MEMBER_FUNCTION(base_device_t, restore_factory_defaults) )
+    py::class_<XIDDevice, py::bases<XIDDeviceReadOnly>, boost::shared_ptr<XIDDevice>, boost::noncopyable >( "XIDDevice", py::no_init )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetOutpostModel) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetHardwareGeneration) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetLightSensorMode) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetLightSensorMode), py::arg( "mode" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetLightSensorThreshold), py::arg( "threshold" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetLightSensorThreshold) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetScannerTriggerFilter), py::arg( "mode" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, ResetRtTimer) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, ResetBaseTimer) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, QueryBaseTimer) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetPulseDuration) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetPulseDuration), py::arg( "duration" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, PollForResponse) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, HasQueuedResponses) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetNumberOfKeysDown) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, ClearResponseQueue) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetNextResponse) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, ClearResponses) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetAccessoryConnectorMode) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetAccessoryConnectorDevice) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetOutputLogic) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetOutputLogic), py::arg( "mode" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetAccessoryConnectorMode), py::args( "mode" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetVKDropDelay) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetVKDropDelay), py::arg( "delay" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetTriggerDefault) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetTriggerDefault), py::arg( "defaultOn" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetTriggerDebounceTime) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetTriggerDebounceTime), py::arg( "time" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetButtonDebounceTime) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetButtonDebounceTime), py::arg( "time" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetProtocol ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetProtocol), py::arg( "protocol" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetDeviceConfig) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, OpenConnection) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, CloseConnection) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, HasLostConnection) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetBaudRate) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, SetBaudRate), py::arg( "rate" ) )
+        .def( "GetProductAndModelID", GetProductAndModelID)
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetMajorFirmwareVersion) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetMinorFirmwareVersion) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, GetInternalProductName) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, RaiseLines), XIDDevice_Overloads() )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, ClearLines) )
+        .def( PY_MEMBER_FUNCTION(XIDDevice, RestoreFactoryDefaults) )
     ;
 
-    // Expose class xid_device_config_t.
-    py::class_<xid_device_config_t, boost::shared_ptr<xid_device_config_t>,
-               boost::noncopyable >( "xid_device_config", py::no_init )
-        .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_mapped_key), py::args("port", "key") )
-        .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_device_name) )
-        .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_product_id) )
-        .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_model_id) )
-        .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_major_version) )
-        .def( PY_MEMBER_FUNCTION(xid_device_config_t, get_vector_of_ports),
+    // Expose class DeviceConfig.
+    py::class_<DeviceConfig, boost::shared_ptr<DeviceConfig>,
+               boost::noncopyable >( "DeviceConfig", py::no_init )
+        .def( PY_MEMBER_FUNCTION(DeviceConfig, GetMappedKey), py::args("port", "key") )
+        .def( PY_MEMBER_FUNCTION(DeviceConfig, GetDeviceName) )
+        .def( PY_MEMBER_FUNCTION(DeviceConfig, GetProductID) )
+        .def( PY_MEMBER_FUNCTION(DeviceConfig, GetModelID) )
+        .def( PY_MEMBER_FUNCTION(DeviceConfig, GetMajorVersion) )
+        .def( PY_MEMBER_FUNCTION(DeviceConfig, GetVectorOfPorts),
                                  py::return_value_policy<py::reference_existing_object>() )
 
-        .def("get_port_by_index", &xid_device_config_t::get_port_ptr_by_index,
-                                   py::arg( "port_num" ),
+        .def("get_port_by_index", &DeviceConfig::GetPortPtrByIndex,
+                                   py::arg( "portNum" ),
                                    py::return_value_policy<py::reference_existing_object>() )
 
-        .def( PY_MEMBER_FUNCTION(xid_device_config_t, does_config_match_device),
-                                 py::args( "device_id, model_id, major_firmware_ver ") )
+        .def( PY_MEMBER_FUNCTION(DeviceConfig, DoesConfigMatchDevice),
+                                 py::args( "deviceId, modelID, majorFirmwareVer ") )
     ;
 
-    py::register_ptr_to_python< boost::shared_ptr<const xid_device_config_t> >();
+    py::register_ptr_to_python< boost::shared_ptr<const DeviceConfig> >();
 
-    // Expose class xid_device_scanner_t.
-    py::class_<xid_device_scanner_t>( "xid_device_scanner", py::init<std::string const &>() )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, close_all_connections) )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, open_all_connections) )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, drop_every_connection) )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, drop_connection_by_ptr), py::arg( "device" ) )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, check_connections_drop_dead_ones) )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, read_in_devconfigs), py::arg( "config_file_location" ) )
-        .def( "detect_valid_xid_devices", &detect_valid_xid_devices, py::args( "report_function", "progress_function" ) )
-        .def( "detect_valid_xid_devices", &detect_valid_xid_devices_def)
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, device_connection_at_index), py::arg( "index" ) )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, device_count) )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, devconfig_at_index), py::arg( "index" ) )
-        .def( PY_MEMBER_FUNCTION(xid_device_scanner_t, devconfig_count) )
+    // Expose class XIDDeviceScanner.
+    py::class_<XIDDeviceScanner>( "XIDDeviceScanner", py::init<std::string const &>() )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, CloseAllConnections) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, OpenAllConnections) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DropEveryConnection) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DropConnectionByPtr), py::arg( "device" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, CheckConnectionsDropDeadOnes) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, ReadInDevconfigs), py::arg( "configFileLocation" ) )
+        .def( "DetectXIDDevices", &DetectXIDDevices, py::args( "reportFunction", "progressFunction" ) )
+        .def( "DetectXIDDevices", &DetectXIDDevicesDef)
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DeviceConnectionAtIndex), py::arg( "index" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DeviceCount) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DevconfigAtIndex), py::arg( "index" ) )
+        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DevconfigCount) )
     ;
 
     #undef PY_MEMBER_FUNCTION

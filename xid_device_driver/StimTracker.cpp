@@ -1,4 +1,4 @@
-/* Copyright (c) 2016, Cedrus Corporation
+/* Copyright (c) 2010, Cedrus Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,29 +29,59 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "StimTracker2.h"
+#include "StimTracker.h"
 
-#include "xid_con_t.h"
-#include "xid_glossary.h"
+#include "Connection.h"
+#include "CommandGlossary.h"
 
-cedrus::StimTracker2::StimTracker2(
-            boost::shared_ptr<xid_con_t> xid_con,
-            boost::shared_ptr<const xid_device_config_t> dev_config)
-    : stim_tracker_t(xid_con, dev_config)
+cedrus::StimTracker::StimTracker(
+            boost::shared_ptr<Connection> xidCon,
+            boost::shared_ptr<const DeviceConfig> devConfig)
+    : XIDDeviceImpl(xidCon, devConfig)
 {
-    clear_lines();
+    ClearLines();
 }
 
-cedrus::StimTracker2::~StimTracker2(void)
+cedrus::StimTracker::~StimTracker()
 {
 }
 
-int cedrus::StimTracker2::get_number_of_lines()
+unsigned int cedrus::StimTracker::GetPulseDuration()
 {
-    return xid_glossary::get_number_of_lines(m_xidCon);
+    return CommandGlossary::GetPulseDuration(m_xidCon);
 }
 
-void cedrus::StimTracker2::set_number_of_lines(unsigned int lines)
+void cedrus::StimTracker::SetPulseDuration(unsigned int duration)
 {
-    xid_glossary::set_number_of_lines(m_xidCon, lines);
+    CommandGlossary::SetPulseDuration(m_xidCon, duration);
+}
+
+void cedrus::StimTracker::RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines)
+{
+    unsigned int output_lines = linesBitmask;
+
+    if(leaveRemainingLines)
+        output_lines |= m_linesState;
+
+    CommandGlossary::SetDigitalOutputLines_ST(m_xidCon, output_lines);
+
+    m_linesState = output_lines;
+}
+
+void cedrus::StimTracker::LowerLines( unsigned int linesBitmask, bool leaveRemainingLines )
+{
+    unsigned int output_lines = ~linesBitmask;
+
+    if(leaveRemainingLines)
+        output_lines &= m_linesState;
+
+    CommandGlossary::SetDigitalOutputLines_ST(m_xidCon, output_lines);
+
+    m_linesState = output_lines;
+}
+
+void cedrus::StimTracker::ClearLines()
+{
+    CommandGlossary::SetDigitalOutputLines_ST(m_xidCon, 0);
+    m_linesState = 0;
 }

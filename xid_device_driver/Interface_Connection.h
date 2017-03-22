@@ -5,13 +5,13 @@
 
 namespace cedrus
 {
-    class interface_xid_con
+    class Interface_Connection
     {
     public:
-        virtual ~interface_xid_con()
+        virtual ~Interface_Connection()
         {}
 
-        virtual bool read( unsigned char *in_buffer, DWORD bytes_to_read, LPDWORD bytes_read ) = 0;
+        virtual bool Read( unsigned char *inBuffer, DWORD bytesToRead, LPDWORD bytesRead) = 0;
     };
 } // namespace cedrus
 

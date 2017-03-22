@@ -29,13 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "xid_device_scanner_t.h"
+#include "XIDDeviceScanner.h"
 
-#include "xid_glossary.h"
-#include "xid_device_config_t.h"
-#include "xid_con_t.h"
-#include "base_device_t.h"
-#include "device_factory.h"
+#include "CommandGlossary.h"
+#include "DeviceConfig.h"
+#include "Connection.h"
+#include "XIDDevice.h"
+#include "DeviceFactory.h"
 
 #include <iostream>
 
@@ -50,23 +50,23 @@
 
 #include <sstream>
 
-cedrus::xid_device_scanner_t::xid_device_scanner_t( const std::string &config_file_location )
+cedrus::XIDDeviceScanner::XIDDeviceScanner( const std::string &configFileLocation )
 {
-    read_in_devconfigs(config_file_location);
+    ReadInDevconfigs(configFileLocation);
 }
 
-bool cedrus::xid_device_scanner_t::read_in_devconfigs ( const std::string &config_file_location )
+bool cedrus::XIDDeviceScanner::ReadInDevconfigs ( const std::string &configFileLocation )
 {
     try {
-        boost::filesystem::path targetDir(config_file_location);
-        boost::filesystem::directory_iterator it(targetDir), eod;
+        boost::filesystem::path target_dir(configFileLocation);
+        boost::filesystem::directory_iterator it(target_dir), eod;
     }
     catch ( boost::filesystem::filesystem_error ) {
         return false; // BAIL BAIL BAIL! Error retrieving devconfigs!
     }
 
-    boost::filesystem::path targetDir(config_file_location);
-    boost::filesystem::directory_iterator it(targetDir), eod;
+    boost::filesystem::path target_dir(configFileLocation);
+    boost::filesystem::directory_iterator it(target_dir), eod;
 
     BOOST_FOREACH(boost::filesystem::path const &p, std::make_pair(it, eod))
     {
@@ -76,7 +76,7 @@ bool cedrus::xid_device_scanner_t::read_in_devconfigs ( const std::string &confi
             try
             {
                 boost::property_tree::ini_parser::read_ini(p.string(), pt);
-                m_masterConfigList.push_back(cedrus::xid_device_config_t::config_for_device(&pt));
+                m_MasterConfigList.push_back(cedrus::DeviceConfig::ConfigForDevice(&pt));
             }
             catch ( boost::property_tree::ini_parser::ini_parser_error err )
             {
@@ -89,9 +89,9 @@ bool cedrus::xid_device_scanner_t::read_in_devconfigs ( const std::string &confi
     return true;
 }
 
-void cedrus::xid_device_scanner_t::load_com_ports( std::vector<DWORD> * available_com_ports )
+void cedrus::XIDDeviceScanner::LoadCOMPorts( std::vector<DWORD> * availableCOMPorts)
 {
-    available_com_ports->clear();
+    availableCOMPorts->clear();
 
     FT_STATUS status;
     DWORD num_devs;
@@ -110,7 +110,7 @@ void cedrus::xid_device_scanner_t::load_com_ports( std::vector<DWORD> * availabl
         {
             for ( unsigned int i = 0; i < num_devs; i++ )
             {
-                available_com_ports->push_back(dev_info[i].LocId);
+                availableCOMPorts->push_back(dev_info[i].LocId);
             }
         }
 
@@ -118,64 +118,63 @@ void cedrus::xid_device_scanner_t::load_com_ports( std::vector<DWORD> * availabl
     }
 }
 
-void cedrus::xid_device_scanner_t::close_all_connections()
+void cedrus::XIDDeviceScanner::CloseAllConnections()
 {
-    for (unsigned int i = 0; i < devices_.size(); i++)
-        devices_[i]->close_connection();
+    for (unsigned int i = 0; i < m_Devices.size(); i++)
+        m_Devices[i]->CloseConnection();
 }
 
 // This may seem like an odd function to have, but it can be used to short-
 // circuit logic by preventing existing devices from being picked up during
 // a scan.
-void cedrus::xid_device_scanner_t::open_all_connections()
+void cedrus::XIDDeviceScanner::OpenAllConnections()
 {
-    for (unsigned int i = 0; i < devices_.size(); i++)
-        devices_[i]->open_connection();
+    for (unsigned int i = 0; i < m_Devices.size(); i++)
+        m_Devices[i]->OpenConnection();
 }
 
-void cedrus::xid_device_scanner_t::drop_every_connection()
+void cedrus::XIDDeviceScanner::DropEveryConnection()
 {
-    close_all_connections();
+    CloseAllConnections();
 
-    devices_.clear();
+    m_Devices.clear();
 }
 
-void cedrus::xid_device_scanner_t::drop_connection_by_ptr( boost::shared_ptr<cedrus::base_device_t> device )
+void cedrus::XIDDeviceScanner::DropConnectionByPtr( boost::shared_ptr<cedrus::XIDDevice> device )
 {
-    for( std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin();
-            iter != devices_.end(); )
+    for( std::vector< boost::shared_ptr<cedrus::XIDDevice> >::iterator iter = m_Devices.begin();
+            iter != m_Devices.end(); )
      {
         if ( device == *iter )
         {
-            (*iter)->close_connection();
-            iter = devices_.erase(iter);
+            (*iter)->CloseConnection();
+            iter = m_Devices.erase(iter);
         }
         else
             ++iter;
     }
 }
 
-void cedrus::xid_device_scanner_t::check_connections_drop_dead_ones()
+void cedrus::XIDDeviceScanner::CheckConnectionsDropDeadOnes()
 {
-    close_all_connections();
-    std::vector< boost::shared_ptr<cedrus::base_device_t> >::iterator iter = devices_.begin();
-    while( iter != devices_.end() )
+    CloseAllConnections();
+    std::vector< boost::shared_ptr<cedrus::XIDDevice> >::iterator iter = m_Devices.begin();
+    while( iter != m_Devices.end() )
     {
-        bool drop_connection = (*iter)->open_connection() != XID_NO_ERR;
+        bool drop_connection = (*iter)->OpenConnection() != XID_NO_ERR;
 
-        // If the connection held up, we still need to verify the device is still
-        // the same. XID devices are largely interchangeable as far as the library
-        // is concerned, and sending commands to the wrong one can make things
+        // If the connection held up, we still need to verify the device is what
+        // it used to be. XID devices are largely interchangeable as far as the library
+        // is concerned, but sending commands to the wrong one can make things
         // very confusing.
         if ( !drop_connection )
         {
-            int product_id;
-            int model_id;
-            (*iter)->get_product_and_model_id(&product_id, &model_id);
+            int product_id, model_id;
+            (*iter)->GetProductAndModelID(&product_id, &model_id);
 
-            int major_firmware_version = (*iter)->get_major_firmware_version();
+            int major_firmware_version = (*iter)->GetMajorFirmwareVersion();
 
-            if ( (*iter)->get_device_config()->does_config_match_device(product_id, model_id, major_firmware_version) )
+            if ( (*iter)->GetDeviceConfig()->DoesConfigMatchDevice(product_id, model_id, major_firmware_version) )
             {
                 ++iter;
             }
@@ -185,23 +184,23 @@ void cedrus::xid_device_scanner_t::check_connections_drop_dead_ones()
 
         if( drop_connection )
         {
-            (*iter)->close_connection();
-            iter = devices_.erase(iter);
+            (*iter)->CloseConnection();
+            iter = m_Devices.erase(iter);
         }
     }
 
-    close_all_connections();
+    CloseAllConnections();
 }
 
 
-int cedrus::xid_device_scanner_t::detect_valid_xid_devices
+int cedrus::XIDDeviceScanner::DetectXIDDevices
 (
  boost::function< void ( std::string ) > reportFunction,
  boost::function< bool ( unsigned int ) > progressFunction
 )
 {
-    check_connections_drop_dead_ones();
-    open_all_connections();
+    CheckConnectionsDropDeadOnes();
+    OpenAllConnections();
 
     unsigned int current_prog = 0;
 
@@ -209,7 +208,7 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
         progressFunction(current_prog);
 
     std::vector<DWORD> available_com_ports;
-    load_com_ports( &available_com_ports );
+    LoadCOMPorts( &available_com_ports );
 
     unsigned int prog_increment = 100/((available_com_ports.size()*5)+1); // 5 is the number of possible xid bauds
     bool scanning_canceled = false;
@@ -232,20 +231,20 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
             {
                 if ( progressFunction(current_prog) )
                 {
-                    drop_every_connection();
+                    DropEveryConnection();
                     scanning_canceled = true;
                     break;
                 }
             }
 
-            boost::shared_ptr<cedrus::xid_con_t> xid_con(new xid_con_t(*iter, baud_rate[i]));
+            boost::shared_ptr<cedrus::Connection> xid_con(new Connection(*iter, baud_rate[i]));
 
-            if(xid_con->open() == XID_NO_ERR)
+            if(xid_con->Open() == XID_NO_ERR)
             {
-                // This may seem like a good place to flush, but open() has taken care of that by now.
+                // This may seem like a good place to flush, but Open() has taken care of that by now.
 
-                // NOTE THE USAGE OF xid_glossary_pst_proof IN THIS CODE. IT'S IMPORTANT!
-                std::string info = xid_glossary_pst_proof::get_device_protocol(xid_con);
+                // NOTE THE USAGE OF XIDGlossaryPSTProof IN THIS CODE. IT'S IMPORTANT!
+                std::string info = XIDGlossaryPSTProof::GetProtocol(xid_con);
 
                 if( boost::starts_with( info, "_xid" ) )
                 {
@@ -255,32 +254,31 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
                     if(strcmp(info.c_str(), "_xid0") != 0)
                     {
                         // Force the device into XID mode if it isn't. This is an XID library.
-                        xid_glossary::set_device_protocol(xid_con, 0);
+                        CommandGlossary::SetProtocol(xid_con, 0);
 
                         mode_changed = true;
                     }
 
-                    int product_id;
-                    int model_id;
-                    int major_firmware_version = xid_glossary_pst_proof::get_major_firmware_version(xid_con);
+                    int product_id, model_id;
+                    int major_firmware_version = XIDGlossaryPSTProof::GetMajorFirmwareVersion(xid_con);
 
                     //What device is it? Get product/model ID, find the corresponding config
-                    xid_glossary_pst_proof::get_product_and_model_id(xid_con, &product_id, &model_id);
+                    XIDGlossaryPSTProof::GetProductAndModelID(xid_con, &product_id, &model_id);
 
-                    // call "create_device" (which resides in device_factory.cpp)
-                    boost::shared_ptr<cedrus::base_device_t> matched_dev =
-                        create_device( product_id,
+                    // call "CreateDevice" (which resides in DeviceFactory.cpp)
+                    boost::shared_ptr<cedrus::XIDDevice> matched_dev =
+                        CreateDevice( product_id,
                                        model_id,
                                        major_firmware_version,
-                                       m_masterConfigList,
+                                       m_MasterConfigList,
                                        xid_con );
 
                     if ( matched_dev )
                     {
-                        devices_.push_back( matched_dev );
+                        m_Devices.push_back( matched_dev );
 
                         if ( mode_changed && reportFunction )
-                            reportFunction( matched_dev->get_device_config()->get_device_name() );
+                            reportFunction( matched_dev->GetDeviceConfig()->GetDeviceName() );
 
                         break;
                     }
@@ -292,33 +290,33 @@ int cedrus::xid_device_scanner_t::detect_valid_xid_devices
     if ( progressFunction )
         progressFunction(100);
 
-    return devices_.size();
+    return m_Devices.size();
 }
 
-boost::shared_ptr<cedrus::base_device_t>
-cedrus::xid_device_scanner_t::device_connection_at_index(unsigned int i) const
+boost::shared_ptr<cedrus::XIDDevice>
+cedrus::XIDDeviceScanner::DeviceConnectionAtIndex(unsigned int i) const
 {
-    if(i >= devices_.size())
-        return boost::shared_ptr<base_device_t>();
+    if(i >= m_Devices.size())
+        return boost::shared_ptr<XIDDevice>();
 
-    return devices_[i];
+    return m_Devices[i];
 }
 
-unsigned int cedrus::xid_device_scanner_t::device_count() const
+unsigned int cedrus::XIDDeviceScanner::DeviceCount() const
 {
-    return devices_.size();
+    return m_Devices.size();
 }
 
-const boost::shared_ptr<const cedrus::xid_device_config_t>
-cedrus::xid_device_scanner_t::devconfig_at_index(unsigned int i) const
+const boost::shared_ptr<const cedrus::DeviceConfig>
+cedrus::XIDDeviceScanner::DevconfigAtIndex(unsigned int i) const
 {
-    if(i >= m_masterConfigList.size())
-        return boost::shared_ptr<const xid_device_config_t>();
+    if(i >= m_MasterConfigList.size())
+        return boost::shared_ptr<const DeviceConfig>();
 
-    return m_masterConfigList[i];
+    return m_MasterConfigList[i];
 }
 
-unsigned int cedrus::xid_device_scanner_t::devconfig_count() const
+unsigned int cedrus::XIDDeviceScanner::DevconfigCount() const
 {
-    return m_masterConfigList.size();
+    return m_MasterConfigList.size();
 }

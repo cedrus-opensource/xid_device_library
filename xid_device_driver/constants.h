@@ -48,7 +48,7 @@ namespace cedrus
         INVALID_RETURN_VALUE = -99
     };
 
-    enum key_state
+    enum KeyState
     {
         NO_KEY_DETECTED = 0,
         FOUND_KEY_DOWN = 1,

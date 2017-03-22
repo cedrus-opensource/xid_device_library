@@ -29,59 +29,67 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "stim_tracker_t.h"
+#include "InputDeviceXID2.h"
 
-#include "xid_con_t.h"
-#include "xid_glossary.h"
+#include "CommandGlossary.h"
 
-cedrus::stim_tracker_t::stim_tracker_t(
-            boost::shared_ptr<xid_con_t> xid_con,
-            boost::shared_ptr<const xid_device_config_t> dev_config)
-    : BaseDeviceImpl(xid_con, dev_config)
-{
-    clear_lines();
-}
-
-cedrus::stim_tracker_t::~stim_tracker_t(void)
+cedrus::InputDeviceXID2::InputDeviceXID2(
+    boost::shared_ptr<Connection> xidCon,
+    boost::shared_ptr<const DeviceConfig> devConfig)
+    : InputDevice(xidCon, devConfig)
 {
 }
 
-unsigned int cedrus::stim_tracker_t::get_pulse_duration( void )
+cedrus::InputDeviceXID2::~InputDeviceXID2(void)
 {
-    return xid_glossary::get_pulse_duration(m_xidCon);
 }
 
-void cedrus::stim_tracker_t::set_pulse_duration(unsigned int duration)
+int cedrus::InputDeviceXID2::GetOutpostModel()
 {
-    xid_glossary::set_pulse_duration(m_xidCon, duration);
+    return CommandGlossary::GetOutpostModel(m_xidCon);
 }
 
-void cedrus::stim_tracker_t::raise_lines(unsigned int lines_bitmask, bool leave_remaining_lines)
+int cedrus::InputDeviceXID2::GetHardwareGeneration()
 {
-    unsigned int output_lines = lines_bitmask;
-
-    if(leave_remaining_lines)
-        output_lines |= m_linesState;
-
-    xid_glossary::set_digital_output_lines_st(m_xidCon, output_lines);
-
-    m_linesState = output_lines;
+    return CommandGlossary::GetHardwareGeneration(m_xidCon);
 }
 
-void cedrus::stim_tracker_t::lower_lines( unsigned int lines_bitmask, bool leave_remaining_lines )
+int cedrus::InputDeviceXID2::GetLightSensorMode()
 {
-    unsigned int output_lines = ~lines_bitmask;
-
-    if(leave_remaining_lines)
-        output_lines &= m_linesState;
-
-    xid_glossary::set_digital_output_lines_st(m_xidCon, output_lines);
-
-    m_linesState = output_lines;
+    return CommandGlossary::GetLightSensorMode(m_xidCon);
 }
 
-void cedrus::stim_tracker_t::clear_lines( void )
+void cedrus::InputDeviceXID2::SetLightSensorMode( unsigned char mode )
 {
-    xid_glossary::set_digital_output_lines_st(m_xidCon, 0);
-    m_linesState = 0;
+    CommandGlossary::SetLightSensorMode(m_xidCon, mode);
+}
+
+void cedrus::InputDeviceXID2::SetLightSensorThreshold( unsigned char threshold )
+{
+    CommandGlossary::SetLightSensorThreshold(m_xidCon, threshold);
+}
+
+int cedrus::InputDeviceXID2::GetLightSensorThreshold()
+{
+    return CommandGlossary::GetLightSensorThreshold(m_xidCon);
+}
+
+void cedrus::InputDeviceXID2::SetScannerTriggerFilter( unsigned char mode )
+{
+    CommandGlossary::SetScannerTriggerFilter(m_xidCon, mode);
+}
+
+int cedrus::InputDeviceXID2::GetAccessoryConnectorMode()
+{
+    return CommandGlossary::GetAccessoryConnectorMode(m_xidCon);
+}
+
+int cedrus::InputDeviceXID2::GetAccessoryConnectorDevice()
+{
+    return CommandGlossary::GetAccessoryConnectorDevice(m_xidCon);
+}
+
+void cedrus::InputDeviceXID2::ConnectToMpod(unsigned int mpod, unsigned int action)
+{
+    CommandGlossary::ConnectToMpod(m_xidCon, mpod, action);
 }

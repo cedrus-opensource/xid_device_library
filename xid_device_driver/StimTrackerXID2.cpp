@@ -29,25 +29,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef STIMTRACKER2_H
-#define STIMTRACKER2_H
+#include "StimTrackerXID2.h"
 
-#include "stim_tracker_t.h"
-#include <boost/shared_ptr.hpp>
+#include "Connection.h"
+#include "CommandGlossary.h"
 
-namespace cedrus
+cedrus::StimTrackerXID2::StimTrackerXID2(
+            boost::shared_ptr<Connection> xidCon,
+            boost::shared_ptr<const DeviceConfig> devConfig)
+    : StimTracker(xidCon, devConfig)
 {
-    class StimTracker2 : public stim_tracker_t
-    {
-    public:
-        StimTracker2(
-            boost::shared_ptr<xid_con_t> xid_con,
-            boost::shared_ptr<const xid_device_config_t> dev_config);
-        virtual ~StimTracker2(void);
+    ClearLines();
+}
 
-        virtual int get_number_of_lines();
-        virtual void set_number_of_lines(unsigned int lines);
-    };
-} // namespace cedrus
+cedrus::StimTrackerXID2::~StimTrackerXID2()
+{
+}
 
-#endif // STIMTRACKER2_H
+int cedrus::StimTrackerXID2::GetNumberOfLines()
+{
+    return CommandGlossary::GetNumberOfLines(m_xidCon);
+}
+
+void cedrus::StimTrackerXID2::SetNumberOfLines(unsigned int lines)
+{
+    CommandGlossary::SetNumberOfLines(m_xidCon, lines);
+}

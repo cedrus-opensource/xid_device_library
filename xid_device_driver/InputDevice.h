@@ -32,68 +32,62 @@
 #ifndef XID_DEVICE_T_H
 #define XID_DEVICE_T_H
 
-#include "BaseDeviceImpl.h"
-#include "response_mgr.h"
+#include "XIDDeviceImpl.h"
+#include "ResponseManager.h"
 
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-
 namespace cedrus
 {
-    /**
-     * @class xid_device_t xid_device_t.h "xid_device_driver/xid_device_t.h"
-     *
-     * @brief abstraction of an XID device
-     */
-    class xid_device_t : public BaseDeviceImpl
+    class InputDevice : public XIDDeviceImpl
     {
     public:
-        xid_device_t(
-            boost::shared_ptr<xid_con_t> xid_con,
-            boost::shared_ptr<const xid_device_config_t> dev_config
-            );
-        virtual ~xid_device_t(void);
+        InputDevice(
+            boost::shared_ptr<Connection> xidCon,
+            boost::shared_ptr<const DeviceConfig> devConfig
+        );
+        virtual ~InputDevice();
 
-        virtual void reset_rt_timer();
+        virtual void ResetRtTimer();
 
-        virtual void poll_for_response();
+        virtual void PollForResponse();
 
-        virtual bool has_queued_responses();
+        virtual bool HasQueuedResponses();
 
-        virtual int get_number_of_keys_down() const;
+        virtual int GetNumberOfKeysDown() const;
 
-        virtual void clear_response_queue();
+        virtual void ClearResponseQueue();
 
-        virtual cedrus::response get_next_response();
+        virtual cedrus::response GetNextResponse();
 
-        virtual void clear_responses();
+        virtual void ClearResponses();
 
-        virtual int get_accessory_connector_mode();
+        virtual int GetAccessoryConnectorMode();
 
-        virtual int get_output_logic();
+        virtual int GetOutputLogic();
 
-        virtual void set_output_logic( int mode );
+        virtual void SetOutputLogic(int mode);
 
-        virtual void set_accessory_connector_mode( int mode );
+        virtual void SetAccessoryConnectorMode(int mode);
 
-        virtual int get_vk_drop_delay();
+        virtual int GetVKDropDelay();
 
-        virtual void set_vk_drop_delay( unsigned char delay );
+        virtual void SetVKDropDelay(unsigned char delay);
 
-        virtual void clear_lines();
-        virtual int get_trigger_default();
-        virtual void set_trigger_default( bool default_on );
-        virtual int get_trigger_debounce_time();
-        virtual void set_trigger_debounce_time( unsigned char time );
-        virtual int get_button_debounce_time();
-        virtual void set_button_debounce_time( unsigned char time );
+        virtual void ClearLines();
+        virtual int GetTriggerDefault();
+        virtual void SetTriggerDefault(bool defaultOn);
+        virtual int GetTriggerDebounceTime();
+        virtual void SetTriggerDebounceTime(unsigned char time);
+        virtual int GetButtonDebounceTime();
+        virtual void SetButtonDebounceTime(unsigned char time);
 
-        virtual void raise_lines( unsigned int lines_bitmask, bool leave_remaining_lines = false );
-        virtual void lower_lines( unsigned int lines_bitmask, bool leave_remaining_lines = false );
+        virtual void RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines = false);
+        virtual void LowerLines(unsigned int linesBitmask, bool leaveRemainingLines = false);
 
     private:
-        const boost::shared_ptr<cedrus::response_mgr> m_response_mgr;
+        const boost::shared_ptr<cedrus::ResponseManager> m_ResponseMgr;
     };
 } // namespace cedrus
 
