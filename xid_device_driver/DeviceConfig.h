@@ -29,8 +29,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DEVICE_CONFIG_H
-#define DEVICE_CONFIG_H
+#pragma once
+
+#include "constants.h"
+#include "XidDriverImpExpDefs.h"
 
 #include <map>
 #include <string>
@@ -38,9 +40,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include "XidDriverImpExpDefs.h"
-
-namespace cedrus
+namespace Cedrus
 {
     struct DevicePort
     {
@@ -91,18 +91,64 @@ namespace cedrus
 
         const std::vector<DevicePort> * GetVectorOfPorts() const;
 
-        const cedrus::DevicePort * GetPortPtrByIndex(unsigned int portNum) const;
+        const Cedrus::DevicePort * GetPortPtrByIndex(unsigned int portNum) const;
 
         bool DoesConfigMatchDevice( int deviceID, int modelID, int majorFirmwareVer ) const;
+
+        bool NeedsDelay() const;
+
+        bool IsLumina() const
+        {
+            return m_ProductID == PRODUCT_ID_LUMINA;
+        }
+
+        bool IsSV1() const
+        {
+            return m_ProductID == PRODUCT_ID_SV1;
+        }
+
+        bool IsRB() const
+        {
+            return m_ProductID == PRODUCT_ID_RB;
+        }
+
+        bool IsMPod() const
+        {
+            return m_ProductID == PRODUCT_ID_MPOD;
+        }
+
+        bool IsCPod() const
+        {
+            return m_ProductID == PRODUCT_ID_CPOD;
+        }
+
+        bool IsStimTracker() const
+        {
+            return m_ProductID == PRODUCT_ID_STIMTRACKER;
+        }
+
+        bool IsXID1() const
+        {
+            return m_MajorFirmwareVer == 1;
+        }
+
+        bool IsXID2() const
+        {
+            return m_MajorFirmwareVer == 2;
+        }
+
+        bool IsXID1InputDevice() const
+        {
+            return IsXID1() && !IsStimTracker();
+        }
 
     private:
         std::string m_DeviceName;
         int m_MajorFirmwareVer;
         int m_ProductID;
         int m_ModelID;
+        bool m_requiresDelay;
 
         std::vector<DevicePort> m_DevicePorts;
     };
-} // namespace cedrus
-
-#endif // DEVICE_CONFIG_H
+} // namespace Cedrus

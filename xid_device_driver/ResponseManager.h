@@ -41,14 +41,14 @@
 
 #include "XidDriverImpExpDefs.h"
 
-namespace cedrus
+namespace Cedrus
 {
     class Interface_Connection;
     class DeviceConfig;
 
-    struct response
+    struct Response
     {
-        response():
+        Response():
             port(-1),
             key(-1),
             wasPressed(false),
@@ -56,13 +56,9 @@ namespace cedrus
 
         //port the response came from. Usualy 0
         int port;
-
         //button pressed. This is a 0 based index
         int key;
-
-        //pressed or released?
         bool wasPressed;
-
         int reactionTime;
     };
 
@@ -93,7 +89,7 @@ namespace cedrus
         bool HasQueuedResponses() const;
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        response GetNextResponse();
+        Response GetNextResponse();
 
         // Even though the number of keys down should never be negative, this
         // returns a signed int as a way to check for errors. The count going
@@ -107,8 +103,8 @@ namespace cedrus
         enum { OS_FILE_ERROR = -1 };
 
         void AdjustBufferForPacketRecovery();
-        KeyState XidInputFound( response &res );
-        KeyState XIDInputFoundLumina3G_21( response &res );
+        KeyState XidInputFound(Response &res);
+        KeyState XIDInputFoundLumina3G_21(Response &res);
 
         enum {XID_PACKET_SIZE = 6};
         enum {INVALID_PACKET_INDEX = -1};
@@ -120,9 +116,9 @@ namespace cedrus
         int m_XIDPacketIndex;
 
         int m_numKeysDown;
-        std::queue<response> m_responseQueue;
-        boost::function< cedrus::KeyState (response&) > m_ResponseParsingFunction;
+        std::queue<Response> m_responseQueue;
+        boost::function< Cedrus::KeyState (Response&) > m_ResponseParsingFunction;
     };
-} // namespace cedrus
+} // namespace Cedrus
 
 #endif // RESPONSE_MGR_H

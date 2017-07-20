@@ -7,7 +7,7 @@
 #include <sstream>
 #include <boost/noncopyable.hpp>
 
-namespace cedrus
+namespace Cedrus
 {
     class  Connection_TestOnly : public Interface_Connection, private boost::noncopyable
     {
@@ -20,6 +20,6 @@ namespace cedrus
     private:
         std::stringstream m_InputBuffer;
     };
-} // namespace cedrus
+} // namespace Cedrus
 
 #endif // XID_CON_TEST_ONLY_H

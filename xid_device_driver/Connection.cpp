@@ -31,38 +31,40 @@
 
 #include "Connection.h"
 
+#include "CedrusAssert.h"
+
 #include "constants.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-cedrus::Connection::Connection(
+Cedrus::Connection::Connection(
     const DWORD location,
     DWORD port_speed,
     BYTE byte_size,
     BYTE bit_parity,
     BYTE stop_bits
-    )
+)
     : m_BaudRate(port_speed),
-      m_ByteSize(byte_size),
-      m_BitParity(bit_parity),
-      m_StopBits(stop_bits),
-      m_Location(location),
-      m_ConnectionDead (false),
-      m_DeviceHandle(nullptr)
+    m_ByteSize(byte_size),
+    m_BitParity(bit_parity),
+    m_StopBits(stop_bits),
+    m_Location(location),
+    m_ConnectionDead(false),
+    m_DeviceHandle(nullptr)
 {
 }
 
-cedrus::Connection::~Connection(void)
+Cedrus::Connection::~Connection(void)
 {
-    if(m_DeviceHandle != nullptr)
+    if (m_DeviceHandle != nullptr)
         Close();
 }
 
-bool cedrus::Connection::Close()
+bool Cedrus::Connection::Close()
 {
     DWORD close_status = FT_OK;
 
     // Don't bother if the handle is already null
-    if ( m_DeviceHandle != nullptr )
+    if (m_DeviceHandle != nullptr)
     {
         close_status = FT_Close(m_DeviceHandle);
         m_DeviceHandle = nullptr;
@@ -71,45 +73,42 @@ bool cedrus::Connection::Close()
     return close_status == FT_OK;
 }
 
-bool cedrus::Connection::FlushWriteToDeviceBuffer()
+bool Cedrus::Connection::FlushWriteToDeviceBuffer()
 {
     return (FT_Purge(m_DeviceHandle, FT_PURGE_TX) == FT_OK);
 }
 
-bool cedrus::Connection::FlushReadFromDeviceBuffer()
+bool Cedrus::Connection::FlushReadFromDeviceBuffer()
 {
     return (FT_Purge(m_DeviceHandle, FT_PURGE_RX) == FT_OK);
 }
 
-int cedrus::Connection::Open()
+int Cedrus::Connection::Open()
 {
     int status = XID_NO_ERR;
 
     // Erring on the side of caution in case we already have a handle.
     Close();
 
-    DWORD open_success = FT_OpenEx(
-              (PVOID)m_Location,
-              FT_OPEN_BY_LOCATION,
-              &m_DeviceHandle);
+    DWORD open_success = FT_OpenEx((PVOID)m_Location, FT_OPEN_BY_LOCATION, &m_DeviceHandle);
 
-    if( open_success != FT_OK )
+    if (open_success != FT_OK)
     {
         status = XID_PORT_NOT_AVAILABLE;
     }
     else
     {
         m_ConnectionDead = false;
-        if ( !SetupCOMPort() )
+        if (!SetupCOMPort())
             status = XID_ERROR_SETTING_UP_PORT;
 
-        FT_Purge(m_DeviceHandle, FT_PURGE_RX|FT_PURGE_TX);
+        FT_Purge(m_DeviceHandle, FT_PURGE_RX | FT_PURGE_TX);
     }
 
     return status;
 }
 
-bool cedrus::Connection::SetupCOMPort()
+bool Cedrus::Connection::SetupCOMPort()
 {
     bool status = false;
 
@@ -121,13 +120,13 @@ bool cedrus::Connection::SetupCOMPort()
     FT_SetLatencyTimer(m_DeviceHandle, 2);
 
     status = FlushWriteToDeviceBuffer();
-    if(status)
+    if (status)
         status = FlushReadFromDeviceBuffer();
 
     return status;
 }
 
-bool cedrus::Connection::Read(
+bool Cedrus::Connection::Read(
     unsigned char *inBuffer,
     DWORD bytesToRead,
     LPDWORD bytesRead)
@@ -147,54 +146,42 @@ bool cedrus::Connection::Read(
     return read_status == FT_OK;
 }
 
-bool cedrus::Connection::Write(
+bool Cedrus::Connection::Write(
     unsigned char * const inBuffer,
     DWORD bytesToWrite,
-    LPDWORD bytesWritten)
+    LPDWORD bytesWritten,
+    bool requiresDelay)
 {
-    unsigned char *p = inBuffer;
     DWORD write_status = FT_OK;
-    DWORD written = 0;
+    bool write_success = false;
 
-    for (unsigned int i = 0; i < bytesToWrite; ++i)
+    if (!requiresDelay)
     {
-        DWORD byte_count;
-        write_status = FT_Write(m_DeviceHandle, p, 1, &byte_count);
-        if (write_status != FT_OK)
+        write_status = FT_Write(m_DeviceHandle, inBuffer, bytesToWrite, bytesWritten);
+    }
+    else
+    {
+        unsigned char *p = inBuffer;
+        for (unsigned int i = 0; i < bytesToWrite; ++i)
         {
-            // We used to check for specific error codes here, but I'm not certain why.
-            // I don't know that any of them are errors you can recover from, so let's
-            // err on the side of caution here.
-            m_ConnectionDead = true;
-            break;
+            DWORD byte_count;
+            write_status = FT_Write(m_DeviceHandle, p, 1, &byte_count);
+            if ((write_status != FT_OK) || (++(*bytesWritten) == bytesToWrite))
+            {
+                break;
+            }
+
+            SLEEP_FUNC(2 * SLEEP_INC);
+            ++p;
         }
-
-        written += byte_count;
-
-        /*
-        This used to be governed by a devconfig flag on a per-device basis.
-        However, the entire thing wasn't documented, and different versions
-        of devconfigs had conflicting information on the subject; with some
-        devices apparently needing it, contrary to the claim, and vice versa.
-
-        It's safer to just do this for every XID device, as the only time-
-        sensitive use for the library is reading responses, and no writing
-        takes place at that time.
-        */
-        SLEEP_FUNC(INTERBYTE_DELAY*SLEEP_INC);
-
-        if (written == bytesToWrite)
-            break;
-
-        ++p;
     }
 
-    *bytesWritten = written;
+    m_ConnectionDead = (write_status == FT_OK);
 
-    return write_status == FT_OK;
+    return m_ConnectionDead;
 }
 
-unsigned long cedrus::Connection::GetTickCount() const
+unsigned long Cedrus::Connection::GetTickCount() const
 {
     boost::posix_time::ptime time_microseconds = boost::posix_time::microsec_clock::local_time();
     unsigned long milliseconds = static_cast<unsigned long>(time_microseconds.time_of_day().total_milliseconds());
@@ -202,71 +189,51 @@ unsigned long cedrus::Connection::GetTickCount() const
     return milliseconds;
 }
 
-int cedrus::Connection::GetBaudRate () const
+int Cedrus::Connection::GetBaudRate() const
 {
     return m_BaudRate;
 }
 
-void cedrus::Connection::SetBaudRate ( unsigned char rate )
+void Cedrus::Connection::SetBaudRate(unsigned char rate)
 {
-    switch ( rate )
+    switch (rate)
     {
-        case 0:
-            m_BaudRate = 9600;
-            break;
-        case 1:
-            m_BaudRate = 19200;
-            break;
-        case 2:
-            m_BaudRate = 38400;
-            break;
-        case 3:
-            m_BaudRate = 57600;
-            break;
-        case 4:
-            m_BaudRate = 115200;
-            break;
-        default:
-            break;
+    case 0:
+        m_BaudRate = 9600;
+        break;
+    case 1:
+        m_BaudRate = 19200;
+        break;
+    case 2:
+        m_BaudRate = 38400;
+        break;
+    case 3:
+        m_BaudRate = 57600;
+        break;
+    case 4:
+        m_BaudRate = 115200;
+        break;
+    default:
+        break;
     }
 }
 
-bool cedrus::Connection::HasLostConnection()
+bool Cedrus::Connection::HasLostConnection()
 {
     return m_ConnectionDead;
 }
 
-DWORD cedrus::Connection::SendXIDCommand(
-    const char inCommand[],
-    unsigned char outResponse[],
-    unsigned int maxOutResponseSize)
-{
-    // 15 has been determined to be enough for most commands
-    return SendXIDCommand(inCommand, outResponse, maxOutResponseSize, 100);
-}
-
-DWORD cedrus::Connection::SendXIDCommand_Slow(
-    const char inCommand[],
-    unsigned char outResponse[],
-    unsigned int maxOutResponseSize)
-{
-    // Some commands, like _aa apparently need some extra leeway. 50 has been
-    // enough thus far.
-    return SendXIDCommand(inCommand, outResponse, maxOutResponseSize, 200);
-}
-
-
-DWORD cedrus::Connection::SendXIDCommand(
+DWORD Cedrus::Connection::SendXIDCommand(
     const char inCommand[],
     unsigned char outResponse[],
     unsigned int maxOutResponseSize,
-    unsigned int numRetries)
+    bool requiresDelay)
 {
-    if(outResponse != NULL)
+    if (outResponse != NULL)
         memset(outResponse, 0x00, maxOutResponseSize);
 
     DWORD bytes_written = 0;
-    Write((unsigned char*)inCommand, strlen(inCommand), &bytes_written);
+    Write((unsigned char*)inCommand, strlen(inCommand), &bytes_written, requiresDelay);
 
     unsigned char in_buff[64];
     memset(in_buff, 0x00, sizeof(in_buff));
@@ -276,14 +243,11 @@ DWORD cedrus::Connection::SendXIDCommand(
     unsigned int i = 0;
     do
     {
-        SLEEP_FUNC(INTERBYTE_DELAY*SLEEP_INC);
+        Read(in_buff, sizeof(in_buff), &bytes_read);
 
-        if( !Read(in_buff, sizeof(in_buff), &bytes_read) )
-            break;
-
-        if(bytes_read >= 1)
+        if (bytes_read > 0)
         {
-            for(unsigned int j = 0; (j < bytes_read) && (bytes_stored < maxOutResponseSize); ++j)
+            for (unsigned int j = 0; (j < bytes_read) && (bytes_stored < maxOutResponseSize); ++j)
             {
                 outResponse[bytes_stored] = in_buff[j];
                 bytes_stored++;
@@ -291,48 +255,40 @@ DWORD cedrus::Connection::SendXIDCommand(
         }
 
         ++i;
-    } while (i < numRetries && bytes_stored < maxOutResponseSize);
+    } while (i < 50 && bytes_stored < maxOutResponseSize);
 
     return bytes_stored;
 }
 
-DWORD cedrus::Connection::SendXIDCommand_PST_Proof(
+DWORD Cedrus::Connection::SendXIDCommand_PST_Proof(
     const char inCommand[],
     unsigned char outResponse[],
-    unsigned int maxOutResponseSize)
+    unsigned int maxOutResponseSize,
+    bool requiresDelay)
 {
-    if(outResponse != NULL)
+    if (outResponse != NULL)
         memset(outResponse, 0x00, maxOutResponseSize);
 
     DWORD bytes_written = 0;
-    Write((unsigned char*)inCommand, strlen(inCommand), &bytes_written);
+    Write((unsigned char*)inCommand, strlen(inCommand), &bytes_written, requiresDelay);
 
     unsigned char in_buff[64];
     memset(in_buff, 0x00, sizeof(in_buff));
     DWORD bytes_read = 0;
     DWORD bytes_stored = 0;
 
-    // sometimes sending a command needs a delay because the 4MHz processors
-    // in the response pads need a little time to process the command and
-    // send a response.
-    SLEEP_FUNC(100*SLEEP_INC);
-
     unsigned int numRetries = 0;
     do
     {
-        // This isn't actually related to the interbyte delay, but the wait is the same.
-        SLEEP_FUNC(INTERBYTE_DELAY*SLEEP_INC);
-
         // We're reading from the buffer in chunks of 64 because of all the potential zeroes.
-        if( !Read(in_buff, sizeof(in_buff), &bytes_read) )
-            break;
+        Read(in_buff, sizeof(in_buff), &bytes_read);
 
-        if(bytes_read >= 1)
+        if (bytes_read > 0)
         {
-            for(unsigned int i = 0; (i < bytes_read) && (bytes_stored < maxOutResponseSize); ++i)
+            for (unsigned int i = 0; (i < bytes_read) && (bytes_stored < maxOutResponseSize); ++i)
             {
-                // Clean out the potential zeroes in the buffer.
-                if(in_buff[i] != 0)
+                // Ignore potential zeroes in the buffer.
+                if (in_buff[i] != 0)
                 {
                     outResponse[bytes_stored] = in_buff[i];
                     bytes_stored++;
@@ -341,7 +297,7 @@ DWORD cedrus::Connection::SendXIDCommand_PST_Proof(
         }
 
         ++numRetries;
-    } while (numRetries < 50 && bytes_stored < maxOutResponseSize);
+    } while (numRetries < 100 && bytes_stored < maxOutResponseSize);
 
     return bytes_stored;
 }

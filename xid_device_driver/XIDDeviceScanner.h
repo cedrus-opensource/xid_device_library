@@ -29,8 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef XID_DEVICE_SCANNER_H
-#define XID_DEVICE_SCANNER_H
+#pragma once
+
+#include "XidDriverImpExpDefs.h"
 
 #include <vector>
 #include <string>
@@ -39,9 +40,7 @@
 
 #include "ftd2xx.h"
 
-#include "XidDriverImpExpDefs.h"
-
-namespace cedrus
+namespace Cedrus
 {
     class Connection;
     class XIDDevice;
@@ -58,15 +57,11 @@ namespace cedrus
 
         void OpenAllConnections();
 
-        void LoadCOMPorts( std::vector<DWORD> * availableCOMPorts);
-
         void DropEveryConnection();
 
-        void DropConnectionByPtr( boost::shared_ptr<cedrus::XIDDevice> device );
+        void DropConnectionByPtr( boost::shared_ptr<Cedrus::XIDDevice> device );
 
         void CheckConnectionsDropDeadOnes();
-
-        bool ReadInDevconfigs ( const std::string &configFileLocation );
 
         // This does a clean scan for devices.
         //  reportFunction is for reporting errors during the scanning process
@@ -85,11 +80,11 @@ namespace cedrus
 
         unsigned int DevconfigCount() const;
 
+        boost::shared_ptr<DeviceConfig> GetConfigForGivenDevice(int deviceID, int modelID, int majorFirmwareVer) const;
+
     private:
-
-        std::vector<boost::shared_ptr<cedrus::XIDDevice> > m_Devices;
-        std::vector< boost::shared_ptr<cedrus::DeviceConfig> > m_MasterConfigList;
+        bool ReadInDevconfigs(const std::string &configFileLocation);
+        std::vector<boost::shared_ptr<Cedrus::XIDDevice> > m_Devices;
+        std::vector< boost::shared_ptr<Cedrus::DeviceConfig> > m_MasterConfigList;
     };
-} // namespace cedrus
-
-#endif // XID_DEVICE_SCANNER_H
+} // namespace Cedrus

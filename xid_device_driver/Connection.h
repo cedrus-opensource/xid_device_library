@@ -29,8 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#pragma once
 
 #include "Interface_Connection.h"
 #include <boost/shared_ptr.hpp>
@@ -44,13 +43,11 @@
 #   define SLEEP_INC 1
 #endif
 
-namespace cedrus
+namespace Cedrus
 {
     class Connection : public Interface_Connection
     {
     public:
-        enum { INTERBYTE_DELAY = 1 };
-
         Connection(
             const DWORD location,
             DWORD port_speed = 115200,
@@ -74,22 +71,20 @@ namespace cedrus
         bool Write(
             unsigned char * const inBuffer,
             DWORD bytesToWrite,
-            LPDWORD bytesWritten);
+            LPDWORD bytesWritten,
+            bool requiresDelay);
 
         DWORD SendXIDCommand(
             const char inCommand[],
             unsigned char outResponse[],
-            unsigned int maxOutResponseSize);
-
-        DWORD SendXIDCommand_Slow(
-            const char inCommand[],
-            unsigned char outResponse[],
-            unsigned int maxOutResponseSize);
+            unsigned int maxOutResponseSize,
+            bool requiresDelay);
 
         DWORD SendXIDCommand_PST_Proof(
             const char inCommand[],
             unsigned char outResponse[],
-            unsigned int maxOutResponseSize);
+            unsigned int maxOutResponseSize,
+            bool requiresDelay);
 
         int GetBaudRate() const;
 
@@ -102,12 +97,6 @@ namespace cedrus
         bool SetupCOMPort();
         unsigned long GetTickCount() const;
 
-        DWORD SendXIDCommand(
-            const char inCommand[],
-            unsigned char outResponse[],
-            unsigned int maxOutResponseSize,
-            unsigned int numRetries);
-
         DWORD m_BaudRate;
         BYTE m_ByteSize;
         BYTE m_BitParity;
@@ -118,6 +107,4 @@ namespace cedrus
 
         FT_HANDLE m_DeviceHandle;
     };
-} // namespace cedrus
-
-#endif // CONNECTION_H
+} // namespace Cedrus

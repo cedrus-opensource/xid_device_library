@@ -43,6 +43,15 @@ def print_dev_names():
         print devCfg.GetDeviceName()
     print "---------"
 
+def test_mpod_commands(devCon):
+    print "Calling SetBaudRate(1) aka 19200 in order to properly interface with m-pod."
+    devCon.SetBaudRate(1)
+
+    devCon.ConnectToMpod(1,1)
+    print_dev_info(devCon)
+
+    devCon.ConnectToMpod(1,0)
+
 def print_dev_info(devCon):
     devCfg = devCon.GetDeviceConfig()
     print "###########################"
@@ -55,9 +64,10 @@ def print_dev_info(devCon):
     print
 
     print "----- From device itself"
-    productAndModelID = devCon.GetProductAndModelID()
-    print '%-20s%-20s' % ("productID: ", productAndModelID.productID)
-    print '%-20s%-20s' % ("modelID: ", productAndModelID.modelID)
+    productID = devCon.GetProductID()
+    print '%-20s%-20s' % ("productID: ", productID)
+    modelID = devCon.GetModelID()
+    print '%-20s%-20s' % ("modelID: ", modelID)
     # This value differentiates old and new devices
     print '%-20s%-20s' % ("GetMajorFirmwareVersion(): ", devCon.GetMajorFirmwareVersion())
     print '%-20s%-20s' % ("GetMinorFirmwareVersion(): ", devCon.GetMinorFirmwareVersion())
@@ -100,7 +110,7 @@ def print_response(response):
 
 def run_button_tests(devCon):
     devCon.ClearResponseQueue()
-    devCon.ClearResponses()
+    devCon.ClearResponsesFromBuffer()
 
     print "Testing basic response gathering... Press a button!"
     while (devCon.HasQueuedResponses() == False):
@@ -110,7 +120,7 @@ def run_button_tests(devCon):
     print_response(devCon.GetNextResponse())
     print "The response queue should be empty now, as we've popped the only response it should have had."
     print '%-20s%-20s' % ("HasQueuedResponses(): ", devCon.HasQueuedResponses())
-    devCon.ClearResponses()
+    devCon.ClearResponsesFromBuffer()
     print
 
     devCfg = devCon.GetDeviceConfig()
@@ -124,7 +134,7 @@ def run_button_tests(devCon):
 
         print "Clearing response queue..."
         devCon.ClearResponseQueue()
-        devCon.ClearResponses()
+        devCon.ClearResponsesFromBuffer()
 
         print "Checking if we have queued responses (we should not, we just cleared them)"
         print '%-20s%-20s' % ("HasQueuedResponses(): ", devCon.HasQueuedResponses())
@@ -132,11 +142,11 @@ def run_button_tests(devCon):
 
     print "Testing response flushing... You have 5 seconds to press some buttons!"
     time.sleep (5)
-    print "Calling ClearResponses()"
-    devCon.ClearResponses()
+    print "Calling ClearResponsesFromBuffer()"
+    devCon.ClearResponsesFromBuffer()
     print "Attempting to retrieve a response from the buffer and put it into the queue..."
     devCon.PollForResponse()
-    print "Checking if we have responses in the queue (we shouldn't due to the ClearResponses() call)"
+    print "Checking if we have responses in the queue (we shouldn't due to the ClearResponsesFromBuffer() call)"
     print '%-20s%-20s' % ("HasQueuedResponses(): ", devCon.HasQueuedResponses())
     print
 
@@ -165,7 +175,7 @@ for device_index in xrange (0,  xds.DeviceCount()):
     # prevent it from messing any tests up.
     if devCfg.GetProductID() == 48 and devCfg.GetMajorVersion() == 1:
         time.sleep(2)
-        devCon.ClearResponses()
+        devCon.ClearResponsesFromBuffer()
 
     # Some slight gymnastics to revert the baud rate later.
     baudRate = devCon.GetBaudRate()
@@ -181,20 +191,13 @@ for device_index in xrange (0,  xds.DeviceCount()):
 
     print "### Testing baud changing commands..."
     print '%-20s%-20s' % ("GetBaudRate(): ", devCon.GetBaudRate())
-    print "Calling SetBaudRate(2) aka 38400"
-    devCon.SetBaudRate(2)
-
-    # Needed after changing baud rate.
-    devCon.CloseConnection();
-    devCon.OpenConnection();
+    print "Calling SetBaudRate(1) aka 19200"
+    devCon.SetBaudRate(1)
 
     print '%-20s%-20s' % ("GetBaudRate(): ", devCon.GetBaudRate())
     print "Calling SetBaudRate(" + str(baudToSet) + ") to set it back to " + str(baudRate)
     devCon.SetBaudRate(baudToSet)
 
-    # Needed after changing baud rate.
-    devCon.CloseConnection();
-    devCon.OpenConnection();
     print "### Done!"
     print
     time.sleep(1)
@@ -243,13 +246,14 @@ for device_index in xrange (0,  xds.DeviceCount()):
         # Changing trigger default makes a Lumina LP-400 output a trigger. We're going to wait
         # a second and then flush the buffer.
         time.sleep(1)
-        devCon.ClearResponses()
+        devCon.ClearResponsesFromBuffer()
 
-    print '%-20s%-20s' % ("QueryBaseTimer(): ", devCon.QueryBaseTimer())
-    print "Calling devCon.ResetBaseTimer()"
-    devCon.ResetBaseTimer()
-    print '%-20s%-20s' % ("QueryBaseTimer(): ", devCon.QueryBaseTimer())
-    print
+    if devCfg.GetMajorVersion() > 1:
+        print '%-20s%-20s' % ("QueryBaseTimer(): ", devCon.QueryBaseTimer())
+        print "Calling devCon.ResetBaseTimer()"
+        devCon.ResetBaseTimer()
+        print '%-20s%-20s' % ("QueryBaseTimer(): ", devCon.QueryBaseTimer())
+        print
 
     # These commands are XID 2 only.
     if devCfg.GetMajorVersion() > 1:
@@ -269,7 +273,8 @@ for device_index in xrange (0,  xds.DeviceCount()):
         #print "Calling SetScannerTriggerFilter(2)"
         #devCon.SetScannerTriggerFilter(2)
 
-        print '%-20s%-20s' % ("GetAccessoryConnectorDevice(): ", devCon.GetAccessoryConnectorDevice())
+        print '%-20s%-20s' % ("GetMpodModel(1): ", devCon.GetMpodModel(1))
+
     # These commands are deprecated in XID 2
     else:
         # These are some more of those commands StimTracker will actually take, store

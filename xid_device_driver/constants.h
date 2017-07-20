@@ -29,10 +29,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#pragma once
 
-namespace cedrus
+namespace
+{
+    // if we decide that other classes can use this, then i will re-declare it in the header
+    void AdjustEndiannessUintToChars
+    (
+        const unsigned int the_int,
+        unsigned char* c1,
+        unsigned char* c2,
+        unsigned char* c3,
+        unsigned char* c4
+    )
+    {
+        unsigned int num = the_int;
+
+        *c1 = num & 0x000000ff;
+        num >>= 8;
+        *c2 = num & 0x000000ff;
+        num >>= 8;
+        *c3 = num & 0x000000ff;
+        num >>= 8;
+        *c4 = num & 0x000000ff;
+    }
+
+    unsigned int AdjustEndiannessCharsToUint
+    (
+        const char c1,
+        const char c2,
+        const char c3,
+        const char c4
+    )
+    {
+        unsigned int result = 0;
+
+        result |= (c4 & 0x000000ff);
+        result <<= 8;
+        result |= (c3 & 0x000000ff);
+        result <<= 8;
+        result |= (c2 & 0x000000ff);
+        result <<= 8;
+        result |= (c1 & 0x000000ff);
+
+        return result;
+    }
+}
+
+namespace Cedrus
 {
     enum
     {
@@ -64,11 +108,11 @@ namespace cedrus
     enum
     {
         PRODUCT_ID_LUMINA = 48, // '0'
-        PRODUCT_ID_SV1    = 49, // '1'
-        PRODUCT_ID_RB     = 50, // '2'
-        PRODUCT_ID_CPOD   = 52
+        PRODUCT_ID_SV1 = 49,
+        PRODUCT_ID_RB = 50,
+        PRODUCT_ID_MPOD = 51,
+        PRODUCT_ID_CPOD = 52,
+        PRODUCT_ID_STIMTRACKER = 83 // 'S'
     };
 
-} // namespace cedrus
-
-#endif // CONSTANTS_H
+} // namespace Cedrus

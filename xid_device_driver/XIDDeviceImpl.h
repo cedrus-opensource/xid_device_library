@@ -29,14 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef XID_DEVICE_IMPL_H
-#define XID_DEVICE_IMPL_H
+#pragma once
 
 #include "XIDDevice.h"
 
 #include <boost/utility.hpp>
 
-namespace cedrus
+namespace Cedrus
 {
     class Connection;
     class DeviceConfig;
@@ -50,107 +49,88 @@ namespace cedrus
 
         virtual ~XIDDeviceImpl();
 
-        virtual int GetOutpostModel();
-
-        virtual int GetHardwareGeneration();
-
-        virtual int GetLightSensorMode();
-
-        virtual void SetLightSensorMode(unsigned char mode);
-
-        virtual void SetLightSensorThreshold(unsigned char threshold);
-
-        virtual int GetLightSensorThreshold();
-
-        virtual void SetScannerTriggerFilter(unsigned char mode);
-
-        virtual void ResetRtTimer();
-
-        virtual void ResetBaseTimer();
-
-        virtual unsigned int QueryBaseTimer();
-
-        virtual unsigned int GetPulseDuration();
-
-        virtual void SetPulseDuration(unsigned int duration);
-
-        virtual int GetNumberOfLines();
-
-        virtual void SetNumberOfLines(unsigned int lines);
-
-        virtual void PollForResponse();
-
-        virtual bool HasQueuedResponses();
-
-        virtual int GetNumberOfKeysDown() const;
-
-        virtual void ClearResponseQueue();
-
-        virtual cedrus::response GetNextResponse();
-
-        virtual void ClearResponses();
-
-        virtual int GetAccessoryConnectorMode();
-
-        virtual int GetAccessoryConnectorDevice();
-
-        virtual int GetOutputLogic();
-
-        virtual void SetOutputLogic(int mode);
-
-        virtual void SetAccessoryConnectorMode(int mode);
-
-        virtual int GetVKDropDelay();
-
-        virtual void SetVKDropDelay(unsigned char delay);
-
-        virtual void ReprogramFlash();
-
-        virtual int GetTriggerDefault();
-
-        virtual void SetTriggerDefault(bool defaultOn);
-
-        virtual int GetTriggerDebounceTime();
-
-        virtual void SetTriggerDebounceTime(unsigned char time);
-
-        virtual int  GetButtonDebounceTime();
-
-        virtual void SetButtonDebounceTime(unsigned char time);
-
-        virtual void SetProtocol(unsigned char protocol);
-
+        virtual int GetOutputLogic() const;
+        virtual void SetOutputLogic(unsigned char mode);
+        virtual int GetAccessoryConnectorMode() const;
+        virtual void SetAccessoryConnectorMode(unsigned char mode);
+        virtual int GetACDebouncingTime() const;
+        virtual void SetACDebouncingTime(unsigned char time);
+        virtual int GetMpodModel(unsigned int mpod) const;
         virtual void ConnectToMpod(unsigned int mpod, unsigned int action);
 
-        // Every device needs these.
-        virtual const boost::shared_ptr<const DeviceConfig> GetDeviceConfig() const;
-        virtual int OpenConnection();
-        virtual int CloseConnection();
-        virtual bool HasLostConnection();
-        virtual int GetBaudRate();
-        virtual void SetBaudRate(unsigned char rate);
-        virtual std::string GetProtocol();
-        virtual void GetProductAndModelID(int *productID, int *modelID);
+        virtual int GetVKDropDelay() const;
+        virtual void SetVKDropDelay(unsigned char delay);
+
+        virtual std::string GetProtocol() const;
+        static std::string GetProtocol(boost::shared_ptr<Connection> xidCon);
+        virtual void SetProtocol(unsigned char protocol);
+        static void SetProtocol(boost::shared_ptr<Connection> xidCon, unsigned char protocol);
+        std::string GetInternalProductName() const;
+        virtual int GetProductID() const;
+        virtual int GetModelID() const;
+        static int GetProductID(boost::shared_ptr<Connection> xidCon); // used during device detection
+        static int GetModelID(boost::shared_ptr<Connection> xidCon); // used during device detection
         virtual void SetModelID(unsigned char model);
-        virtual int GetMajorFirmwareVersion();
-        virtual int GetMinorFirmwareVersion();
-        virtual std::string GetInternalProductName();
+        virtual int GetMajorFirmwareVersion() const;
+        static int GetMajorFirmwareVersion(boost::shared_ptr<Connection> xidCon); // used during device detection
+        virtual int GetMinorFirmwareVersion() const;
+        virtual int GetOutpostModel() const;
+        virtual int GetHardwareGeneration() const;
+
+        virtual void ResetBaseTimer();
+        virtual unsigned int QueryBaseTimer();
+        virtual void ResetRtTimer();
+
+        virtual void SetBaudRate(unsigned char rate);
+        virtual void GetLockingLevel();
+        virtual void SetLockingLevel(unsigned char level);
+        virtual void ReprogramFlash();
+        virtual int GetTriggerDefault() const;
+        virtual void SetTriggerDefault(bool defaultOn);
+        virtual int GetTriggerDebounceTime() const;
+        virtual void SetTriggerDebounceTime(unsigned char time);
+        virtual int  GetButtonDebounceTime() const;
+        virtual void SetButtonDebounceTime(unsigned char time);
         virtual void RestoreFactoryDefaults();
 
-        // Implementations of these will differ
-        virtual void RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines = false) = 0;
-        virtual void LowerLines(unsigned int linesBitmask, bool leaveRemainingLines = false) = 0;
-        virtual void ClearLines() = 0;
+        virtual int GetNumberOfLines() const;
+        virtual void SetNumberOfLines(unsigned int lines);
+        virtual unsigned int GetPulseDuration() const;
+        virtual void SetPulseDuration(unsigned int duration);
 
-        virtual ProductAndModelID GetProductAndModelID();
+        // These are getting replaced with ir, im, it, iv and such commands
+        virtual int GetLightSensorMode() const;
+        virtual void SetLightSensorMode(unsigned char mode);
+        virtual int GetLightSensorThreshold() const;
+        virtual void SetLightSensorThreshold(unsigned char threshold);
 
-    protected:
+        // The following two blocks of commands do not query the device directly
+        virtual int GetBaudRate() const;
+        virtual const boost::shared_ptr<const DeviceConfig> GetDeviceConfig() const;
+        virtual int OpenConnection() const;
+        virtual int CloseConnection() const;
+        virtual bool HasLostConnection() const;
+
+        // These are for getting button input from an RB
+        virtual void PollForResponse() const;
+        virtual bool HasQueuedResponses() const;
+        virtual int GetNumberOfKeysDown() const;
+        virtual Cedrus::Response GetNextResponse() const;
+        virtual void ClearResponseQueue(); // Clear processed responses
+        virtual void ClearResponsesFromBuffer(); // Clear characters from the physical buffer
+
+        virtual void RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines = false);
+        virtual void LowerLines(unsigned int linesBitmask, bool leaveRemainingLines = false);
+        virtual void ClearLines();
+
+    private:
+        void SetDigitalOutputLines_RB(boost::shared_ptr<Connection> xidCon, unsigned int lines);
+        void SetDigitalOutputLines_ST(boost::shared_ptr<Connection> xidCon, unsigned int lines);
+
         unsigned int m_linesState;
         boost::shared_ptr<Connection> m_xidCon;
-        const boost::shared_ptr<const cedrus::DeviceConfig> m_config;
-        const boost::shared_ptr<cedrus::ResponseManager> m_ResponseMgr;
+        const boost::shared_ptr<const Cedrus::DeviceConfig> m_config;
+        const boost::shared_ptr<Cedrus::ResponseManager> m_ResponseMgr;
     };
 
-} // namespace cedrus
-
-#endif // XID_DEVICE_IMPL_H
+} // namespace Cedrus

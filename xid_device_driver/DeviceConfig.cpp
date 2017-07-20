@@ -44,7 +44,7 @@
 
 #include "CedrusAssert.h"
 
-boost::shared_ptr<cedrus::DeviceConfig> cedrus::DeviceConfig::ConfigForDevice(
+boost::shared_ptr<Cedrus::DeviceConfig> Cedrus::DeviceConfig::ConfigForDevice(
         boost::property_tree::ptree * pt )
 {
     boost::shared_ptr<DeviceConfig> devconfig;
@@ -54,7 +54,7 @@ boost::shared_ptr<cedrus::DeviceConfig> cedrus::DeviceConfig::ConfigForDevice(
     return devconfig;
 }
 
-cedrus::DeviceConfig::DeviceConfig( boost::property_tree::ptree * pt )
+Cedrus::DeviceConfig::DeviceConfig( boost::property_tree::ptree * pt )
 {
     std::string digital_output_command;
 
@@ -108,13 +108,15 @@ cedrus::DeviceConfig::DeviceConfig( boost::property_tree::ptree * pt )
 
         m_DevicePorts.push_back(port);
     }
+
+    m_requiresDelay = (IsRB() && IsXID1()) || IsSV1();
 }
 
-cedrus::DeviceConfig::~DeviceConfig(void)
+Cedrus::DeviceConfig::~DeviceConfig(void)
 {
 }
 
-int cedrus::DeviceConfig::GetMappedKey(int port, int key) const
+int Cedrus::DeviceConfig::GetMappedKey(int port, int key) const
 {
     int mapped_key = -1;
 
@@ -127,14 +129,14 @@ int cedrus::DeviceConfig::GetMappedKey(int port, int key) const
     return mapped_key;
 }
 
-const std::vector<cedrus::DevicePort> * cedrus::DeviceConfig::GetVectorOfPorts() const
+const std::vector<Cedrus::DevicePort> * Cedrus::DeviceConfig::GetVectorOfPorts() const
 {
     return &m_DevicePorts;
 }
 
-const cedrus::DevicePort * cedrus::DeviceConfig::GetPortPtrByIndex(unsigned int portNum) const
+const Cedrus::DevicePort * Cedrus::DeviceConfig::GetPortPtrByIndex(unsigned int portNum) const
 {
-    const cedrus::DevicePort * port_ptr = nullptr;
+    const Cedrus::DevicePort * port_ptr = nullptr;
     if ( portNum < m_DevicePorts.size() )
         port_ptr = &(m_DevicePorts[portNum]);
     else
@@ -143,27 +145,27 @@ const cedrus::DevicePort * cedrus::DeviceConfig::GetPortPtrByIndex(unsigned int 
     return port_ptr;
 }
 
-std::string cedrus::DeviceConfig::GetDeviceName() const
+std::string Cedrus::DeviceConfig::GetDeviceName() const
 {
     return m_DeviceName;
 }
 
-int cedrus::DeviceConfig::GetProductID() const
+int Cedrus::DeviceConfig::GetProductID() const
 {
     return m_ProductID;
 }
 
-int cedrus::DeviceConfig::GetModelID() const
+int Cedrus::DeviceConfig::GetModelID() const
 {
     return m_ModelID;
 }
 
-int cedrus::DeviceConfig::GetMajorVersion() const
+int Cedrus::DeviceConfig::GetMajorVersion() const
 {
     return m_MajorFirmwareVer;
 }
 
-bool cedrus::DeviceConfig::DoesConfigMatchDevice( int deviceID, int modelID, int majorFirmwareVer ) const
+bool Cedrus::DeviceConfig::DoesConfigMatchDevice( int deviceID, int modelID, int majorFirmwareVer ) const
 {
     bool does_match = false;
     if ( m_ProductID == deviceID && m_ModelID == modelID && m_MajorFirmwareVer == majorFirmwareVer)
@@ -172,4 +174,9 @@ bool cedrus::DeviceConfig::DoesConfigMatchDevice( int deviceID, int modelID, int
     }
 
     return does_match;
+}
+
+bool Cedrus::DeviceConfig::NeedsDelay() const
+{
+    return m_requiresDelay;
 }

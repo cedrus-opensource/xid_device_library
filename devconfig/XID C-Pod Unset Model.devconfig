@@ -1,8 +1,8 @@
 [DeviceInfo]
 MajorFirmwareVersion = 2
 DeviceName = c-pod no model set
-# 52 is the integer value of the char '4'
-XidProductID = 52
+# 51 is the integer value of the char '3'
+XidProductID = 51
 # 48 is the integer value of the char '0'
 XidModelID = 48
 

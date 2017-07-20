@@ -2,7 +2,6 @@
 
 #include "Interface_Connection.h"
 #include "DeviceConfig.h"
-#include "CommandGlossary.h"
 #include "constants.h"
 
 #include "CedrusAssert.h"
@@ -12,10 +11,10 @@ namespace
     bool device_is_7byte_lumina3g_21
     (
      const int minorFirmwareVer,
-     boost::shared_ptr<const cedrus::DeviceConfig> devConfig
+     boost::shared_ptr<const Cedrus::DeviceConfig> devConfig
     )
     {
-        const bool prod_is_lumina3g_21 = ( devConfig->GetProductID() == cedrus::PRODUCT_ID_LUMINA );
+        const bool prod_is_lumina3g_21 = ( devConfig->GetProductID() == Cedrus::PRODUCT_ID_LUMINA );
         const bool maj_fw_is_lumina3g_21 = ( devConfig->GetMajorVersion() == 2 );
         const bool min_fw_is_lumina3g_21 = ( minorFirmwareVer == 1 );
 
@@ -23,11 +22,11 @@ namespace
     }
 }
 
-cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, boost::shared_ptr<const DeviceConfig> devConfig )
+Cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, boost::shared_ptr<const DeviceConfig> devConfig )
     : m_BytesInBuffer(0),
       m_XIDPacketIndex(INVALID_PACKET_INDEX),
       m_numKeysDown(0),
-      m_ResponseParsingFunction( boost::bind( &cedrus::ResponseManager::XidInputFound, this, _1 ) )
+      m_ResponseParsingFunction( boost::bind( &Cedrus::ResponseManager::XidInputFound, this, _1 ) )
 {
     for(int i = 0; i < XID_PACKET_SIZE; ++i)
     {
@@ -41,19 +40,19 @@ cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, boost::sha
      for a variety of reasons. Our parsing can handle snipping off the extra byte,
      but since the 7th byte isn't at the end of the packet, this messes with the
      timestamp, making the problem described in the comment at the top of
-     cedrus::ResponseManager::XidInputFound much, much worse.
+     Cedrus::ResponseManager::XidInputFound much, much worse.
     */
     if ( devConfig && device_is_7byte_lumina3g_21( minorFirmwareVer, devConfig ) )
     {
-        m_ResponseParsingFunction = boost::bind( &cedrus::ResponseManager::XIDInputFoundLumina3G_21, this, _1 );
+        m_ResponseParsingFunction = boost::bind( &Cedrus::ResponseManager::XIDInputFoundLumina3G_21, this, _1 );
     }
 }
 
-cedrus::ResponseManager::~ResponseManager()
+Cedrus::ResponseManager::~ResponseManager()
 {
 }
 
-cedrus::KeyState cedrus::ResponseManager::XidInputFound( response &res )
+Cedrus::KeyState Cedrus::ResponseManager::XidInputFound(Response &res)
 {
     // Wisdom from Hisham, circa Aug 13, 2005. Point C is especially relevant.
     //
@@ -92,7 +91,7 @@ cedrus::KeyState cedrus::ResponseManager::XidInputFound( response &res )
 
                 CEDRUS_ASSERT ( res.port < 6, "As of March 2015, no devices should be able to receive input from more than 5 ports!" );
 
-                res.reactionTime = CommandGlossary::AdjustEndiannessCharsToUint
+                res.reactionTime = AdjustEndiannessCharsToUint
                     ( m_InputBuffer[2], m_InputBuffer[3], m_InputBuffer[4], m_InputBuffer[5] );
 
                 input_found = static_cast<KeyState>(FOUND_KEY_DOWN + !res.wasPressed);
@@ -154,7 +153,7 @@ cedrus::KeyState cedrus::ResponseManager::XidInputFound( response &res )
     return input_found;
 }
 
-cedrus::KeyState cedrus::ResponseManager::XIDInputFoundLumina3G_21( response &res )
+Cedrus::KeyState Cedrus::ResponseManager::XIDInputFoundLumina3G_21(Response &res)
 {
     KeyState input_found = NO_KEY_DETECTED;
     m_XIDPacketIndex = INVALID_PACKET_INDEX;
@@ -171,7 +170,7 @@ cedrus::KeyState cedrus::ResponseManager::XIDInputFoundLumina3G_21( response &re
 
             CEDRUS_ASSERT ( res.port < 6, "As of March 2015, no devices should be able to receive input from more than 5 ports!" );
 
-            res.reactionTime = CommandGlossary::AdjustEndiannessCharsToUint
+            res.reactionTime = AdjustEndiannessCharsToUint
                 ( m_InputBuffer[2], m_InputBuffer[3], m_InputBuffer[4], m_InputBuffer[5] );
 
             input_found = static_cast<KeyState>(FOUND_KEY_DOWN + !res.wasPressed);
@@ -207,10 +206,10 @@ cedrus::KeyState cedrus::ResponseManager::XIDInputFoundLumina3G_21( response &re
     return input_found;
 }
 
-void cedrus::ResponseManager::CheckForKeypress(boost::shared_ptr<Interface_Connection> portConnection, boost::shared_ptr<const DeviceConfig> devConfig)
+void Cedrus::ResponseManager::CheckForKeypress(boost::shared_ptr<Interface_Connection> portConnection, boost::shared_ptr<const DeviceConfig> devConfig)
 {
     DWORD bytes_read = 0;
-    response res;
+    Response res;
     KeyState response_found = NO_KEY_DETECTED;
 
     // The amount of bytes read is variable as a part of a process that attempts to recover
@@ -224,7 +223,7 @@ void cedrus::ResponseManager::CheckForKeypress(boost::shared_ptr<Interface_Conne
         response_found = m_ResponseParsingFunction(res);
     }
 
-    if(response_found != cedrus::NO_KEY_DETECTED)
+    if(response_found != Cedrus::NO_KEY_DETECTED)
     {
         res.key = devConfig->GetMappedKey(res.port, res.key);
 
@@ -237,7 +236,7 @@ void cedrus::ResponseManager::CheckForKeypress(boost::shared_ptr<Interface_Conne
     }
 }
 
-void cedrus::ResponseManager::AdjustBufferForPacketRecovery()
+void Cedrus::ResponseManager::AdjustBufferForPacketRecovery()
 {
     CEDRUS_ASSERT( m_XIDPacketIndex != INVALID_PACKET_INDEX, "We're about to crash, because someone misused this function!" );
 
@@ -258,7 +257,7 @@ void cedrus::ResponseManager::AdjustBufferForPacketRecovery()
     memset( &m_InputBuffer[m_BytesInBuffer], 0x00, (XID_PACKET_SIZE - m_BytesInBuffer) );
 }
 
-bool cedrus::ResponseManager::HasQueuedResponses() const
+bool Cedrus::ResponseManager::HasQueuedResponses() const
 {
     return !m_responseQueue.empty();
 }
@@ -266,9 +265,9 @@ bool cedrus::ResponseManager::HasQueuedResponses() const
 // If there are no processed responses, this will return a default response
 // with most of the properties resolving to -1 and such. To avoid that, verify
 // that responses exist with HasQueuedResponses()
-cedrus::response cedrus::ResponseManager::GetNextResponse()
+Cedrus::Response Cedrus::ResponseManager::GetNextResponse()
 {
-    response res;
+    Response res;
     if ( HasQueuedResponses() )
     {
         res = m_responseQueue.front();
@@ -278,15 +277,15 @@ cedrus::response cedrus::ResponseManager::GetNextResponse()
     return res;
 }
 
-int cedrus::ResponseManager::GetNumberOfKeysDown() const
+int Cedrus::ResponseManager::GetNumberOfKeysDown() const
 {
     return m_numKeysDown;
 }
 
-void cedrus::ResponseManager::ClearResponseQueue()
+void Cedrus::ResponseManager::ClearResponseQueue()
 {
     // This is how you clear a queue, evidently.
-    m_responseQueue = std::queue<response>();
+    m_responseQueue = std::queue<Response>();
 
     // We probably want to zero out the keypress counter.
     m_numKeysDown = 0;

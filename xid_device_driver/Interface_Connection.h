@@ -3,7 +3,7 @@
 
 #include "ftd2xx.h"
 
-namespace cedrus
+namespace Cedrus
 {
     class Interface_Connection
     {
@@ -13,6 +13,6 @@ namespace cedrus
 
         virtual bool Read( unsigned char *inBuffer, DWORD bytesToRead, LPDWORD bytesRead) = 0;
     };
-} // namespace cedrus
+} // namespace Cedrus
 
 #endif // INTERFACE_XID_CON_T_H

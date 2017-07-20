@@ -2,7 +2,7 @@
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions areXIDConnection
+ * modification, are permitted provided that the following conditions are
  * met:
  *
  * Redistributions of source code must retain the above copyright notice,
@@ -29,127 +29,133 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef BASE_DEVICE_T_H
-#define BASE_DEVICE_T_H
+#pragma once
 
 #include "XidDriverImpExpDefs.h"
-
 #include "ResponseManager.h"
-#include "XIDDeviceReadOnly.h"
 
-#include <boost/utility.hpp>
-
-namespace cedrus
+namespace Cedrus
 {
-    class Connection;
     class DeviceConfig;
 
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT XIDDevice : public XIDDeviceReadOnly, boost::noncopyable
+    class CEDRUS_XIDDRIVER_IMPORTEXPORT XIDDevice : public boost::noncopyable
     {
     public:
-        struct ProductAndModelID
-        {
-            ProductAndModelID() : productID(-1), modelID(-1) { }
-            int productID;
-            int modelID;
-        };
-
         virtual ~XIDDevice()
         {
         }
 
-        virtual int GetOutpostModel()=0;
-
-        virtual int GetHardwareGeneration()=0;
-
-        virtual int GetLightSensorMode()=0;
-
-        virtual void SetLightSensorMode( unsigned char mode )=0;
-
-        virtual void SetLightSensorThreshold( unsigned char threshold )=0;
-
-        virtual int GetLightSensorThreshold()=0;
-
-        virtual void SetScannerTriggerFilter( unsigned char mode )=0;
-
-        virtual void ResetRtTimer()=0;
-
-        virtual void ResetBaseTimer()=0;
-
-        virtual unsigned int QueryBaseTimer()=0;
-
-        virtual unsigned int GetPulseDuration()=0;
-
-        virtual void SetPulseDuration( unsigned int duration )=0;
-
-        virtual int GetNumberOfLines()=0;
-
-        virtual void SetNumberOfLines(unsigned int lines)=0;
-
-        virtual void PollForResponse()=0;
-
-        virtual bool HasQueuedResponses()=0;
-
-        virtual int GetNumberOfKeysDown() const=0;
-
-        virtual void ClearResponseQueue()=0;
-
-        virtual cedrus::response GetNextResponse()=0;
-
-        virtual void ClearResponses()=0;
-
-        virtual int GetAccessoryConnectorMode()=0;
-
-        virtual int GetAccessoryConnectorDevice()=0;
-
-        virtual int GetOutputLogic()=0;
-
-        virtual void SetOutputLogic( int mode )=0;
-
-        virtual void SetAccessoryConnectorMode( int mode )=0;
-
-        virtual int GetVKDropDelay()=0;
-
-        virtual void SetVKDropDelay( unsigned char delay )=0;
-
-        virtual void ReprogramFlash()=0;
-
-        virtual int GetTriggerDefault()=0;
-
-        virtual void SetTriggerDefault( bool defaultOn )=0;
-
-        virtual int GetTriggerDebounceTime()=0;
-
-        virtual void SetTriggerDebounceTime( unsigned char time )=0;
-
-        virtual int  GetButtonDebounceTime()=0;
-
-        virtual void SetButtonDebounceTime( unsigned char time )=0;
-
-        virtual void SetProtocol( unsigned char protocol )=0;
-
+        // _a0
+        virtual int GetOutputLogic() const = 0;
+        // a0
+        virtual void SetOutputLogic(unsigned char mode) = 0;
+        // _a1
+        virtual int GetAccessoryConnectorMode() const = 0;
+        // a1
+        virtual void SetAccessoryConnectorMode(unsigned char mode) = 0;
+        // _a6
+        virtual int GetACDebouncingTime() const = 0;
+        // a6
+        virtual void SetACDebouncingTime(unsigned char time) = 0;
+        // _aq
+        virtual int GetMpodModel(unsigned int mpod) const = 0;
+        // aq
         virtual void ConnectToMpod(unsigned int mpod, unsigned int action) = 0;
 
-        // Every device needs these.
+        // _b3
+        virtual int GetVKDropDelay() const = 0;
+        // b3
+        virtual void SetVKDropDelay(unsigned char delay) = 0;
+
+        // _c1
+        virtual std::string GetProtocol() const = 0;
+        // c1
+        virtual void SetProtocol(unsigned char protocol) = 0;
+        // _d1
+        virtual std::string GetInternalProductName() const = 0;
+        // _d2
+        virtual int GetProductID() const = 0;
+        // _d3
+        virtual int GetModelID() const = 0;
+        // d3
+        virtual void SetModelID(unsigned char model) = 0;
+        // _d4
+        virtual int GetMajorFirmwareVersion() const = 0;
+        // _d5
+        virtual int GetMinorFirmwareVersion() const = 0;
+        // _d6
+        virtual int GetOutpostModel() const = 0;
+        // _d7
+        virtual int GetHardwareGeneration() const = 0;
+
+        // e1
+        virtual void ResetBaseTimer() = 0;
+        // e3
+        virtual unsigned int QueryBaseTimer() = 0;
+        // e5
+        virtual void ResetRtTimer() = 0;
+
+        // f1
+        virtual void SetBaudRate(unsigned char rate) = 0;
+        // _f2
+        virtual void GetLockingLevel() = 0;
+        // f2
+        virtual void SetLockingLevel(unsigned char level) = 0;
+        // f3
+        virtual void ReprogramFlash() = 0;
+        // _f4
+        virtual int GetTriggerDefault() const = 0;
+        // f4
+        virtual void SetTriggerDefault(bool defaultOn) = 0;
+        // _f5
+        virtual int GetTriggerDebounceTime() const = 0;
+        // f5
+        virtual void SetTriggerDebounceTime(unsigned char time) = 0;
+        // _f6
+        virtual int GetButtonDebounceTime() const = 0;
+        // f6
+        virtual void SetButtonDebounceTime(unsigned char time) = 0;
+        // f7
+        virtual void RestoreFactoryDefaults() = 0;
+
+        // _ml
+        virtual int GetNumberOfLines() const = 0;
+        //ml
+        virtual void SetNumberOfLines(unsigned int lines) = 0;
+        // _mp
+        virtual unsigned int GetPulseDuration() const = 0;
+        // mp
+        virtual void SetPulseDuration(unsigned int duration) = 0;
+
+        // These are getting replaced with ir, im, it, iv and such commands
+        // _lr
+        virtual int GetLightSensorMode() const = 0;
+        // lr
+        virtual void SetLightSensorMode(unsigned char mode) = 0;
+        // _lt
+        virtual int GetLightSensorThreshold() const = 0;
+        // lt
+        virtual void SetLightSensorThreshold(unsigned char threshold) = 0;
+
+        // The following two blocks of commands do not query the device directly
+        virtual int GetBaudRate() const = 0;
         virtual const boost::shared_ptr<const DeviceConfig> GetDeviceConfig() const = 0;
-        virtual int OpenConnection() = 0;
-        virtual int CloseConnection() = 0;
-        virtual bool HasLostConnection() = 0;
-        virtual int GetBaudRate() = 0;
-        virtual void SetBaudRate( unsigned char rate ) = 0;
-        virtual std::string GetProtocol()=0;
-        virtual void GetProductAndModelID( int *productID, int *modelID ) = 0;
-        virtual void SetModelID( unsigned char model ) = 0;
-        virtual ProductAndModelID GetProductAndModelID()=0;
-        virtual int GetMajorFirmwareVersion() = 0;
-        virtual int GetMinorFirmwareVersion() = 0;
-        virtual std::string GetInternalProductName() = 0;
+        virtual int OpenConnection() const = 0;
+        virtual int CloseConnection() const = 0;
+        virtual bool HasLostConnection() const = 0;
+
+        // These are for getting button input from an RB
+        virtual void PollForResponse() const = 0;
+        virtual bool HasQueuedResponses() const = 0;
+        virtual int GetNumberOfKeysDown() const = 0;
+        virtual Cedrus::Response GetNextResponse() const = 0;
+        virtual void ClearResponseQueue() = 0; // Clear processed responses
+        virtual void ClearResponsesFromBuffer() = 0; // Clear characters from the physical buffer
+
+        // ah or mh
         virtual void RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines = false) = 0;
         virtual void LowerLines(unsigned int linesBitmask, bool leaveRemainingLines = false) = 0;
         virtual void ClearLines() = 0;
-        virtual void RestoreFactoryDefaults() = 0;
     };
 
-} // namespace cedrus
-
-#endif
+} // namespace Cedrus

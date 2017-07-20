@@ -1,11 +1,11 @@
 #include "Connection_TestOnly.h"
 
-cedrus::Connection_TestOnly::Connection_TestOnly( char * inputBuffer, int size )
+Cedrus::Connection_TestOnly::Connection_TestOnly( char * inputBuffer, int size )
 {
    InsertMoreDataIntoBuffer(inputBuffer, size);
 }
 
-bool cedrus::Connection_TestOnly::Read(
+bool Cedrus::Connection_TestOnly::Read(
     unsigned char *inBuffer,
     DWORD bytesToRead,
     LPDWORD bytesRead)
@@ -17,7 +17,7 @@ bool cedrus::Connection_TestOnly::Read(
     return true;
 }
 
-void cedrus::Connection_TestOnly::InsertMoreDataIntoBuffer( char * inputBuffer, int size )
+void Cedrus::Connection_TestOnly::InsertMoreDataIntoBuffer( char * inputBuffer, int size )
 {
     // The write will fail if ios::good() isn't true. This usually happens when
     // we exhaust the buffer, seting eofbit on it. Clear everything.

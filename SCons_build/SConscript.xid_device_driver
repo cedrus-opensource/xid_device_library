@@ -55,14 +55,8 @@ inputs = [
     prefix + 'xid_device_driver/Connection_TestOnly.cpp',
     prefix + 'xid_device_driver/DeviceConfig.cpp',
     prefix + 'xid_device_driver/ResponseManager.cpp',
-    prefix + 'xid_device_driver/CommandGlossary.cpp',
     prefix + 'xid_device_driver/XIDDeviceScanner.cpp',
     prefix + 'xid_device_driver/XIDDeviceImpl.cpp',
-    prefix + 'xid_device_driver/DeviceFactory.cpp',
-    prefix + 'xid_device_driver/InputDevice.cpp',
-    prefix + 'xid_device_driver/InputDeviceXID2.cpp',
-    prefix + 'xid_device_driver/StimTracker.cpp',
-    prefix + 'xid_device_driver/StimTrackerXID2.cpp',
 ]
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
