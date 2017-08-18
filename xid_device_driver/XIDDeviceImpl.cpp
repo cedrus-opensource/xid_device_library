@@ -45,7 +45,8 @@
 Cedrus::XIDDeviceImpl::XIDDeviceImpl(
             boost::shared_ptr<Connection> xidCon,
             boost::shared_ptr<const DeviceConfig> devConfig)
-    : m_xidCon(xidCon),
+    : m_linesState(0),
+    m_xidCon(xidCon),
     m_config(devConfig),
     m_ResponseMgr((devConfig->IsRB() || devConfig->IsSV1() || devConfig->IsLumina()) ?
         new ResponseManager(GetMinorFirmwareVersion(), devConfig) : nullptr)
