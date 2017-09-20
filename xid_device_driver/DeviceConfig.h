@@ -37,8 +37,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/property_tree/ptree.hpp>
+#include <memory>
 
 namespace Cedrus
 {
@@ -50,6 +49,33 @@ namespace Cedrus
             numberOfLines(-1),
             keyMap(8, -1),
             isResponsePort(false)
+        {
+        }
+
+        DevicePort(std::string portName,
+            int portNumber,
+            int numberOfLines,
+            std::vector<int> keyMap,
+            bool isResponsePort)
+            :
+            portName(portName),
+            portNumber(portNumber),
+            numberOfLines(numberOfLines),
+            keyMap(keyMap),
+            isResponsePort(isResponsePort)
+        {
+        }
+
+        DevicePort(std::string portName,
+            int portNumber,
+            int numberOfLines,
+            bool isResponsePort)
+            :
+            portName(portName),
+            portNumber(portNumber),
+            numberOfLines(numberOfLines),
+            keyMap(8, -1),
+            isResponsePort(isResponsePort)
         {
         }
 
@@ -70,14 +96,16 @@ namespace Cedrus
 
     class CEDRUS_XIDDRIVER_IMPORTEXPORT DeviceConfig
     {
-    private:
-        DeviceConfig(boost::property_tree::ptree * pt);
-
     public:
-        // This is exported for testing purposes only!
-        static boost::shared_ptr<DeviceConfig> ConfigForDevice(boost::property_tree::ptree * pt);
+        DeviceConfig(std::string deviceName,
+            int productID,
+            int modelID,
+            int majorFirmwareVer,
+            std::vector<DevicePort> devicePorts);
 
         ~DeviceConfig(void);
+
+        static void PopulateConfigList(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs);
 
         int GetMappedKey(int port, int key) const;
 
@@ -144,9 +172,9 @@ namespace Cedrus
 
     private:
         std::string m_DeviceName;
-        int m_MajorFirmwareVer;
         int m_ProductID;
         int m_ModelID;
+        int m_MajorFirmwareVer;
         bool m_requiresDelay;
 
         std::vector<DevicePort> m_DevicePorts;

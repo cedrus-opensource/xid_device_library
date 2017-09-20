@@ -40,8 +40,6 @@ env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLi
 cedrusboost_xidlib = imp.load_source('CedrusBoost_xidlib', outer_repo_root_dir + 'scons_helpers/scons/CedrusBoost.py')
 
 boost = cedrusboost_xidlib.CedrusBoostSettings(env)
-boost.need_boost_filesystem()
-boost.need_boost_system()
 
 project_target_name = 'xid_device_driver'
 
@@ -112,7 +110,8 @@ elif sys.platform == 'darwin':
 
 # This will be used in CedrusSConsHelperFunctions
 total_complete_staging = []
-total_complete_staging += boost.publish_all_libs_to_staging()
+if env['PYXID_FLAG']:
+    total_complete_staging += boost.publish_all_libs_to_staging()
 env.AppendUnique(CEDRUS_COMPLETE_THIRD_PARTY_STAGING = total_complete_staging)
 
 staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(

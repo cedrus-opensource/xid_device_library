@@ -43,9 +43,10 @@
 #include <boost/algorithm/string/predicate.hpp>
 
 Cedrus::XIDDeviceImpl::XIDDeviceImpl(
-            boost::shared_ptr<Connection> xidCon,
-            boost::shared_ptr<const DeviceConfig> devConfig)
-    : m_xidCon(xidCon),
+    std::shared_ptr<Connection> xidCon,
+    std::shared_ptr<const DeviceConfig> devConfig)
+    : m_linesState(0),
+    m_xidCon(xidCon),
     m_config(devConfig),
     m_ResponseMgr((devConfig->IsRB() || devConfig->IsSV1() || devConfig->IsLumina()) ?
         new ResponseManager(GetMinorFirmwareVersion(), devConfig) : nullptr)
@@ -235,7 +236,7 @@ std::string Cedrus::XIDDeviceImpl::GetProtocol() const
     return GetProtocol(m_xidCon);
 }
 
-/*static*/ std::string Cedrus::XIDDeviceImpl::GetProtocol(boost::shared_ptr<Connection> xidCon)
+/*static*/ std::string Cedrus::XIDDeviceImpl::GetProtocol(std::shared_ptr<Connection> xidCon)
 {
     // There's a possibility that the device is in E-Prime mode. Right
     // now is the only time the library cares about it, and we need to
@@ -270,7 +271,7 @@ void Cedrus::XIDDeviceImpl::SetProtocol(unsigned char protocol)
     return SetProtocol(m_xidCon, protocol);
 }
 
-void Cedrus::XIDDeviceImpl::SetProtocol(boost::shared_ptr<Connection> xidCon, unsigned char protocol)
+void Cedrus::XIDDeviceImpl::SetProtocol(std::shared_ptr<Connection> xidCon, unsigned char protocol)
 {
     DWORD bytes_written;
     unsigned char set_device_protocol_cmd[3];
@@ -305,7 +306,7 @@ int Cedrus::XIDDeviceImpl::GetModelID() const
     return XIDDeviceImpl::GetModelID(m_xidCon);
 }
 
-/*static*/ int Cedrus::XIDDeviceImpl::GetProductID(boost::shared_ptr<Connection> xidCon)
+/*static*/ int Cedrus::XIDDeviceImpl::GetProductID(std::shared_ptr<Connection> xidCon)
 {
     unsigned char product_id_return[1]; // we rely on SendXIDCommand to zero-initialize this buffer
 
@@ -325,7 +326,7 @@ int Cedrus::XIDDeviceImpl::GetModelID() const
     return return_valid ? product_id : INVALID_RETURN_VALUE;
 }
 
-/*static*/ int Cedrus::XIDDeviceImpl::GetModelID(boost::shared_ptr<Connection> xidCon)
+/*static*/ int Cedrus::XIDDeviceImpl::GetModelID(std::shared_ptr<Connection> xidCon)
 {
     unsigned char model_id_return[1]; // we rely on SendXIDCommand to zero-initialize this buffer
 
@@ -362,7 +363,7 @@ int Cedrus::XIDDeviceImpl::GetMajorFirmwareVersion() const
     return GetMajorFirmwareVersion(m_xidCon);
 }
 
-/*static*/ int Cedrus::XIDDeviceImpl::GetMajorFirmwareVersion(boost::shared_ptr<Connection> xidCon)
+/*static*/ int Cedrus::XIDDeviceImpl::GetMajorFirmwareVersion(std::shared_ptr<Connection> xidCon)
 {
     unsigned char major_return[1];
 
@@ -806,7 +807,7 @@ int Cedrus::XIDDeviceImpl::GetBaudRate() const
     return m_xidCon->GetBaudRate();
 }
 
-const boost::shared_ptr<const Cedrus::DeviceConfig> Cedrus::XIDDeviceImpl::GetDeviceConfig() const
+std::shared_ptr<const Cedrus::DeviceConfig> Cedrus::XIDDeviceImpl::GetDeviceConfig() const
 {
     return m_config;
 }
@@ -844,7 +845,6 @@ int Cedrus::XIDDeviceImpl::GetNumberOfKeysDown() const
 Cedrus::Response Cedrus::XIDDeviceImpl::GetNextResponse() const
 {
     return m_ResponseMgr->GetNextResponse();
-    // OR return Cedrus::Response();
 }
 
 void Cedrus::XIDDeviceImpl::ClearResponseQueue()
@@ -857,7 +857,7 @@ void Cedrus::XIDDeviceImpl::ClearResponsesFromBuffer()
     m_xidCon->FlushReadFromDeviceBuffer();
 }
 
-void Cedrus::XIDDeviceImpl::SetDigitalOutputLines_RB(boost::shared_ptr<Connection> xidCon, unsigned int lines)
+void Cedrus::XIDDeviceImpl::SetDigitalOutputLines_RB(std::shared_ptr<Connection> xidCon, unsigned int lines)
 {
     char set_lines_cmd[3];
 
@@ -869,7 +869,7 @@ void Cedrus::XIDDeviceImpl::SetDigitalOutputLines_RB(boost::shared_ptr<Connectio
     xidCon->Write((unsigned char*)set_lines_cmd, 3, &bytes_written, m_config->NeedsDelay());
 }
 
-void Cedrus::XIDDeviceImpl::SetDigitalOutputLines_ST(boost::shared_ptr<Connection> xidCon, unsigned int lines)
+void Cedrus::XIDDeviceImpl::SetDigitalOutputLines_ST(std::shared_ptr<Connection> xidCon, unsigned int lines)
 {
     unsigned int mask = lines;
     char set_lines_cmd[4];

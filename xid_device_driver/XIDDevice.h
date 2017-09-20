@@ -139,7 +139,7 @@ namespace Cedrus
 
         // The following two blocks of commands do not query the device directly
         virtual int GetBaudRate() const = 0;
-        virtual const boost::shared_ptr<const DeviceConfig> GetDeviceConfig() const = 0;
+        virtual std::shared_ptr<const DeviceConfig> GetDeviceConfig() const = 0;
         virtual int OpenConnection() const = 0;
         virtual int CloseConnection() const = 0;
         virtual bool HasLostConnection() const = 0;

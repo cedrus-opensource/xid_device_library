@@ -35,7 +35,6 @@
 
 #include <vector>
 #include <string>
-#include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 
 #include "ftd2xx.h"
@@ -44,14 +43,15 @@ namespace Cedrus
 {
     class Connection;
     class XIDDevice;
-    class InputDevice;
     class StimTracker;
     class DeviceConfig;
 
     class CEDRUS_XIDDRIVER_IMPORTEXPORT XIDDeviceScanner
     {
+    private:
+        XIDDeviceScanner();
     public:
-        XIDDeviceScanner(const std::string &configFileLocation);
+        static XIDDeviceScanner& GetDeviceScanner();
 
         void CloseAllConnections();
 
@@ -59,7 +59,7 @@ namespace Cedrus
 
         void DropEveryConnection();
 
-        void DropConnectionByPtr( boost::shared_ptr<Cedrus::XIDDevice> device );
+        void DropConnectionByPtr(std::shared_ptr<XIDDevice> device);
 
         void CheckConnectionsDropDeadOnes();
 
@@ -69,22 +69,21 @@ namespace Cedrus
         // return value is to signal that we need to cancel the scanning process.
         // true for stop, false for don't
         int DetectXIDDevices(
-            boost::function< void ( std::string ) > reportFunction = NULL,
-            boost::function< bool ( unsigned int ) > progressFunction = NULL );
+            boost::function< void(std::string) > reportFunction = NULL,
+            boost::function< bool(unsigned int) > progressFunction = NULL);
 
-        boost::shared_ptr<XIDDevice> DeviceConnectionAtIndex(unsigned int i) const;
+        std::shared_ptr<XIDDevice> DeviceConnectionAtIndex(unsigned int i) const;
 
         unsigned int DeviceCount() const;
 
-        const boost::shared_ptr<const DeviceConfig> DevconfigAtIndex(unsigned int i) const;
+        std::shared_ptr<const DeviceConfig> DevconfigAtIndex(unsigned int i) const;
 
         unsigned int DevconfigCount() const;
 
-        boost::shared_ptr<DeviceConfig> GetConfigForGivenDevice(int deviceID, int modelID, int majorFirmwareVer) const;
+        std::shared_ptr<const DeviceConfig> GetConfigForGivenDevice(int deviceID, int modelID, int majorFirmwareVer) const;
 
     private:
-        bool ReadInDevconfigs(const std::string &configFileLocation);
-        std::vector<boost::shared_ptr<Cedrus::XIDDevice> > m_Devices;
-        std::vector< boost::shared_ptr<Cedrus::DeviceConfig> > m_MasterConfigList;
+        std::vector<std::shared_ptr<XIDDevice> > m_Devices;
+        std::vector<std::shared_ptr<DeviceConfig> > m_MasterConfigList;
     };
 } // namespace Cedrus

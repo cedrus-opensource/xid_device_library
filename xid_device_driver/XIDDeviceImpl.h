@@ -44,8 +44,8 @@ namespace Cedrus
     {
     public:
         XIDDeviceImpl(
-            boost::shared_ptr<Connection> xidCon,
-            boost::shared_ptr<const DeviceConfig> devConfig);
+            std::shared_ptr<Connection> xidCon,
+            std::shared_ptr<const DeviceConfig> devConfig);
 
         virtual ~XIDDeviceImpl();
 
@@ -62,17 +62,17 @@ namespace Cedrus
         virtual void SetVKDropDelay(unsigned char delay);
 
         virtual std::string GetProtocol() const;
-        static std::string GetProtocol(boost::shared_ptr<Connection> xidCon);
+        static std::string GetProtocol(std::shared_ptr<Connection> xidCon);
         virtual void SetProtocol(unsigned char protocol);
-        static void SetProtocol(boost::shared_ptr<Connection> xidCon, unsigned char protocol);
+        static void SetProtocol(std::shared_ptr<Connection> xidCon, unsigned char protocol);
         std::string GetInternalProductName() const;
         virtual int GetProductID() const;
         virtual int GetModelID() const;
-        static int GetProductID(boost::shared_ptr<Connection> xidCon); // used during device detection
-        static int GetModelID(boost::shared_ptr<Connection> xidCon); // used during device detection
+        static int GetProductID(std::shared_ptr<Connection> xidCon); // used during device detection
+        static int GetModelID(std::shared_ptr<Connection> xidCon); // used during device detection
         virtual void SetModelID(unsigned char model);
         virtual int GetMajorFirmwareVersion() const;
-        static int GetMajorFirmwareVersion(boost::shared_ptr<Connection> xidCon); // used during device detection
+        static int GetMajorFirmwareVersion(std::shared_ptr<Connection> xidCon); // used during device detection
         virtual int GetMinorFirmwareVersion() const;
         virtual int GetOutpostModel() const;
         virtual int GetHardwareGeneration() const;
@@ -106,7 +106,7 @@ namespace Cedrus
 
         // The following two blocks of commands do not query the device directly
         virtual int GetBaudRate() const;
-        virtual const boost::shared_ptr<const DeviceConfig> GetDeviceConfig() const;
+        virtual std::shared_ptr<const DeviceConfig> GetDeviceConfig() const;
         virtual int OpenConnection() const;
         virtual int CloseConnection() const;
         virtual bool HasLostConnection() const;
@@ -124,13 +124,13 @@ namespace Cedrus
         virtual void ClearLines();
 
     private:
-        void SetDigitalOutputLines_RB(boost::shared_ptr<Connection> xidCon, unsigned int lines);
-        void SetDigitalOutputLines_ST(boost::shared_ptr<Connection> xidCon, unsigned int lines);
+        void SetDigitalOutputLines_RB(std::shared_ptr<Connection> xidCon, unsigned int lines);
+        void SetDigitalOutputLines_ST(std::shared_ptr<Connection> xidCon, unsigned int lines);
 
         unsigned int m_linesState;
-        boost::shared_ptr<Connection> m_xidCon;
-        const boost::shared_ptr<const Cedrus::DeviceConfig> m_config;
-        const boost::shared_ptr<Cedrus::ResponseManager> m_ResponseMgr;
+        std::shared_ptr<Connection> m_xidCon;
+        std::shared_ptr<const Cedrus::DeviceConfig> m_config;
+        const std::shared_ptr<Cedrus::ResponseManager> m_ResponseMgr;
     };
 
 } // namespace Cedrus

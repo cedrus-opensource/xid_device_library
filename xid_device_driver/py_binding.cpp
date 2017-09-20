@@ -6,7 +6,6 @@
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
-
 namespace {
 
 /*
@@ -23,17 +22,17 @@ Wrap XIDDeviceScanner::DetectXIDDevices( boost::function< void(std::string) >,
                                                    boost::function< bool(unsigned int) > )
 allowing pass python function as parameters
 */
-int DetectXIDDevices( Cedrus::XIDDeviceScanner& self,
-                              boost::python::object reportFunction,
-                              boost::python::object progressFunction )
+int DetectXIDDevices(Cedrus::XIDDeviceScanner& self,
+                     boost::python::object reportFunction,
+                     boost::python::object progressFunction)
 {
-    return self.DetectXIDDevices( reportFunction, progressFunction );
+    return self.DetectXIDDevices(reportFunction, progressFunction);
 }
 
 /*
 Wrap XIDDeviceScanner::DetectXIDDevices() without paramters 
 */
-int DetectXIDDevicesDef( Cedrus::XIDDeviceScanner& self )
+int DetectXIDDevicesDef(Cedrus::XIDDeviceScanner& self)
 {
     return self.DetectXIDDevices();
 }
@@ -54,8 +53,7 @@ Cedrus::XIDDevice const volatile* get_pointer(class Cedrus::XIDDevice const vola
 
 } // namespace boost
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS( XIDDevice_Overloads, RaiseLines, 1, 2 )
-
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XIDDevice_Overloads, RaiseLines, 1, 2)
 
 BOOST_PYTHON_MODULE( xid )
 {
@@ -69,59 +67,58 @@ BOOST_PYTHON_MODULE( xid )
     using namespace Cedrus;
 
     // Expose std::vector<int> for DevicePort::keyMap.
-    py::class_<std::vector<int> >( "KeyVec" )
-        .def( py::vector_indexing_suite<std::vector<int> >() )
+    py::class_<std::vector<int> >("KeyVec")
+        .def(py::vector_indexing_suite<std::vector<int> >())
     ;
 
     // Expose struct DevicePort.
-    py::class_<DevicePort>( "DevicePort" )
-        .def( py::init<>() )
-        .def( py::init<DevicePort>() )
-        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, portName) )
-        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, portNumber) )
-        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, numberOfLines) )
-        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, keyMap) )
-        .def_readwrite( PY_MEMBER_FUNCTION(DevicePort, isResponsePort) )
+    py::class_<DevicePort>("DevicePort")
+        .def(py::init<>())
+        .def(py::init<DevicePort>())
+        .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, portName))
+        .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, portNumber))
+        .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, numberOfLines))
+        .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, keyMap))
+        .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, isResponsePort))
     ; 
 
     py::register_ptr_to_python<DevicePort*>();
 
     // Expose std::vector<DevicePort> for return value of DeviceConfig::GetVectorOfPorts()
-    py::class_<std::vector<DevicePort> >( "DevicePortVec" )
+    py::class_<std::vector<DevicePort> >("DevicePortVec")
         .def(py::vector_indexing_suite<std::vector<DevicePort> >())
     ;
 
     py::register_ptr_to_python< std::vector<DevicePort>* >();
 
     // Expose struct Response.
-    py::class_<Response>( "Response" )
+    py::class_<Response>("Response")
         .def(py::init<>())
         .def(py::init<Response>())
-        .add_property( PY_MEMBER_FUNCTION( Response, port) )
-        .add_property( PY_MEMBER_FUNCTION( Response, key) )
-        .add_property( PY_MEMBER_FUNCTION( Response, wasPressed) )
-        .add_property( PY_MEMBER_FUNCTION( Response, reactionTime) )
+        .add_property(PY_MEMBER_FUNCTION(Response, port))
+        .add_property(PY_MEMBER_FUNCTION(Response, key))
+        .add_property(PY_MEMBER_FUNCTION(Response, wasPressed))
+        .add_property(PY_MEMBER_FUNCTION(Response, reactionTime))
     ;
 
     // Expose Interface_Connection.
-    py::class_<Interface_Connection, boost::noncopyable>( "Interface_Connection", py::no_init )
-        .def( "Read", &Interface_Connection::Read, py::args( "inBuffer, bytesToRead, bytesRead" ))
+    py::class_<Interface_Connection, boost::noncopyable>("Interface_Connection", py::no_init)
+        .def("Read", &Interface_Connection::Read, py::args("inBuffer, bytesToRead, bytesRead"))
     ;
 
     // Expose class ResponseManager.
-    py::class_<ResponseManager, boost::noncopyable>( "ResponseManager",
-                                                  py::init<int , boost::shared_ptr<const DeviceConfig> >() )
-        .def( PY_MEMBER_FUNCTION(ResponseManager, CheckForKeypress), py::args( "portConnection, devConfig" ) )
-        .def( PY_MEMBER_FUNCTION(ResponseManager, HasQueuedResponses) )
-        .def( PY_MEMBER_FUNCTION(ResponseManager, GetNextResponse) )
-        .def( PY_MEMBER_FUNCTION(ResponseManager, GetNumberOfKeysDown) )
-        .def( PY_MEMBER_FUNCTION(ResponseManager, ClearResponseQueue) )
+    py::class_<ResponseManager, boost::noncopyable>("ResponseManager",
+                                                    py::init<int, std::shared_ptr<const DeviceConfig> >())
+        .def(PY_MEMBER_FUNCTION(ResponseManager, CheckForKeypress), py::args("portConnection, devConfig"))
+        .def(PY_MEMBER_FUNCTION(ResponseManager, HasQueuedResponses))
+        .def(PY_MEMBER_FUNCTION(ResponseManager, GetNextResponse))
+        .def(PY_MEMBER_FUNCTION(ResponseManager, GetNumberOfKeysDown))
+        .def(PY_MEMBER_FUNCTION(ResponseManager, ClearResponseQueue))
     ;
     py::scope().attr("INVALID_PORT_BITS") = static_cast<int>(ResponseManager::INVALID_PORT_BITS);
 
     // Expose class DeviceConfig.
-    py::class_<DeviceConfig, boost::shared_ptr<DeviceConfig>,
-        boost::noncopyable >("DeviceConfig", py::no_init)
+    py::class_<DeviceConfig, std::shared_ptr<DeviceConfig>, boost::noncopyable >("DeviceConfig", py::no_init)
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetMappedKey), py::args("port", "key"))
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetDeviceName))
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetProductID))
@@ -130,7 +127,7 @@ BOOST_PYTHON_MODULE( xid )
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetVectorOfPorts),
             py::return_value_policy<py::reference_existing_object>())
 
-        .def("get_port_by_index", &DeviceConfig::GetPortPtrByIndex,
+        .def("GetPortPtrByIndex", &DeviceConfig::GetPortPtrByIndex,
             py::arg("portNum"),
             py::return_value_policy<py::reference_existing_object>())
 
@@ -138,10 +135,10 @@ BOOST_PYTHON_MODULE( xid )
             py::args("deviceId, modelID, majorFirmwareVer "))
         ;
 
-    py::register_ptr_to_python< boost::shared_ptr<const DeviceConfig> >();
+    py::register_ptr_to_python< std::shared_ptr<const DeviceConfig> >();
 
     // Expose class XIDDevice.
-    py::class_<XIDDevice, boost::shared_ptr<XIDDevice>, boost::noncopyable >("XIDDevice", py::no_init)
+    py::class_<XIDDevice, std::shared_ptr<XIDDevice>, boost::noncopyable >("XIDDevice", py::no_init)
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetOutputLogic))
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetOutputLogic), py::arg("mode"))
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetAccessoryConnectorMode))
@@ -196,18 +193,18 @@ BOOST_PYTHON_MODULE( xid )
         ;
 
     // Expose class XIDDeviceScanner.
-    py::class_<XIDDeviceScanner>( "XIDDeviceScanner", py::init<std::string const &>() )
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, CloseAllConnections) )
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, OpenAllConnections) )
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DropEveryConnection) )
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DropConnectionByPtr), py::arg( "device" ) )
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, CheckConnectionsDropDeadOnes) )
-        .def( "DetectXIDDevices", &DetectXIDDevices, py::args( "reportFunction", "progressFunction" ) )
-        .def( "DetectXIDDevices", &DetectXIDDevicesDef)
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DeviceConnectionAtIndex), py::arg( "index" ) )
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DeviceCount) )
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DevconfigAtIndex), py::arg( "index" ) )
-        .def( PY_MEMBER_FUNCTION(XIDDeviceScanner, DevconfigCount) )
+    py::class_<XIDDeviceScanner>("XIDDeviceScanner", py::no_init)
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, CloseAllConnections))
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, OpenAllConnections))
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, DropEveryConnection))
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, DropConnectionByPtr), py::arg("device"))
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, CheckConnectionsDropDeadOnes))
+        .def("DetectXIDDevices", &DetectXIDDevices, py::args("reportFunction", "progressFunction"))
+        .def("DetectXIDDevices", &DetectXIDDevicesDef)
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, DeviceConnectionAtIndex), py::arg("index"))
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, DeviceCount))
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, DevconfigAtIndex), py::arg("index"))
+        .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, DevconfigCount))
     ;
 
     #undef PY_MEMBER_FUNCTION

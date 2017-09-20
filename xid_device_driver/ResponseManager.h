@@ -29,12 +29,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RESPONSE_MGR_H
-#define RESPONSE_MGR_H
+#pragma once
 
 #include "constants.h"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <queue>
@@ -71,7 +69,7 @@ namespace Cedrus
         };
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-         ResponseManager(int minorFirmwareVer, boost::shared_ptr<const DeviceConfig> devConfig);
+         ResponseManager(int minorFirmwareVer, std::shared_ptr<const DeviceConfig> devConfig);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         ~ResponseManager();
@@ -83,7 +81,7 @@ namespace Cedrus
          * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
          */
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        void CheckForKeypress(boost::shared_ptr<Interface_Connection> portConnection, boost::shared_ptr<const DeviceConfig> devConfig);
+        void CheckForKeypress(std::shared_ptr<Interface_Connection> portConnection, std::shared_ptr<const DeviceConfig> devConfig);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         bool HasQueuedResponses() const;
@@ -121,4 +119,3 @@ namespace Cedrus
     };
 } // namespace Cedrus
 
-#endif // RESPONSE_MGR_H

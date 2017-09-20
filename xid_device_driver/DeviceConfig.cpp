@@ -31,84 +31,52 @@
 
 #include "DeviceConfig.h"
 
+#include "DeviceConfigRepository.h"
+
 #include "constants.h"
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ini_parser.hpp>
-#include <boost/property_tree/exceptions.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <iostream>
 #include <sstream>
 
 #include "CedrusAssert.h"
 
-boost::shared_ptr<Cedrus::DeviceConfig> Cedrus::DeviceConfig::ConfigForDevice(
-        boost::property_tree::ptree * pt )
+void Cedrus::DeviceConfig::PopulateConfigList(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
 {
-    boost::shared_ptr<DeviceConfig> devconfig;
+    CreateRB530Config(listOfAllConfigs);
+    CreateRB540Config(listOfAllConfigs);
+    CreateRB730Config(listOfAllConfigs);
+    CreateRB740Config(listOfAllConfigs);
+    CreateRB830Config(listOfAllConfigs);
+    CreateRB840Config(listOfAllConfigs);
+    CreateRB834Config(listOfAllConfigs);
+    CreateRB844Config(listOfAllConfigs);
 
-    devconfig.reset(new DeviceConfig(pt));
+    CreateLuminaLP400Config(listOfAllConfigs);
+    CreateLumina3GConfig(listOfAllConfigs);
 
-    return devconfig;
+    CreateSV1Config(listOfAllConfigs);
+
+    CreateST100Config(listOfAllConfigs);
+
+    CreateAllmpodConfigs(listOfAllConfigs);
+
+    CreateAllcpodConfigs(listOfAllConfigs);
 }
 
-Cedrus::DeviceConfig::DeviceConfig( boost::property_tree::ptree * pt )
+Cedrus::DeviceConfig::DeviceConfig(std::string deviceName,
+    int productID,
+    int modelID,
+    int majorFirmwareVer,
+    std::vector<DevicePort> devicePorts)
+    :
+    m_DeviceName(deviceName),
+    m_ProductID(productID),
+    m_ModelID(modelID),
+    m_MajorFirmwareVer(majorFirmwareVer),
+    m_requiresDelay(false),
+    m_DevicePorts(devicePorts)
 {
-    std::string digital_output_command;
-
-    m_MajorFirmwareVer = pt->get<int>("DeviceInfo.MajorFirmwareVersion", (int) INVALID_RETURN_VALUE );
-    m_DeviceName = pt->get<std::string>("DeviceInfo.DeviceName", "" );
-    m_ProductID = pt->get<int>("DeviceInfo.XidProductID", (int) INVALID_RETURN_VALUE );
-    m_ModelID = pt->get<int>("DeviceInfo.XidModelID", (int) INVALID_RETURN_VALUE );
-
-    bool missing_port = false;
-
-    // The XID protocol can report responses from a maximum of 8 ports,
-    // but usually only 2-3 ports are actually defined and only one
-    // of them is for input.
-    for(unsigned int i = 0; i < 8; ++i)
-    {
-        std::string port_str;
-        std::ostringstream s;
-        s << "Port" << i;
-        port_str = s.str().c_str();
-
-        try {
-            pt->get_child(port_str);
-        }
-        catch ( boost::property_tree::ptree_bad_path err ) {
-            missing_port = true;
-            continue; // The device doesn't support this port
-        }
-
-        if ( missing_port )
-            CEDRUS_FAIL("Devconfigs should include a fake port block for the ports they're missing!");
-
-        DevicePort port;
-        port.portName = pt->get(port_str+".PortName", "not_found");
-        port.portNumber = i;
-        port.numberOfLines = pt->get(port_str+".NumberOfLines", -1);
-        port.isResponsePort = pt->get(port_str+".UseableAsResponse", "not_found") == "Yes";
-
-        if ( port.isResponsePort )
-        {
-            // devconfig files have up to 8 key mappings per port
-            for( unsigned int j = 0; j < 8; ++j )
-            {
-                std::ostringstream s2;
-                s2 << ".XidDeviceKeyMap" << j;
-                std::string key_name = s2.str().c_str();
-
-                int key_num = pt->get(port_str+key_name, -1);
-                port.keyMap[j] = key_num;
-            }
-        }
-
-        m_DevicePorts.push_back(port);
-    }
-
     m_requiresDelay = (IsRB() && IsXID1()) || IsSV1();
 }
 

@@ -32,7 +32,6 @@
 #pragma once
 
 #include "Interface_Connection.h"
-#include <boost/shared_ptr.hpp>
 
 #ifdef __APPLE__
 #   define SLEEP_FUNC usleep

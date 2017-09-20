@@ -6,23 +6,25 @@
 
 #include "CedrusAssert.h"
 
+#include <boost/bind.hpp>
+
 namespace
 {
     bool device_is_7byte_lumina3g_21
     (
-     const int minorFirmwareVer,
-     boost::shared_ptr<const Cedrus::DeviceConfig> devConfig
+        const int minorFirmwareVer,
+        std::shared_ptr<const Cedrus::DeviceConfig> devConfig
     )
     {
-        const bool prod_is_lumina3g_21 = ( devConfig->GetProductID() == Cedrus::PRODUCT_ID_LUMINA );
-        const bool maj_fw_is_lumina3g_21 = ( devConfig->GetMajorVersion() == 2 );
-        const bool min_fw_is_lumina3g_21 = ( minorFirmwareVer == 1 );
+        const bool prod_is_lumina3g_21 = (devConfig->GetProductID() == Cedrus::PRODUCT_ID_LUMINA);
+        const bool maj_fw_is_lumina3g_21 = (devConfig->GetMajorVersion() == 2);
+        const bool min_fw_is_lumina3g_21 = (minorFirmwareVer == 1);
 
-        return ( prod_is_lumina3g_21 && maj_fw_is_lumina3g_21 && min_fw_is_lumina3g_21 );
+        return (prod_is_lumina3g_21 && maj_fw_is_lumina3g_21 && min_fw_is_lumina3g_21);
     }
 }
 
-Cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, boost::shared_ptr<const DeviceConfig> devConfig )
+Cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, std::shared_ptr<const DeviceConfig> devConfig )
     : m_BytesInBuffer(0),
       m_XIDPacketIndex(INVALID_PACKET_INDEX),
       m_numKeysDown(0),
@@ -206,7 +208,7 @@ Cedrus::KeyState Cedrus::ResponseManager::XIDInputFoundLumina3G_21(Response &res
     return input_found;
 }
 
-void Cedrus::ResponseManager::CheckForKeypress(boost::shared_ptr<Interface_Connection> portConnection, boost::shared_ptr<const DeviceConfig> devConfig)
+void Cedrus::ResponseManager::CheckForKeypress(std::shared_ptr<Interface_Connection> portConnection, std::shared_ptr<const Cedrus::DeviceConfig> devConfig)
 {
     DWORD bytes_read = 0;
     Response res;

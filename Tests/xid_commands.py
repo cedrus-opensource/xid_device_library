@@ -9,8 +9,7 @@ if _platform != "darwin" and _platform != "win32":
 import time
 import xid
 
-# Edit this to match your devconfig location!
-xds = xid.XIDDeviceScanner("C:/Users/Eugene Matsak/source/Xidon/xid_device_library/devconfig")
+xds = xid.XIDDeviceScanner()
 
 print ("Detecting XID devices, stand by.")
 xds.DetectXIDDevices()

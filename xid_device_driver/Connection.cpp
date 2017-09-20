@@ -176,7 +176,7 @@ bool Cedrus::Connection::Write(
         }
     }
 
-    m_ConnectionDead = (write_status == FT_OK);
+    m_ConnectionDead = (write_status != FT_OK);
 
     return m_ConnectionDead;
 }
