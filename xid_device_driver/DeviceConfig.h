@@ -130,6 +130,11 @@ namespace Cedrus
             return m_ProductID == PRODUCT_ID_LUMINA;
         }
 
+        bool IsLumina3G() const
+        {
+            return m_ProductID == PRODUCT_ID_LUMINA && IsXID2();
+        }
+
         bool IsSV1() const
         {
             return m_ProductID == PRODUCT_ID_SV1;
@@ -138,6 +143,11 @@ namespace Cedrus
         bool IsRB() const
         {
             return m_ProductID == PRODUCT_ID_RB;
+        }
+
+        bool IsRBx40() const
+        {
+            return m_ProductID == PRODUCT_ID_RB && IsXID2();
         }
 
         bool IsMPod() const

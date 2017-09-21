@@ -689,6 +689,9 @@ void Cedrus::XIDDeviceImpl::SetPulseDuration(unsigned int duration)
 
 int Cedrus::XIDDeviceImpl::GetLightSensorMode() const
 {
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
+        return INVALID_RETURN_VALUE;
+
     unsigned char return_info[4]; // we rely on SendXIDCommand to zero-initialize this buffer
     const DWORD bytes_count = m_xidCon->SendXIDCommand(
         "_lr",
@@ -711,6 +714,9 @@ it will at least zero our buffer");
 
 void Cedrus::XIDDeviceImpl::SetLightSensorMode(unsigned char mode)
 {
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
+        return;
+
     DWORD bytes_written;
     unsigned char change_mode_cmd[3];
     change_mode_cmd[0] = 'l';
@@ -829,27 +835,32 @@ bool Cedrus::XIDDeviceImpl::HasLostConnection() const
 
 void Cedrus::XIDDeviceImpl::PollForResponse() const
 {
-    m_ResponseMgr->CheckForKeypress(m_xidCon, m_config);
+    if (m_ResponseMgr)
+        m_ResponseMgr->CheckForKeypress(m_xidCon, m_config);
 }
 
 bool Cedrus::XIDDeviceImpl::HasQueuedResponses() const
 {
-    return m_ResponseMgr->HasQueuedResponses();
+    if (m_ResponseMgr)
+        return m_ResponseMgr->HasQueuedResponses();
 }
 
 int Cedrus::XIDDeviceImpl::GetNumberOfKeysDown() const
 {
-    return m_ResponseMgr->GetNumberOfKeysDown();
+    if (m_ResponseMgr)
+        return m_ResponseMgr->GetNumberOfKeysDown();
 }
 
 Cedrus::Response Cedrus::XIDDeviceImpl::GetNextResponse() const
 {
-    return m_ResponseMgr->GetNextResponse();
+    if (m_ResponseMgr)
+        return m_ResponseMgr->GetNextResponse();
 }
 
 void Cedrus::XIDDeviceImpl::ClearResponseQueue()
 {
-    m_ResponseMgr->ClearResponseQueue();
+    if (m_ResponseMgr)
+        m_ResponseMgr->ClearResponseQueue();
 }
 
 void Cedrus::XIDDeviceImpl::ClearResponsesFromBuffer()
