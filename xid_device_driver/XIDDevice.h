@@ -123,7 +123,7 @@ namespace Cedrus
         virtual void RestoreFactoryDefaults() = 0;
 
         // _ml
-        virtual int GetNumberOfLines() const = 0;
+        virtual unsigned int GetNumberOfLines() const = 0;
         //ml
         virtual void SetNumberOfLines(unsigned int lines) = 0;
         // _mp
@@ -151,7 +151,7 @@ namespace Cedrus
         // These are for getting button input from an RB
         virtual void PollForResponse() const = 0;
         virtual bool HasQueuedResponses() const = 0;
-        virtual int GetNumberOfKeysDown() const = 0;
+        virtual unsigned int GetNumberOfKeysDown() const = 0;
         virtual Cedrus::Response GetNextResponse() const = 0;
         virtual void ClearResponseQueue() = 0; // Clear processed responses
         virtual void ClearResponsesFromBuffer() = 0; // Clear characters from the physical buffer

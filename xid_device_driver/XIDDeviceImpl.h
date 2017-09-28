@@ -64,7 +64,7 @@ namespace Cedrus
         virtual void SetVKDropDelay(unsigned char delay);
 
         virtual std::string GetProtocol() const;
-        static std::string GetProtocol(std::shared_ptr<Connection> xidCon);
+        static std::string GetProtocol(std::shared_ptr<Connection> xidCon); // used during device detection
         virtual void SetProtocol(unsigned char protocol);
         static void SetProtocol(std::shared_ptr<Connection> xidCon, unsigned char protocol);
         std::string GetInternalProductName() const;
@@ -95,7 +95,7 @@ namespace Cedrus
         virtual void SetButtonDebounceTime(unsigned char time);
         virtual void RestoreFactoryDefaults();
 
-        virtual int GetNumberOfLines() const;
+        virtual unsigned int GetNumberOfLines() const;
         virtual void SetNumberOfLines(unsigned int lines);
         virtual unsigned int GetPulseDuration() const;
         virtual void SetPulseDuration(unsigned int duration);
@@ -116,7 +116,7 @@ namespace Cedrus
         // These are for getting button input from an RB
         virtual void PollForResponse() const;
         virtual bool HasQueuedResponses() const;
-        virtual int GetNumberOfKeysDown() const;
+        virtual unsigned int GetNumberOfKeysDown() const;
         virtual Cedrus::Response GetNextResponse() const;
         virtual void ClearResponseQueue(); // Clear processed responses
         virtual void ClearResponsesFromBuffer(); // Clear characters from the physical buffer
@@ -131,8 +131,8 @@ namespace Cedrus
 
         unsigned int m_linesState;
         std::shared_ptr<Connection> m_xidCon;
-        std::shared_ptr<const Cedrus::DeviceConfig> m_config;
-        const std::shared_ptr<Cedrus::ResponseManager> m_ResponseMgr;
+        std::shared_ptr<const DeviceConfig> m_config;
+        const std::shared_ptr<ResponseManager> m_ResponseMgr;
     };
 
 } // namespace Cedrus

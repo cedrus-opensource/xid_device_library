@@ -93,7 +93,7 @@ namespace Cedrus
         // returns a signed int as a way to check for errors. The count going
         // negative means that at some point we lost a key press, and that's
         // serious.
-        int GetNumberOfKeysDown() const;
+        unsigned int GetNumberOfKeysDown() const;
 
         void ClearResponseQueue();
 
@@ -113,7 +113,7 @@ namespace Cedrus
         unsigned char m_InputBuffer[XID_PACKET_SIZE];
         int m_XIDPacketIndex;
 
-        int m_numKeysDown;
+        unsigned int m_numKeysDown;
         std::queue<Response> m_responseQueue;
         boost::function< Cedrus::KeyState (Response&) > m_ResponseParsingFunction;
     };

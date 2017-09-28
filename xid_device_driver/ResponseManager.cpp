@@ -279,7 +279,7 @@ Cedrus::Response Cedrus::ResponseManager::GetNextResponse()
     return res;
 }
 
-int Cedrus::ResponseManager::GetNumberOfKeysDown() const
+unsigned int Cedrus::ResponseManager::GetNumberOfKeysDown() const
 {
     return m_numKeysDown;
 }

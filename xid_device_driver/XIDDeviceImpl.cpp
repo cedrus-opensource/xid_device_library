@@ -669,10 +669,10 @@ void Cedrus::XIDDeviceImpl::RestoreFactoryDefaults()
     m_xidCon->Write((unsigned char*)"f7", 2, &bytes_written, m_config->NeedsDelay());
 }
 
-int Cedrus::XIDDeviceImpl::GetNumberOfLines() const
+unsigned int Cedrus::XIDDeviceImpl::GetNumberOfLines() const
 {
-    if (!(m_config->IsCPod() || m_config->IsMPod()))
-        return INVALID_RETURN_VALUE;
+    //if (!(m_config->IsCPod() || m_config->IsMPod()))
+    //    return INVALID_RETURN_VALUE;
 
     unsigned char gen_return[4];
 
@@ -896,12 +896,16 @@ bool Cedrus::XIDDeviceImpl::HasQueuedResponses() const
 {
     if (m_ResponseMgr)
         return m_ResponseMgr->HasQueuedResponses();
+    else
+        return false;
 }
 
-int Cedrus::XIDDeviceImpl::GetNumberOfKeysDown() const
+unsigned int Cedrus::XIDDeviceImpl::GetNumberOfKeysDown() const
 {
     if (m_ResponseMgr)
         return m_ResponseMgr->GetNumberOfKeysDown();
+    else
+        return 0;
 }
 
 Cedrus::Response Cedrus::XIDDeviceImpl::GetNextResponse() const

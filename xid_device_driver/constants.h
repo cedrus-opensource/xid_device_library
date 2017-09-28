@@ -33,7 +33,6 @@
 
 namespace
 {
-    // if we decide that other classes can use this, then i will re-declare it in the header
     void AdjustEndiannessUintToChars
     (
         const unsigned int the_int,
