@@ -201,6 +201,59 @@ void Cedrus::XIDDeviceImpl::ConnectToMpod(unsigned int mpod, unsigned int action
     SLEEP_FUNC(200 * SLEEP_INC);
 }
 
+std::string Cedrus::XIDDeviceImpl::GetMappedSignals(unsigned int line)
+{
+    std::string mapped_signals;
+
+    if (!m_config->IsXID2())
+        return mapped_signals;
+
+    char get_mapped_signals_cmd[4];
+    get_mapped_signals_cmd[0] = '_';
+    get_mapped_signals_cmd[1] = 'a';
+    get_mapped_signals_cmd[2] = 't';
+    get_mapped_signals_cmd[3] = '0' + line;
+
+    unsigned char mapped_signals_return[12];
+    m_xidCon->SendXIDCommand(
+        get_mapped_signals_cmd,
+        mapped_signals_return,
+        sizeof(mapped_signals_return),
+        m_config->NeedsDelay());
+
+    bool return_valid = boost::starts_with(mapped_signals_return, "_at");
+
+    char mask[9];
+    mask[8] = '\0';
+
+    memcpy(mask, mapped_signals_return+4, 8 * sizeof(unsigned char));
+    mapped_signals = mask;
+
+    return mapped_signals;
+}
+
+void Cedrus::XIDDeviceImpl::MapSignals(unsigned int line, std::string map)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    DWORD bytes_written;
+    unsigned char map_signals_cmd[11];
+    map_signals_cmd[0] = 'a';
+    map_signals_cmd[1] = 't';
+    map_signals_cmd[2] = '0' + line;
+    map_signals_cmd[3] = map[0];
+    map_signals_cmd[4] = map[1];
+    map_signals_cmd[5] = map[2];
+    map_signals_cmd[6] = map[3];
+    map_signals_cmd[7] = map[4];
+    map_signals_cmd[8] = map[5];
+    map_signals_cmd[9] = map[6];
+    map_signals_cmd[10] = map[7];
+
+    m_xidCon->Write(map_signals_cmd, 11, &bytes_written, m_config->NeedsDelay());
+}
+
 int Cedrus::XIDDeviceImpl::GetVKDropDelay() const
 {
     if (!m_config->IsXID1InputDevice())

@@ -61,6 +61,10 @@ namespace Cedrus
         virtual int GetMpodModel(unsigned int mpod) const = 0;
         // aq
         virtual void ConnectToMpod(unsigned int mpod, unsigned int action) = 0;
+        // _at
+        virtual std::string GetMappedSignals(unsigned int line) = 0;
+        // at
+        virtual void MapSignals(unsigned int line, std::string map) = 0;
 
         // _b3
         virtual int GetVKDropDelay() const = 0;

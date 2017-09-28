@@ -57,6 +57,8 @@ namespace Cedrus
         virtual void SetACDebouncingTime(unsigned char time);
         virtual int GetMpodModel(unsigned int mpod) const;
         virtual void ConnectToMpod(unsigned int mpod, unsigned int action);
+        virtual std::string GetMappedSignals(unsigned int line);
+        virtual void MapSignals(unsigned int line, std::string map);
 
         virtual int GetVKDropDelay() const;
         virtual void SetVKDropDelay(unsigned char delay);

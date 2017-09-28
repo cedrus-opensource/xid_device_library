@@ -115,4 +115,40 @@ namespace Cedrus
         PRODUCT_ID_STIMTRACKER = 83 // 'S'
     };
 
+    enum MpodBitMask
+    {
+        PORTA_BIT0 = 0x00000001,
+        PORTA_BIT1 = 0x00000002,
+        PORTA_BIT2 = 0x00000004,
+        PORTA_BIT3 = 0x00000008,
+        PORTA_BIT4 = 0x00000010,
+        PORTA_BIT5 = 0x00000020,
+        PORTA_BIT6 = 0x00000040,
+        PORTA_BIT7 = 0x00000080,
+
+        PORTB_BIT0 = 0x00000100,
+        PORTB_BIT1 = 0x00000200,
+        PORTB_BIT2 = 0x00000400,
+        PORTB_BIT3 = 0x00000800,
+        PORTB_BIT4 = 0x00001000,
+        PORTB_BIT5 = 0x00002000,
+        PORTB_BIT6 = 0x00004000,
+        PORTB_BIT7 = 0x00008000,
+
+        VOICE_KEY = 0x00040000,
+        LIGHT_SENS = 0x00080001,
+        TRIGGER = 0x00100000,
+
+        XID_IN = 0x00400000,
+        XID_OUT = 0x00800000,
+
+        PORTE_BIT0 = 0x01000000,
+        PORTE_BIT1 = 0x02000000,
+        PORTE_BIT2 = 0x04000000,
+        PORTE_BIT3 = 0x08000000,
+        PORTE_BIT4 = 0x10000000,
+        PORTE_BIT5 = 0x20000000,
+        PORTE_BIT6 = 0x40000000,
+        PORTE_BIT7 = 0x80000000,
+    };
 } // namespace Cedrus
