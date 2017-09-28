@@ -280,11 +280,12 @@ namespace
         int productID,
         int modelID,
         int majorFirmwareVer,
+        unsigned int num_lines,
         std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
         std::vector<Cedrus::DevicePort> devicePorts;
 
-        Cedrus::DevicePort port("Event Marker", 0, 8, false);
+        Cedrus::DevicePort port("Event Marker", 0, num_lines, false);
         devicePorts.push_back(port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig(deviceName, productID, modelID, majorFirmwareVer, devicePorts));
@@ -294,37 +295,37 @@ namespace
 
     void CreateAllmpodConfigs(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
-        AddPodConfig("m-pod for ADI", 51, 65, 2, listOfAllConfigs); // 'A'
-        AddPodConfig("m-pod for Brain Products DB-26", 51, 66, 2, listOfAllConfigs); // 'B'
-        AddPodConfig("m-pod for ANT Neuro", 51, 67, 2, listOfAllConfigs); // 'C'
-        AddPodConfig("m-pod for Biopac MP35/36", 51, 68, 2, listOfAllConfigs); // 'D'
-        AddPodConfig("m-pod for Biopac MP150(STP100C module)", 51, 69, 2, listOfAllConfigs); // 'E'
-        AddPodConfig("m-pod for Biosemi", 51, 70, 2, listOfAllConfigs); // 'F'
-        AddPodConfig("m-pod for MindWare", 51, 71, 2, listOfAllConfigs); // 'G'
-        AddPodConfig("m-pod for Neuroscan", 51, 72, 2, listOfAllConfigs); // 'H'
-        AddPodConfig("m-pod for SMI", 51, 74, 2, listOfAllConfigs); // 'J'
-        AddPodConfig("m-pod for Brain Products actiCHamp", 51, 77, 2, listOfAllConfigs); // 'M'
-        AddPodConfig("m-pod for NIRx", 51, 78, 2, listOfAllConfigs); // 'N'
-        AddPodConfig("m-pod for Tobii", 51, 84, 2, listOfAllConfigs); // 'T'
-        AddPodConfig("m-pod no model set", 51, 48, 2, listOfAllConfigs); // '0'
-        AddPodConfig("Generic m-pod", 51, 103, 2, listOfAllConfigs); // 'g'
+        AddPodConfig("m-pod for ADI", 51, 65, 2, 8, listOfAllConfigs); // 'A'
+        AddPodConfig("m-pod for Brain Products DB-26", 51, 66, 2, 16, listOfAllConfigs); // 'B'
+        AddPodConfig("m-pod for ANT Neuro", 51, 67, 2, 8, listOfAllConfigs); // 'C'
+        AddPodConfig("m-pod for Biopac MP35/36", 51, 68, 2, 8, listOfAllConfigs); // 'D'
+        AddPodConfig("m-pod for Biopac MP150(STP100C module)", 51, 69, 2, 8, listOfAllConfigs); // 'E'
+        AddPodConfig("m-pod for Biosemi", 51, 70, 2, 16, listOfAllConfigs); // 'F'
+        AddPodConfig("m-pod for MindWare", 51, 71, 2, 8, listOfAllConfigs); // 'G'
+        AddPodConfig("m-pod for Neuroscan", 51, 72, 2, 8, listOfAllConfigs); // 'H'
+        AddPodConfig("m-pod for SMI", 51, 74, 2, 8, listOfAllConfigs); // 'J'
+        AddPodConfig("m-pod for Brain Products actiCHamp", 51, 77, 2, 16, listOfAllConfigs); // 'M'
+        AddPodConfig("m-pod for NIRx", 51, 78, 2, 8, listOfAllConfigs); // 'N'
+        AddPodConfig("m-pod for Tobii", 51, 84, 2, 8, listOfAllConfigs); // 'T'
+        AddPodConfig("m-pod no model set", 51, 48, 2, 16, listOfAllConfigs); // '0'
+        AddPodConfig("Generic m-pod", 51, 103, 2, 8, listOfAllConfigs); // 'g'
     }
 
     void CreateAllcpodConfigs(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
-        AddPodConfig("c-pod for ADI", 52, 65, 2, listOfAllConfigs); // 'A'
-        AddPodConfig("c-pod for Brain Products DB-26", 52, 66, 2, listOfAllConfigs); // 'B'
-        AddPodConfig("c-pod for ANT Neuro", 52, 67, 2, listOfAllConfigs); // 'C'
-        AddPodConfig("c-pod for Biopac MP35/36", 52, 68, 2, listOfAllConfigs); // 'D'
-        AddPodConfig("c-pod for Biopac MP150(STP100C module)", 52, 69, 2, listOfAllConfigs); // 'E'
-        AddPodConfig("c-pod for Biosemi", 52, 70, 2, listOfAllConfigs); // 'F'
-        AddPodConfig("c-pod for MindWare", 52, 71, 2, listOfAllConfigs); // 'G'
-        AddPodConfig("c-pod for Neuroscan", 52, 72, 2, listOfAllConfigs); // 'H'
-        AddPodConfig("c-pod for SMI", 52, 74, 2, listOfAllConfigs); // 'J'
-        AddPodConfig("c-pod for Brain Products actiCHamp", 52, 77, 2, listOfAllConfigs); // 'M'
-        AddPodConfig("c-pod for NIRx", 52, 78, 2, listOfAllConfigs); // 'N'
-        AddPodConfig("c-pod for Tobii", 52, 84, 2, listOfAllConfigs); // 'T'
-        AddPodConfig("c-pod no model set", 52, 48, 2, listOfAllConfigs); // '0'
-        AddPodConfig("Generic c-pod", 52, 103, 2, listOfAllConfigs); // 'g'
+        AddPodConfig("c-pod for ADI", 52, 65, 2, 8, listOfAllConfigs); // 'A'
+        AddPodConfig("c-pod for Brain Products DB-26", 52, 66, 2, 16, listOfAllConfigs); // 'B'
+        AddPodConfig("c-pod for ANT Neuro", 52, 67, 2, 8, listOfAllConfigs); // 'C'
+        AddPodConfig("c-pod for Biopac MP35/36", 52, 68, 2, 8, listOfAllConfigs); // 'D'
+        AddPodConfig("c-pod for Biopac MP150(STP100C module)", 52, 69, 2, 8, listOfAllConfigs); // 'E'
+        AddPodConfig("c-pod for Biosemi", 52, 70, 2, 16, listOfAllConfigs); // 'F'
+        AddPodConfig("c-pod for MindWare", 52, 71, 2, 8, listOfAllConfigs); // 'G'
+        AddPodConfig("c-pod for Neuroscan", 52, 72, 2, 16, listOfAllConfigs); // 'H'
+        AddPodConfig("c-pod for SMI", 52, 74, 2, 8, listOfAllConfigs); // 'J'
+        AddPodConfig("c-pod for Brain Products actiCHamp", 52, 77, 2, 8, listOfAllConfigs); // 'M'
+        AddPodConfig("c-pod for NIRx", 52, 78, 2, 8, listOfAllConfigs); // 'N'
+        AddPodConfig("c-pod for Tobii", 52, 84, 2, 8, listOfAllConfigs); // 'T'
+        AddPodConfig("c-pod no model set", 52, 48, 2, 16, listOfAllConfigs); // '0'
+        AddPodConfig("Generic c-pod", 52, 103, 2, 8, listOfAllConfigs); // 'g'
     }
 }
