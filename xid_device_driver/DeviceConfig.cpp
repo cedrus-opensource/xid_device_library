@@ -58,6 +58,8 @@ void Cedrus::DeviceConfig::PopulateConfigList(std::vector<std::shared_ptr<Cedrus
     CreateSV1Config(listOfAllConfigs);
 
     CreateST100Config(listOfAllConfigs);
+    CreateST2DuoConfig(listOfAllConfigs);
+    CreateST2QuadConfig(listOfAllConfigs);
 
     CreateAllmpodConfigs(listOfAllConfigs);
 
@@ -68,13 +70,15 @@ Cedrus::DeviceConfig::DeviceConfig(std::string deviceName,
     int productID,
     int modelID,
     int majorFirmwareVer,
-    std::vector<DevicePort> devicePorts)
+    unsigned int outputLines,
+    std::map<unsigned int, DevicePort> devicePorts)
     :
     m_DeviceName(deviceName),
     m_ProductID(productID),
     m_ModelID(modelID),
     m_MajorFirmwareVer(majorFirmwareVer),
     m_requiresDelay(false),
+    m_outputLines(outputLines),
     m_DevicePorts(devicePorts)
 {
     m_requiresDelay = (IsRB() && IsXID1()) || IsSV1();
@@ -88,27 +92,35 @@ int Cedrus::DeviceConfig::GetMappedKey(int port, int key) const
 {
     int mapped_key = -1;
 
-    if ( port < m_DevicePorts.size() )
+    try
     {
-        mapped_key = m_DevicePorts[port].keyMap[key];
+        mapped_key = m_DevicePorts.at(port).keyMap[key];
+    }
+    catch (std::out_of_range e)
+    {
+        return -1;
     }
 
-    // Anything that wasn't mapped during the devconfig parsing process will default to -1
     return mapped_key;
 }
 
-const std::vector<Cedrus::DevicePort> * Cedrus::DeviceConfig::GetVectorOfPorts() const
+const std::map<unsigned int, Cedrus::DevicePort> * Cedrus::DeviceConfig::GetMapOfPorts() const
 {
     return &m_DevicePorts;
 }
 
-const Cedrus::DevicePort * Cedrus::DeviceConfig::GetPortPtrByIndex(unsigned int portNum) const
+const Cedrus::DevicePort * Cedrus::DeviceConfig::GetPortPtrByNumber(unsigned int portNum) const
 {
     const Cedrus::DevicePort * port_ptr = nullptr;
-    if ( portNum < m_DevicePorts.size() )
-        port_ptr = &(m_DevicePorts[portNum]);
-    else
-        CEDRUS_FAIL("Requested port number doesn't exist!");
+
+    try
+    {
+        port_ptr = &(m_DevicePorts.at(portNum));
+    }
+    catch (std::out_of_range e)
+    {
+        return nullptr;
+    }
 
     return port_ptr;
 }
@@ -131,6 +143,11 @@ int Cedrus::DeviceConfig::GetModelID() const
 int Cedrus::DeviceConfig::GetMajorVersion() const
 {
     return m_MajorFirmwareVer;
+}
+
+unsigned int Cedrus::DeviceConfig::GetNumberOfOutputLines() const
+{
+    return m_outputLines;
 }
 
 bool Cedrus::DeviceConfig::DoesConfigMatchDevice( int deviceID, int modelID, int majorFirmwareVer ) const

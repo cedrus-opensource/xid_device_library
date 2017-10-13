@@ -79,13 +79,12 @@ BOOST_PYTHON_MODULE( xid )
         .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, portNumber))
         .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, numberOfLines))
         .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, keyMap))
-        .def_readwrite(PY_MEMBER_FUNCTION(DevicePort, isResponsePort))
     ; 
 
     py::register_ptr_to_python<DevicePort*>();
 
-    // Expose std::vector<DevicePort> for return value of DeviceConfig::GetVectorOfPorts()
-    py::class_<std::vector<DevicePort> >("DevicePortVec")
+    // Expose std::vector<DevicePort> for return value of DeviceConfig::GetMapOfPorts()
+    py::class_<std::vector<DevicePort> >("DevicePortMap")
         .def(py::vector_indexing_suite<std::vector<DevicePort> >())
     ;
 
@@ -124,10 +123,10 @@ BOOST_PYTHON_MODULE( xid )
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetProductID))
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetModelID))
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetMajorVersion))
-        .def(PY_MEMBER_FUNCTION(DeviceConfig, GetVectorOfPorts),
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, GetMapOfPorts),
             py::return_value_policy<py::reference_existing_object>())
 
-        .def("GetPortPtrByIndex", &DeviceConfig::GetPortPtrByIndex,
+        .def("GetPortPtrByIndex", &DeviceConfig::GetPortPtrByNumber,
             py::arg("portNum"),
             py::return_value_policy<py::reference_existing_object>())
 
@@ -173,10 +172,10 @@ BOOST_PYTHON_MODULE( xid )
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetButtonDebounceTime), py::arg("time"))
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetPulseDuration))
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetPulseDuration), py::arg("duration"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetLightSensorMode))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetLightSensorMode), py::arg("mode"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetLightSensorThreshold), py::arg("threshold"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetLightSensorThreshold))
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetTimerResetOnOnsetMode))
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetTimerResetOnOnsetMode), py::arg("mode"))
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetAnalogInputThreshold))
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetAnalogInputThreshold), py::arg("threshold"))
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetDeviceConfig))
         .def(PY_MEMBER_FUNCTION(XIDDevice, OpenConnection))
         .def(PY_MEMBER_FUNCTION(XIDDevice, CloseConnection))

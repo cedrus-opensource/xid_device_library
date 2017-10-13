@@ -135,7 +135,7 @@ namespace Cedrus
         PORTB_BIT7 = 0x00008000,
 
         VOICE_KEY = 0x00040000,
-        LIGHT_SENS = 0x00080001,
+        LIGHT_SENS = 0x00080000,
         TRIGGER = 0x00100000,
 
         XID_IN = 0x00400000,

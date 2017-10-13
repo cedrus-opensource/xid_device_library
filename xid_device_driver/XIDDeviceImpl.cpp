@@ -39,6 +39,8 @@
 #include "CedrusAssert.h"
 #include <string.h>
 #include <sstream>
+#include <iomanip>
+#include <locale>
 
 #include <boost/algorithm/string/predicate.hpp>
 
@@ -201,18 +203,16 @@ void Cedrus::XIDDeviceImpl::ConnectToMpod(unsigned int mpod, unsigned int action
     SLEEP_FUNC(200 * SLEEP_INC);
 }
 
-std::string Cedrus::XIDDeviceImpl::GetMappedSignals(unsigned int line)
+unsigned int Cedrus::XIDDeviceImpl::GetMappedSignals(unsigned int line)
 {
-    std::string mapped_signals;
-
     if (!m_config->IsXID2())
-        return mapped_signals;
+        return 0;
 
     char get_mapped_signals_cmd[4];
     get_mapped_signals_cmd[0] = '_';
     get_mapped_signals_cmd[1] = 'a';
     get_mapped_signals_cmd[2] = 't';
-    get_mapped_signals_cmd[3] = '0' + line;
+    get_mapped_signals_cmd[3] = line > 9 ? '7' + line : '0' + line;
 
     unsigned char mapped_signals_return[12];
     m_xidCon->SendXIDCommand(
@@ -227,31 +227,68 @@ std::string Cedrus::XIDDeviceImpl::GetMappedSignals(unsigned int line)
     mask[8] = '\0';
 
     memcpy(mask, mapped_signals_return+4, 8 * sizeof(unsigned char));
-    mapped_signals = mask;
+    std::string mapped_signals = mask;
 
-    return mapped_signals;
+    unsigned int signals = 0;
+    if (!mapped_signals.empty())
+        signals = std::stoul(mapped_signals, nullptr, 16);
+
+    return signals;
 }
 
-void Cedrus::XIDDeviceImpl::MapSignals(unsigned int line, std::string map)
+void Cedrus::XIDDeviceImpl::MapSignals(unsigned int line, unsigned int map)
 {
     if (!m_config->IsXID2())
         return;
+
+    std::stringstream stream;
+    stream << std::setfill('0') << std::setw(sizeof(unsigned int) * 2)
+        << std::hex << map << std::endl;
+    std::string string_mask(stream.str());
+    for (auto & c : string_mask) c = toupper(c);
 
     DWORD bytes_written;
     unsigned char map_signals_cmd[11];
     map_signals_cmd[0] = 'a';
     map_signals_cmd[1] = 't';
-    map_signals_cmd[2] = '0' + line;
-    map_signals_cmd[3] = map[0];
-    map_signals_cmd[4] = map[1];
-    map_signals_cmd[5] = map[2];
-    map_signals_cmd[6] = map[3];
-    map_signals_cmd[7] = map[4];
-    map_signals_cmd[8] = map[5];
-    map_signals_cmd[9] = map[6];
-    map_signals_cmd[10] = map[7];
+    map_signals_cmd[2] = line > 9 ? '7' + line : '0' + line;
+    map_signals_cmd[3] = string_mask[0];
+    map_signals_cmd[4] = string_mask[1];
+    map_signals_cmd[5] = string_mask[2];
+    map_signals_cmd[6] = string_mask[3];
+    map_signals_cmd[7] = string_mask[4];
+    map_signals_cmd[8] = string_mask[5];
+    map_signals_cmd[9] = string_mask[6];
+    map_signals_cmd[10] = string_mask[7];
 
     m_xidCon->Write(map_signals_cmd, 11, &bytes_written, m_config->NeedsDelay());
+}
+
+void Cedrus::XIDDeviceImpl::ResetMappedLinesToDefault()
+{
+    if (!m_config->IsXID2())
+        return;
+
+    DWORD bytes_written;
+    unsigned char reset_map_signals_cmd[3];
+    reset_map_signals_cmd[0] = 'a';
+    reset_map_signals_cmd[1] = 't';
+    reset_map_signals_cmd[2] = 'X';
+
+    m_xidCon->Write(reset_map_signals_cmd, 3, &bytes_written, m_config->NeedsDelay());
+}
+
+void Cedrus::XIDDeviceImpl::CommitLineMappingToFlash()
+{
+    if (!m_config->IsXID2())
+        return;
+
+    DWORD bytes_written;
+    unsigned char commit_map_cmd[2];
+    commit_map_cmd[0] = 'a';
+    commit_map_cmd[1] = 'f';
+
+    m_xidCon->Write(commit_map_cmd, 2, &bytes_written, m_config->NeedsDelay());
 }
 
 int Cedrus::XIDDeviceImpl::GetVKDropDelay() const
@@ -345,6 +382,8 @@ std::string Cedrus::XIDDeviceImpl::GetInternalProductName() const
         m_config->NeedsDelay());
 
     std::string return_name((char*)return_info);
+
+    std::replace(return_name.begin(), return_name.end(), '\r', '\n');
 
     return return_name.empty() ? std::string("Error Retrieving Name") : return_name;
 }
@@ -669,6 +708,65 @@ void Cedrus::XIDDeviceImpl::RestoreFactoryDefaults()
     m_xidCon->Write((unsigned char*)"f7", 2, &bytes_written, m_config->NeedsDelay());
 }
 
+int Cedrus::XIDDeviceImpl::GetTimerResetOnOnsetMode() const
+{
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
+        return INVALID_RETURN_VALUE;
+
+    unsigned char return_info[4]; // we rely on SendXIDCommand to zero-initialize this buffer
+    const DWORD bytes_count = m_xidCon->SendXIDCommand(
+        "_lr",
+        return_info,
+        sizeof(return_info),
+        m_config->NeedsDelay());
+
+    bool return_valid_lr = boost::starts_with(return_info, "_lr");
+    bool return_valid_val = return_info[3] >= 48 && return_info[3] <= 51;
+
+    return (return_valid_lr && return_valid_val) ? return_info[3] - '0' : INVALID_RETURN_VALUE;
+}
+
+void Cedrus::XIDDeviceImpl::SetTimerResetOnOnsetMode(unsigned char mode)
+{
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
+        return;
+
+    DWORD bytes_written;
+    unsigned char change_mode_cmd[3];
+    change_mode_cmd[0] = 'l';
+    change_mode_cmd[1] = 'r';
+    change_mode_cmd[2] = mode + '0';
+
+    m_xidCon->Write(change_mode_cmd, 3, &bytes_written, m_config->NeedsDelay());
+}
+
+void Cedrus::XIDDeviceImpl::SetAnalogInputThreshold(unsigned char threshold)
+{
+    DWORD bytes_written;
+    unsigned char change_threshold_cmd[3];
+    change_threshold_cmd[0] = 'l';
+    change_threshold_cmd[1] = 't';
+    change_threshold_cmd[2] = threshold;
+
+    m_xidCon->Write(change_threshold_cmd, 3, &bytes_written, m_config->NeedsDelay());
+}
+
+int Cedrus::XIDDeviceImpl::GetAnalogInputThreshold() const
+{
+    unsigned char threshold_return[4]; // we rely on SendXIDCommand to zero-initialize this buffer
+
+    m_xidCon->SendXIDCommand(
+        "_lt",
+        threshold_return,
+        sizeof(threshold_return),
+        m_config->NeedsDelay());
+
+    bool return_valid = boost::starts_with(threshold_return, "_lt");
+
+    unsigned char return_val = (unsigned char)(threshold_return[3]);
+    return return_valid ? (int)(return_val) : INVALID_RETURN_VALUE;
+}
+
 unsigned int Cedrus::XIDDeviceImpl::GetNumberOfLines() const
 {
     //if (!(m_config->IsCPod() || m_config->IsMPod()))
@@ -738,74 +836,6 @@ void Cedrus::XIDDeviceImpl::SetPulseDuration(unsigned int duration)
 
     DWORD written = 0;
     m_xidCon->Write(command, 6, &written, m_config->NeedsDelay());
-}
-
-int Cedrus::XIDDeviceImpl::GetLightSensorMode() const
-{
-    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
-        return INVALID_RETURN_VALUE;
-
-    unsigned char return_info[4]; // we rely on SendXIDCommand to zero-initialize this buffer
-    const DWORD bytes_count = m_xidCon->SendXIDCommand(
-        "_lr",
-        return_info,
-        sizeof(return_info),
-        m_config->NeedsDelay());
-
-    CEDRUS_ASSERT(bytes_count >= 1 || (return_info[0] == 0 && return_info[3] == 0),
-        "in the case where SendXIDCommand neglected to store ANY BYTES, we are relying on a GUARANTEE that \
-it will at least zero our buffer");
-
-    bool return_valid_lr = boost::starts_with(return_info, "_lr");
-    bool return_valid_val = return_info[3] >= 48 && return_info[3] <= 51;
-
-    CEDRUS_ASSERT(return_valid_lr, "GetLightSensorMode xid query result must start with _lr");
-    CEDRUS_ASSERT(return_valid_val, "GetLightSensorMode's return value must be between '0' and '3'");
-
-    return (return_valid_lr && return_valid_val) ? return_info[3] - '0' : INVALID_RETURN_VALUE;
-}
-
-void Cedrus::XIDDeviceImpl::SetLightSensorMode(unsigned char mode)
-{
-    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
-        return;
-
-    DWORD bytes_written;
-    unsigned char change_mode_cmd[3];
-    change_mode_cmd[0] = 'l';
-    change_mode_cmd[1] = 'r';
-    change_mode_cmd[2] = mode + '0';
-
-    m_xidCon->Write(change_mode_cmd, 3, &bytes_written, m_config->NeedsDelay());
-}
-
-void Cedrus::XIDDeviceImpl::SetLightSensorThreshold(unsigned char threshold)
-{
-    DWORD bytes_written;
-    unsigned char change_threshold_cmd[3];
-    change_threshold_cmd[0] = 'l';
-    change_threshold_cmd[1] = 't';
-    change_threshold_cmd[2] = threshold;
-
-    m_xidCon->Write(change_threshold_cmd, 3, &bytes_written, m_config->NeedsDelay());
-}
-
-int Cedrus::XIDDeviceImpl::GetLightSensorThreshold() const
-{
-    unsigned char threshold_return[4]; // we rely on SendXIDCommand to zero-initialize this buffer
-
-    m_xidCon->SendXIDCommand(
-        "_lt",
-        threshold_return,
-        sizeof(threshold_return),
-        m_config->NeedsDelay());
-
-    bool return_valid = boost::starts_with(threshold_return, "_lt");
-
-    CEDRUS_ASSERT(return_valid, "GetLightSensorThreshold xid query result must start with _lt");
-
-    unsigned char return_val = (unsigned char)(threshold_return[3]);
-    return return_valid ? (int)(return_val) : INVALID_RETURN_VALUE;
 }
 
 void Cedrus::XIDDeviceImpl::RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines)
@@ -912,6 +942,8 @@ Cedrus::Response Cedrus::XIDDeviceImpl::GetNextResponse() const
 {
     if (m_ResponseMgr)
         return m_ResponseMgr->GetNextResponse();
+    else
+        return Response();
 }
 
 void Cedrus::XIDDeviceImpl::ClearResponseQueue()

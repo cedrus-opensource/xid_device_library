@@ -62,9 +62,13 @@ namespace Cedrus
         // aq
         virtual void ConnectToMpod(unsigned int mpod, unsigned int action) = 0;
         // _at
-        virtual std::string GetMappedSignals(unsigned int line) = 0;
+        virtual unsigned int GetMappedSignals(unsigned int line) = 0;
         // at
-        virtual void MapSignals(unsigned int line, std::string map) = 0;
+        virtual void MapSignals(unsigned int line, unsigned int map) = 0;
+        // atX
+        virtual void ResetMappedLinesToDefault() = 0;
+        // af
+        virtual void CommitLineMappingToFlash() = 0;
 
         // _b3
         virtual int GetVKDropDelay() const = 0;
@@ -122,6 +126,23 @@ namespace Cedrus
         // f7
         virtual void RestoreFactoryDefaults() = 0;
 
+        // _io
+        //virtual bool GetGenerateTimestampedOutput() const = 0;
+        // io
+        //virtual bool SetGenerateTimestampedOutput() = 0;
+        // _ir
+        virtual int GetTimerResetOnOnsetMode() const = 0;
+        // ir
+        virtual void SetTimerResetOnOnsetMode(unsigned char mode) = 0;
+        // _it
+        virtual int GetAnalogInputThreshold() const = 0;
+        // it
+        virtual void SetAnalogInputThreshold(unsigned char threshold) = 0;
+        // _iv
+        //virtual bool GetMixedInputMode() const = 0;
+        // iv
+        //virtual bool SetMixedInputMode() = 0;
+
         // _ml
         virtual unsigned int GetNumberOfLines() const = 0;
         //ml
@@ -130,16 +151,6 @@ namespace Cedrus
         virtual unsigned int GetPulseDuration() const = 0;
         // mp
         virtual void SetPulseDuration(unsigned int duration) = 0;
-
-        // These are getting replaced with ir, im, it, iv and such commands
-        // _lr
-        virtual int GetLightSensorMode() const = 0;
-        // lr
-        virtual void SetLightSensorMode(unsigned char mode) = 0;
-        // _lt
-        virtual int GetLightSensorThreshold() const = 0;
-        // lt
-        virtual void SetLightSensorThreshold(unsigned char threshold) = 0;
 
         // The following two blocks of commands do not query the device directly
         virtual int GetBaudRate() const = 0;

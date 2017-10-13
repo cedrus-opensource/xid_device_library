@@ -47,35 +47,28 @@ namespace Cedrus
             portName(""),
             portNumber(-1),
             numberOfLines(-1),
-            keyMap(8, -1),
-            isResponsePort(false)
+            keyMap(8, -1)
         {
         }
 
         DevicePort(std::string portName,
             int portNumber,
             int numberOfLines,
-            std::vector<int> keyMap,
-            bool isResponsePort)
+            std::vector<int> keyMap)
             :
             portName(portName),
             portNumber(portNumber),
             numberOfLines(numberOfLines),
-            keyMap(keyMap),
-            isResponsePort(isResponsePort)
+            keyMap(keyMap)
         {
         }
 
-        DevicePort(std::string portName,
-            int portNumber,
-            int numberOfLines,
-            bool isResponsePort)
+        DevicePort(std::string portName, int portNumber, int numberOfLines)
             :
             portName(portName),
             portNumber(portNumber),
             numberOfLines(numberOfLines),
-            keyMap(8, -1),
-            isResponsePort(isResponsePort)
+            keyMap(8, -1)
         {
         }
 
@@ -83,7 +76,6 @@ namespace Cedrus
         int portNumber;
         int numberOfLines;
         std::vector<int> keyMap;
-        bool isResponsePort;
 
         bool operator==( const DevicePort& other ) const
         {
@@ -101,7 +93,8 @@ namespace Cedrus
             int productID,
             int modelID,
             int majorFirmwareVer,
-            std::vector<DevicePort> devicePorts);
+            unsigned int outputLines,
+            std::map<unsigned int, DevicePort> devicePorts);
 
         ~DeviceConfig(void);
 
@@ -117,9 +110,11 @@ namespace Cedrus
 
         int GetMajorVersion() const;
 
-        const std::vector<DevicePort> * GetVectorOfPorts() const;
+        unsigned int GetNumberOfOutputLines() const;
 
-        const Cedrus::DevicePort * GetPortPtrByIndex(unsigned int portNum) const;
+        const std::map<unsigned int, DevicePort> * GetMapOfPorts() const;
+
+        const Cedrus::DevicePort * GetPortPtrByNumber(unsigned int portNum) const;
 
         bool DoesConfigMatchDevice( int deviceID, int modelID, int majorFirmwareVer ) const;
 
@@ -186,7 +181,8 @@ namespace Cedrus
         int m_ModelID;
         int m_MajorFirmwareVer;
         bool m_requiresDelay;
+        unsigned int m_outputLines;
 
-        std::vector<DevicePort> m_DevicePorts;
+        std::map<unsigned int, DevicePort> m_DevicePorts;
     };
 } // namespace Cedrus

@@ -71,11 +71,14 @@ project_target = staging_dir + os.path.sep
 
 python_path = outer_repo_root_dir + 'Python27'
 
+ftd2xx_loc = outer_repo_root_dir + 'ftd2xx'
+lib_path.append(ftd2xx_loc)
+
 if sys.platform == 'win32':
     lib_dependencies = ['ftd2xx']
     include_path.append( python_path +'/win32/include/' )
     lib_path.append( python_path + '/win32/libs/' )
-    env.Install( staging_dir, env.subst('ftd2xx.dll') )
+    env.Install( staging_dir, env.subst(ftd2xx_loc + '/ftd2xx.dll') )
     project_target += project_target_name + ".dll"
     name_of_pyd += ".pyd"
 
@@ -83,7 +86,7 @@ if sys.platform == 'darwin':
     lib_dependencies = ['ftd2xx.1.2.2', 'libpython2.7']
     include_path.append( python_path +'/osx/include/' )
     lib_path.append( python_path +'/osx/libs/' )
-    env.Install( staging_dir, env.subst('libftd2xx.1.2.2.dylib') )
+    env.Install( staging_dir, env.subst(ftd2xx_loc + '/libftd2xx.1.2.2.dylib') )
     project_target += "lib" + project_target_name + ".dylib"
     name_of_pyd += ".so"
 

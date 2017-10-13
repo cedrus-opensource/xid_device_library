@@ -57,8 +57,10 @@ namespace Cedrus
         virtual void SetACDebouncingTime(unsigned char time);
         virtual int GetMpodModel(unsigned int mpod) const;
         virtual void ConnectToMpod(unsigned int mpod, unsigned int action);
-        virtual std::string GetMappedSignals(unsigned int line);
-        virtual void MapSignals(unsigned int line, std::string map);
+        virtual unsigned int GetMappedSignals(unsigned int line);
+        virtual void MapSignals(unsigned int line, unsigned int map);
+        virtual void ResetMappedLinesToDefault();
+        virtual void CommitLineMappingToFlash();
 
         virtual int GetVKDropDelay() const;
         virtual void SetVKDropDelay(unsigned char delay);
@@ -95,16 +97,19 @@ namespace Cedrus
         virtual void SetButtonDebounceTime(unsigned char time);
         virtual void RestoreFactoryDefaults();
 
+        //virtual bool GetGenerateTimestampedOutput() const;
+        //virtual bool SetGenerateTimestampedOutput();
+        virtual int GetTimerResetOnOnsetMode() const;
+        virtual void SetTimerResetOnOnsetMode(unsigned char mode);
+        virtual int GetAnalogInputThreshold() const;
+        virtual void SetAnalogInputThreshold(unsigned char threshold);
+        //virtual bool GetMixedInputMode() const;
+        //virtual bool SetMixedInputMode();
+
         virtual unsigned int GetNumberOfLines() const;
         virtual void SetNumberOfLines(unsigned int lines);
         virtual unsigned int GetPulseDuration() const;
         virtual void SetPulseDuration(unsigned int duration);
-
-        // These are getting replaced with ir, im, it, iv and such commands
-        virtual int GetLightSensorMode() const;
-        virtual void SetLightSensorMode(unsigned char mode);
-        virtual int GetLightSensorThreshold() const;
-        virtual void SetLightSensorThreshold(unsigned char threshold);
 
         // The following two blocks of commands do not query the device directly
         virtual int GetBaudRate() const;

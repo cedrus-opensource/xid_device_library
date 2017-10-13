@@ -153,7 +153,6 @@ bool Cedrus::Connection::Write(
     bool requiresDelay)
 {
     DWORD write_status = FT_OK;
-    bool write_success = false;
 
     if (!requiresDelay)
     {
