@@ -5,6 +5,7 @@
 
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+#include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
 namespace {
 
@@ -83,12 +84,12 @@ BOOST_PYTHON_MODULE( xid )
 
     py::register_ptr_to_python<DevicePort*>();
 
-    // Expose std::vector<DevicePort> for return value of DeviceConfig::GetMapOfPorts()
-    py::class_<std::vector<DevicePort> >("DevicePortMap")
-        .def(py::vector_indexing_suite<std::vector<DevicePort> >())
+    // Expose std::map<unsigned int, DevicePort> for return value of DeviceConfig::GetMapOfPorts()
+    py::class_<std::map<unsigned int, DevicePort> >("DevicePortMap")
+        .def(py::map_indexing_suite<std::map<unsigned int, DevicePort> >())
     ;
 
-    py::register_ptr_to_python< std::vector<DevicePort>* >();
+    py::register_ptr_to_python< std::map<unsigned int, DevicePort>* >();
 
     // Expose struct Response.
     py::class_<Response>("Response")
@@ -126,7 +127,7 @@ BOOST_PYTHON_MODULE( xid )
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetMapOfPorts),
             py::return_value_policy<py::reference_existing_object>())
 
-        .def("GetPortPtrByIndex", &DeviceConfig::GetPortPtrByNumber,
+        .def("GetPortPtrByNumber", &DeviceConfig::GetPortPtrByNumber,
             py::arg("portNum"),
             py::return_value_policy<py::reference_existing_object>())
 
@@ -193,6 +194,9 @@ BOOST_PYTHON_MODULE( xid )
 
     // Expose class XIDDeviceScanner.
     py::class_<XIDDeviceScanner>("XIDDeviceScanner", py::no_init)
+        //.def(PY_MEMBER_FUNCTION(XIDDeviceScanner, GetDeviceScanner))
+        .def("GetDeviceScanner", &XIDDeviceScanner::GetDeviceScanner, py::return_value_policy<py::reference_existing_object>())
+        .staticmethod("GetDeviceScanner")
         .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, CloseAllConnections))
         .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, OpenAllConnections))
         .def(PY_MEMBER_FUNCTION(XIDDeviceScanner, DropEveryConnection))

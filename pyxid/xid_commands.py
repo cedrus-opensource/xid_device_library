@@ -9,7 +9,7 @@ if _platform != "darwin" and _platform != "win32":
 import time
 import xid
 
-xds = xid.XIDDeviceScanner()
+xds = xid.XIDDeviceScanner.GetDeviceScanner()
 
 print ("Detecting XID devices, stand by.")
 xds.DetectXIDDevices()
@@ -81,20 +81,17 @@ def print_dev_info(devCon):
 
 def print_ports_info(devCon):
     devCfg = devCon.GetDeviceConfig()
-    ports = devCfg.GetVectorOfPorts()
+    ports = devCfg.GetMapOfPorts()
 
     print "###########################"
     print "#### Device Port info #####"
 
-    for p in xrange (0, len(ports)):
-        DevicePort = devCfg.get_port_by_index(p)
-        print 'Port #%d'  % (p)
-        print '%-20s%-3s%-20s' % ("portName: ", p, DevicePort.portName)
-        print '%-20s%-3s%-20s' % ("portNumber: ", p, DevicePort.portNumber)
-        print '%-20s%-3s%-20s' % ("numberOfLines: ", p, DevicePort.numberOfLines)
-        print '%-20s%-3s%-20s' % ("isResponsePort: ", p, DevicePort.isResponsePort)
+    for port in ports:
+        print '%-20s%-20s' % ("portName: ", port.data().portName)
+        print '%-20s%-20s' % ("portNumber: ", port.data().portNumber)
+        print '%-20s%-20s' % ("numberOfLines: ", port.data().numberOfLines)
         print "keyMap: ",
-        for k in DevicePort.keyMap:
+        for k in port.data().keyMap:
             print k,
         print
     print "###########################"
@@ -256,16 +253,16 @@ for device_index in xrange (0,  xds.DeviceCount()):
 
     # These commands are XID 2 only.
     if devCfg.GetMajorVersion() > 1:
-        print '%-20s%-20s' % ("GetLightSensorMode(): ", devCon.GetLightSensorMode())
-        print "Calling SetLightSensorMode(2)"
-        devCon.SetLightSensorMode(2)
-        print '%-20s%-20s' % ("GetLightSensorMode(): ", devCon.GetLightSensorMode())
+        print '%-20s%-20s' % ("GetTimerResetOnOnsetMode(): ", devCon.GetTimerResetOnOnsetMode())
+        print "Calling SetTimerResetOnOnsetMode(2)"
+        devCon.SetTimerResetOnOnsetMode(2)
+        print '%-20s%-20s' % ("GetTimerResetOnOnsetMode(): ", devCon.GetTimerResetOnOnsetMode())
         print
 
-        print '%-20s%-20s' % ("GetLightSensorThreshold(): ", devCon.GetLightSensorThreshold())
-        print "Calling SetLightSensorThreshold(200)"
-        devCon.SetLightSensorThreshold(200)
-        print '%-20s%-20s' % ("GetLightSensorThreshold(): ", devCon.GetLightSensorThreshold())
+        print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold())
+        print "Calling SetAnalogInputThreshold(200)"
+        devCon.SetAnalogInputThreshold(200)
+        print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold())
         print
 
         # There is currently no matching get command for this
