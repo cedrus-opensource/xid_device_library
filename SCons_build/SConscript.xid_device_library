@@ -22,7 +22,8 @@ CCPCHFLAGS = []
 
 # should compute a path like: /Users/ematsak/source/xid_device_library
 # (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)
-env.SetDefault(XIDLIB_OUTER_REPO_DIR = os.path.abspath(os.getcwd()) + os.path.sep + '..' + os.path.sep )
+sconscript_file = env.File(env)
+env.SetDefault(XIDLIB_OUTER_REPO_DIR = str(sconscript_file).replace(sconscript_file.get_string(env), '')+ os.path.sep + '..' + os.path.sep )
 outer_repo_root_dir = env['XIDLIB_OUTER_REPO_DIR']
 
 # set boost and wx versions. we don't actually use wx here, but some of the helper code relies on it
@@ -43,25 +44,20 @@ boost = cedrusboost_xidlib.CedrusBoostSettings(env)
 
 project_target_name = 'xid_device_driver'
 
-prefix = ''
-
-if env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
-    prefix = '$OBJ_ROOT/xid_device_library/'
-
 inputs = [
-    prefix + 'xid_device_driver/Connection.cpp',
-    prefix + 'xid_device_driver/Connection_TestOnly.cpp',
-    prefix + 'xid_device_driver/DeviceConfig.cpp',
-    prefix + 'xid_device_driver/ResponseManager.cpp',
-    prefix + 'xid_device_driver/XIDDeviceScanner.cpp',
-    prefix + 'xid_device_driver/XIDDeviceImpl.cpp',
+    'xid_device_driver/Connection.cpp',
+    'xid_device_driver/Connection_TestOnly.cpp',
+    'xid_device_driver/DeviceConfig.cpp',
+    'xid_device_driver/ResponseManager.cpp',
+    'xid_device_driver/XIDDeviceScanner.cpp',
+    'xid_device_driver/XIDDeviceImpl.cpp',
 ]
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
 cxxflags = []
 frameworks = []
 
-include_path = [ prefix + 'scons_helpers/cpp_src/']
+include_path = ['scons_helpers/cpp_src/']
 lib_path = []
 
 staging_dir = str(env.subst('$STAGING_DIR'))

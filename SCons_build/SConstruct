@@ -27,7 +27,7 @@ env['XIDLIB_OUTER_REPO_DIR'] = outer_repo_root_dir
 #os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
 env['WX_VERSION'] = 'NONE'
 projects = [
-    'SConscript.xid_device_driver',
+    'SConscript.xid_device_library',
     #'SConscript.TestXidLib', # this is commented out for the general public. the SConscript can be enabled at Cedrus.
 ]
 
@@ -39,9 +39,8 @@ env.Replace(
 if GetOption('build_mode') == 'opt':
     env.AppendUnique( CPPDEFINES = [ 'CEDRUS_DISABLE_ASSERT' ] )
 
-env[ 'CURRENT_CEDRUS_REPO_ROOT' ] = sys.path[0] + '/../'
+env['CURRENT_CEDRUS_REPO_ROOT'] = sys.path[0] + '/../'
 print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
-
 env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
 
 def BuildEnvironmentSConscripts(masterConfig):
@@ -55,9 +54,6 @@ def BuildEnvironmentSConscripts(masterConfig):
         c_dir = c_script.dir # c_dir is important for the scripts in COMMON (not here side-by-side in our scons dir)
 
         variant_dir_string = '$OBJ_ROOT/' + str(c_dir)
-
-        if sys.platform == 'win32' and str(c_dir) != '.':
-            variant_dir_string = '$OBJ_ROOT/Cmv_dir_win32/dir_' + str(c_script.name) + '/'
 
         #print ec.subst( variant_dir_string )
         ec['CEDRUS_CHOSEN_VARIANT_DIR'] = variant_dir_string
