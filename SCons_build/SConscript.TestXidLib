@@ -20,16 +20,10 @@ Import('env')
 # question as to what the name of the target is.
 project_target_name = 'TestXidLib'
 
-prefix = ''
-
-if env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
-    prefix = '$OBJ_ROOT/xid_device_library/'
-
 inputs = [
 
-    prefix + 'scons_helpers/cpp_src/qt_gtest_main.cpp',
-
-    prefix + 'AutomatedTesting/TestKeypressPackets.cpp',
+    'scons_helpers/cpp_src/qt_gtest_main.cpp',
+    'AutomatedTesting/TestKeypressPackets.cpp',
 
 ]
 
@@ -38,8 +32,6 @@ if sys.platform == 'darwin':
     if env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
         inputs.append( '$OBJ_ROOT/Common/src/app_init_exit_routines_osx.cpp' )
 
-
-
 defines = []
 
 include_path = [ prefix + 'scons_helpers/cpp_src/' ]
@@ -47,7 +39,7 @@ include_path += [ prefix + 'xid_device_driver/' ]
 
 
 cxxflags = []
-frameworks = [ 'Cocoa' ]
+frameworks = ['Cocoa']
 lib_dependencies = ['xid_device_driver']
 lib_path = []
 linkflags = []
@@ -62,10 +54,6 @@ qt_cedrus = CedrusQt.CedrusQtSettings(env)
 qt_cedrus.need_qt_basics()
 
 need = []
-
-if False == env.has_key( 'THE_CEDRUS_XIDON_BUILD' ):
-    need += qt_cedrus.publish_all_libs_to_staging()
-    need += gMock.publish_all_libs_to_staging(env)
 
 skip_test_execution = False
 
