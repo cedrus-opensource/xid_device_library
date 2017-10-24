@@ -1,5 +1,7 @@
 Debug/
+Debug with Python Binding/
 Release
+Release with Python Binding/
 DebugPS/
 ReleasePS/
 *.user
