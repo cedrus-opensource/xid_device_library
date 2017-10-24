@@ -87,7 +87,7 @@ if sys.platform == 'darwin':
     name_of_pyd += ".so"
 
 if env['PYXID_FLAG']:
-    inputs += [prefix + 'xid_device_driver/py_binding.cpp']
+    inputs += ['xid_device_driver/py_binding.cpp']
     boost.need_boost_python()
 
     # Clean up potentially outdated versions of the XID Python extension and the test
@@ -97,7 +97,7 @@ if env['PYXID_FLAG']:
 
     # Install fresh ones by copying the XID library file as XID Python extension and replacing the test.
     env.InstallAs( name_of_pyd, project_target )
-    env.Install( staging_dir, outer_repo_root_dir + 'Tests' + os.path.sep + name_of_test )
+    env.Install( staging_dir, outer_repo_root_dir + 'pyxid' + os.path.sep + name_of_test )
 
 linkflags = []
 
