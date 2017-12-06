@@ -217,6 +217,9 @@ namespace
     void CreateST2DuoConfig(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
         std::map<unsigned int, Cedrus::DevicePort> devicePorts;
+        std::vector<int> keyMap = { -1, 1, 2, 3, 4, 5, 6, 7, 8 };
+        Cedrus::DevicePort port("Key", 75, 9, keyMap);
+        devicePorts.emplace(75, port);
 
         // 'S' and '2'
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker 2", 83, 49, 2, 16, devicePorts));
@@ -227,6 +230,9 @@ namespace
     void CreateST2QuadConfig(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
         std::map<unsigned int, Cedrus::DevicePort> devicePorts;
+        std::vector<int> keyMap = { -1, 1, 2, 3, 4, 5, 6, 7, 8 };
+        Cedrus::DevicePort port("Key", 75, 9, keyMap);
+        devicePorts.emplace(75, port);
 
         // 'S' and '2'
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker 2", 83, 50, 2, 16, devicePorts));
@@ -259,8 +265,9 @@ namespace
         AddPodConfig("m-pod for MindWare", 51, 71, 2, 8, listOfAllConfigs); // 'G'
         AddPodConfig("m-pod for Neuroscan", 51, 72, 2, 16, listOfAllConfigs); // 'H'
         AddPodConfig("m-pod for SMI", 51, 74, 2, 8, listOfAllConfigs); // 'J'
-        AddPodConfig("m-pod for Brain Products actiCHamp", 51, 77, 2, 16, listOfAllConfigs); // 'M'
+        AddPodConfig("m-pod for Brain Products actiCHamp", 51, 77, 2, 8, listOfAllConfigs); // 'M'
         AddPodConfig("m-pod for NIRx", 51, 78, 2, 8, listOfAllConfigs); // 'N'
+        AddPodConfig("m-pod for EGI", 51, 79, 2, 8, listOfAllConfigs); // 'O'
         AddPodConfig("m-pod for Parallel port", 51, 80, 2, 13, listOfAllConfigs); // 'P'
         AddPodConfig("m-pod for Tobii", 51, 84, 2, 8, listOfAllConfigs); // 'T'
         AddPodConfig("m-pod no model set", 51, 48, 2, 16, listOfAllConfigs); // '0'
@@ -282,6 +289,7 @@ namespace
         AddPodConfig("c-pod for SMI", 52, 74, 2, 8, listOfAllConfigs); // 'J'
         AddPodConfig("c-pod for Brain Products actiCHamp", 52, 77, 2, 8, listOfAllConfigs); // 'M'
         AddPodConfig("c-pod for NIRx", 52, 78, 2, 8, listOfAllConfigs); // 'N'
+        AddPodConfig("c-pod for EGI", 52, 79, 2, 8, listOfAllConfigs); // 'O'
         AddPodConfig("c-pod for Parallel port", 52, 80, 2, 13, listOfAllConfigs); // 'P'
         AddPodConfig("c-pod for Tobii", 52, 84, 2, 8, listOfAllConfigs); // 'T'
         AddPodConfig("c-pod no model set", 52, 48, 2, 16, listOfAllConfigs); // '0'

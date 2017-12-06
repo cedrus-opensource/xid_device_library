@@ -88,7 +88,7 @@ namespace Cedrus
 
     enum
     {
-        INVALID_RETURN_VALUE = -99
+        INVALID_RETURN_VALUE = -1
     };
 
     enum KeyState
@@ -114,40 +114,107 @@ namespace Cedrus
         PRODUCT_ID_STIMTRACKER = 83 // 'S'
     };
 
+    // These are laid out in pairs in blocks of 8. The masks are the same,
+    // but they have different meanings for RB/Lumina and StimTracker.
     enum MpodBitMask
     {
-        PORTA_BIT0 = 0x00000001,
+        PORTA_BIT0 = 0x00000001,  // RB/Lumina
+        EVENT_CODE0 = 0x00000001, // StimTracker
+
         PORTA_BIT1 = 0x00000002,
+        EVENT_CODE1 = 0x00000002,
+
         PORTA_BIT2 = 0x00000004,
+        EVENT_CODE2 = 0x00000004,
+
         PORTA_BIT3 = 0x00000008,
+        EVENT_CODE3 = 0x00000008,
+
         PORTA_BIT4 = 0x00000010,
+        EVENT_CODE4 = 0x00000010,
+
         PORTA_BIT5 = 0x00000020,
+        EVENT_CODE5 = 0x00000020,
+
         PORTA_BIT6 = 0x00000040,
+        EVENT_CODE6 = 0x00000040,
+
         PORTA_BIT7 = 0x00000080,
+        EVENT_CODE7 = 0x00000080,
 
+        // -------------------------
         PORTB_BIT0 = 0x00000100,
-        PORTB_BIT1 = 0x00000200,
-        PORTB_BIT2 = 0x00000400,
-        PORTB_BIT3 = 0x00000800,
-        PORTB_BIT4 = 0x00001000,
-        PORTB_BIT5 = 0x00002000,
-        PORTB_BIT6 = 0x00004000,
-        PORTB_BIT7 = 0x00008000,
+        EVENT_CODE8 = 0x00000100,
 
-        VOICE_KEY = 0x00040000,
+        PORTB_BIT1 = 0x00000200,
+        EVENT_CODE9 = 0x00000200,
+
+        PORTB_BIT2 = 0x00000400,
+        EVENT_CODEA = 0x00000400,
+
+        PORTB_BIT3 = 0x00000800,
+        EVENT_CODEB = 0x00000800,
+
+        PORTB_BIT4 = 0x00001000,
+        EVENT_CODEC = 0x00001000,
+
+        PORTB_BIT5 = 0x00002000,
+        EVENT_CODED = 0x00002000,
+
+        PORTB_BIT6 = 0x00004000,
+        EVENT_CODEE = 0x00004000,
+
+        PORTB_BIT7 = 0x00008000,
+        EVENT_CODEF = 0x00008000,
+
+        // -------------------------
+        //RESERVED = 0x00010000,
+        LIGHT_SENS_1 = 0x00010000,
+
+        //RESERVED = 0x00020000,
+        LIGHT_SENS_2 = 0x00020000,
+
+        VOICE_KEY_RB = 0x00040000,
+        LIGHT_SENS_3 = 0x00040000,
+
         LIGHT_SENS = 0x00080000,
+        LIGHT_SENS_4 = 0x00080000,
+
         TRIGGER = 0x00100000,
+        VOICE_KEY_ST = 0x00100000,
+
+        //RESERVED = 0x00200000,
+        //RESERVED = 0x00200000,
 
         XID_IN = 0x00400000,
-        XID_OUT = 0x00800000,
+        L_SPEAKER = 0x00400000,
 
+        XID_OUT = 0x00800000,
+        R_SPEAKER = 0x00800000,
+
+        // -------------------------
         PORTE_BIT0 = 0x01000000,
+        USER_XID0 = 0x01000000,
+
         PORTE_BIT1 = 0x02000000,
+        USER_XID1 = 0x02000000,
+
         PORTE_BIT2 = 0x04000000,
+        USER_XID2 = 0x04000000,
+
         PORTE_BIT3 = 0x08000000,
+        USER_XID3 = 0x08000000,
+
         PORTE_BIT4 = 0x10000000,
+        USER_XID4 = 0x10000000,
+
         PORTE_BIT5 = 0x20000000,
+        USER_XID5 = 0x20000000,
+
         PORTE_BIT6 = 0x40000000,
+        USER_XID6 = 0x40000000,
+
         PORTE_BIT7 = 0x80000000,
+        USER_XID7 = 0x80000000,
     };
 } // namespace Cedrus
