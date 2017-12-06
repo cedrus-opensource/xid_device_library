@@ -28,9 +28,11 @@ Cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, std::share
     : m_BytesInBuffer(0),
       m_XIDPacketIndex(INVALID_PACKET_INDEX),
       m_numKeysDown(0),
+      m_packetSize(XID_PACKET_SIZE),
       m_ResponseParsingFunction( boost::bind( &Cedrus::ResponseManager::XidInputFound, this, _1 ) )
 {
-    for(int i = 0; i < XID_PACKET_SIZE; ++i)
+    m_packetSize = devConfig->IsStimTracker2() ? ST2_PACKET_SIZE : XID_PACKET_SIZE;
+    for(int i = 0; i < m_packetSize; ++i)
     {
         m_InputBuffer[i] = '\0';
     }
@@ -47,6 +49,10 @@ Cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, std::share
     if ( devConfig && device_is_7byte_lumina3g_21( minorFirmwareVer, devConfig ) )
     {
         m_ResponseParsingFunction = boost::bind( &Cedrus::ResponseManager::XIDInputFoundLumina3G_21, this, _1 );
+    }
+    else if (devConfig->IsStimTracker2())
+    {
+        m_ResponseParsingFunction = boost::bind(&Cedrus::ResponseManager::ST2InputFound, this, _1);
     }
 }
 
@@ -155,6 +161,49 @@ Cedrus::KeyState Cedrus::ResponseManager::XidInputFound(Response &res)
     return input_found;
 }
 
+Cedrus::KeyState Cedrus::ResponseManager::ST2InputFound(Response &res)
+{
+    KeyState input_found = NO_KEY_DETECTED;
+    int input_packet_index = 0;
+
+    if (m_InputBuffer[0] != 'o')
+    {
+        for (int i = 1; i < m_BytesInBuffer; ++i)
+        {
+            if (m_InputBuffer[i] == 'o')
+            {
+                input_packet_index = i;
+                break;
+            }
+        }
+    }
+
+    if (m_XIDPacketIndex != INVALID_PACKET_INDEX && m_XIDPacketIndex != 0)
+        AdjustBufferForPacketRecovery();
+
+    if (m_InputBuffer[input_packet_index] == 'o' && m_InputBuffer[input_packet_index+7] == 0)
+    {
+        m_XIDPacketIndex = 0;
+
+        res.wasPressed = true;// (m_InputBuffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
+        res.port = m_InputBuffer[input_packet_index+1];
+        res.key = m_InputBuffer[input_packet_index + 2];
+
+        res.reactionTime = AdjustEndiannessCharsToUint
+        (m_InputBuffer[3], m_InputBuffer[4], m_InputBuffer[5], m_InputBuffer[6]);
+
+        input_found = static_cast<KeyState>(FOUND_KEY_DOWN);
+    }
+
+    if (input_found == FOUND_KEY_DOWN)
+    {
+        m_BytesInBuffer = 0;
+        memset(m_InputBuffer, 0x00, 7);
+    }
+
+    return input_found;
+}
+
 Cedrus::KeyState Cedrus::ResponseManager::XIDInputFoundLumina3G_21(Response &res)
 {
     KeyState input_found = NO_KEY_DETECTED;
@@ -217,7 +266,7 @@ void Cedrus::ResponseManager::CheckForKeypress(std::shared_ptr<Interface_Connect
     // The amount of bytes read is variable as a part of a process that attempts to recover
     // malformed xid packets. The process will not work 100% reliably, but it's the best we
     // can do given the protocol.
-    portConnection->Read(&m_InputBuffer[m_BytesInBuffer], (XID_PACKET_SIZE - m_BytesInBuffer), &bytes_read);
+    portConnection->Read(&m_InputBuffer[m_BytesInBuffer], (m_packetSize - m_BytesInBuffer), &bytes_read);
 
     if(bytes_read > 0)
     {
@@ -246,7 +295,7 @@ void Cedrus::ResponseManager::AdjustBufferForPacketRecovery()
     unsigned char *src_char  = &m_InputBuffer[m_XIDPacketIndex];
 
     // Move the k and everything after it to the beginning of the buffer.
-    for(int i = m_XIDPacketIndex; i < XID_PACKET_SIZE; ++i, ++dest_char, ++src_char)
+    for(int i = m_XIDPacketIndex; i < ST2_PACKET_SIZE; ++i, ++dest_char, ++src_char)
     {
         *dest_char = *src_char;
     }
@@ -256,7 +305,7 @@ void Cedrus::ResponseManager::AdjustBufferForPacketRecovery()
     m_BytesInBuffer = m_BytesInBuffer - m_XIDPacketIndex;
 
     // Clean out the rest of the buffer past the partial packet
-    memset( &m_InputBuffer[m_BytesInBuffer], 0x00, (XID_PACKET_SIZE - m_BytesInBuffer) );
+    memset( &m_InputBuffer[m_BytesInBuffer], 0x00, (ST2_PACKET_SIZE - m_BytesInBuffer) );
 }
 
 bool Cedrus::ResponseManager::HasQueuedResponses() const

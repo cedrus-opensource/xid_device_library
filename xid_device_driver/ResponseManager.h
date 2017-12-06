@@ -52,9 +52,9 @@ namespace Cedrus
             wasPressed(false),
             reactionTime(-1){}
 
-        //port the response came from. Usualy 0
+        // Port the response came from, usually 0.
         int port;
-        //button pressed. This is a 0 based index
+        // Button pressed. This is a 0 based index.
         int key;
         bool wasPressed;
         int reactionTime;
@@ -102,16 +102,19 @@ namespace Cedrus
 
         void AdjustBufferForPacketRecovery();
         KeyState XidInputFound(Response &res);
+        KeyState ST2InputFound(Response &res);
         KeyState XIDInputFoundLumina3G_21(Response &res);
 
-        enum {XID_PACKET_SIZE = 6};
-        enum {INVALID_PACKET_INDEX = -1};
-        enum {KEY_RELEASE_BITMASK = 0x10};
+        enum { XID_PACKET_SIZE = 6 };
+        enum { ST2_PACKET_SIZE = 8 };
+        enum { INVALID_PACKET_INDEX = -1 };
+        enum { KEY_RELEASE_BITMASK = 0x10 };
 
         // Used by the response parsing logic
         int m_BytesInBuffer;
-        unsigned char m_InputBuffer[XID_PACKET_SIZE];
+        unsigned char m_InputBuffer[ST2_PACKET_SIZE];
         int m_XIDPacketIndex;
+        unsigned int m_packetSize;
 
         unsigned int m_numKeysDown;
         std::queue<Response> m_responseQueue;

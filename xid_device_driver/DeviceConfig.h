@@ -160,6 +160,16 @@ namespace Cedrus
             return m_ProductID == PRODUCT_ID_STIMTRACKER;
         }
 
+        bool IsStimTracker1() const
+        {
+            return IsStimTracker() && IsXID1();
+        }
+
+        bool IsStimTracker2() const
+        {
+            return IsStimTracker() && IsXID2();
+        }
+
         bool IsXID1() const
         {
             return m_MajorFirmwareVer == 1;
