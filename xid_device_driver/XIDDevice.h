@@ -126,22 +126,26 @@ namespace Cedrus
         // f7
         virtual void RestoreFactoryDefaults() = 0;
 
-        // _io
-        //virtual bool GetGenerateTimestampedOutput() const = 0;
-        // io
-        //virtual bool SetGenerateTimestampedOutput() = 0;
         // _ir
-        virtual int GetTimerResetOnOnsetMode() const = 0;
+        virtual int GetTimerResetOnOnsetMode(unsigned char selector) const = 0;
         // ir
-        virtual void SetTimerResetOnOnsetMode(unsigned char mode) = 0;
+        virtual void SetTimerResetOnOnsetMode(unsigned char selector, unsigned char mode) = 0;
+        // _io
+        virtual bool GetGenerateTimestampedOutput(unsigned char selector) const = 0;
+        // io
+        virtual void SetGenerateTimestampedOutput(unsigned char selector, unsigned char mode) = 0;
         // _it
-        virtual int GetAnalogInputThreshold() const = 0;
+        virtual int GetAnalogInputThreshold(unsigned char selector) const = 0;
         // it
-        virtual void SetAnalogInputThreshold(unsigned char threshold) = 0;
+        virtual void SetAnalogInputThreshold(unsigned char selector, unsigned char threshold) = 0;
+        // _im
+        virtual int GetMpodOutputMode(unsigned char selector) const = 0;
+        // im
+        virtual void SetMpodOutputMode(unsigned char selector, unsigned char mode) = 0;
         // _iv
-        //virtual bool GetMixedInputMode() const = 0;
+        virtual int GetMixedInputMode() const = 0;
         // iv
-        //virtual bool SetMixedInputMode() = 0;
+        virtual void SetMixedInputMode(unsigned char selector) = 0;
 
         // _ml
         virtual unsigned int GetNumberOfLines() const = 0;

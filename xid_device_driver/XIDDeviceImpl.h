@@ -97,14 +97,16 @@ namespace Cedrus
         virtual void SetButtonDebounceTime(unsigned char time);
         virtual void RestoreFactoryDefaults();
 
-        //virtual bool GetGenerateTimestampedOutput() const;
-        //virtual bool SetGenerateTimestampedOutput();
-        virtual int GetTimerResetOnOnsetMode() const;
-        virtual void SetTimerResetOnOnsetMode(unsigned char mode);
-        virtual int GetAnalogInputThreshold() const;
-        virtual void SetAnalogInputThreshold(unsigned char threshold);
-        //virtual bool GetMixedInputMode() const;
-        //virtual bool SetMixedInputMode();
+        virtual int GetTimerResetOnOnsetMode(unsigned char selector) const;
+        virtual void SetTimerResetOnOnsetMode(unsigned char selector, unsigned char mode);
+        virtual bool GetGenerateTimestampedOutput(unsigned char selector) const;
+        virtual void SetGenerateTimestampedOutput(unsigned char selector, unsigned char mode);
+        virtual int GetAnalogInputThreshold(unsigned char selector) const;
+        virtual void SetAnalogInputThreshold(unsigned char selector, unsigned char threshold);
+        virtual int GetMpodOutputMode(unsigned char selector) const;
+        virtual void SetMpodOutputMode(unsigned char selector, unsigned char mode);
+        virtual int GetMixedInputMode() const;
+        virtual void SetMixedInputMode(unsigned char mode);
 
         virtual unsigned int GetNumberOfLines() const;
         virtual void SetNumberOfLines(unsigned int lines);
@@ -133,6 +135,7 @@ namespace Cedrus
     private:
         void SetDigitalOutputLines_RB(std::shared_ptr<Connection> xidCon, unsigned int lines);
         void SetDigitalOutputLines_ST(std::shared_ptr<Connection> xidCon, unsigned int lines);
+        void MatchConfigToModel(char model);
 
         unsigned int m_linesState;
         std::shared_ptr<Connection> m_xidCon;

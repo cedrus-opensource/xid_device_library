@@ -175,6 +175,8 @@ bool Cedrus::Connection::Write(
         }
     }
 
+    SLEEP_FUNC(10 * SLEEP_INC);
+
     m_ConnectionDead = (write_status != FT_OK);
 
     return m_ConnectionDead;
@@ -231,6 +233,8 @@ DWORD Cedrus::Connection::SendXIDCommand(
     if (outResponse != NULL)
         memset(outResponse, 0x00, maxOutResponseSize);
 
+    FlushReadFromDeviceBuffer();
+
     DWORD bytes_written = 0;
     Write((unsigned char*)inCommand, strlen(inCommand), &bytes_written, requiresDelay);
 
@@ -254,7 +258,7 @@ DWORD Cedrus::Connection::SendXIDCommand(
         }
 
         ++i;
-    } while (i < 50 && bytes_stored < maxOutResponseSize);
+    } while (i < 200 && bytes_stored < maxOutResponseSize);
 
     return bytes_stored;
 }
@@ -267,6 +271,8 @@ DWORD Cedrus::Connection::SendXIDCommand_PST_Proof(
 {
     if (outResponse != NULL)
         memset(outResponse, 0x00, maxOutResponseSize);
+
+    FlushReadFromDeviceBuffer();
 
     DWORD bytes_written = 0;
     Write((unsigned char*)inCommand, strlen(inCommand), &bytes_written, requiresDelay);
@@ -296,7 +302,7 @@ DWORD Cedrus::Connection::SendXIDCommand_PST_Proof(
         }
 
         ++numRetries;
-    } while (numRetries < 100 && bytes_stored < maxOutResponseSize);
+    } while (numRetries < 200 && bytes_stored < maxOutResponseSize);
 
     return bytes_stored;
 }
