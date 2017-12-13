@@ -35,7 +35,7 @@
 #include "DeviceConfig.h"
 #include "Connection.h"
 
-#include "XIDDeviceImpl.h"
+#include "XIDDevice.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -55,7 +55,7 @@ std::shared_ptr<Cedrus::XIDDevice> CreateDevice
     {
         if (configCandidates[i]->DoesConfigMatchDevice(productID, modelID, majorFirmwareVersion))
         {
-            result.reset(new Cedrus::XIDDeviceImpl(xidCon, configCandidates[i]));
+            result.reset(new Cedrus::XIDDevice(xidCon, configCandidates[i]));
             break;
         }
     }
@@ -228,7 +228,7 @@ int Cedrus::XIDDeviceScanner::DetectXIDDevices
                 // This may seem like a good place to flush, but Open() has taken care of that by now.
 
                 // NOTE THE USAGE OF XIDGlossaryPSTProof IN THIS CODE. IT'S IMPORTANT!
-                std::string info = XIDDeviceImpl::GetProtocol(xid_con);
+                std::string info = XIDDevice::GetProtocol(xid_con);
 
                 if (boost::starts_with(info, "_xid"))
                 {
@@ -238,14 +238,14 @@ int Cedrus::XIDDeviceScanner::DetectXIDDevices
                     if (strcmp(info.c_str(), "_xid0") != 0)
                     {
                         // Force the device into XID mode if it isn't. This is an XID library.
-                        XIDDeviceImpl::SetProtocol(xid_con, 0);
+                        XIDDevice::SetProtocol(xid_con, 0);
 
                         mode_changed = true;
                     }
 
-                    int product_id = XIDDeviceImpl::GetProductID(xid_con);
-                    int model_id = XIDDeviceImpl::GetModelID(xid_con);
-                    int major_firmware_version = XIDDeviceImpl::GetMajorFirmwareVersion(xid_con);
+                    int product_id = XIDDevice::GetProductID(xid_con);
+                    int model_id = XIDDevice::GetModelID(xid_con);
+                    int major_firmware_version = XIDDevice::GetMajorFirmwareVersion(xid_con);
 
                     std::shared_ptr<Cedrus::XIDDevice> matched_dev =
                         CreateDevice(product_id,

@@ -101,11 +101,6 @@ BOOST_PYTHON_MODULE( xid )
         .add_property(PY_MEMBER_FUNCTION(Response, reactionTime))
     ;
 
-    // Expose Interface_Connection.
-    py::class_<Interface_Connection, boost::noncopyable>("Interface_Connection", py::no_init)
-        .def("Read", &Interface_Connection::Read, py::args("inBuffer, bytesToRead, bytesRead"))
-    ;
-
     // Expose class ResponseManager.
     py::class_<ResponseManager, boost::noncopyable>("ResponseManager",
                                                     py::init<int, std::shared_ptr<const DeviceConfig> >())

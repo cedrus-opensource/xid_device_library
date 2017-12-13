@@ -41,7 +41,7 @@
 
 namespace Cedrus
 {
-    class Interface_Connection;
+    class Connection;
     class DeviceConfig;
 
     struct Response
@@ -81,7 +81,7 @@ namespace Cedrus
          * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
          */
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        void CheckForKeypress(std::shared_ptr<Interface_Connection> portConnection, std::shared_ptr<const DeviceConfig> devConfig);
+        void CheckForKeypress(std::shared_ptr<Connection> portConnection, std::shared_ptr<const DeviceConfig> devConfig);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         bool HasQueuedResponses() const;

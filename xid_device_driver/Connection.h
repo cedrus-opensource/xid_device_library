@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "Interface_Connection.h"
+#include "ftd2xx.h"
 
 #ifdef __APPLE__
 #   define SLEEP_FUNC usleep
@@ -44,7 +44,7 @@
 
 namespace Cedrus
 {
-    class Connection : public Interface_Connection
+    class Connection
     {
     public:
         Connection(
@@ -55,7 +55,7 @@ namespace Cedrus
             BYTE stop_bits = FT_STOP_BITS_1
         );
 
-        virtual ~Connection();
+        ~Connection();
 
         bool Close();
 
@@ -75,12 +75,14 @@ namespace Cedrus
 
         DWORD SendXIDCommand(
             const char inCommand[],
+            DWORD commandSize,
             unsigned char outResponse[],
             unsigned int maxOutResponseSize,
             bool requiresDelay);
 
         DWORD SendXIDCommand_PST_Proof(
             const char inCommand[],
+            DWORD commandSize,
             unsigned char outResponse[],
             unsigned int maxOutResponseSize,
             bool requiresDelay);

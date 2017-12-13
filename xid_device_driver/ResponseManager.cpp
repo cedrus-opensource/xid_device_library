@@ -1,6 +1,6 @@
 #include "ResponseManager.h"
 
-#include "Interface_Connection.h"
+#include "Connection.h"
 #include "DeviceConfig.h"
 #include "constants.h"
 
@@ -257,7 +257,7 @@ Cedrus::KeyState Cedrus::ResponseManager::XIDInputFoundLumina3G_21(Response &res
     return input_found;
 }
 
-void Cedrus::ResponseManager::CheckForKeypress(std::shared_ptr<Interface_Connection> portConnection, std::shared_ptr<const Cedrus::DeviceConfig> devConfig)
+void Cedrus::ResponseManager::CheckForKeypress(std::shared_ptr<Connection> portConnection, std::shared_ptr<const Cedrus::DeviceConfig> devConfig)
 {
     DWORD bytes_read = 0;
     Response res;

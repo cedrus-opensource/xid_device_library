@@ -46,11 +46,10 @@ project_target_name = 'xid_device_driver'
 
 inputs = [
     'xid_device_driver/Connection.cpp',
-    'xid_device_driver/Connection_TestOnly.cpp',
     'xid_device_driver/DeviceConfig.cpp',
     'xid_device_driver/ResponseManager.cpp',
     'xid_device_driver/XIDDeviceScanner.cpp',
-    'xid_device_driver/XIDDeviceImpl.cpp',
+    'xid_device_driver/XIDDevice.cpp',
 ]
 
 defines = [ 'CEDRUS_XID_MAKEDLL' ]
