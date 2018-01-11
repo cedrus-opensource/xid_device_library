@@ -1,6 +1,5 @@
 #include "XIDDeviceScanner.h"
 #include "XIDDevice.h"
-#include "Interface_Connection.h"
 #include "DeviceConfig.h"
 
 #include <boost/python.hpp>

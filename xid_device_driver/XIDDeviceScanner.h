@@ -37,8 +37,6 @@
 #include <string>
 #include <boost/function.hpp>
 
-#include "ftd2xx.h"
-
 namespace Cedrus
 {
     class Connection;

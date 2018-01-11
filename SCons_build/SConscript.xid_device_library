@@ -23,8 +23,7 @@ CCPCHFLAGS = []
 # should compute a path like: /Users/ematsak/source/xid_device_library
 # (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)
 sconscript_file = env.File(env)
-env.SetDefault(XIDLIB_OUTER_REPO_DIR = str(sconscript_file).replace(sconscript_file.get_string(env), '')+ os.path.sep + '..' + os.path.sep )
-outer_repo_root_dir = env['XIDLIB_OUTER_REPO_DIR']
+outer_repo_root_dir = str(sconscript_file).replace(sconscript_file.get_string(env), '') + '..' + os.path.sep
 
 # set boost and wx versions. we don't actually use wx here, but some of the helper code relies on it
 env['BOOST_VERSION'] = '1_58'
@@ -67,6 +66,7 @@ project_target = staging_dir + os.path.sep
 python_path = outer_repo_root_dir + 'Python27'
 
 ftd2xx_loc = outer_repo_root_dir + 'ftd2xx'
+include_path.append(ftd2xx_loc)
 lib_path.append(ftd2xx_loc)
 
 if sys.platform == 'win32':
@@ -129,7 +129,7 @@ staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
 # be made darwin-only but there isn't really harm in always returning this information.
 required_libs_for_copying = list(env['LIBS'])
 
- # don't actually need to copy dylibs for this one
+# don't actually need to copy dylibs for this one
 if 'libpython2.7' in required_libs_for_copying: required_libs_for_copying.remove('libpython2.7')
 
 Return('required_libs_for_copying')

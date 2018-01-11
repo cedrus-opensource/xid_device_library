@@ -19,13 +19,12 @@ env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup(env_
 
 env.SetDefault(PYXID_FLAG = GetOption('pyxid_flag'))
 
-# should compute a path like: /Users/ematsak/source/xid_device_library
-# (it should be where you CLONED the project: git@github.com:cedrus-opensource/xid_device_library.git)
-outer_repo_root_dir = os.path.abspath( os.getcwd() ) + os.path.sep + '..' + os.path.sep
-env['XIDLIB_OUTER_REPO_DIR'] = outer_repo_root_dir
+env['CURRENT_CEDRUS_REPO_ROOT'] = sys.path[0] + os.path.sep + '..' + os.path.sep
+print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
+env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
 
-#os.environ['GMOCK'] = outer_repo_root_dir + 'binaries_gtest'
 env['WX_VERSION'] = 'NONE'
+
 projects = [
     'SConscript.xid_device_library',
     #'SConscript.TestXidLib', # this is commented out for the general public. the SConscript can be enabled at Cedrus.
@@ -39,10 +38,6 @@ env.Replace(
 if GetOption('build_mode') == 'opt':
     env.AppendUnique( CPPDEFINES = [ 'CEDRUS_DISABLE_ASSERT' ] )
 
-env['CURRENT_CEDRUS_REPO_ROOT'] = sys.path[0] + '/../'
-print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
-env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
-
 def BuildEnvironmentSConscripts(masterConfig):
 
     for c in masterConfig['CEDRUS_LISTING_OF_BUILD_SCONSCRIPTS']:
@@ -55,8 +50,8 @@ def BuildEnvironmentSConscripts(masterConfig):
 
         variant_dir_string = '$OBJ_ROOT/' + str(c_dir)
 
-        #print ec.subst( variant_dir_string )
-        ec['CEDRUS_CHOSEN_VARIANT_DIR'] = variant_dir_string
+        if sys.platform == 'win32' and str(c_dir) != '.':
+            variant_dir_string = '$OBJ_ROOT' + os.path.sep + str(c_script.name).replace('SConscript.','') + os.path.sep
 
         ec.SConscript(c_script,
                       variant_dir=variant_dir_string,

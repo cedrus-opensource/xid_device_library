@@ -237,7 +237,7 @@ DWORD Cedrus::Connection::SendXIDCommand(
     FlushReadFromDeviceBuffer();
 
     DWORD bytes_written = 0;
-    Write((unsigned char*)inCommand, sizeof(inCommand), &bytes_written, requiresDelay);
+    Write((unsigned char*)inCommand, commandSize, &bytes_written, requiresDelay);
 
     unsigned char in_buff[64];
     memset(in_buff, 0x00, sizeof(in_buff));
