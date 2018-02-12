@@ -3,63 +3,89 @@
 
 #define WINAPI
 
-#define MAX_NUM_DEVICES 50
-#include <sys/time.h>
-
-typedef unsigned int			DWORD;
-typedef unsigned int			ULONG;
-typedef unsigned short			USHORT;
-typedef unsigned short			SHORT;
-typedef unsigned char			UCHAR;
-typedef unsigned short			WORD;
-typedef unsigned char			BYTE;
-typedef BYTE					*LPBYTE;
-typedef unsigned int			BOOL;
-typedef unsigned char			BOOLEAN;
-typedef unsigned char			CHAR;
-typedef BOOL					*LPBOOL;
-typedef UCHAR					*PUCHAR;
-typedef const char				*LPCSTR;
-typedef char					*PCHAR;
-typedef void					*PVOID;
-typedef void					*HANDLE;
-typedef unsigned int			LONG;
-typedef int						INT;
-typedef unsigned int			UINT;
-typedef char					*LPSTR;
-typedef char					*LPTSTR;
-typedef const char				*LPCTSTR;
-typedef DWORD					*LPDWORD;
-typedef WORD					*LPWORD;
-typedef ULONG					*PULONG;
-typedef LONG					*LPLONG;
-typedef PVOID					LPVOID;
-typedef void					VOID;
-typedef unsigned long long int	ULONGLONG;
+typedef unsigned int            DWORD;
+typedef unsigned int            ULONG;
+typedef unsigned short            USHORT;
+typedef unsigned short            SHORT;
+typedef unsigned char            UCHAR;
+typedef unsigned short            WORD;
+typedef unsigned short            WCHAR;
+typedef unsigned char            BYTE;
+typedef BYTE                    *LPBYTE;
+typedef unsigned int            BOOL;
+typedef unsigned char            BOOLEAN;
+typedef unsigned char            CHAR;
+typedef BOOL                    *LPBOOL;
+typedef UCHAR                    *PUCHAR;
+typedef const char                *LPCSTR;
+typedef char                    *PCHAR;
+typedef void                    *PVOID;
+typedef void                    *HANDLE;
+typedef unsigned int            LONG;
+typedef int                        INT;
+typedef unsigned int            UINT;
+typedef char                    *LPSTR;
+typedef char                    *LPTSTR;
+typedef const char                *LPCTSTR;
+typedef DWORD                    *LPDWORD;
+typedef WORD                    *LPWORD;
+typedef ULONG                    *PULONG;
+typedef LONG                    *LPLONG;
+typedef PVOID                    LPVOID;
+typedef void                    VOID;
+typedef USHORT                  *PUSHORT;
+typedef unsigned long long int    ULONGLONG;
 
 typedef struct _OVERLAPPED {
-	DWORD Internal;
-	DWORD InternalHigh;
-	DWORD Offset;
-	DWORD OffsetHigh;
-	HANDLE hEvent;
+    DWORD Internal;
+    DWORD InternalHigh;
+    union {
+        struct{
+            DWORD Offset;
+            DWORD OffsetHigh;
+        };
+        PVOID  Pointer;
+    };
+    HANDLE hEvent;
 } OVERLAPPED, *LPOVERLAPPED;
 
 typedef struct _SECURITY_ATTRIBUTES {
-	DWORD nLength;
-	LPVOID lpSecurityDescriptor;
-	BOOL bInheritHandle;
+    DWORD nLength;
+    LPVOID lpSecurityDescriptor;
+    BOOL bInheritHandle;
 } SECURITY_ATTRIBUTES , *LPSECURITY_ATTRIBUTES;
+
+#include <pthread.h>
+// Substitute for HANDLE returned by Windows CreateEvent API.
+// FT_SetEventNotification expects parameter 3 to be the address
+// of one of these structures.
+typedef struct _EVENT_HANDLE
+{
+    pthread_cond_t  eCondVar;
+    pthread_mutex_t eMutex;
+    int             iVar;
+} EVENT_HANDLE;
 
 typedef struct timeval SYSTEMTIME;
 typedef struct timeval FILETIME;
+
+// WaitForSingleObject return values.
+#define WAIT_ABANDONED      0x00000080L
+#define WAIT_OBJECT_0       0x00000000L
+#define WAIT_TIMEOUT        0x00000102L
+#define WAIT_FAILED         0xFFFFFFFF
+// Special value for WaitForSingleObject dwMilliseconds parameter
+#define INFINITE            0xFFFFFFFF  // Infinite timeout
+
 #ifndef TRUE
-#define TRUE	1
+#define TRUE    1
 #endif
 #ifndef FALSE
-#define FALSE	0
+#define FALSE    0
 #endif
-
+#ifndef CONST
+#define CONST const
+#endif
 //
 // Modem Status Flags
 //
@@ -125,4 +151,4 @@ typedef struct timeval FILETIME;
 #define INVALID_HANDLE_VALUE 0xFFFFFFFF
 #endif
 
-#endif
+#endif /* __WINDOWS_TYPES__ */
