@@ -185,6 +185,11 @@ namespace Cedrus
             return IsXID1() && !IsStimTracker();
         }
 
+        bool ModelIDMatters() const
+        {
+            return IsRB() || IsStimTracker() || IsCPod() || IsMPod();
+        }
+
     private:
         std::string m_DeviceName;
         int m_ProductID;

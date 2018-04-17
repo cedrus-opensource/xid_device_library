@@ -153,7 +153,8 @@ unsigned int Cedrus::DeviceConfig::GetNumberOfOutputLines() const
 bool Cedrus::DeviceConfig::DoesConfigMatchDevice( int deviceID, int modelID, int majorFirmwareVer ) const
 {
     bool does_match = false;
-    if ( m_ProductID == deviceID && m_ModelID == modelID && m_MajorFirmwareVer == majorFirmwareVer)
+    if ( m_ProductID == deviceID && m_MajorFirmwareVer == majorFirmwareVer &&
+        (!ModelIDMatters() || (m_ModelID == modelID)) )
     {
         does_match = true;
     }
