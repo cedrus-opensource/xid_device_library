@@ -273,6 +273,7 @@ namespace
         AddPodConfig("m-pod no model set", 51, 48, 2, 16, listOfAllConfigs); // '0'
         AddPodConfig("m-pod for ABM", 51, 97, 2, 8, listOfAllConfigs); // 'a'
         AddPodConfig("Generic m-pod", 51, 103, 2, 8, listOfAllConfigs); // 'g'
+        AddPodConfig("m-pod for iWorx", 51, 105, 2, 8, listOfAllConfigs); // 'i'
         AddPodConfig("m-pod for Mangold", 51, 109, 2, 8, listOfAllConfigs); // 'm'
     }
 
@@ -295,6 +296,7 @@ namespace
         AddPodConfig("c-pod no model set", 52, 48, 2, 16, listOfAllConfigs); // '0'
         AddPodConfig("c-pod for ABM", 52, 97, 2, 8, listOfAllConfigs); // 'a'
         AddPodConfig("Generic c-pod", 52, 103, 2, 8, listOfAllConfigs); // 'g'
+        AddPodConfig("c-pod for iWorx", 52, 105, 2, 8, listOfAllConfigs); // 'i'
         AddPodConfig("c-pod for Mangold", 52, 109, 2, 8, listOfAllConfigs); // 'm'
     }
 }
