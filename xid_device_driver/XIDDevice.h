@@ -68,6 +68,7 @@ namespace Cedrus
         static std::string GetProtocol(std::shared_ptr<Connection> xidCon); // _c1 used during device detection
         void SetProtocol(unsigned char protocol); // c1
         static void SetProtocol(std::shared_ptr<Connection> xidCon, unsigned char protocol); // c1
+        std::string GetCombinedInfo() const; // _d0
         std::string GetInternalProductName() const; // _d1
         int GetProductID() const; // _d2
         int GetModelID() const; // _d3
@@ -92,9 +93,10 @@ namespace Cedrus
         void SetTriggerDefault(bool defaultOn); // f4
         int GetTriggerDebounceTime() const; // _f5
         void SetTriggerDebounceTime(unsigned char time); // f5
-        int  GetButtonDebounceTime() const; // _f6
+        int GetButtonDebounceTime() const; // _f6
         void SetButtonDebounceTime(unsigned char time); // f6
         void RestoreFactoryDefaults(); // f7
+        void SaveSettingsToFlash(); //f9
 
         int GetTimerResetOnOnsetMode(unsigned char selector) const; // _ir
         void SetTimerResetOnOnsetMode(unsigned char selector, unsigned char mode); // ir

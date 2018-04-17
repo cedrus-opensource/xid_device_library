@@ -103,7 +103,7 @@ BOOST_PYTHON_MODULE( xid )
     // Expose class ResponseManager.
     py::class_<ResponseManager, boost::noncopyable>("ResponseManager",
                                                     py::init<int, std::shared_ptr<const DeviceConfig> >())
-        .def(PY_MEMBER_FUNCTION(ResponseManager, CheckForKeypress), py::args("portConnection, devConfig"))
+        .def(PY_MEMBER_FUNCTION(ResponseManager, CheckForKeypress), py::args("portConnection"))
         .def(PY_MEMBER_FUNCTION(ResponseManager, HasQueuedResponses))
         .def(PY_MEMBER_FUNCTION(ResponseManager, GetNextResponse))
         .def(PY_MEMBER_FUNCTION(ResponseManager, GetNumberOfKeysDown))

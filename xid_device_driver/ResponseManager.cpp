@@ -29,7 +29,8 @@ Cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, std::share
       m_XIDPacketIndex(INVALID_PACKET_INDEX),
       m_numKeysDown(0),
       m_packetSize(XID_PACKET_SIZE),
-      m_ResponseParsingFunction( boost::bind( &Cedrus::ResponseManager::XidInputFound, this, _1 ) )
+      m_ResponseParsingFunction( boost::bind( &Cedrus::ResponseManager::XidInputFound, this, _1 ) ),
+      m_respDevConfig(devConfig)
 {
     m_packetSize = devConfig->IsStimTracker2() ? ST2_PACKET_SIZE : XID_PACKET_SIZE;
     for(int i = 0; i < m_packetSize; ++i)
@@ -257,7 +258,7 @@ Cedrus::KeyState Cedrus::ResponseManager::XIDInputFoundLumina3G_21(Response &res
     return input_found;
 }
 
-void Cedrus::ResponseManager::CheckForKeypress(std::shared_ptr<Connection> portConnection, std::shared_ptr<const Cedrus::DeviceConfig> devConfig)
+void Cedrus::ResponseManager::CheckForKeypress(std::shared_ptr<Connection> portConnection)
 {
     DWORD bytes_read = 0;
     Response res;
@@ -276,7 +277,7 @@ void Cedrus::ResponseManager::CheckForKeypress(std::shared_ptr<Connection> portC
 
     if(response_found != Cedrus::NO_KEY_DETECTED)
     {
-        res.key = devConfig->GetMappedKey(res.port, res.key);
+        res.key = m_respDevConfig->GetMappedKey(res.port, res.key);
 
         m_responseQueue.push(res);
 

@@ -368,7 +368,7 @@ int Cedrus::XIDDevice::GetModelID() const
     xidCon->SendXIDCommand("_d3", 3, model_id_return, sizeof(model_id_return), true);
 
     int model_id = (int)(model_id_return[0]);
-    bool return_valid = model_id >= 48 && model_id <= 103;
+    bool return_valid = model_id >= 48 && model_id <= 105;
 
     CEDRUS_ASSERT(return_valid, "_d3 command's result value must be between '0' and 'g'");
 
@@ -600,6 +600,12 @@ void Cedrus::XIDDevice::RestoreFactoryDefaults()
 {
     DWORD bytes_written;
     m_xidCon->Write((unsigned char*)"f7", 2, &bytes_written, m_config->NeedsDelay());
+}
+
+void Cedrus::XIDDevice::SaveSettingsToFlash()
+{
+    DWORD bytes_written;
+    m_xidCon->Write((unsigned char*)"f9", 2, &bytes_written, m_config->NeedsDelay());
 }
 
 int Cedrus::XIDDevice::GetTimerResetOnOnsetMode(unsigned char selector) const
@@ -874,7 +880,7 @@ bool Cedrus::XIDDevice::HasLostConnection() const
 void Cedrus::XIDDevice::PollForResponse() const
 {
     if (m_ResponseMgr)
-        m_ResponseMgr->CheckForKeypress(m_xidCon, m_config);
+        m_ResponseMgr->CheckForKeypress(m_xidCon);
 }
 
 bool Cedrus::XIDDevice::HasQueuedResponses() const

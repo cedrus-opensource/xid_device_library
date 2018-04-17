@@ -81,7 +81,7 @@ namespace Cedrus
          * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
          */
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
-        void CheckForKeypress(std::shared_ptr<Connection> portConnection, std::shared_ptr<const DeviceConfig> devConfig);
+        void CheckForKeypress(std::shared_ptr<Connection> portConnection);
 
         // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         bool HasQueuedResponses() const;
@@ -119,6 +119,7 @@ namespace Cedrus
         unsigned int m_numKeysDown;
         std::queue<Response> m_responseQueue;
         boost::function< Cedrus::KeyState (Response&) > m_ResponseParsingFunction;
+        const std::shared_ptr<const DeviceConfig> m_respDevConfig;
     };
 } // namespace Cedrus
 
