@@ -38,6 +38,18 @@
 
 namespace Cedrus
 {
+    struct SignalFilter
+    {
+        unsigned int holdOn = 0;
+        unsigned int holdOff = 0;
+    };
+
+    struct SingleShotMode
+    {
+        bool enabled = 0;
+        unsigned int delay = 0;
+    };
+
     class Connection;
     class DeviceConfig;
 
@@ -54,35 +66,43 @@ namespace Cedrus
         void SetAccessoryConnectorMode(unsigned char mode); // a1
         int GetACDebouncingTime() const; // _a6
         void SetACDebouncingTime(unsigned char time); // a6
-        int GetMpodModel(unsigned int mpod) const; // _aq
-        void ConnectToMpod(unsigned int mpod, unsigned int action); // aq
+        unsigned char GetMpodOutputMode() const; // _am
+        void SetMpodOutputMode(unsigned char mode); // am
+        int GetMpodModel(unsigned char mpod) const; // _aq
+        void ConnectToMpod(unsigned char mpod, unsigned char action); // aq
+        unsigned char GetTranslationTable() const; // _as
+        void SetTranslationTable(unsigned char table); // as
         unsigned int GetMappedSignals(unsigned int line); // _at
         void MapSignals(unsigned int line, unsigned int map); // at
         void ResetMappedLinesToDefault(); // atX
         void CommitLineMappingToFlash(); // af
+        unsigned char GetMpodPulseDuration() const; // _aw
+        void SetMpodPulseDuration(unsigned char duration); // aw
 
         int GetVKDropDelay() const; // _b3
         void SetVKDropDelay(unsigned char delay); // b3
 
         std::string GetProtocol() const; // _c1
-        static std::string GetProtocol(std::shared_ptr<Connection> xidCon); // _c1 used during device detection
+        static std::string GetProtocol_Scan(std::shared_ptr<Connection> xidCon); // _c1 used during device detection
         void SetProtocol(unsigned char protocol); // c1
-        static void SetProtocol(std::shared_ptr<Connection> xidCon, unsigned char protocol); // c1
+        static void SetProtocol_Scan(std::shared_ptr<Connection> xidCon, unsigned char protocol); // c1
+        void SwitchToKeyboardMode();
         std::string GetCombinedInfo() const; // _d0
         std::string GetInternalProductName() const; // _d1
         int GetProductID() const; // _d2
         int GetModelID() const; // _d3
-        static int GetProductID(std::shared_ptr<Connection> xidCon); // _d2 used during device detection
-        static int GetModelID(std::shared_ptr<Connection> xidCon); // _d3 used during device detection
+        static int GetProductID_Scan(std::shared_ptr<Connection> xidCon); // _d2 used during device detection
+        static int GetModelID_Scan(std::shared_ptr<Connection> xidCon); // _d3 used during device detection
         void SetModelID(unsigned char model); // d3
         int GetMajorFirmwareVersion() const; // _d4
-        static int GetMajorFirmwareVersion(std::shared_ptr<Connection> xidCon); // _d4 used during device detection
+        static int GetMajorFirmwareVersion_Scan(std::shared_ptr<Connection> xidCon); // _d4 used during device detection
         int GetMinorFirmwareVersion() const; // _d5
         int GetOutpostModel() const; // _d6
         int GetHardwareGeneration() const; // _d7
 
-        void ResetBaseTimer(); // e1
-        unsigned int QueryBaseTimer(); // e3
+        void ResetBaseTimer(); // e1 (XID 1 Only)
+        unsigned int QueryBaseTimer(); // e3 (XID 1 Only)
+        unsigned int QueryRtTimer(); // _e5
         void ResetRtTimer(); // e5
 
         void SetBaudRate(unsigned char rate); // f1
@@ -98,14 +118,18 @@ namespace Cedrus
         void RestoreFactoryDefaults(); // f7
         void SaveSettingsToFlash(); //f9
 
+        SingleShotMode GetSingleShotMode (unsigned char selector) const; // _ia
+        void SetSingleShotMode(unsigned char selector, bool enable, unsigned int delay); // ia
+        SignalFilter GetSignalFilter(unsigned char selector) const; // _if
+        void SetSignalFilter(unsigned char selector, unsigned int holdOn, unsigned int holdOff); // if
+        bool GetEnableDigitalOutput(unsigned char selector) const; // _io
+        void SetEnableDigitalOutput(unsigned char selector, unsigned char mode); // io
         int GetTimerResetOnOnsetMode(unsigned char selector) const; // _ir
         void SetTimerResetOnOnsetMode(unsigned char selector, unsigned char mode); // ir
-        bool GetGenerateTimestampedOutput(unsigned char selector) const; // _io
-        void SetGenerateTimestampedOutput(unsigned char selector, unsigned char mode); // io
+        bool GetEnableUSBOutput(unsigned char selector) const; // _iu
+        void SetEnableUSBOutput(unsigned char selector, unsigned char mode); // iu
         int GetAnalogInputThreshold(unsigned char selector) const; // _it
         void SetAnalogInputThreshold(unsigned char selector, unsigned char threshold); // it
-        int GetMpodOutputMode(unsigned char selector) const; // _im
-        void SetMpodOutputMode(unsigned char selector, unsigned char mode); // im
         int GetMixedInputMode() const; // _iv
         void SetMixedInputMode(unsigned char mode); // iv
 
@@ -113,6 +137,14 @@ namespace Cedrus
         void SetNumberOfLines(unsigned int lines); // ml
         unsigned int GetPulseDuration() const; // _mp
         void SetPulseDuration(unsigned int duration); // mp
+        unsigned int GetPulseTableBitMask(); // _mk
+        void SetPulseTableBitMask(unsigned int lines); // mk
+        void ClearPulseTable(); // mc
+        bool IsPulseTableRunning() const; // _mr
+        void RunPulseTable(); // mr
+        void StopPulseTable(); // ms
+        void AddPulseTableEntry(unsigned int time, unsigned int lines); // mt
+        void ResetOutputLines(); // mz
 
         // The following two blocks of commands do not query the device directly
         int GetBaudRate() const;
@@ -139,10 +171,15 @@ namespace Cedrus
         void SetDigitalOutputLines_ST(std::shared_ptr<Connection> xidCon, unsigned int lines);
         void MatchConfigToModel(char model);
 
+        void SetPodLineMapping_Neuroscan16bit();
+        void SetPodLineMapping_NeuroscanGrael();
+
         unsigned int m_linesState;
         std::shared_ptr<Connection> m_xidCon;
         std::shared_ptr<const DeviceConfig> m_config;
+        std::shared_ptr<const DeviceConfig> m_podHostConfig;
         const std::shared_ptr<ResponseManager> m_ResponseMgr;
+        int m_baudRatePriorToMpod;
     };
 
 } // namespace Cedrus

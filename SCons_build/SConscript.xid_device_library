@@ -65,7 +65,7 @@ lib_path = []
 
 staging_dir = str(env.subst('$STAGING_DIR'))
 
-name_of_pyd = staging_dir + os.path.sep + "xid"
+name_of_pyd = staging_dir + os.path.sep + "pyxid"
 project_target = staging_dir + os.path.sep
 
 python_path = outer_repo_root_dir + 'Python27'

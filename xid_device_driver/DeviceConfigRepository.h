@@ -58,8 +58,7 @@ namespace
         Cedrus::DevicePort port("Key", 0, 5, keyMap);
         devicePorts.emplace(0, port);
 
-        keyMap = { -1, -1, -1, 0, -1, -1, -1, -1 };
-        port = Cedrus::DevicePort("Light Sensor", 2, 1, keyMap);
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
         devicePorts.emplace(2, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-540", 50, 49, 2, 8, devicePorts));
@@ -88,8 +87,7 @@ namespace
         Cedrus::DevicePort port("Key", 0, 7, keyMap);
         devicePorts.emplace(0, port);
 
-        keyMap = { -1, -1, -1, 0, -1, -1, -1, -1 };
-        port = Cedrus::DevicePort("Light Sensor", 2, 1, keyMap);
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
         devicePorts.emplace(2, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-740", 50, 50, 2, 8, devicePorts));
@@ -118,8 +116,7 @@ namespace
         Cedrus::DevicePort port("Key", 0, 8, keyMap);
         devicePorts.emplace(0, port);
 
-        keyMap = { -1, -1, -1, 0, -1, -1, -1, -1 };
-        port = Cedrus::DevicePort("Light Sensor", 2, 1, keyMap);
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
         devicePorts.emplace(2, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-840", 50, 51, 2, 8, devicePorts));
@@ -148,8 +145,7 @@ namespace
         Cedrus::DevicePort port("Key", 0, 8, keyMap);
         devicePorts.emplace(0, port);
 
-        keyMap = { -1, -1, -1, 0, -1, -1, -1, -1 };
-        port = Cedrus::DevicePort("Light Sensor", 2, 1, keyMap);
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
         devicePorts.emplace(2, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-844", 50, 52, 2, 8, devicePorts));
@@ -175,11 +171,11 @@ namespace
         std::map<unsigned int, Cedrus::DevicePort> devicePorts;
 
         std::vector<int> keyMap = { -1, 0, 1, 2, 3, 4, -1, -1 };
-        Cedrus::DevicePort port("Lumina Pad 1, Button", 0, 5, keyMap);
+        Cedrus::DevicePort port("Lumina Pad 1", 0, 5, keyMap);
         devicePorts.emplace(0, port);
 
         keyMap = { -1, 0, 1, 2, 3, 4, -1, -1 };
-        port = Cedrus::DevicePort("Lumina Pad 2, Button", 1, 5, keyMap);
+        port = Cedrus::DevicePort("Lumina Pad 2", 1, 5, keyMap);
         devicePorts.emplace(1, port);
 
         keyMap = { -1, -1, -1, 0, 1, -1, -1, -1 };
@@ -195,8 +191,7 @@ namespace
     {
         std::map<unsigned int, Cedrus::DevicePort> devicePorts;
 
-        std::vector<int> keyMap = { -1, 0, -1, -1, -1, -1, -1, -1 };
-        Cedrus::DevicePort port("Voice Key", 2, 1, keyMap);
+        Cedrus::DevicePort port("Voice Key", 2, 1);
         devicePorts.emplace(2, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("SV-1 Voice Key", 49, 66, 1, 6, devicePorts));
@@ -263,7 +258,7 @@ namespace
         AddPodConfig("m-pod for Biopac MP150(STP100C module)", 51, 69, 2, 8, listOfAllConfigs); // 'E'
         AddPodConfig("m-pod for Biosemi", 51, 70, 2, 16, listOfAllConfigs); // 'F'
         AddPodConfig("m-pod for MindWare", 51, 71, 2, 8, listOfAllConfigs); // 'G'
-        AddPodConfig("m-pod for Neuroscan", 51, 72, 2, 16, listOfAllConfigs); // 'H'
+        AddPodConfig("m-pod for Neuroscan 16-bit", 51, 72, 2, 16, listOfAllConfigs); // 'H'
         AddPodConfig("m-pod for SMI", 51, 74, 2, 8, listOfAllConfigs); // 'J'
         AddPodConfig("m-pod for Brain Products actiCHamp", 51, 77, 2, 8, listOfAllConfigs); // 'M'
         AddPodConfig("m-pod for NIRx", 51, 78, 2, 8, listOfAllConfigs); // 'N'
@@ -272,9 +267,13 @@ namespace
         AddPodConfig("m-pod for Tobii", 51, 84, 2, 8, listOfAllConfigs); // 'T'
         AddPodConfig("m-pod no model set", 51, 48, 2, 16, listOfAllConfigs); // '0'
         AddPodConfig("m-pod for ABM", 51, 97, 2, 8, listOfAllConfigs); // 'a'
+        AddPodConfig("m-pod for Bittium NeurOne", 51, 98, 2, 8, listOfAllConfigs); // 'b'
         AddPodConfig("Generic m-pod", 51, 103, 2, 8, listOfAllConfigs); // 'g'
+        AddPodConfig("m-pod for Neuroscan Grael", 51, 104, 2, 16, listOfAllConfigs); // 'h'
         AddPodConfig("m-pod for iWorx", 51, 105, 2, 8, listOfAllConfigs); // 'i'
         AddPodConfig("m-pod for Mangold", 51, 109, 2, 8, listOfAllConfigs); // 'm'
+        AddPodConfig("m-pod for SR Research", 51, 115, 2, 8, listOfAllConfigs); // 's'
+        AddPodConfig("m-pod for TMSi", 51, 116, 2, 8, listOfAllConfigs); // 't'
     }
 
     void CreateAllcpodConfigs(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
@@ -286,7 +285,7 @@ namespace
         AddPodConfig("c-pod for Biopac MP150(STP100C module)", 52, 69, 2, 8, listOfAllConfigs); // 'E'
         AddPodConfig("c-pod for Biosemi", 52, 70, 2, 16, listOfAllConfigs); // 'F'
         AddPodConfig("c-pod for MindWare", 52, 71, 2, 8, listOfAllConfigs); // 'G'
-        AddPodConfig("c-pod for Neuroscan", 52, 72, 2, 16, listOfAllConfigs); // 'H'
+        AddPodConfig("c-pod for Neuroscan 16-bit", 52, 72, 2, 16, listOfAllConfigs); // 'H'
         AddPodConfig("c-pod for SMI", 52, 74, 2, 8, listOfAllConfigs); // 'J'
         AddPodConfig("c-pod for Brain Products actiCHamp", 52, 77, 2, 8, listOfAllConfigs); // 'M'
         AddPodConfig("c-pod for NIRx", 52, 78, 2, 8, listOfAllConfigs); // 'N'
@@ -295,8 +294,12 @@ namespace
         AddPodConfig("c-pod for Tobii", 52, 84, 2, 8, listOfAllConfigs); // 'T'
         AddPodConfig("c-pod no model set", 52, 48, 2, 16, listOfAllConfigs); // '0'
         AddPodConfig("c-pod for ABM", 52, 97, 2, 8, listOfAllConfigs); // 'a'
+        AddPodConfig("m-pod for Bittium NeurOne", 52, 98, 2, 8, listOfAllConfigs); // 'b'
         AddPodConfig("Generic c-pod", 52, 103, 2, 8, listOfAllConfigs); // 'g'
+        AddPodConfig("m-pod for Neuroscan Grael", 52, 104, 2, 16, listOfAllConfigs); // 'h'
         AddPodConfig("c-pod for iWorx", 52, 105, 2, 8, listOfAllConfigs); // 'i'
         AddPodConfig("c-pod for Mangold", 52, 109, 2, 8, listOfAllConfigs); // 'm'
+        AddPodConfig("m-pod for SR Research", 52, 115, 2, 8, listOfAllConfigs); // 's'
+        AddPodConfig("m-pod for TMSi", 52, 116, 2, 8, listOfAllConfigs); // 't'
     }
 }

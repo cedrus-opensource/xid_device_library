@@ -55,7 +55,7 @@ Cedrus::XIDDevice const volatile* get_pointer(class Cedrus::XIDDevice const vola
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XIDDevice_Overloads, RaiseLines, 1, 2)
 
-BOOST_PYTHON_MODULE( xid )
+BOOST_PYTHON_MODULE( pyxid )
 {
     #if defined(PY_MEMBER_FUNCTION) || defined(class_name) || defined(mem_fun_name) 
     #error "PY_MEMBER_FUNCTION macro redefinition"
@@ -98,7 +98,23 @@ BOOST_PYTHON_MODULE( xid )
         .add_property(PY_MEMBER_FUNCTION(Response, key))
         .add_property(PY_MEMBER_FUNCTION(Response, wasPressed))
         .add_property(PY_MEMBER_FUNCTION(Response, reactionTime))
-    ;
+        ;
+
+    // Expose struct SignalFilter.
+    py::class_<SignalFilter>("SignalFilter")
+        .def(py::init<>())
+        .def(py::init<SignalFilter>())
+        .add_property(PY_MEMBER_FUNCTION(SignalFilter, holdOn))
+        .add_property(PY_MEMBER_FUNCTION(SignalFilter, holdOff))
+        ;
+
+    // Expose struct SingleShotMode.
+    py::class_<SingleShotMode>("SingleShotMode")
+        .def(py::init<>())
+        .def(py::init<SingleShotMode>())
+        .add_property(PY_MEMBER_FUNCTION(SingleShotMode, enabled))
+        .add_property(PY_MEMBER_FUNCTION(SingleShotMode, delay))
+        ;
 
     // Expose class ResponseManager.
     py::class_<ResponseManager, boost::noncopyable>("ResponseManager",
@@ -120,6 +136,9 @@ BOOST_PYTHON_MODULE( xid )
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetMajorVersion))
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetMapOfPorts),
             py::return_value_policy<py::reference_existing_object>())
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsStimTracker2))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsRBx40))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsXID2))
 
         .def("GetPortPtrByNumber", &DeviceConfig::GetPortPtrByNumber,
             py::arg("portNum"),
@@ -133,51 +152,69 @@ BOOST_PYTHON_MODULE( xid )
 
     // Expose class XIDDevice.
     py::class_<XIDDevice, std::shared_ptr<XIDDevice>, boost::noncopyable >("XIDDevice", py::no_init)
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetOutputLogic))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetOutputLogic), py::arg("mode"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetAccessoryConnectorMode))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetAccessoryConnectorMode), py::args("mode"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetACDebouncingTime))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetACDebouncingTime), py::args("time"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMpodModel), py::arg("mpod"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, ConnectToMpod), py::args("mpod, action"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetVKDropDelay))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetVKDropDelay), py::arg("delay"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetProtocol))
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetOutputLogic)) // _a0
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetOutputLogic), py::arg("mode")) // a0
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetAccessoryConnectorMode)) // _a1
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetAccessoryConnectorMode), py::args("mode")) // a1
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetACDebouncingTime)) // _a6
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetACDebouncingTime), py::args("time")) // a6
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMpodModel), py::arg("mpod")) // _aq
+        .def(PY_MEMBER_FUNCTION(XIDDevice, ConnectToMpod), py::args("mpod, action")) // aq
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetVKDropDelay)) // _b3
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetVKDropDelay), py::arg("delay")) // b3
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetProtocol)) // _c1
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetProtocol), py::arg("protocol"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetInternalProductName))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetProductID))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetModelID))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetModelID), py::arg("model"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMajorFirmwareVersion))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMinorFirmwareVersion))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetOutpostModel))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetHardwareGeneration))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, ResetRtTimer))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, ResetBaseTimer))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, QueryBaseTimer))
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetCombinedInfo)) // _d0
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetInternalProductName)) // _d1
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetProductID)) // _d2
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetModelID)) // _d3
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetModelID), py::arg("model")) // d3
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMajorFirmwareVersion)) // _d4
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMinorFirmwareVersion))// _d5
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetOutpostModel)) // _d6
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetHardwareGeneration)) // _d7
+        .def(PY_MEMBER_FUNCTION(XIDDevice, ResetBaseTimer)) // e1
+        .def(PY_MEMBER_FUNCTION(XIDDevice, QueryBaseTimer)) // e3
+        // _e5
+        .def(PY_MEMBER_FUNCTION(XIDDevice, ResetRtTimer)) // e5
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetBaudRate))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetBaudRate), py::arg("rate"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, ReprogramFlash))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetTriggerDefault))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetTriggerDefault), py::arg("defaultOn"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetTriggerDebounceTime))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetTriggerDebounceTime), py::arg("time"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetButtonDebounceTime))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetButtonDebounceTime), py::arg("time"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetPulseDuration))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetPulseDuration), py::arg("duration"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetTimerResetOnOnsetMode))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetTimerResetOnOnsetMode), py::arg("mode"))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, GetAnalogInputThreshold))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, SetAnalogInputThreshold), py::arg("threshold"))
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetBaudRate), py::arg("rate")) // f1
+        .def(PY_MEMBER_FUNCTION(XIDDevice, ReprogramFlash)) // f3
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetTriggerDefault)) // _f4
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetTriggerDefault), py::arg("defaultOn")) // f4
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetTriggerDebounceTime)) // _f5
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetTriggerDebounceTime), py::arg("time")) // f5
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetButtonDebounceTime)) // _f6
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetButtonDebounceTime), py::arg("time")) // f6
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetSingleShotMode), py::arg("selector")) // _ia
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetSingleShotMode), py::args("selector", "mode", "delay")) // ia
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetSignalFilter), py::arg("selector")) // _if
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetSignalFilter), py::args("selector", "mode", "delay")) // if
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetTimerResetOnOnsetMode), py::arg("selector")) // _ir
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetTimerResetOnOnsetMode), py::args("selector", "mode")) // ir
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetEnableUSBOutput), py::arg("selector")) // _iu
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetEnableUSBOutput), py::args("selector", "mode")) // iu
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetAnalogInputThreshold), py::arg("selector")) // _it
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetAnalogInputThreshold), py::args("selector", "threshold")) // it
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetDeviceConfig))
         .def(PY_MEMBER_FUNCTION(XIDDevice, OpenConnection))
         .def(PY_MEMBER_FUNCTION(XIDDevice, CloseConnection))
         .def(PY_MEMBER_FUNCTION(XIDDevice, HasLostConnection))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, RaiseLines), XIDDevice_Overloads())
+        .def(PY_MEMBER_FUNCTION(XIDDevice, RaiseLines), XIDDevice_Overloads()) // mh (ah/mh for XID 1)
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetPulseDuration)) // _mp
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetPulseDuration), py::arg("duration")) // mp
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetNumberOfLines)) // _ml
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetNumberOfLines), py::arg("lines")) // ml
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetPulseTableBitMask)) // _mk
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetPulseTableBitMask), py::arg("lines")) // mk
+        .def(PY_MEMBER_FUNCTION(XIDDevice, ClearPulseTable)) // mc
+        .def(PY_MEMBER_FUNCTION(XIDDevice, IsPulseTableRunning)) // _mr
+        .def(PY_MEMBER_FUNCTION(XIDDevice, RunPulseTable)) // mr
+        .def(PY_MEMBER_FUNCTION(XIDDevice, StopPulseTable)) // ms
+        .def(PY_MEMBER_FUNCTION(XIDDevice, AddPulseTableEntry), py::args("time", "lines")) // mt
+        .def(PY_MEMBER_FUNCTION(XIDDevice, ResetOutputLines)) // mz
         .def(PY_MEMBER_FUNCTION(XIDDevice, ClearLines))
-        .def(PY_MEMBER_FUNCTION(XIDDevice, RestoreFactoryDefaults))
+        .def(PY_MEMBER_FUNCTION(XIDDevice, RestoreFactoryDefaults)) // f7
         .def(PY_MEMBER_FUNCTION(XIDDevice, PollForResponse))
         .def(PY_MEMBER_FUNCTION(XIDDevice, HasQueuedResponses))
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetNumberOfKeysDown))

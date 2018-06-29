@@ -60,7 +60,7 @@ namespace Cedrus
         int reactionTime;
     };
 
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT ResponseManager : private boost::noncopyable
+    class ResponseManager : private boost::noncopyable
     {
     public:
         enum
@@ -68,25 +68,14 @@ namespace Cedrus
             INVALID_PORT_BITS = 0x08
         };
 
-        // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
          ResponseManager(int minorFirmwareVer, std::shared_ptr<const DeviceConfig> devConfig);
 
-        // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         ~ResponseManager();
 
-        /**
-         * Checks the device to see if an event response has been sent.
-         *
-         * @returns KeyState if no event was found, NO_KEY_DETECTED is returned.
-         * Otherwise, it responds with FOUND_KEY_UP, or FOUND_KEY_DOWN.
-         */
-        // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         void CheckForKeypress(std::shared_ptr<Connection> portConnection);
 
-        // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         bool HasQueuedResponses() const;
 
-        // This is exported purely for testing purposes! The response manager isn't meant to be used on its own!
         Response GetNextResponse();
 
         // Even though the number of keys down should never be negative, this
@@ -101,12 +90,12 @@ namespace Cedrus
         enum { OS_FILE_ERROR = -1 };
 
         void AdjustBufferForPacketRecovery();
-        KeyState XidInputFound(Response &res);
-        KeyState ST2InputFound(Response &res);
-        KeyState XIDInputFoundLumina3G_21(Response &res);
+        bool XidInputFound(Response &res);
+        bool ST2InputFound(Response &res);
+        bool XIDInputFoundLumina3G_21(Response &res);
 
         enum { XID_PACKET_SIZE = 6 };
-        enum { ST2_PACKET_SIZE = 8 };
+        enum { ST2_PACKET_SIZE = 9 };
         enum { INVALID_PACKET_INDEX = -1 };
         enum { KEY_RELEASE_BITMASK = 0x10 };
 
@@ -118,7 +107,7 @@ namespace Cedrus
 
         unsigned int m_numKeysDown;
         std::queue<Response> m_responseQueue;
-        boost::function< Cedrus::KeyState (Response&) > m_ResponseParsingFunction;
+        boost::function< bool(Response&) > m_ResponseParsingFunction;
         const std::shared_ptr<const DeviceConfig> m_respDevConfig;
     };
 } // namespace Cedrus

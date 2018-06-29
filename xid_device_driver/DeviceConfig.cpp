@@ -90,16 +90,15 @@ Cedrus::DeviceConfig::~DeviceConfig(void)
 
 int Cedrus::DeviceConfig::GetMappedKey(int port, int key) const
 {
-    int mapped_key = -1;
+    int mapped_key = key;
 
     try
     {
-        mapped_key = m_DevicePorts.at(port).keyMap[key];
+        const Cedrus::DevicePort & key_port = m_DevicePorts.at(port);
+        if (!key_port.keyMap.empty())
+            mapped_key = key_port.keyMap[key];
     }
-    catch (std::out_of_range e)
-    {
-        return -1;
-    }
+    catch (std::out_of_range e){}
 
     return mapped_key;
 }

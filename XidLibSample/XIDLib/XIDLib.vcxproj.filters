@@ -21,9 +21,6 @@
     <ClInclude Include="..\..\xid_device_driver\Connection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xid_device_driver\Connection_TestOnly.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xid_device_driver\constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,9 +42,6 @@
     <ClInclude Include="..\..\xid_device_driver\XIDDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xid_device_driver\XIDDeviceImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xid_device_driver\XIDDeviceScanner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -59,22 +53,19 @@
     <ClCompile Include="..\..\xid_device_driver\Connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xid_device_driver\Connection_TestOnly.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xid_device_driver\DeviceConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xid_device_driver\ResponseManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xid_device_driver\XIDDeviceImpl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xid_device_driver\XIDDeviceScanner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xid_device_driver\py_binding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\xid_device_driver\XIDDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

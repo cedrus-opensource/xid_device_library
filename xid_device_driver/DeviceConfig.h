@@ -68,7 +68,7 @@ namespace Cedrus
             portName(portName),
             portNumber(portNumber),
             numberOfLines(numberOfLines),
-            keyMap(8, -1)
+            keyMap()
         {
         }
 
@@ -123,6 +123,11 @@ namespace Cedrus
         bool IsLumina() const
         {
             return m_ProductID == PRODUCT_ID_LUMINA;
+        }
+
+        bool IsLuminaLP400() const
+        {
+            return m_ProductID == PRODUCT_ID_LUMINA && IsXID1();
         }
 
         bool IsLumina3G() const

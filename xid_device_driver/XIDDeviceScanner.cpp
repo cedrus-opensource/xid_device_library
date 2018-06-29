@@ -228,7 +228,7 @@ int Cedrus::XIDDeviceScanner::DetectXIDDevices
                 // This may seem like a good place to flush, but Open() has taken care of that by now.
 
                 // NOTE THE USAGE OF XIDGlossaryPSTProof IN THIS CODE. IT'S IMPORTANT!
-                std::string info = XIDDevice::GetProtocol(xid_con);
+                std::string info = XIDDevice::GetProtocol_Scan(xid_con);
 
                 if (boost::starts_with(info, "_xid"))
                 {
@@ -238,14 +238,14 @@ int Cedrus::XIDDeviceScanner::DetectXIDDevices
                     if (strcmp(info.c_str(), "_xid0") != 0)
                     {
                         // Force the device into XID mode if it isn't. This is an XID library.
-                        XIDDevice::SetProtocol(xid_con, 0);
+                        XIDDevice::SetProtocol_Scan(xid_con, 0);
 
                         mode_changed = true;
                     }
 
-                    int product_id = XIDDevice::GetProductID(xid_con);
-                    int model_id = XIDDevice::GetModelID(xid_con);
-                    int major_firmware_version = XIDDevice::GetMajorFirmwareVersion(xid_con);
+                    int product_id = XIDDevice::GetProductID_Scan(xid_con);
+                    int model_id = XIDDevice::GetModelID_Scan(xid_con);
+                    int major_firmware_version = XIDDevice::GetMajorFirmwareVersion_Scan(xid_con);
 
                     std::shared_ptr<Cedrus::XIDDevice> matched_dev =
                         CreateDevice(product_id,
@@ -302,11 +302,23 @@ unsigned int Cedrus::XIDDeviceScanner::DevconfigCount() const
 
 std::shared_ptr<const Cedrus::DeviceConfig> Cedrus::XIDDeviceScanner::GetConfigForGivenDevice(int deviceID, int modelID, int majorFirmwareVer) const
 {
+    std::shared_ptr<const Cedrus::DeviceConfig> config;
+
     for (unsigned int i = 0; i < m_MasterConfigList.size(); ++i)
     {
         if (m_MasterConfigList[i]->DoesConfigMatchDevice(deviceID, modelID, majorFirmwareVer))
-            return m_MasterConfigList[i];
+        {
+            config = m_MasterConfigList[i];
+            break;
+        }
     }
 
-    return nullptr;
+    // The model value didn't match any known pod configs. Give the "no model set" config instead.
+    if (!config)
+    {
+        if (deviceID == PRODUCT_ID_MPOD || deviceID == PRODUCT_ID_CPOD)
+                config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(deviceID, '0', majorFirmwareVer);
+    }
+
+    return config;
 }

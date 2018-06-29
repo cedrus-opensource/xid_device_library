@@ -7,9 +7,9 @@ if _platform != "darwin" and _platform != "win32":
     quit()
 
 import time
-import xid
+import pyxid
 
-xds = xid.XIDDeviceScanner.GetDeviceScanner()
+xds = pyxid.XIDDeviceScanner.GetDeviceScanner()
 
 print ("Detecting XID devices, stand by.")
 xds.DetectXIDDevices()
@@ -253,16 +253,16 @@ for device_index in xrange (0,  xds.DeviceCount()):
 
     # These commands are XID 2 only.
     if devCfg.GetMajorVersion() > 1:
-        print '%-20s%-20s' % ("GetTimerResetOnOnsetMode(): ", devCon.GetTimerResetOnOnsetMode())
+        print '%-20s%-20s' % ("GetTimerResetOnOnsetMode(): ", devCon.GetTimerResetOnOnsetMode(ord('A')))
         print "Calling SetTimerResetOnOnsetMode(2)"
-        devCon.SetTimerResetOnOnsetMode(2)
-        print '%-20s%-20s' % ("GetTimerResetOnOnsetMode(): ", devCon.GetTimerResetOnOnsetMode())
+        devCon.SetTimerResetOnOnsetMode(ord('A'), 2)
+        print '%-20s%-20s' % ("GetTimerResetOnOnsetMode(): ", devCon.GetTimerResetOnOnsetMode(ord('A')))
         print
 
-        print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold())
+        print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold(ord('A')))
         print "Calling SetAnalogInputThreshold(200)"
-        devCon.SetAnalogInputThreshold(200)
-        print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold())
+        devCon.SetAnalogInputThreshold(ord('A'), 200)
+        print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold(ord('A')))
         print
 
         # There is currently no matching get command for this

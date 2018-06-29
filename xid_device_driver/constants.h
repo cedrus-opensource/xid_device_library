@@ -53,6 +53,20 @@ namespace
         *c4 = num & 0x000000ff;
     }
 
+    void AdjustEndiannessUintToChars
+    (
+        const unsigned int the_int,
+        unsigned char* c1,
+        unsigned char* c2
+    )
+    {
+        unsigned int num = the_int;
+
+        *c1 = num & 0x000000ff;
+        num >>= 8;
+        *c2 = num & 0x000000ff;
+    }
+
     unsigned int AdjustEndiannessCharsToUint
     (
         const char c1,
@@ -91,13 +105,6 @@ namespace Cedrus
         INVALID_RETURN_VALUE = -1
     };
 
-    enum KeyState
-    {
-        NO_KEY_DETECTED = 0,
-        FOUND_KEY_DOWN = 1,
-        FOUND_KEY_UP = 2
-    };
-
     enum
     {
         MAX_PORTS = 255
@@ -116,7 +123,7 @@ namespace Cedrus
 
     // These are laid out in pairs in blocks of 8. The masks are the same,
     // but they have different meanings for RB/Lumina and StimTracker.
-    enum MpodBitMask
+    enum MpodBitMask : unsigned int
     {
         PORTA_BIT0 = 0x00000001,  // RB/Lumina
         EVENT_CODE0 = 0x00000001, // StimTracker

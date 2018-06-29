@@ -154,6 +154,8 @@ bool Cedrus::Connection::Write(
 {
     DWORD write_status = FT_OK;
 
+    FlushWriteToDeviceBuffer();
+
     if (!requiresDelay)
     {
         write_status = FT_Write(m_DeviceHandle, inBuffer, bytesToWrite, bytesWritten);
@@ -259,7 +261,7 @@ DWORD Cedrus::Connection::SendXIDCommand(
         }
 
         ++i;
-    } while (i < 200 && bytes_stored < maxOutResponseSize);
+    } while (i < 500 && bytes_stored < maxOutResponseSize);
 
     return bytes_stored;
 }
@@ -304,7 +306,7 @@ DWORD Cedrus::Connection::SendXIDCommand_PST_Proof(
         }
 
         ++numRetries;
-    } while (numRetries < 200 && bytes_stored < maxOutResponseSize);
+    } while (numRetries < 500 && bytes_stored < maxOutResponseSize);
 
     return bytes_stored;
 }

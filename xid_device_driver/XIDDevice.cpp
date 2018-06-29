@@ -51,6 +51,7 @@ Cedrus::XIDDevice::XIDDevice(
     : m_linesState(0),
     m_xidCon(xidCon),
     m_config(devConfig),
+    m_podHostConfig(),
     m_ResponseMgr((devConfig->IsRB() || devConfig->IsSV1() || devConfig->IsLumina() || devConfig->IsStimTracker2()) ?
         new ResponseManager(GetMinorFirmwareVersion(), devConfig) : nullptr)
 {
@@ -144,7 +145,55 @@ void Cedrus::XIDDevice::SetACDebouncingTime(unsigned char time)
     m_xidCon->Write(sacdt_command, 3, &bytes_written, m_config->NeedsDelay());
 }
 
-int Cedrus::XIDDevice::GetMpodModel(unsigned int mpod) const
+unsigned char Cedrus::XIDDevice::GetMpodOutputMode() const
+{
+    if (!m_config->IsMPod())
+        return '0';
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_am", 3, cmd_return, sizeof(cmd_return), m_config->NeedsDelay());
+
+    return cmd_return[3] - '0';
+}
+
+void Cedrus::XIDDevice::SetMpodOutputMode(unsigned char mode)
+{
+    if (!m_config->IsMPod())
+        return;
+
+    static unsigned char smom_command[3] = { 'a','m' };
+    smom_command[2] = mode + '0';
+
+    DWORD bytes_written;
+    m_xidCon->Write(smom_command, 3, &bytes_written, m_config->NeedsDelay());
+}
+
+unsigned char Cedrus::XIDDevice::GetMpodPulseDuration() const
+{
+    if (!m_config->IsMPod())
+        return '0';
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_aw", 3, cmd_return, sizeof(cmd_return), m_config->NeedsDelay());
+
+    return cmd_return[3];
+}
+
+void Cedrus::XIDDevice::SetMpodPulseDuration(unsigned char duration)
+{
+    if (!m_config->IsMPod())
+        return;
+
+    static unsigned char smpd_command[3] = { 'a','w' };
+    smpd_command[2] = duration;
+
+    DWORD bytes_written;
+    m_xidCon->Write(smpd_command, 3, &bytes_written, m_config->NeedsDelay());
+}
+
+int Cedrus::XIDDevice::GetMpodModel(unsigned char mpod) const
 {
     if (!m_config->IsXID2())
         return INVALID_RETURN_VALUE;
@@ -155,21 +204,48 @@ int Cedrus::XIDDevice::GetMpodModel(unsigned int mpod) const
     unsigned char mpod_model_return[5];
     m_xidCon->SendXIDCommand(gmm_cmd, 4, mpod_model_return, sizeof(mpod_model_return), m_config->NeedsDelay());
 
-    //SLEEP_FUNC(100 * SLEEP_INC);
-
     bool return_valid = boost::starts_with(mpod_model_return, "_aq");
 
     unsigned char return_val = (unsigned char)(mpod_model_return[4]);
     return return_valid ? (int)(return_val) : INVALID_RETURN_VALUE;
 }
 
-void Cedrus::XIDDevice::ConnectToMpod(unsigned int mpod, unsigned int action)
+void Cedrus::XIDDevice::ConnectToMpod(unsigned char mpod, unsigned char action)
 {
     if (!m_config->IsXID2())
         return;
 
-    // m-pods operate at 19200 only
-    SetBaudRate(1);
+    int rate = 4;
+
+    if (action > 0)
+    {
+        m_baudRatePriorToMpod = GetBaudRate();
+        // m-pods operate at 19200 only
+        SetBaudRate(1);
+    }
+    else
+    {
+        switch (m_baudRatePriorToMpod)
+        {
+        case 9600:
+            rate = 0;
+            break;
+        case 19200:
+            rate = 1;
+            break;
+        case 38400:
+            rate = 2;
+            break;
+        case 57600:
+            rate = 3;
+            break;
+        case 115200:
+            rate = 4;
+            break;
+        default:
+            break;
+        }
+    }
 
     static unsigned char ctm_cmd[4] = {'a','q'};
     ctm_cmd[2] = '0' + mpod;
@@ -178,9 +254,40 @@ void Cedrus::XIDDevice::ConnectToMpod(unsigned int mpod, unsigned int action)
     DWORD bytes_written;
     m_xidCon->Write(ctm_cmd, 4, &bytes_written, m_config->NeedsDelay());
 
-    SLEEP_FUNC(100 * SLEEP_INC);
+    SLEEP_FUNC(300 * SLEEP_INC);
 
+    m_podHostConfig = (action == 0 ? nullptr : m_config);
     MatchConfigToModel(-1);
+
+    if (action == 0)
+        SetBaudRate(rate);
+}
+
+unsigned char Cedrus::XIDDevice::GetTranslationTable() const
+{
+    if (!m_config->IsMPod())
+        return '0';
+
+    static char gtt_command[3] = { '_','a','s' };
+
+    unsigned char return_info[4];
+    m_xidCon->SendXIDCommand(gtt_command, 3, return_info, sizeof(return_info), m_config->NeedsDelay());
+
+    return return_info[3] + '0';
+}
+
+void Cedrus::XIDDevice::SetTranslationTable(unsigned char table)
+{
+    if (!m_config->IsMPod())
+        return;
+
+    static unsigned char stt_cmd[3] = { 'a','s' };
+    stt_cmd[2] = table + '0';
+
+    DWORD bytes_written;
+    m_xidCon->Write(stt_cmd, 3, &bytes_written, m_config->NeedsDelay());
+
+    SLEEP_FUNC(100 * SLEEP_INC);
 }
 
 unsigned int Cedrus::XIDDevice::GetMappedSignals(unsigned int line)
@@ -246,6 +353,18 @@ void Cedrus::XIDDevice::ResetMappedLinesToDefault()
 
     DWORD bytes_written;
     m_xidCon->Write(rmltd_cmd, 3, &bytes_written, m_config->NeedsDelay());
+
+    if (m_config->IsMPod())
+    {
+        if (m_config->GetModelID() == 72) // Neuroscan 16-bit
+        {
+            SetPodLineMapping_Neuroscan16bit();
+        }
+        else if (m_config->GetModelID() == 104) // Neuroscan Grael
+        {
+            SetPodLineMapping_NeuroscanGrael();
+        }
+    }
 }
 
 void Cedrus::XIDDevice::CommitLineMappingToFlash()
@@ -257,6 +376,8 @@ void Cedrus::XIDDevice::CommitLineMappingToFlash()
 
     DWORD bytes_written;
     m_xidCon->Write(commit_map_cmd, 2, &bytes_written, m_config->NeedsDelay());
+
+    SLEEP_FUNC(100*SLEEP_INC);
 }
 
 int Cedrus::XIDDevice::GetVKDropDelay() const
@@ -285,10 +406,10 @@ void Cedrus::XIDDevice::SetVKDropDelay(unsigned char delay)
 
 std::string Cedrus::XIDDevice::GetProtocol() const
 {
-    return GetProtocol(m_xidCon);
+    return GetProtocol_Scan(m_xidCon);
 }
 
-/*static*/ std::string Cedrus::XIDDevice::GetProtocol(std::shared_ptr<Connection> xidCon)
+/*static*/ std::string Cedrus::XIDDevice::GetProtocol_Scan(std::shared_ptr<Connection> xidCon)
 {
     // There's a possibility that the device is in E-Prime mode. Right
     // now is the only time the library cares about it, and we need to
@@ -313,16 +434,39 @@ it will at least zero our buffer");
 
 void Cedrus::XIDDevice::SetProtocol(unsigned char protocol)
 {
-    return SetProtocol(m_xidCon, protocol);
+    return SetProtocol_Scan(m_xidCon, protocol);
 }
 
-void Cedrus::XIDDevice::SetProtocol(std::shared_ptr<Connection> xidCon, unsigned char protocol)
+void Cedrus::XIDDevice::SetProtocol_Scan(std::shared_ptr<Connection> xidCon, unsigned char protocol)
 {
     static unsigned char sdp_cmd[3] = { 'c', '1' };
     sdp_cmd[2] = protocol + '0';
 
     DWORD bytes_written;
     xidCon->Write(sdp_cmd, 3, &bytes_written, true);
+}
+
+void Cedrus::XIDDevice::SwitchToKeyboardMode()
+{
+    if (!(m_config->IsLumina3G() || m_config->IsRBx40()))
+        return;
+
+    static unsigned char stkm_cmd[2] = { 'c', '3' };
+
+    DWORD bytes_written;
+    m_xidCon->Write(stkm_cmd, 2, &bytes_written, m_config->NeedsDelay());
+}
+
+std::string Cedrus::XIDDevice::GetCombinedInfo() const
+{
+    unsigned char return_info[1000];
+    m_xidCon->SendXIDCommand("_d0", 3, return_info, sizeof(return_info), m_config->NeedsDelay());
+
+    std::string return_name((char*)return_info);
+
+    std::replace(return_name.begin(), return_name.end(), '\r', '\n');
+
+    return return_name.empty() ? std::string("Error Retrieving Name") : return_name;
 }
 
 std::string Cedrus::XIDDevice::GetInternalProductName() const
@@ -339,40 +483,34 @@ std::string Cedrus::XIDDevice::GetInternalProductName() const
 
 int Cedrus::XIDDevice::GetProductID() const
 {
-    return XIDDevice::GetProductID(m_xidCon);
+    return XIDDevice::GetProductID_Scan(m_xidCon);
 }
 
 int Cedrus::XIDDevice::GetModelID() const
 {
-    return XIDDevice::GetModelID(m_xidCon);
+    return XIDDevice::GetModelID_Scan(m_xidCon);
 }
 
-/*static*/ int Cedrus::XIDDevice::GetProductID(std::shared_ptr<Connection> xidCon)
+/*static*/ int Cedrus::XIDDevice::GetProductID_Scan(std::shared_ptr<Connection> xidCon)
 {
     unsigned char product_id_return[1]; // we rely on SendXIDCommand to zero-initialize this buffer
 
     xidCon->SendXIDCommand("_d2", 3, product_id_return, sizeof(product_id_return), true);
 
     int product_id = (int)(product_id_return[0]);
-    bool return_valid = product_id >= 48 && product_id <= 52 || product_id == 83;
 
-    CEDRUS_ASSERT(return_valid, "_d2 command's result value must be between '0' and '4', or be 'S'");
-
-    return return_valid ? product_id : INVALID_RETURN_VALUE;
+    return product_id;
 }
 
-/*static*/ int Cedrus::XIDDevice::GetModelID(std::shared_ptr<Connection> xidCon)
+/*static*/ int Cedrus::XIDDevice::GetModelID_Scan(std::shared_ptr<Connection> xidCon)
 {
     unsigned char model_id_return[1]; // we rely on SendXIDCommand to zero-initialize this buffer
 
     xidCon->SendXIDCommand("_d3", 3, model_id_return, sizeof(model_id_return), true);
 
     int model_id = (int)(model_id_return[0]);
-    bool return_valid = model_id >= 48 && model_id <= 105;
 
-    CEDRUS_ASSERT(return_valid, "_d3 command's result value must be between '0' and 'g'");
-
-    return return_valid ? model_id : INVALID_RETURN_VALUE;
+    return model_id;
 }
 
 void Cedrus::XIDDevice::SetModelID(unsigned char model)
@@ -383,17 +521,29 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
     DWORD bytes_written;
     m_xidCon->Write((unsigned char*)set_model_cmd, 3, &bytes_written, m_config->NeedsDelay());
 
-    SLEEP_FUNC(100 * SLEEP_INC);
+    SLEEP_FUNC(300 * SLEEP_INC);
 
     MatchConfigToModel(model);
+
+    if (m_config->IsMPod())
+    {
+        if (model == 72) // Neuroscan 16-bit
+        {
+            SetPodLineMapping_Neuroscan16bit();
+        }
+        else if (model == 104) // Neuroscan Grael
+        {
+            SetPodLineMapping_NeuroscanGrael();
+        }
+    }
 }
 
 int Cedrus::XIDDevice::GetMajorFirmwareVersion() const
 {
-    return GetMajorFirmwareVersion(m_xidCon);
+    return GetMajorFirmwareVersion_Scan(m_xidCon);
 }
 
-/*static*/ int Cedrus::XIDDevice::GetMajorFirmwareVersion(std::shared_ptr<Connection> xidCon)
+/*static*/ int Cedrus::XIDDevice::GetMajorFirmwareVersion_Scan(std::shared_ptr<Connection> xidCon)
 {
     unsigned char major_return[1];
 
@@ -475,6 +625,26 @@ unsigned int Cedrus::XIDDevice::QueryBaseTimer()
     return base_timer;
 }
 
+unsigned int Cedrus::XIDDevice::QueryRtTimer()
+{
+    if (!m_config->IsXID2())
+        return 0;
+
+    static char qrt_command[3] = { '_', 'e','5' };
+
+
+    unsigned char return_info[7];
+    m_xidCon->SendXIDCommand(qrt_command, 3, return_info, sizeof(return_info), m_config->NeedsDelay());
+
+    unsigned int timer = AdjustEndiannessCharsToUint(
+        return_info[3],
+        return_info[4],
+        return_info[5],
+        return_info[6]);
+
+    return timer;
+}
+
 void Cedrus::XIDDevice::ResetRtTimer()
 {
     if (m_config->IsStimTracker1())
@@ -512,7 +682,7 @@ void Cedrus::XIDDevice::SetLockingLevel(unsigned char level)
         return;
 
     static unsigned char set_level_cmd[3] = { 'f', '2' };
-    set_level_cmd[2] = level;
+    set_level_cmd[2] = level + '0';
 
     DWORD bytes_written;
     m_xidCon->Write(set_level_cmd, 3, &bytes_written, m_config->NeedsDelay());
@@ -600,12 +770,153 @@ void Cedrus::XIDDevice::RestoreFactoryDefaults()
 {
     DWORD bytes_written;
     m_xidCon->Write((unsigned char*)"f7", 2, &bytes_written, m_config->NeedsDelay());
+
+    SLEEP_FUNC(200 * SLEEP_INC);
+
+    if (m_config->IsMPod())
+    {
+        SetTranslationTable(m_podHostConfig->IsStimTracker2() ? 1 : 0);
+        if (m_config->GetModelID() == 72) // Neuroscan 16-bit
+        {
+            SetPodLineMapping_Neuroscan16bit();
+        }
+        else if (m_config->GetModelID() == 104) // Neuroscan Grael
+        {
+            SetPodLineMapping_NeuroscanGrael();
+        }
+    }
 }
 
 void Cedrus::XIDDevice::SaveSettingsToFlash()
 {
     DWORD bytes_written;
     m_xidCon->Write((unsigned char*)"f9", 2, &bytes_written, m_config->NeedsDelay());
+}
+
+Cedrus::SingleShotMode Cedrus::XIDDevice::GetSingleShotMode(unsigned char selector) const
+{
+    if (!m_config->IsXID2())
+        return SingleShotMode();
+
+    static char gssm_command[4] = { '_','i','a' };
+
+    gssm_command[3] = selector;
+
+    unsigned char return_info[9];
+    m_xidCon->SendXIDCommand(gssm_command, 4, return_info, sizeof(return_info), m_config->NeedsDelay());
+
+    SingleShotMode ss_mode;
+    ss_mode.enabled = return_info[4] == '1';
+
+    ss_mode.delay = AdjustEndiannessCharsToUint(
+        return_info[5],
+        return_info[6],
+        return_info[7],
+        return_info[8]);
+
+    return ss_mode;
+}
+
+void Cedrus::XIDDevice::SetSingleShotMode(unsigned char selector, bool enable, unsigned int delay)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    static unsigned char sssm_cmd[8] = { 'i','a' };
+    sssm_cmd[2] = selector;
+    sssm_cmd[3] = enable? '1' : '0';
+
+    AdjustEndiannessUintToChars(
+        delay,
+        &(sssm_cmd[4]),
+        &(sssm_cmd[5]),
+        &(sssm_cmd[6]),
+        &(sssm_cmd[7]));
+
+    DWORD bytes_written;
+    m_xidCon->Write(sssm_cmd, 8, &bytes_written, m_config->NeedsDelay());
+}
+
+Cedrus::SignalFilter Cedrus::XIDDevice::GetSignalFilter(unsigned char selector) const
+{
+    if (!m_config->IsXID2())
+        return SignalFilter();
+
+    static char gsf_command[4] = { '_','i','f' };
+
+    gsf_command[3] = selector;
+
+    unsigned char return_info[12];
+    m_xidCon->SendXIDCommand(gsf_command, 4, return_info, sizeof(return_info), m_config->NeedsDelay());
+
+    SignalFilter filter;
+    filter.holdOn = AdjustEndiannessCharsToUint(
+        return_info[4],
+        return_info[5],
+        return_info[6],
+        return_info[7]);
+
+    filter.holdOff = AdjustEndiannessCharsToUint(
+        return_info[8],
+        return_info[9],
+        return_info[10],
+        return_info[11]);
+
+    return filter;
+}
+
+void Cedrus::XIDDevice::SetSignalFilter(unsigned char selector, unsigned int holdOn, unsigned int holdOff)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    static unsigned char ssf_cmd[11] = { 'i','f' };
+    ssf_cmd[2] = selector;
+
+    AdjustEndiannessUintToChars(
+        holdOn,
+        &(ssf_cmd[3]),
+        &(ssf_cmd[4]),
+        &(ssf_cmd[5]),
+        &(ssf_cmd[6]));
+
+    AdjustEndiannessUintToChars(
+        holdOff,
+        &(ssf_cmd[7]),
+        &(ssf_cmd[8]),
+        &(ssf_cmd[9]),
+        &(ssf_cmd[10]));
+
+    DWORD bytes_written;
+    m_xidCon->Write(ssf_cmd, 11, &bytes_written, m_config->NeedsDelay());
+}
+
+bool Cedrus::XIDDevice::GetEnableDigitalOutput(unsigned char selector) const
+{
+    if (!m_config->IsXID2())
+        return false;
+
+    unsigned char return_info[5];
+
+    static char gtso_command[4] = { '_','i','o' };
+    gtso_command[3] = selector;
+
+    m_xidCon->SendXIDCommand(gtso_command, 4, return_info, sizeof(return_info), m_config->NeedsDelay());
+
+    return boost::starts_with(return_info, "_io") ? return_info[4] - '0' : false;
+}
+
+void Cedrus::XIDDevice::SetEnableDigitalOutput(unsigned char selector, unsigned char mode)
+{
+    if (!m_config->IsStimTracker2())
+        return;
+
+    static unsigned char stso_command[4] = { 'i','o' };
+    stso_command[2] = selector;
+    stso_command[3] = mode + '0';
+
+    DWORD bytes_written;
+    m_xidCon->Write(stso_command, 4, &bytes_written, m_config->NeedsDelay());
 }
 
 int Cedrus::XIDDevice::GetTimerResetOnOnsetMode(unsigned char selector) const
@@ -635,32 +946,32 @@ void Cedrus::XIDDevice::SetTimerResetOnOnsetMode(unsigned char selector, unsigne
     m_xidCon->Write(change_mode_cmd, 4, &bytes_written, m_config->NeedsDelay());
 }
 
-bool Cedrus::XIDDevice::GetGenerateTimestampedOutput(unsigned char selector) const
+bool Cedrus::XIDDevice::GetEnableUSBOutput(unsigned char selector) const
 {
     if (!m_config->IsXID2())
         return false;
 
     unsigned char return_info[5];
 
-    static char gtso_command[3] = { '_','i','o' };
-    gtso_command[3] = selector;
+    static char geuo_command[4] = { '_','i','u' };
+    geuo_command[3] = selector;
 
-    m_xidCon->SendXIDCommand(gtso_command, 3, return_info, sizeof(return_info), m_config->NeedsDelay());
+    m_xidCon->SendXIDCommand(geuo_command, 4, return_info, sizeof(return_info), m_config->NeedsDelay());
 
-    return boost::starts_with(return_info, "_io") ? return_info[4] - '0' : false;
+    return boost::starts_with(return_info, "_iu") ? return_info[4] - '0' : false;
 }
 
-void Cedrus::XIDDevice::SetGenerateTimestampedOutput(unsigned char selector, unsigned char mode)
+void Cedrus::XIDDevice::SetEnableUSBOutput(unsigned char selector, unsigned char mode)
 {
     if (!m_config->IsStimTracker2())
         return;
 
-    static unsigned char stso_command[4] = { 'i','o' };
-    stso_command[2] = selector;
-    stso_command[3] = mode + '0';
+    static unsigned char seuo_command[4] = { 'i','u' };
+    seuo_command[2] = selector;
+    seuo_command[3] = mode + '0';
 
     DWORD bytes_written;
-    m_xidCon->Write(stso_command, 4, &bytes_written, m_config->NeedsDelay());
+    m_xidCon->Write(seuo_command, 4, &bytes_written, m_config->NeedsDelay());
 }
 
 int Cedrus::XIDDevice::GetAnalogInputThreshold(unsigned char selector) const
@@ -688,33 +999,6 @@ void Cedrus::XIDDevice::SetAnalogInputThreshold(unsigned char selector, unsigned
 
     DWORD bytes_written;
     m_xidCon->Write(change_threshold_cmd, 4, &bytes_written, m_config->NeedsDelay());
-}
-
-int Cedrus::XIDDevice::GetMpodOutputMode(unsigned char selector) const
-{
-    if (!m_config->IsXID2())
-        return INVALID_RETURN_VALUE;
-
-    unsigned char cmd_return[5];
-    static char gmom_command[4] = { '_','i','m' };
-    gmom_command[3] = selector;
-
-    m_xidCon->SendXIDCommand(gmom_command, 4, cmd_return, sizeof(cmd_return), m_config->NeedsDelay());
-
-    return boost::starts_with(cmd_return, "_im") ? (int)(cmd_return[4]) - '0' : INVALID_RETURN_VALUE;
-}
-
-void Cedrus::XIDDevice::SetMpodOutputMode(unsigned char selector, unsigned char mode)
-{
-    if (!m_config->IsXID2())
-        return;
-
-    static unsigned char smom_command[4] = {'i','m'};
-    smom_command[2] = selector;
-    smom_command[3] = mode + '0';
-
-    DWORD bytes_written;
-    m_xidCon->Write(smom_command, 4, &bytes_written, m_config->NeedsDelay());
 }
 
 int Cedrus::XIDDevice::GetMixedInputMode() const
@@ -797,6 +1081,96 @@ void Cedrus::XIDDevice::SetPulseDuration(unsigned int duration)
 
     DWORD written = 0;
     m_xidCon->Write(spd_command, 6, &written, m_config->NeedsDelay());
+}
+
+unsigned int Cedrus::XIDDevice::GetPulseTableBitMask()
+{
+    if (!m_config->IsXID2())
+        return 0;
+
+    unsigned char return_info[5];
+    m_xidCon->SendXIDCommand("_mk", 3, return_info, sizeof(return_info), m_config->NeedsDelay());
+
+    unsigned int dur = AdjustEndiannessCharsToUint(0,0,
+        return_info[3],
+        return_info[4]);
+
+    return dur;
+}
+
+void Cedrus::XIDDevice::SetPulseTableBitMask(unsigned int lines)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    unsigned int mask = lines;
+
+    static char set_lines_cmd[4] = { 'm','k' };
+    set_lines_cmd[2] = mask & 0x000000ff;
+    mask >>= 8;
+    set_lines_cmd[3] = mask & 0x000000ff;
+
+    DWORD bytes_written;
+    m_xidCon->Write((unsigned char*)set_lines_cmd, 4, &bytes_written, m_config->NeedsDelay());
+}
+
+void Cedrus::XIDDevice::ClearPulseTable()
+{
+    DWORD bytes_written;
+    m_xidCon->Write((unsigned char*)"mc", 2, &bytes_written, m_config->NeedsDelay());
+}
+
+bool Cedrus::XIDDevice::IsPulseTableRunning() const
+{
+    if (!m_config->IsXID2())
+        return false;
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_mr", 3, cmd_return, sizeof(cmd_return), m_config->NeedsDelay());
+
+    return boost::starts_with(cmd_return, "_mr") ? (int)(cmd_return[3]) - '0' : false;
+}
+
+void Cedrus::XIDDevice::RunPulseTable()
+{
+    DWORD bytes_written;
+    m_xidCon->Write((unsigned char*)"mr", 2, &bytes_written, m_config->NeedsDelay());
+}
+
+void Cedrus::XIDDevice::StopPulseTable()
+{
+    DWORD bytes_written;
+    m_xidCon->Write((unsigned char*)"ms", 2, &bytes_written, m_config->NeedsDelay());
+}
+
+void Cedrus::XIDDevice::AddPulseTableEntry(unsigned int time, unsigned int lines)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    static unsigned char apte_cmd[8] = { 'm','t' };
+
+    AdjustEndiannessUintToChars(
+        time,
+        &(apte_cmd[2]),
+        &(apte_cmd[3]),
+        &(apte_cmd[4]),
+        &(apte_cmd[5]));
+
+    AdjustEndiannessUintToChars(
+        lines,
+        &(apte_cmd[6]),
+        &(apte_cmd[7]));
+
+    DWORD bytes_written;
+    m_xidCon->Write(apte_cmd, 8, &bytes_written, m_config->NeedsDelay());
+}
+
+void Cedrus::XIDDevice::ResetOutputLines()
+{
+    DWORD bytes_written;
+    m_xidCon->Write((unsigned char*)"mz", 2, &bytes_written, m_config->NeedsDelay());
 }
 
 void Cedrus::XIDDevice::RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines)
@@ -943,4 +1317,96 @@ void Cedrus::XIDDevice::SetDigitalOutputLines_ST(std::shared_ptr<Connection> xid
 void Cedrus::XIDDevice::MatchConfigToModel(char model)
 {
     m_config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(GetProductID(), model != -1 ? model : GetModelID(), m_config->GetMajorVersion());
+}
+
+void Cedrus::XIDDevice::SetPodLineMapping_Neuroscan16bit()
+{
+    unsigned char initial_table = GetTranslationTable();
+
+    SetTranslationTable(0);
+    MapSignals(0, 524288);
+    MapSignals(1, 0);
+    MapSignals(2, 0);
+    MapSignals(3, 0);
+    MapSignals(4, 256);
+    MapSignals(5, 512);
+    MapSignals(6, 1024);
+    MapSignals(7, 2048);
+    MapSignals(8, 16777216);
+    MapSignals(9, 33554432);
+    MapSignals(10, 67108864);
+    MapSignals(11, 134217728);
+    MapSignals(12, 268435456);
+    MapSignals(13, 536870912);
+    MapSignals(14, 1073741824);
+    MapSignals(15, 2147483648);
+    CommitLineMappingToFlash();
+
+    SetTranslationTable(1);
+    MapSignals(0, 65536);
+    MapSignals(1, 131072);
+    MapSignals(2, 1048576);
+    MapSignals(3, 12582912);
+    MapSignals(4, 134217728);
+    MapSignals(5, 67108864);
+    MapSignals(6, 33554432);
+    MapSignals(7, 16777216);
+    MapSignals(8, 1);
+    MapSignals(9, 2);
+    MapSignals(10, 4);
+    MapSignals(11, 8);
+    MapSignals(12, 16);
+    MapSignals(13, 32);
+    MapSignals(14, 64);
+    MapSignals(15, 128);
+    CommitLineMappingToFlash();
+
+    SetTranslationTable(initial_table);
+    SetMpodOutputMode(0);
+}
+
+void Cedrus::XIDDevice::SetPodLineMapping_NeuroscanGrael()
+{
+    unsigned char initial_table = GetTranslationTable();
+
+    SetTranslationTable(0);
+    MapSignals(0, 0);
+    MapSignals(1, 0);
+    MapSignals(2, 0);
+    MapSignals(3, 0);
+    MapSignals(4, 256);
+    MapSignals(5, 512);
+    MapSignals(6, 1024);
+    MapSignals(7, 2048);
+    MapSignals(8, 16777216);
+    MapSignals(9, 33554432);
+    MapSignals(10, 67108864);
+    MapSignals(11, 134217728);
+    MapSignals(12, 268435456);
+    MapSignals(13, 536870912);
+    MapSignals(14, 0);
+    MapSignals(15, 524288);
+    CommitLineMappingToFlash();
+
+    SetTranslationTable(1);
+    MapSignals(0, 0);
+    MapSignals(1, 0);
+    MapSignals(2, 0);
+    MapSignals(3, 0);
+    MapSignals(4, 0);
+    MapSignals(5, 0);
+    MapSignals(6, 0);
+    MapSignals(7, 0);
+    MapSignals(8, 1);
+    MapSignals(9, 2);
+    MapSignals(10, 4);
+    MapSignals(11, 8);
+    MapSignals(12, 16);
+    MapSignals(13, 32);
+    MapSignals(14, 12582912);
+    MapSignals(15, 65536);
+    CommitLineMappingToFlash();
+
+    SetTranslationTable(initial_table);
+    SetMpodOutputMode(1);
 }

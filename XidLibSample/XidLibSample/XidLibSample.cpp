@@ -4,6 +4,7 @@
 #include "constants.h"
 
 #include <iostream>
+#include <chrono>
 
 int main()
 {
@@ -18,14 +19,14 @@ int main()
 
         std::cout << "Device found:\n" << device->GetInternalProductName() << std::endl;
 
-        int ls_threshold = device->GetAnalogInputThreshold();
+        int ls_threshold = device->GetAnalogInputThreshold('A');
         std::cout << "Light Sensor Threshold: " << ls_threshold << std::endl;
 
         std::cout << "Setting Light Sensor Threshold to itself for purely educational purposes\n"
             << "Do some input with your device! Generate a total of 6 responses through keys/light sensor/scanner trigger/voice key input.\n"
             << "Remember that a key press and a key release are two separate responses!" << std::endl;
 
-        device->SetAnalogInputThreshold(ls_threshold);
+        device->SetAnalogInputThreshold('A', ls_threshold);
 
         device->ClearResponseQueue(); // Clears response collection in the library
         device->ClearResponsesFromBuffer(); // Clears out the port buffers responses are drawn from
@@ -80,7 +81,7 @@ int main()
         {
             device->RaiseLines(lines_bitmask);
             lines_bitmask = lines_bitmask << 1;
-            Sleep(200);
+            std::chrono::duration<int, std::milli> timespan(200);
 
             if (lines_bitmask > 255)
                 lines_bitmask = 1;
