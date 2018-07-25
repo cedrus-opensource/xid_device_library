@@ -55,13 +55,13 @@ Cedrus::XIDDevice const volatile* get_pointer(class Cedrus::XIDDevice const vola
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XIDDevice_Overloads, RaiseLines, 1, 2)
 
-BOOST_PYTHON_MODULE( pyxid )
+BOOST_PYTHON_MODULE(pyxid2)
 {
-    #if defined(PY_MEMBER_FUNCTION) || defined(class_name) || defined(mem_fun_name) 
-    #error "PY_MEMBER_FUNCTION macro redefinition"
-    #endif
+#if defined(PY_MEMBER_FUNCTION) || defined(class_name) || defined(mem_fun_name)
+#error "PY_MEMBER_FUNCTION macro redefinition"
+#endif
 
-    #define PY_MEMBER_FUNCTION(class_name, mem_fun_name) #mem_fun_name, &class_name::mem_fun_name
+#define PY_MEMBER_FUNCTION(class_name, mem_fun_name) #mem_fun_name, &class_name::mem_fun_name
 
     namespace py = boost::python;
     using namespace Cedrus;

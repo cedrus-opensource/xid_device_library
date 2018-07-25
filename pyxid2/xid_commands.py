@@ -7,19 +7,12 @@ if _platform != "darwin" and _platform != "win32":
     quit()
 
 import time
-import pyxid
+import pyxid2
 
-xds = pyxid.XIDDeviceScanner.GetDeviceScanner()
+xds = pyxid2.XIDDeviceScanner.GetDeviceScanner()
 
 print ("Detecting XID devices, stand by.")
 xds.DetectXIDDevices()
-
-devCfgCount = xds.DevconfigCount()
-if (devCfgCount == 0):
-    print("No device configs found, returning...")
-    quit()
-
-print "Devconfig count = ", devCfgCount
 
 devCount = xds.DeviceCount()
 if (devCount == 0):
