@@ -37,6 +37,15 @@ UseableAsResponse = No
 
 namespace
 {
+    void CreateEmptyConfig(std::shared_ptr<Cedrus::DeviceConfig> & invalidCfgPtr)
+    {
+        std::map<unsigned int, Cedrus::DevicePort> devicePorts;
+
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Invalid Device", -1, -1, -1, 0, devicePorts));
+
+        invalidCfgPtr = config;
+    }
+
     void CreateRB530Config(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
         std::map<unsigned int, Cedrus::DevicePort> devicePorts;
@@ -267,11 +276,11 @@ namespace
         AddPodConfig("m-pod for Tobii", 51, 84, 2, 8, listOfAllConfigs); // 'T'
         AddPodConfig("m-pod no model set", 51, 48, 2, 16, listOfAllConfigs); // '0'
         AddPodConfig("m-pod for ABM", 51, 97, 2, 8, listOfAllConfigs); // 'a'
-        AddPodConfig("m-pod for Bittium NeurOne", 51, 98, 2, 8, listOfAllConfigs); // 'b'
         AddPodConfig("Generic m-pod", 51, 103, 2, 8, listOfAllConfigs); // 'g'
         AddPodConfig("m-pod for Neuroscan Grael", 51, 104, 2, 16, listOfAllConfigs); // 'h'
         AddPodConfig("m-pod for iWorx", 51, 105, 2, 8, listOfAllConfigs); // 'i'
         AddPodConfig("m-pod for Mangold", 51, 109, 2, 8, listOfAllConfigs); // 'm'
+        AddPodConfig("m-pod for Bittium NeurOne", 51, 110, 2, 8, listOfAllConfigs); // 'n'
         AddPodConfig("m-pod for SR Research", 51, 115, 2, 8, listOfAllConfigs); // 's'
         AddPodConfig("m-pod for TMSi", 51, 116, 2, 8, listOfAllConfigs); // 't'
     }
@@ -294,12 +303,12 @@ namespace
         AddPodConfig("c-pod for Tobii", 52, 84, 2, 8, listOfAllConfigs); // 'T'
         AddPodConfig("c-pod no model set", 52, 48, 2, 16, listOfAllConfigs); // '0'
         AddPodConfig("c-pod for ABM", 52, 97, 2, 8, listOfAllConfigs); // 'a'
-        AddPodConfig("m-pod for Bittium NeurOne", 52, 98, 2, 8, listOfAllConfigs); // 'b'
         AddPodConfig("Generic c-pod", 52, 103, 2, 8, listOfAllConfigs); // 'g'
-        AddPodConfig("m-pod for Neuroscan Grael", 52, 104, 2, 16, listOfAllConfigs); // 'h'
+        AddPodConfig("c-pod for Neuroscan Grael", 52, 104, 2, 16, listOfAllConfigs); // 'h'
         AddPodConfig("c-pod for iWorx", 52, 105, 2, 8, listOfAllConfigs); // 'i'
         AddPodConfig("c-pod for Mangold", 52, 109, 2, 8, listOfAllConfigs); // 'm'
-        AddPodConfig("m-pod for SR Research", 52, 115, 2, 8, listOfAllConfigs); // 's'
-        AddPodConfig("m-pod for TMSi", 52, 116, 2, 8, listOfAllConfigs); // 't'
+        AddPodConfig("c-pod for Bittium NeurOne", 52, 110, 2, 8, listOfAllConfigs); // 'n'
+        AddPodConfig("c-pod for SR Research", 52, 115, 2, 8, listOfAllConfigs); // 's'
+        AddPodConfig("c-pod for TMSi", 52, 116, 2, 8, listOfAllConfigs); // 't'
     }
 }

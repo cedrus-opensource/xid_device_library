@@ -190,12 +190,18 @@ BOOST_PYTHON_MODULE( pyxid )
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetSingleShotMode), py::args("selector", "mode", "delay")) // ia
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetSignalFilter), py::arg("selector")) // _if
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetSignalFilter), py::args("selector", "mode", "delay")) // if
+        .def(PY_MEMBER_FUNCTION(XIDDevice, IsRBx40LEDEnabled)) // _il
+        .def(PY_MEMBER_FUNCTION(XIDDevice, EnableRBx40LED), py::arg("enable")) // il
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetEnableDigitalOutput), py::arg("selector")) // _io
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetEnableDigitalOutput), py::args("selector", "mode")) // io
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetTimerResetOnOnsetMode), py::arg("selector")) // _ir
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetTimerResetOnOnsetMode), py::args("selector", "mode")) // ir
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetEnableUSBOutput), py::arg("selector")) // _iu
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetEnableUSBOutput), py::args("selector", "mode")) // iu
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetAnalogInputThreshold), py::arg("selector")) // _it
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetAnalogInputThreshold), py::args("selector", "threshold")) // it
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMixedInputMode)) // _iv
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetMixedInputMode), py::arg("enable")) // iv
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetDeviceConfig))
         .def(PY_MEMBER_FUNCTION(XIDDevice, OpenConnection))
         .def(PY_MEMBER_FUNCTION(XIDDevice, CloseConnection))

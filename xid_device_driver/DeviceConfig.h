@@ -99,6 +99,7 @@ namespace Cedrus
         ~DeviceConfig(void);
 
         static void PopulateConfigList(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs);
+        static void CreateInvalidConfig(std::shared_ptr<Cedrus::DeviceConfig> & invalidCfgPtr);
 
         int GetMappedKey(int port, int key) const;
 

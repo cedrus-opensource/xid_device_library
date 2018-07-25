@@ -83,5 +83,6 @@ namespace Cedrus
     private:
         std::vector<std::shared_ptr<XIDDevice> > m_Devices;
         std::vector<std::shared_ptr<DeviceConfig> > m_MasterConfigList;
+        std::shared_ptr<DeviceConfig> m_emptyConfig;
     };
 } // namespace Cedrus

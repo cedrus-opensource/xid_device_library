@@ -535,6 +535,11 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
         {
             SetPodLineMapping_NeuroscanGrael();
         }
+        else
+        {
+            ResetMappedLinesToDefault();
+            CommitLineMappingToFlash();
+        }
     }
 }
 
@@ -889,6 +894,30 @@ void Cedrus::XIDDevice::SetSignalFilter(unsigned char selector, unsigned int hol
 
     DWORD bytes_written;
     m_xidCon->Write(ssf_cmd, 11, &bytes_written, m_config->NeedsDelay());
+}
+
+bool Cedrus::XIDDevice::IsRBx40LEDEnabled() const
+{
+    if (!m_config->IsXID2())
+        return false;
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_il", 3, cmd_return, sizeof(cmd_return), m_config->NeedsDelay());
+
+    return (bool)(cmd_return[3] - '0');
+}
+
+void Cedrus::XIDDevice::EnableRBx40LED(bool enable)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    static unsigned char change_threshold_cmd[3] = { 'i','l' };
+    change_threshold_cmd[2] = enable ? '1' : '0';
+
+    DWORD bytes_written;
+    m_xidCon->Write(change_threshold_cmd, 3, &bytes_written, m_config->NeedsDelay());
 }
 
 bool Cedrus::XIDDevice::GetEnableDigitalOutput(unsigned char selector) const

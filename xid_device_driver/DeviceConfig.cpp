@@ -66,6 +66,11 @@ void Cedrus::DeviceConfig::PopulateConfigList(std::vector<std::shared_ptr<Cedrus
     CreateAllcpodConfigs(listOfAllConfigs);
 }
 
+void Cedrus::DeviceConfig::CreateInvalidConfig(std::shared_ptr<Cedrus::DeviceConfig> & invalidCfgPtr)
+{
+    CreateEmptyConfig(invalidCfgPtr);
+}
+
 Cedrus::DeviceConfig::DeviceConfig(std::string deviceName,
     int productID,
     int modelID,

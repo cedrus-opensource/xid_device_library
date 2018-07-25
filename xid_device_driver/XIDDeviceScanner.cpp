@@ -95,6 +95,7 @@ void LoadCOMPorts(std::vector<DWORD> * availableCOMPorts)
 Cedrus::XIDDeviceScanner::XIDDeviceScanner()
 {
     DeviceConfig::PopulateConfigList(m_MasterConfigList);
+    DeviceConfig::CreateInvalidConfig(m_emptyConfig);
 }
 
 Cedrus::XIDDeviceScanner& Cedrus::XIDDeviceScanner::GetDeviceScanner()
@@ -317,7 +318,9 @@ std::shared_ptr<const Cedrus::DeviceConfig> Cedrus::XIDDeviceScanner::GetConfigF
     if (!config)
     {
         if (deviceID == PRODUCT_ID_MPOD || deviceID == PRODUCT_ID_CPOD)
-                config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(deviceID, '0', majorFirmwareVer);
+            config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(deviceID, '0', majorFirmwareVer);
+        else
+            config = m_emptyConfig;
     }
 
     return config;
