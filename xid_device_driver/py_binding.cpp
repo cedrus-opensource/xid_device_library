@@ -2,6 +2,7 @@
 #include "XIDDevice.h"
 #include "DeviceConfig.h"
 
+#include <iostream>
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/suite/indexing/map_indexing_suite.hpp>
