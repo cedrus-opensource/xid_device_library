@@ -101,7 +101,7 @@ if env['PYXID_FLAG']:
 
     # Install fresh ones by copying the XID library file as XID Python extension and replacing the test.
     env.InstallAs( name_of_pyd, project_target )
-    env.Install( staging_dir, outer_repo_root_dir + 'pyxid2' + os.path.sep + name_of_test )
+    env.Install( staging_dir, outer_repo_root_dir + 'samples' + os.path.sep + name_of_test )
 
 linkflags = []
 

@@ -238,10 +238,10 @@ for device_index in xrange (0,  xds.DeviceCount()):
         devCon.ClearResponsesFromBuffer()
 
     if devCfg.GetMajorVersion() > 1:
-        print '%-20s%-20s' % ("QueryBaseTimer(): ", devCon.QueryBaseTimer())
-        print "Calling devCon.ResetBaseTimer()"
-        devCon.ResetBaseTimer()
-        print '%-20s%-20s' % ("QueryBaseTimer(): ", devCon.QueryBaseTimer())
+        print '%-20s%-20s' % ("QueryRtTimer(): ", devCon.QueryRtTimer())
+        print "Calling devCon.ResetRtTimer()"
+        devCon.ResetRtTimer()
+        print '%-20s%-20s' % ("QueryRtTimer(): ", devCon.QueryRtTimer())
         print
 
     # These commands are XID 2 only.
@@ -253,8 +253,8 @@ for device_index in xrange (0,  xds.DeviceCount()):
         print
 
         print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold(ord('A')))
-        print "Calling SetAnalogInputThreshold(200)"
-        devCon.SetAnalogInputThreshold(ord('A'), 200)
+        print "Calling SetAnalogInputThreshold(66)"
+        devCon.SetAnalogInputThreshold(ord('A'), 66)
         print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold(ord('A')))
         print
 
