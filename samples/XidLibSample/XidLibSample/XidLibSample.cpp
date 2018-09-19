@@ -1,7 +1,5 @@
 #include "XIDDeviceScanner.h"
 #include "XIDDevice.h"
-#include "DeviceConfig.h"
-#include "constants.h"
 
 #include <iostream>
 #include <chrono>

@@ -1,4 +1,14 @@
 #!/usr/bin/python
+"""
+You can see a full list of all XID2 commands on Cedrus' website here:
+https://www.cedrus.com/support/xid/commands.htm
+
+m-pod specific commands can be found on a separate page here:
+https://www.cedrus.com/support/xid/mpod_commands.htm
+
+For an exhaustive list of all functions in the library, see
+/xid_device_library/xid_device_driver/py_binding.cpp
+"""
 
 from sys import platform as _platform
 
@@ -9,69 +19,60 @@ if _platform != "darwin" and _platform != "win32":
 import time
 import pyxid2
 
-xds = pyxid2.XIDDeviceScanner.GetDeviceScanner()
-
-print ("Detecting XID devices, stand by.")
-xds.DetectXIDDevices()
-
-devCount = xds.DeviceCount()
-if (devCount == 0):
-    print("No devices found, returning...")
-    quit()
-
-print "Device count = ", devCount
-
-def connect_to_devices():
-    for d in xrange (0, xds.DeviceCount()):
-        devCon = xds.DeviceConnectionAtIndex(d)
-        devCfg = devCon.GetDeviceConfig()
-        print 'Open %-20s:%-20s' % (devCfg.GetDeviceName(), devCon.OpenConnection())
-
-def print_dev_names():
-    print "---------"
-    for d in xrange (0, xds.DeviceCount()):
-        devCon = xds.DeviceConnectionAtIndex(d)
-        devCfg = devCon.GetDeviceConfig()
-        print devCfg.GetDeviceName()
-    print "---------"
-
-def test_mpod_commands(devCon):
-    print "Calling SetBaudRate(1) aka 19200 in order to properly interface with m-pod."
-    devCon.SetBaudRate(1)
-
-    devCon.ConnectToMpod(1,1)
-    print_dev_info(devCon)
-
-    devCon.ConnectToMpod(1,0)
-
+"""
+The library contains a host of so-called device configs that let it know which XID device any
+given serial device is. For instance, an RB-540 has the Product ID of 2, a Model ID of 1 and
+a major firmware version of 2, while an RB-530 has the same Product and Model IDs, but a major
+version of 1. This information is exposed for a variety of reasons,such as setting up a GUI
+based on which device you're working with. There are also helpers for all XID device categories
+and sub-categories(up to a point), such as IsRBx30(), IsXID1() and IsStimTracker2Quad().
+"""
 def print_dev_info(devCon):
     devCfg = devCon.GetDeviceConfig()
     print "###########################"
     print "#### Basic device info ####"
     print "----- From devconfig"
     print '%-20s%-20s' % ("GetDeviceName(): ", devCfg.GetDeviceName())
-    print '%-20s%-20s' % ("GetProductID(): ", devCfg.GetProductID())
-    print '%-20s%-20s' % ("GetModelID(): ", devCfg.GetModelID())
+    print '%-20s%-20s' % ("GetProductID(): ", unichr(devCfg.GetProductID()))
+    print '%-20s%-20s' % ("GetModelID(): ", unichr(devCfg.GetModelID()))
     print '%-20s%-20s' % ("GetMajorVersion(): ", devCfg.GetMajorVersion())
     print
+    
+    """
+    The distinction between these two sections is that pulling information from the config doesn't
+    require the library to query the device itself, which is beneficial for speed reasons, and also
+    because sending queries interferes with response collection.
+
+    Moreover, the information in the config should always match the query result, so these commands
+    exists largely as a way to sanity-check device identification errors.
+    """
 
     print "----- From device itself"
     productID = devCon.GetProductID()
-    print '%-20s%-20s' % ("productID: ", productID)
+    print '%-20s%-20s' % ("GetProductID(): ", unichr(productID))
     modelID = devCon.GetModelID()
-    print '%-20s%-20s' % ("modelID: ", modelID)
-    # This value differentiates old and new devices
+    print '%-20s%-20s' % ("GetModelID(): ", unichr(modelID))
     print '%-20s%-20s' % ("GetMajorFirmwareVersion(): ", devCon.GetMajorFirmwareVersion())
     print '%-20s%-20s' % ("GetMinorFirmwareVersion(): ", devCon.GetMinorFirmwareVersion())
     print "GetInternalProductName():"
     internalName = devCon.GetInternalProductName()
     print internalName
-    print "These two commands only work with XID2.0 devices:"
-    print '%-20s%-20s' % ("GetOutpostModel() : ", devCon.GetOutpostModel())
-    print '%-20s%-20s' % ("GetHardwareGeneration(): ", devCon.GetHardwareGeneration())
-    print "###########################"
-    print
+    if devCfg.IsXID2():
+        print '%-20s%-20s' % ("GetOutpostModel() : ", devCon.GetOutpostModel())
+        print '%-20s%-20s' % ("GetHardwareGeneration(): ", devCon.GetHardwareGeneration())
+        print "###########################"
+        print
 
+"""
+Most devices will generate output on the serial port, and those devices have a map of their own
+"ports" to help you make sense of what comes out of them. Each port object contains a string
+for its name, its "number"(can also be a letter) and the number of lines it has. Aside from the
+educational value, these things can help you set up a GUI. Some ports also contain a keyMap that
+lets the library interpet what comes out of the device better. On some RBs it might not be
+immediately clear which order the buttons go in, and the actual key presses reported make about
+as much sense. That one's for internal use primarily, but it's exposed just in case. A lack of a
+keyMap means that the library reports keys as they are given to it by the device.
+"""
 def print_ports_info(devCon):
     devCfg = devCon.GetDeviceConfig()
     ports = devCfg.GetMapOfPorts()
@@ -90,6 +91,13 @@ def print_ports_info(devCon):
     print "###########################"
     print
 
+"""
+The contents of a response object are mostly self-explanatory. Port number is going to match to one
+of the ports that the device has, and the key is going be some value, in some case seemingly arbitrary
+(a Light Sensor response from an RB-x40 is on Port 2 and its Key is 3. You'll never see a Key 0 or 1 on
+that port). wasPressed just indicates whether the key was pressed or released(or equivalent) and the
+reaction time is a timestamp from the device itself.
+"""
 def print_response(response):
     print "---Fetched Response---"
     print '%-20s%-20s' % ("port: ", response.port)
@@ -97,6 +105,16 @@ def print_response(response):
     print '%-20s%-20s' % ("wasPressed: ", response.wasPressed)
     print '%-20s%-20s' % ("reactionTime: ", response.reactionTime)
 
+"""
+Gathering responses from the pad has a few moving parts. You start by calling PollForResponse(), which
+will pull some bytes from the buffer and attempt to parse them as a single response packet. If it
+succeeds, it will store a processed response, and HasQueuedResponses() will now return true. You can then
+retrieve a response from the queue at any time by calling GetNextResponse(). If you want to know whether
+multiple keys are held down at once, GetNumberOfKeysDown() has you covered.
+
+You can flush both the buffer of the device of itself, and the queue of processed responses via
+ClearResponsesFromBuffer() and ClearResponseQueue() respectively.
+"""
 def run_button_tests(devCon):
     devCon.ClearResponseQueue()
     devCon.ClearResponsesFromBuffer()
@@ -109,60 +127,108 @@ def run_button_tests(devCon):
     print_response(devCon.GetNextResponse())
     print "The response queue should be empty now, as we've popped the only response it should have had."
     print '%-20s%-20s' % ("HasQueuedResponses(): ", devCon.HasQueuedResponses())
-    devCon.ClearResponsesFromBuffer()
     print
 
     devCfg = devCon.GetDeviceConfig()
     # You physically can't hold down two buttons on the SV-1
-    if devCfg.GetProductID() != 49:
+    if not devCfg.IsSV1():
+        devCon.ClearResponsesFromBuffer()
         print "Testing simultaneous keypresses... Hold down two buttons!"
         while (devCon.GetNumberOfKeysDown() < 2):
             devCon.PollForResponse()
             time.sleep(.01)
         print "Two keys down. Good job!"
 
-        print "Clearing response queue..."
+        print "Clearing respons queue and buffer..."
         devCon.ClearResponseQueue()
         devCon.ClearResponsesFromBuffer()
 
-        print "Checking if we have queued responses (we should not, we just cleared them)"
-        print '%-20s%-20s' % ("HasQueuedResponses(): ", devCon.HasQueuedResponses())
-        print
-
-    print "Testing response flushing... You have 5 seconds to press some buttons!"
+    print "Testing buffer flushing... You have 5 seconds to press some buttons!"
     time.sleep (5)
     print "Calling ClearResponsesFromBuffer()"
     devCon.ClearResponsesFromBuffer()
-    print "Attempting to retrieve a response from the buffer and put it into the queue..."
+    print "Attempting to retrieve a response from the buffer..."
     devCon.PollForResponse()
-    print "Checking if we have responses in the queue (we shouldn't due to the ClearResponsesFromBuffer() call)"
+    print "Checking if we have responses in the queue (we shouldn't)"
     print '%-20s%-20s' % ("HasQueuedResponses(): ", devCon.HasQueuedResponses())
     print
 
+"""
+There is rarely a reason to connect to an m-pod directly. It does have settings that can be tweaked, but
+navigating those can be a little complicated. We recommend that you use Xidon 2, a utility we provide
+separately, in order to change those settings.
+"""
+def test_mpod_commands(devCon):
+    print "Checking if an m-pod is present via GetMpodModel()..."
+    print "m-pod 1 model (- means no connection): ", unichr(devCon.GetMpodModel(1))
+    devCon.ConnectToMpod(1,1)
+    print_dev_info(devCon)
+
+    print '%-20s%-20s' % ("GetTranslationTable(): ", devCon.GetTranslationTable())
+
+    ass = devCon.GetMappedSignals(0)
+    print '%-20s%-20s' % ("GetMappedSignals(): ", ass)
+    devCon.MapSignals(0, 536870912)
+    print '%-20s%-20s' % ("GetMappedSignals(): ", devCon.GetMappedSignals(0))
+    devCon.MapSignals(0, ass)
+    print '%-20s%-20s' % ("GetMappedSignals(): ", devCon.GetMappedSignals(0))
+
+    print '%-20s%-20s' % ("GetMpodPulseDuration(): ", devCon.GetMpodPulseDuration())
+    #devCon.SetMpodPulseDuration()
+    #devCon.ResetMappedLinesToDefault() // atX
+
+    devCon.ConnectToMpod(1,0)
+
+scanner = pyxid2.XIDDeviceScanner.GetDeviceScanner()
+
+print ("Detecting XID devices, stand by.")
+"""
+Detecting devices will open all of the respective serial ports and keep them open for as long as the scanner persists.
+Typically, this is the way to use the library. If you need to do something trickier with the devices, you can use these
+functions to manipulate them.
+
+CloseAllConnections() -- Closes all connections, but the devices remain in the scanner. You can open them back up without
+re-scanning.
+OpenAllConnections()  -- Opens all connection back up.
+DropEveryConnection() -- In addition to closing the connections, the devices will be removed from the scanner and will
+require a fresh scan to work with them again.
+DropConnectionByPtr(device) -- Drops a specific device from the scanner.
+CheckConnectionsDropDeadOnes() -- Fairly self-explanatory. Live devices will remain intact and their connections open.
+"""
+scanner.DetectXIDDevices()
+
+devCount = scanner.DeviceCount()
+if (devCount == 0):
+    print("No devices found, returning...")
+    quit()
+
+print "Device count = ", devCount
+
 # Test officially starting here
 print("Found the following devices:")
-print_dev_names()
+print "---------"
+for d in xrange (0, scanner.DeviceCount()):
+    # This is the main way of accessing devices found by the scanner.
+    devCon = scanner.DeviceConnectionAtIndex(d)
+    print devCon.GetDeviceConfig().GetDeviceName()
+print "---------"
 
-for device_index in xrange (0,  xds.DeviceCount()):
+for device_index in xrange (0,  scanner.DeviceCount()):
     print "========================================================"
     print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     print "========================================================"
-    devCon = xds.DeviceConnectionAtIndex(device_index)
+    devCon = scanner.DeviceConnectionAtIndex(device_index)
     devCfg = devCon.GetDeviceConfig()
-    isStimTrackerOrCpod = devCfg.GetProductID() == 83 or devCfg.GetProductID() == 52
+    isStimTrackerOrCpod = devCfg.IsStimTracker1() or devCfg.IsCPod()
 
     # Printing device and port information
     print_dev_info(devCon)
     print_ports_info(devCon)
 
-    print "Calling RestoreFactoryDefaults()"
-    print
-    devCon.RestoreFactoryDefaults()
-
     # Resetting an LP-400 makes it output a trigger, just like sending
     # it f4 does. We're going to wait a little and then flush the buffer to
     # prevent it from messing any tests up.
-    if devCfg.GetProductID() == 48 and devCfg.GetMajorVersion() == 1:
+    if devCfg.IsLuminaLP400():
         time.sleep(2)
         devCon.ClearResponsesFromBuffer()
 
@@ -191,121 +257,61 @@ for device_index in xrange (0,  xds.DeviceCount()):
     print
     time.sleep(1)
 
-    # These calls do nothing for StimTracker! They're not implemented in the library
-    # and actually sending these bytes to it doesn't result in anything noteworthy.
-    if not isStimTrackerOrCpod:
-        print "Testing protocol commands..."
-        print '%-20s%-20s' % ("GetProtocol(): ", devCon.GetProtocol())
-        print "Calling SetProtocol(3)"
-        devCon.SetProtocol(3)
-        print '%-20s%-20s' % ("GetProtocol(): ", devCon.GetProtocol())
-        print "Calling SetProtocol(0)"
-        devCon.SetProtocol(0)
-        print
-
-    # StimTracker will actually accept this command and adjust its internal state,
-    # but nothing can possibly come of it, because of what StimTracker is.
-    if devCfg.GetProductID() == 49:
-        print '%-20s%-20s' % ("GetVKDropDelay(): ", devCon.GetVKDropDelay())
-        print "Calling SetVKDropDelay(123)"
-        devCon.SetVKDropDelay(123)
-        time.sleep(.5)
-        print '%-20s%-20s' % ("GetVKDropDelay(): ", devCon.GetVKDropDelay())
-        print
-
-    # Non-StimTracker devices will actually record and store pulse duration, but
+    # Non-StimTracker XID1 devices will actually record and store pulse duration, but
     # have no way of taking advantage of it.
-    if isStimTrackerOrCpod:
+    if devCfg.IsXID2() or devCfg.IsStimTracker1():
         print '%-20s%-20s' % ("GetPulseDuration(): ", devCon.GetPulseDuration())
         print "Calling SetPulseDuration(500)"
         devCon.SetPulseDuration(500)
         print '%-20s%-20s' % ("GetPulseDuration(): ", devCon.GetPulseDuration())
         print
 
-    # This only does anything for Lumina LP-400
-    if devCfg.GetProductID() == 48:
-        trigger_default = devCon.GetTriggerDefault()
-        print '%-20s%-20s' % ("GetTriggerDefault(): ", trigger_default)
-        print "Inverting trigger default"
-        devCon.SetTriggerDefault(not trigger_default)
-        print '%-20s%-20s' % ("GetTriggerDefault(): ", devCon.GetTriggerDefault())
-        print "Inverting trigger default back"
-        devCon.SetTriggerDefault(trigger_default)
-        print
-        # Changing trigger default makes a Lumina LP-400 output a trigger. We're going to wait
-        # a second and then flush the buffer.
-        time.sleep(1)
-        devCon.ClearResponsesFromBuffer()
+    """
+    There are several commands for controlling and filtering input from the device. A lot of these only ever need
+    to be set once and then committed to flash with SaveSettingsToFlash(). We're avoiding using Set commands in
+    this sample to ensure that the device state isn't changed. You can read more about these commands on the XID
+    commands page.
 
-    if devCfg.GetMajorVersion() > 1:
+    There are many different input selectors one can pass to these commands, varying from device to device. Light
+    Sensor 1 ('A') is the one that all XID2 devices have.
+    """
+    if devCfg.IsXID2():
+        print "Testing timer commands..."
         print '%-20s%-20s' % ("QueryRtTimer(): ", devCon.QueryRtTimer())
         print "Calling devCon.ResetRtTimer()"
         devCon.ResetRtTimer()
         print '%-20s%-20s' % ("QueryRtTimer(): ", devCon.QueryRtTimer())
         print
 
-    # These commands are XID 2 only.
-    if devCfg.GetMajorVersion() > 1:
+        print '%-20s%-20s' % ("GetEnableDigitalOutput(): ", devCon.GetEnableDigitalOutput(ord('A')))
+        # This is what the Set equivalent of this command looks like.
+        #devCon.GetEnableDigitalOutput(ord('A'), 2)
+
+        print '%-20s%-20s' % ("GetEnableUSBOutput(): ", devCon.GetEnableUSBOutput(ord('A')))
+        #devCon.GetEnableUSBOutput(ord('A'), 1)
+
         print '%-20s%-20s' % ("GetTimerResetOnOnsetMode(): ", devCon.GetTimerResetOnOnsetMode(ord('A')))
-        print "Calling SetTimerResetOnOnsetMode(2)"
-        devCon.SetTimerResetOnOnsetMode(ord('A'), 2)
-        print '%-20s%-20s' % ("GetTimerResetOnOnsetMode(): ", devCon.GetTimerResetOnOnsetMode(ord('A')))
-        print
+        #devCon.SetTimerResetOnOnsetMode(ord('A'), 2)
 
         print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold(ord('A')))
-        print "Calling SetAnalogInputThreshold(66)"
-        devCon.SetAnalogInputThreshold(ord('A'), 66)
-        print '%-20s%-20s' % ("GetAnalogInputThreshold(): ", devCon.GetAnalogInputThreshold(ord('A')))
-        print
+        #devCon.SetAnalogInputThreshold(ord('A'), 66)
 
-        # There is currently no matching get command for this
-        #print "Calling SetScannerTriggerFilter(2)"
-        #devCon.SetScannerTriggerFilter(2)
+        singleShot = devCon.GetSingleShotMode(ord('A'))
+        print "GetSingleShotMode() :"
+        print 'enabled: %s delay: %s' % (singleShot.enabled, singleShot.delay)
 
-        print '%-20s%-20s' % ("GetMpodModel(1): ", devCon.GetMpodModel(1))
+        signalFilter = devCon.GetSignalFilter(ord('A'))
+        print "GetSignalFilter() :"
+        print 'holdOn: %s holdOff: %s' % (signalFilter.holdOn, signalFilter.holdOff)
 
-    # These commands are deprecated in XID 2
-    else:
-        # These are some more of those commands StimTracker will actually take, store
-        # and then do nothing with. May as well not bother.
-        if not isStimTrackerOrCpod:
-            acc_conn_mode = devCon.GetAccessoryConnectorMode();
-            print '%-20s%-20s' % ("GetAccessoryConnectorMode(): ", acc_conn_mode)
-            print "Inverting accessory connector mode with SetAccessoryConnectorMode()"
-            devCon.SetAccessoryConnectorMode(not acc_conn_mode)
-            print '%-20s%-20s' % ("GetAccessoryConnectorMode(): ", devCon.GetAccessoryConnectorMode())
-            print "Inverting accessory connector mode back with SetAccessoryConnectorMode()"
-            devCon.SetAccessoryConnectorMode(acc_conn_mode)
-            print
-
-            print '%-20s%-20s' % ("GetTriggerDebounceTime(): ", devCon.GetTriggerDebounceTime())
-            print "Calling SetTriggerDebounceTime(10)"
-            devCon.SetTriggerDebounceTime(10)
-            print '%-20s%-20s' % ("GetTriggerDebounceTime(): ", devCon.GetTriggerDebounceTime())
-            print
-
-            print '%-20s%-20s' % ("GetButtonDebounceTime(): ", devCon.GetButtonDebounceTime())
-            print "call SetButtonDebounceTime(150)"
-            devCon.SetButtonDebounceTime(150)
-            print '%-20s%-20s' % ("GetButtonDebounceTime(): ", devCon.GetButtonDebounceTime())
-            print
-
-            output_logic = devCon.GetOutputLogic()
-            print '%-20s%-20s' % ("GetOutputLogic(): ", output_logic)
-            print "Inverting output logic with SetOutputLogic()"
-            devCon.SetOutputLogic(not output_logic)
-            print '%-20s%-20s' % ("GetOutputLogic(): ", devCon.GetOutputLogic())
-            print "Inverting output logic back with SetOutputLogic()"
-            devCon.SetOutputLogic(output_logic)
+    print "Calling ResetRtTimer() prior to the input test..."
+    devCon.ResetRtTimer()
     print
+    #run_button_tests(devCon)
+    print "TESTING MPOD COMMANDS"
+    test_mpod_commands(devCon)
 
-    # StimTracker ST-100 has no buttons to press and cannot return responses.
-    if not isStimTrackerOrCpod:
-        print "Calling ResetRtTimer() You should be able to see the effects momentarily."
-        devCon.ResetRtTimer()
-        print
-        run_button_tests(devCon)
-    print("Performing line output test...")
+    print "Performing line output test..."
 
     devCon.SetPulseDuration(300)
     linesBitmask = 1
@@ -313,19 +319,13 @@ for device_index in xrange (0,  xds.DeviceCount()):
     print str(sleep_flash*1000) + "ms between line changes"
     for bm in xrange (0, 16):
         print "raise lines bitmask: ", linesBitmask
-        xds.DeviceConnectionAtIndex(device_index).RaiseLines(linesBitmask)
+        scanner.DeviceConnectionAtIndex(device_index).RaiseLines(linesBitmask)
         linesBitmask = linesBitmask << 1
         if linesBitmask > 255:
             linesBitmask = 1
         time.sleep(sleep_flash)
 
 print("Clearing lines on all devices...")
-print "Calling RestoreFactoryDefaults() on all devices..."
-print("Closing device connections...")
-for d in xrange (0, xds.DeviceCount()):
-    devCon = xds.DeviceConnectionAtIndex(d)
+for d in xrange (0, scanner.DeviceCount()):
+    devCon = scanner.DeviceConnectionAtIndex(d)
     devCon.ClearLines()
-    devCon.RestoreFactoryDefaults()
-    devCon.CloseConnection()
-    devCfg = devCon.GetDeviceConfig()
-    print(devCfg.GetDeviceName() + " has lost connection at any point: " + str(devCon.HasLostConnection()))
