@@ -109,7 +109,7 @@ namespace Cedrus
         void GetLockingLevel(); // _f2
         void SetLockingLevel(unsigned char level); // f2
         void ReprogramFlash(); // f3
-        int GetTriggerDefault() const; // _f4
+        bool GetTriggerDefault() const; // _f4
         void SetTriggerDefault(bool defaultOn); // f4
         int GetTriggerDebounceTime() const; // _f5
         void SetTriggerDebounceTime(unsigned char time); // f5
@@ -125,11 +125,11 @@ namespace Cedrus
         bool IsRBx40LEDEnabled() const; // _il
         void EnableRBx40LED(bool enable); // il
         bool GetEnableDigitalOutput(unsigned char selector) const; // _io
-        void SetEnableDigitalOutput(unsigned char selector, unsigned char mode); // io
+        void SetEnableDigitalOutput(unsigned char selector, bool mode); // io
         int GetTimerResetOnOnsetMode(unsigned char selector) const; // _ir
         void SetTimerResetOnOnsetMode(unsigned char selector, unsigned char mode); // ir
         bool GetEnableUSBOutput(unsigned char selector) const; // _iu
-        void SetEnableUSBOutput(unsigned char selector, unsigned char mode); // iu
+        void SetEnableUSBOutput(unsigned char selector, bool mode); // iu
         int GetAnalogInputThreshold(unsigned char selector) const; // _it
         void SetAnalogInputThreshold(unsigned char selector, unsigned char threshold); // it
         int GetMixedInputMode() const; // _iv

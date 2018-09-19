@@ -166,8 +166,7 @@ namespace
     {
         std::map<unsigned int, Cedrus::DevicePort> devicePorts;
 
-        std::vector<int> keyMap = { -1, 0, 1, 2, 3, 4, -1, -1 };
-        Cedrus::DevicePort port("Key + Scanner Trigger", 0, 5, keyMap);
+        Cedrus::DevicePort port("Key + Scanner Trigger", 0, 5);
         devicePorts.emplace(0, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Lumina LP-400", 48, 69, 1, 6, devicePorts));
@@ -187,8 +186,7 @@ namespace
         port = Cedrus::DevicePort("Lumina Pad 2", 1, 5, keyMap);
         devicePorts.emplace(1, port);
 
-        keyMap = { -1, -1, -1, 0, 1, -1, -1, -1 };
-        port = Cedrus::DevicePort("Light Sensor + Scanner Trigger", 2, 2, keyMap);
+        port = Cedrus::DevicePort("Light Sensor + Scanner Trigger", 2, 2);
         devicePorts.emplace(2, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Lumina 3G", 48, 65, 2, 8, devicePorts));

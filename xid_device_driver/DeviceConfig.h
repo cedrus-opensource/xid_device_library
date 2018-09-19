@@ -77,12 +77,12 @@ namespace Cedrus
         int numberOfLines;
         std::vector<int> keyMap;
 
-        bool operator==( const DevicePort& other ) const
+        bool operator == (const DevicePort& other) const
         {
-            return ( portName == other.portName &&
-                     portNumber == other.portNumber &&
-                     numberOfLines == other.numberOfLines &&
-                     keyMap == other.keyMap );
+            return (portName == other.portName &&
+                portNumber == other.portNumber &&
+                numberOfLines == other.numberOfLines &&
+                keyMap == other.keyMap);
         }
     };
 
@@ -128,12 +128,12 @@ namespace Cedrus
 
         bool IsLuminaLP400() const
         {
-            return m_ProductID == PRODUCT_ID_LUMINA && IsXID1();
+            return IsLumina() && IsXID1();
         }
 
         bool IsLumina3G() const
         {
-            return m_ProductID == PRODUCT_ID_LUMINA && IsXID2();
+            return IsLumina() && IsXID2();
         }
 
         bool IsSV1() const
@@ -146,9 +146,14 @@ namespace Cedrus
             return m_ProductID == PRODUCT_ID_RB;
         }
 
+        bool IsRBx30() const
+        {
+            return IsRB() && IsXID1();
+        }
+
         bool IsRBx40() const
         {
-            return m_ProductID == PRODUCT_ID_RB && IsXID2();
+            return IsRB() && IsXID2();
         }
 
         bool IsMPod() const
@@ -174,6 +179,16 @@ namespace Cedrus
         bool IsStimTracker2() const
         {
             return IsStimTracker() && IsXID2();
+        }
+
+        bool IsStimTracker2Duo() const
+        {
+            return IsStimTracker2() && m_ModelID == '1';
+        }
+
+        bool IsStimTracker2Quad() const
+        {
+            return IsStimTracker2() && m_ModelID == '2';
         }
 
         bool IsXID1() const

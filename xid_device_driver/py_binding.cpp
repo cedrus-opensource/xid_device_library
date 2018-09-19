@@ -137,8 +137,21 @@ BOOST_PYTHON_MODULE(pyxid2)
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetMajorVersion))
         .def(PY_MEMBER_FUNCTION(DeviceConfig, GetMapOfPorts),
             py::return_value_policy<py::reference_existing_object>())
-        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsStimTracker2))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsLumina))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsLuminaLP400))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsLumina3G))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsSV1))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsRB))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsRBx30))
         .def(PY_MEMBER_FUNCTION(DeviceConfig, IsRBx40))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsMPod))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsCPod))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsStimTracker))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsStimTracker1))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsStimTracker2))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsStimTracker2Duo))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsStimTracker2Quad))
+        .def(PY_MEMBER_FUNCTION(DeviceConfig, IsXID1))
         .def(PY_MEMBER_FUNCTION(DeviceConfig, IsXID2))
 
         .def("GetPortPtrByNumber", &DeviceConfig::GetPortPtrByNumber,
@@ -161,6 +174,16 @@ BOOST_PYTHON_MODULE(pyxid2)
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetACDebouncingTime), py::args("time")) // a6
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetMpodModel), py::arg("mpod")) // _aq
         .def(PY_MEMBER_FUNCTION(XIDDevice, ConnectToMpod), py::args("mpod, action")) // aq
+
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetTranslationTable)) // _as
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetTranslationTable), py::arg("table")) // as
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMappedSignals), py::arg("line")) // _at
+        .def(PY_MEMBER_FUNCTION(XIDDevice, MapSignals), py::args("line", "map")) // at
+        .def(PY_MEMBER_FUNCTION(XIDDevice, ResetMappedLinesToDefault)) // atX
+        .def(PY_MEMBER_FUNCTION(XIDDevice, CommitLineMappingToFlash)) // af
+        .def(PY_MEMBER_FUNCTION(XIDDevice, GetMpodPulseDuration)) // _aw
+        .def(PY_MEMBER_FUNCTION(XIDDevice, SetMpodPulseDuration), py::arg("duration")) // aw
+
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetVKDropDelay)) // _b3
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetVKDropDelay), py::arg("delay")) // b3
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetProtocol)) // _c1
@@ -176,7 +199,7 @@ BOOST_PYTHON_MODULE(pyxid2)
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetHardwareGeneration)) // _d7
         .def(PY_MEMBER_FUNCTION(XIDDevice, ResetBaseTimer)) // e1
         .def(PY_MEMBER_FUNCTION(XIDDevice, QueryBaseTimer)) // e3
-        // _e5
+        .def(PY_MEMBER_FUNCTION(XIDDevice, QueryRtTimer))// _e5
         .def(PY_MEMBER_FUNCTION(XIDDevice, ResetRtTimer)) // e5
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetBaudRate))
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetBaudRate), py::arg("rate")) // f1

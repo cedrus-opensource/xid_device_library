@@ -273,7 +273,7 @@ unsigned char Cedrus::XIDDevice::GetTranslationTable() const
     unsigned char return_info[4];
     m_xidCon->SendXIDCommand(gtt_command, 3, return_info, sizeof(return_info), m_config->NeedsDelay());
 
-    return return_info[3] + '0';
+    return return_info[3];
 }
 
 void Cedrus::XIDDevice::SetTranslationTable(unsigned char table)
@@ -699,21 +699,13 @@ void Cedrus::XIDDevice::ReprogramFlash()
     m_xidCon->Write((unsigned char*)"f3", 2, &bytes_written, m_config->NeedsDelay());
 }
 
-int Cedrus::XIDDevice::GetTriggerDefault() const
+bool Cedrus::XIDDevice::GetTriggerDefault() const
 {
-    unsigned char default_return[4]; // we rely on SendXIDCommand to zero-initialize this buffer
+    unsigned char default_return[4];
 
     m_xidCon->SendXIDCommand("_f4", 3, default_return, sizeof(default_return), m_config->NeedsDelay());
 
-    bool return_valid_f4 = boost::starts_with(default_return, "_f4");
-    bool return_valid_val = default_return[3] == '0' || default_return[3] == '1';
-
-    CEDRUS_ASSERT(return_valid_f4, "GetTriggerDefault's xid query result must start with _f4");
-    CEDRUS_ASSERT(return_valid_val, "GetTriggerDefault's value must be either '0' or '1'");
-
-    return (return_valid_f4 && return_valid_val) ?
-        static_cast<int>(default_return[3] == '1')
-        : static_cast<int>(INVALID_RETURN_VALUE);
+    return default_return[3] == '1' ? true : false;
 }
 
 void Cedrus::XIDDevice::SetTriggerDefault(bool defaultOn)
@@ -932,17 +924,17 @@ bool Cedrus::XIDDevice::GetEnableDigitalOutput(unsigned char selector) const
 
     m_xidCon->SendXIDCommand(gtso_command, 4, return_info, sizeof(return_info), m_config->NeedsDelay());
 
-    return boost::starts_with(return_info, "_io") ? return_info[4] - '0' : false;
+    return return_info[4] == '1' ? true : false;
 }
 
-void Cedrus::XIDDevice::SetEnableDigitalOutput(unsigned char selector, unsigned char mode)
+void Cedrus::XIDDevice::SetEnableDigitalOutput(unsigned char selector, bool mode)
 {
     if (!m_config->IsStimTracker2())
         return;
 
     static unsigned char stso_command[4] = { 'i','o' };
     stso_command[2] = selector;
-    stso_command[3] = mode + '0';
+    stso_command[3] = mode ? '1' : '0';
 
     DWORD bytes_written;
     m_xidCon->Write(stso_command, 4, &bytes_written, m_config->NeedsDelay());
@@ -987,17 +979,17 @@ bool Cedrus::XIDDevice::GetEnableUSBOutput(unsigned char selector) const
 
     m_xidCon->SendXIDCommand(geuo_command, 4, return_info, sizeof(return_info), m_config->NeedsDelay());
 
-    return boost::starts_with(return_info, "_iu") ? return_info[4] - '0' : false;
+    return return_info[4] == '1' ? true : false;
 }
 
-void Cedrus::XIDDevice::SetEnableUSBOutput(unsigned char selector, unsigned char mode)
+void Cedrus::XIDDevice::SetEnableUSBOutput(unsigned char selector, bool mode)
 {
     if (!m_config->IsStimTracker2())
         return;
 
     static unsigned char seuo_command[4] = { 'i','u' };
     seuo_command[2] = selector;
-    seuo_command[3] = mode + '0';
+    seuo_command[3] = mode ? '1' : '0';
 
     DWORD bytes_written;
     m_xidCon->Write(seuo_command, 4, &bytes_written, m_config->NeedsDelay());
@@ -1048,7 +1040,7 @@ void Cedrus::XIDDevice::SetMixedInputMode(unsigned char mode)
         return;
 
     static unsigned char change_threshold_cmd[3] = { 'i','v' };
-    change_threshold_cmd[2] = mode + '0';
+    change_threshold_cmd[2] = mode ? '1' : '0';
 
     DWORD bytes_written;
     m_xidCon->Write(change_threshold_cmd, 3, &bytes_written, m_config->NeedsDelay());
@@ -1158,7 +1150,7 @@ bool Cedrus::XIDDevice::IsPulseTableRunning() const
 
     m_xidCon->SendXIDCommand("_mr", 3, cmd_return, sizeof(cmd_return), m_config->NeedsDelay());
 
-    return boost::starts_with(cmd_return, "_mr") ? (int)(cmd_return[3]) - '0' : false;
+    return cmd_return[3] == '1' ? true : false;
 }
 
 void Cedrus::XIDDevice::RunPulseTable()
