@@ -190,7 +190,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
-      <AdditionalIncludeDirectories>..\..\xid_device_driver;..\..\binaries_boost\1_58\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\xid_device_driver;..\..\..\binaries_boost\1_58\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
