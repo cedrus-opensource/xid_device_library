@@ -63,21 +63,6 @@ Cedrus::ResponseManager::~ResponseManager()
 
 bool Cedrus::ResponseManager::XidInputFound(Response &res)
 {
-    // Wisdom from Hisham, circa Aug 13, 2005. Point C is especially relevant.
-    //
-    // First, we try to determine if we have a valid packet. Our options
-    // are limited; here what we look for:
-    //
-    // a. The first byte must be the letter 'k'
-    //
-    // b. Bits 0-3 of the second byte indicate the port number.  Lumina
-    //    and RB-x30 models use only bits 0 and 1; SV-1 uses only bits
-    //    1 and 2.  We check that the two remaining bits are zero.
-    //
-    // c. The remaining four bytes provide the reaction time.  Here, we'll
-    //    assume that the RT will never exceed 4.66 hours :-) and verify
-    //    that the last byte is set to 0.
-
     bool input_found = false;
     m_XIDPacketIndex = INVALID_PACKET_INDEX;
 
@@ -90,21 +75,14 @@ bool Cedrus::ResponseManager::XidInputFound(Response &res)
         // we'll just read in fewer bytes on the next pass in an attempt to finish it.
         if (m_BytesInBuffer == XID_PACKET_SIZE)
         {
-            // However, if we have a packet's worth of data, but it's not a valid packet,
-            // things are starting to head south.
-            if (m_InputBuffer[5] == '\0')
-            {
-                res.wasPressed = (m_InputBuffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
-                res.port = m_InputBuffer[1] & 0x0F;
-                res.key = (m_InputBuffer[1] & 0xE0) >> 5;
+            res.wasPressed = (m_InputBuffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
+            res.port = m_InputBuffer[1] & 0x0F;
+            res.key = (m_InputBuffer[1] & 0xE0) >> 5;
 
-                res.reactionTime = AdjustEndiannessCharsToUint
-                (m_InputBuffer[2], m_InputBuffer[3], m_InputBuffer[4], m_InputBuffer[5]);
+            res.reactionTime = AdjustEndiannessCharsToUint
+            (m_InputBuffer[2], m_InputBuffer[3], m_InputBuffer[4], m_InputBuffer[5]);
 
-                input_found = true;
-            }
-            else
-                m_XIDPacketIndex = INVALID_PACKET_INDEX;
+            input_found = true;
         }
     }
 
