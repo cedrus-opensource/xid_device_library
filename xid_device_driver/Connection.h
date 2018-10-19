@@ -42,6 +42,8 @@
 #   define SLEEP_INC 1
 #endif
 
+#include <chrono>
+
 namespace Cedrus
 {
     class Connection
@@ -70,22 +72,19 @@ namespace Cedrus
         bool Write(
             unsigned char * const inBuffer,
             DWORD bytesToWrite,
-            LPDWORD bytesWritten,
-            bool requiresDelay);
+            LPDWORD bytesWritten);
 
         DWORD SendXIDCommand(
             const char inCommand[],
             DWORD commandSize,
             unsigned char outResponse[],
-            unsigned int maxOutResponseSize,
-            bool requiresDelay);
+            unsigned int maxOutResponseSize);
 
         DWORD SendXIDCommand_PST_Proof(
             const char inCommand[],
             DWORD commandSize,
             unsigned char outResponse[],
-            unsigned int maxOutResponseSize,
-            bool requiresDelay);
+            unsigned int maxOutResponseSize);
 
         int GetBaudRate() const;
 
@@ -107,5 +106,7 @@ namespace Cedrus
         bool m_ConnectionDead;
 
         FT_HANDLE m_DeviceHandle;
+
+        std::chrono::high_resolution_clock::time_point m_timestamp;
     };
 } // namespace Cedrus

@@ -105,6 +105,8 @@ int Cedrus::Connection::Open()
         FT_Purge(m_DeviceHandle, FT_PURGE_RX | FT_PURGE_TX);
     }
 
+    m_timestamp = std::chrono::high_resolution_clock::now();
+
     return status;
 }
 
@@ -115,9 +117,9 @@ bool Cedrus::Connection::SetupCOMPort()
     FT_SetBaudRate(m_DeviceHandle, m_BaudRate);
     FT_SetDataCharacteristics(m_DeviceHandle, m_ByteSize, m_StopBits, m_BitParity);
 
-    FT_SetTimeouts(m_DeviceHandle, 1, 500);
+    FT_SetTimeouts(m_DeviceHandle, 100, 100);
     FT_SetUSBParameters(m_DeviceHandle, 64, 64);
-    FT_SetLatencyTimer(m_DeviceHandle, 2);
+    FT_SetLatencyTimer(m_DeviceHandle, 10);
 
     status = FlushWriteToDeviceBuffer();
     if (status)
@@ -149,35 +151,30 @@ bool Cedrus::Connection::Read(
 bool Cedrus::Connection::Write(
     unsigned char * const inBuffer,
     DWORD bytesToWrite,
-    LPDWORD bytesWritten,
-    bool requiresDelay)
+    LPDWORD bytesWritten)
 {
-    DWORD write_status = FT_OK;
-
     FlushWriteToDeviceBuffer();
 
-    if (!requiresDelay)
+    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - m_timestamp).count() < 10)
     {
-        write_status = FT_Write(m_DeviceHandle, inBuffer, bytesToWrite, bytesWritten);
     }
-    else
+    m_timestamp = std::chrono::high_resolution_clock::now();
+
+    DWORD write_status = FT_OK;
+
+    unsigned char *p = inBuffer;
+    for (unsigned int i = 0; i < bytesToWrite; ++i)
     {
-        unsigned char *p = inBuffer;
-        for (unsigned int i = 0; i < bytesToWrite; ++i)
+        DWORD byte_count;
+        write_status = FT_Write(m_DeviceHandle, p, 1, &byte_count);
+        if ((write_status != FT_OK) || (++(*bytesWritten) == bytesToWrite))
         {
-            DWORD byte_count;
-            write_status = FT_Write(m_DeviceHandle, p, 1, &byte_count);
-            if ((write_status != FT_OK) || (++(*bytesWritten) == bytesToWrite))
-            {
-                break;
-            }
-
-            SLEEP_FUNC(2 * SLEEP_INC);
-            ++p;
+            break;
         }
-    }
 
-    SLEEP_FUNC(10 * SLEEP_INC);
+        SLEEP_FUNC(1 * SLEEP_INC);
+        ++p;
+    }
 
     m_ConnectionDead = (write_status != FT_OK);
 
@@ -230,8 +227,7 @@ DWORD Cedrus::Connection::SendXIDCommand(
     const char inCommand[],
     DWORD commandSize,
     unsigned char outResponse[],
-    unsigned int maxOutResponseSize,
-    bool requiresDelay)
+    unsigned int maxOutResponseSize)
 {
     if (outResponse != NULL)
         memset(outResponse, 0x00, maxOutResponseSize);
@@ -239,14 +235,14 @@ DWORD Cedrus::Connection::SendXIDCommand(
     FlushReadFromDeviceBuffer();
 
     DWORD bytes_written = 0;
-    Write((unsigned char*)inCommand, commandSize, &bytes_written, requiresDelay);
+    Write((unsigned char*)inCommand, commandSize, &bytes_written);
 
     unsigned char in_buff[64];
     memset(in_buff, 0x00, sizeof(in_buff));
     DWORD bytes_read = 0;
     DWORD bytes_stored = 0;
 
-    unsigned int i = 0;
+    unsigned int num_retries = 0;
     do
     {
         Read(in_buff, sizeof(in_buff), &bytes_read);
@@ -260,8 +256,8 @@ DWORD Cedrus::Connection::SendXIDCommand(
             }
         }
 
-        ++i;
-    } while (i < 500 && bytes_stored < maxOutResponseSize);
+        ++num_retries;
+    } while (bytes_stored < maxOutResponseSize && num_retries < 3);
 
     return bytes_stored;
 }
@@ -270,8 +266,7 @@ DWORD Cedrus::Connection::SendXIDCommand_PST_Proof(
     const char inCommand[],
     DWORD commandSize,
     unsigned char outResponse[],
-    unsigned int maxOutResponseSize,
-    bool requiresDelay)
+    unsigned int maxOutResponseSize)
 {
     if (outResponse != NULL)
         memset(outResponse, 0x00, maxOutResponseSize);
@@ -279,14 +274,14 @@ DWORD Cedrus::Connection::SendXIDCommand_PST_Proof(
     FlushReadFromDeviceBuffer();
 
     DWORD bytes_written = 0;
-    Write((unsigned char*)inCommand, commandSize, &bytes_written, requiresDelay);
+    Write((unsigned char*)inCommand, commandSize, &bytes_written);
 
     unsigned char in_buff[64];
     memset(in_buff, 0x00, sizeof(in_buff));
     DWORD bytes_read = 0;
     DWORD bytes_stored = 0;
 
-    unsigned int numRetries = 0;
+    unsigned int num_retries = 0;
     do
     {
         // We're reading from the buffer in chunks of 64 because of all the potential zeroes.
@@ -305,8 +300,8 @@ DWORD Cedrus::Connection::SendXIDCommand_PST_Proof(
             }
         }
 
-        ++numRetries;
-    } while (numRetries < 500 && bytes_stored < maxOutResponseSize);
+        ++num_retries;
+    } while (bytes_stored < maxOutResponseSize && num_retries < 3);
 
     return bytes_stored;
 }

@@ -66,6 +66,8 @@ namespace Cedrus
         void SetAccessoryConnectorMode(unsigned char mode); // a1
         int GetACDebouncingTime() const; // _a6
         void SetACDebouncingTime(unsigned char time); // a6
+        bool IsMpodOutputEnabled() const; // _ae
+        void EnableMpodOutput(bool enable); // ae
         unsigned char GetMpodOutputMode() const; // _am
         void SetMpodOutputMode(unsigned char mode); // am
         int GetMpodModel(unsigned char mpod) const; // _aq

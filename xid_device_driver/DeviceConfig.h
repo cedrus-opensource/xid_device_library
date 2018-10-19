@@ -119,8 +119,6 @@ namespace Cedrus
 
         bool DoesConfigMatchDevice( int deviceID, int modelID, int majorFirmwareVer ) const;
 
-        bool NeedsDelay() const;
-
         bool IsLumina() const
         {
             return m_ProductID == PRODUCT_ID_LUMINA;

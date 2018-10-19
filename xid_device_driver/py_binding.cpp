@@ -172,6 +172,8 @@ BOOST_PYTHON_MODULE(pyxid2)
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetAccessoryConnectorMode), py::args("mode")) // a1
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetACDebouncingTime)) // _a6
         .def(PY_MEMBER_FUNCTION(XIDDevice, SetACDebouncingTime), py::args("time")) // a6
+        .def(PY_MEMBER_FUNCTION(XIDDevice, IsMpodOutputEnabled)) // _ae
+        .def(PY_MEMBER_FUNCTION(XIDDevice, EnableMpodOutput), py::arg("enable")) // ae
         .def(PY_MEMBER_FUNCTION(XIDDevice, GetMpodModel), py::arg("mpod")) // _aq
         .def(PY_MEMBER_FUNCTION(XIDDevice, ConnectToMpod), py::args("mpod, action")) // aq
 

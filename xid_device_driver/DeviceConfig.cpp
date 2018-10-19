@@ -165,8 +165,3 @@ bool Cedrus::DeviceConfig::DoesConfigMatchDevice( int deviceID, int modelID, int
 
     return does_match;
 }
-
-bool Cedrus::DeviceConfig::NeedsDelay() const
-{
-    return m_requiresDelay;
-}
