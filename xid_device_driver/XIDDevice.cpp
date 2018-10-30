@@ -311,7 +311,7 @@ void Cedrus::XIDDevice::SetTranslationTable(unsigned char table)
     DWORD bytes_written = 0;
     m_xidCon->Write(stt_cmd, 3, &bytes_written);
 
-    SLEEP_FUNC(100 * SLEEP_INC);
+    SLEEP_FUNC(50 * SLEEP_INC);
 }
 
 unsigned int Cedrus::XIDDevice::GetMappedSignals(unsigned int line)
@@ -336,8 +336,6 @@ unsigned int Cedrus::XIDDevice::GetMappedSignals(unsigned int line)
     unsigned int signals = 0;
     if (!mapped_signals.empty())
         signals = std::stoul(mapped_signals, nullptr, 16);
-
-    //SLEEP_FUNC(100 * SLEEP_INC);
 
     return signals;
 }
@@ -401,7 +399,7 @@ void Cedrus::XIDDevice::CommitLineMappingToFlash()
     DWORD bytes_written = 0;
     m_xidCon->Write(commit_map_cmd, 2, &bytes_written);
 
-    SLEEP_FUNC(100*SLEEP_INC);
+    SLEEP_FUNC(50 * SLEEP_INC);
 }
 
 int Cedrus::XIDDevice::GetVKDropDelay() const
@@ -545,7 +543,7 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)set_model_cmd, 3, &bytes_written);
 
-    SLEEP_FUNC(200 * SLEEP_INC);
+    SLEEP_FUNC(100 * SLEEP_INC);
 
     MatchConfigToModel(model);
 
@@ -789,7 +787,7 @@ void Cedrus::XIDDevice::RestoreFactoryDefaults()
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"f7", 2, &bytes_written);
 
-    SLEEP_FUNC(200 * SLEEP_INC);
+    SLEEP_FUNC(100 * SLEEP_INC);
 
     if (m_config->IsMPod())
     {
@@ -1070,7 +1068,7 @@ void Cedrus::XIDDevice::SetMixedInputMode(unsigned char mode)
 unsigned int Cedrus::XIDDevice::GetNumberOfLines() const
 {
     if (!m_config->IsXID2())
-        return INVALID_RETURN_VALUE;
+        return 0;
 
     unsigned char gen_return[4];
 
