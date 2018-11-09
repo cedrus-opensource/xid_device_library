@@ -191,6 +191,8 @@ void Cedrus::XIDDevice::SetMpodOutputMode(unsigned char mode)
 
     DWORD bytes_written = 0;
     m_xidCon->Write(smom_command, 3, &bytes_written);
+
+    SLEEP_FUNC(50 * SLEEP_INC);
 }
 
 unsigned char Cedrus::XIDDevice::GetMpodPulseDuration() const
@@ -215,6 +217,8 @@ void Cedrus::XIDDevice::SetMpodPulseDuration(unsigned char duration)
 
     DWORD bytes_written = 0;
     m_xidCon->Write(smpd_command, 3, &bytes_written);
+
+    SLEEP_FUNC(50 * SLEEP_INC);
 }
 
 int Cedrus::XIDDevice::GetMpodModel(unsigned char mpod) const
@@ -543,7 +547,7 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)set_model_cmd, 3, &bytes_written);
 
-    SLEEP_FUNC(100 * SLEEP_INC);
+    SLEEP_FUNC(200 * SLEEP_INC);
 
     MatchConfigToModel(model);
 
@@ -794,12 +798,17 @@ void Cedrus::XIDDevice::RestoreFactoryDefaults()
         SetTranslationTable(m_podHostConfig->IsStimTracker2() ? 1 : 0);
         if (m_config->GetModelID() == 72) // Neuroscan 16-bit
         {
-            SetPodLineMapping_Neuroscan16bit();
+            SetMPodLineMapping_Neuroscan16bit();
         }
         else if (m_config->GetModelID() == 104) // Neuroscan Grael
         {
-            SetPodLineMapping_NeuroscanGrael();
+            SetMPodLineMapping_NeuroscanGrael();
         }
+    }
+    else if (m_config->IsCPod())
+    {
+        if (m_config->GetModelID()== 104)
+            SetCPodLineMapping_NeuroscanGrael(); // Neuroscan Grael
     }
 }
 
@@ -807,6 +816,7 @@ void Cedrus::XIDDevice::SaveSettingsToFlash()
 {
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"f9", 2, &bytes_written);
+    SLEEP_FUNC(50 * SLEEP_INC);
 }
 
 Cedrus::SingleShotMode Cedrus::XIDDevice::GetSingleShotMode(unsigned char selector) const
@@ -929,6 +939,8 @@ void Cedrus::XIDDevice::EnableRBx40LED(bool enable)
 
     DWORD bytes_written = 0;
     m_xidCon->Write(change_threshold_cmd, 3, &bytes_written);
+
+    SLEEP_FUNC(50 * SLEEP_INC);
 }
 
 bool Cedrus::XIDDevice::GetEnableDigitalOutput(unsigned char selector) const
