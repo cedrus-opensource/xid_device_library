@@ -282,7 +282,7 @@ void Cedrus::XIDDevice::ConnectToMpod(unsigned char mpod, unsigned char action)
     DWORD bytes_written = 0;
     m_xidCon->Write(ctm_cmd, 4, &bytes_written);
 
-    SLEEP_FUNC(100 * SLEEP_INC);
+    SLEEP_FUNC(150 * SLEEP_INC);
 
     m_podHostConfig = (action == 0 ? nullptr : m_config);
     MatchConfigToModel(-1);
@@ -384,12 +384,16 @@ void Cedrus::XIDDevice::ResetMappedLinesToDefault()
     {
         if (m_config->GetModelID() == 72) // Neuroscan 16-bit
         {
-            SetPodLineMapping_Neuroscan16bit();
+            SetMPodLineMapping_Neuroscan16bit();
         }
         else if (m_config->GetModelID() == 104) // Neuroscan Grael
         {
-            SetPodLineMapping_NeuroscanGrael();
+            SetMPodLineMapping_NeuroscanGrael();
         }
+    }
+    else if (m_config->IsCPod() && m_config->GetModelID() == 104)
+    {
+        SetCPodLineMapping_NeuroscanGrael(); // Neuroscan Grael
     }
 }
 
@@ -555,17 +559,27 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
     {
         if (model == 72) // Neuroscan 16-bit
         {
-            SetPodLineMapping_Neuroscan16bit();
+            SetMPodLineMapping_Neuroscan16bit();
         }
         else if (model == 104) // Neuroscan Grael
         {
-            SetPodLineMapping_NeuroscanGrael();
+            SetMPodLineMapping_NeuroscanGrael();
         }
         else
         {
             ResetMappedLinesToDefault();
             CommitLineMappingToFlash();
             SetMpodOutputMode(0);
+        }
+    }
+    else if (m_config->IsCPod())
+    {
+        if (model == 104)
+            SetCPodLineMapping_NeuroscanGrael(); // Neuroscan Grael
+        else
+        {
+            ResetMappedLinesToDefault();
+            CommitLineMappingToFlash();
         }
     }
 }
@@ -917,6 +931,30 @@ void Cedrus::XIDDevice::SetSignalFilter(unsigned char selector, unsigned int hol
     m_xidCon->Write(ssf_cmd, 11, &bytes_written);
 }
 
+bool Cedrus::XIDDevice::IsKbAutorepeatOn() const
+{
+    if (!m_config->IsXID2())
+        return false;
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_ig", 3, cmd_return, sizeof(cmd_return));
+
+    return (bool)(cmd_return[3] - '0');
+}
+
+void Cedrus::XIDDevice::EnableKbAutorepeat(bool pause)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    static unsigned char enable_kb_autorepeat_cmd[3] = { 'i','g' };
+    enable_kb_autorepeat_cmd[2] = pause ? '1' : '0';
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write(enable_kb_autorepeat_cmd, 3, &bytes_written);
+}
+
 bool Cedrus::XIDDevice::IsRBx40LEDEnabled() const
 {
     if (!m_config->IsXID2())
@@ -934,11 +972,11 @@ void Cedrus::XIDDevice::EnableRBx40LED(bool enable)
     if (!m_config->IsXID2())
         return;
 
-    static unsigned char change_threshold_cmd[3] = { 'i','l' };
-    change_threshold_cmd[2] = enable ? '1' : '0';
+    static unsigned char enable_rb_led_cmd[3] = { 'i','l' };
+    enable_rb_led_cmd[2] = enable ? '1' : '0';
 
     DWORD bytes_written = 0;
-    m_xidCon->Write(change_threshold_cmd, 3, &bytes_written);
+    m_xidCon->Write(enable_rb_led_cmd, 3, &bytes_written);
 
     SLEEP_FUNC(50 * SLEEP_INC);
 }
@@ -969,6 +1007,30 @@ void Cedrus::XIDDevice::SetEnableDigitalOutput(unsigned char selector, bool mode
 
     DWORD bytes_written = 0;
     m_xidCon->Write(stso_command, 4, &bytes_written);
+}
+
+bool Cedrus::XIDDevice::IsOutputPaused() const
+{
+    if (!m_config->IsXID2())
+        return false;
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_ip", 3, cmd_return, sizeof(cmd_return));
+
+    return (bool)(cmd_return[3] - '0');
+}
+
+void Cedrus::XIDDevice::PauseAllOutput(bool pause)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    static unsigned char pause_output_cmd[3] = { 'i','p' };
+    pause_output_cmd[2] = !pause ? '1' : '0';
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write(pause_output_cmd, 3, &bytes_written);
 }
 
 int Cedrus::XIDDevice::GetTimerResetOnOnsetMode(unsigned char selector) const
@@ -1371,7 +1433,7 @@ void Cedrus::XIDDevice::MatchConfigToModel(char model)
     m_config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(GetProductID(), model != -1 ? model : GetModelID(), m_config->GetMajorVersion());
 }
 
-void Cedrus::XIDDevice::SetPodLineMapping_Neuroscan16bit()
+void Cedrus::XIDDevice::SetMPodLineMapping_Neuroscan16bit()
 {
     unsigned char initial_table = GetTranslationTable();
 
@@ -1417,7 +1479,7 @@ void Cedrus::XIDDevice::SetPodLineMapping_Neuroscan16bit()
     SetMpodOutputMode(0);
 }
 
-void Cedrus::XIDDevice::SetPodLineMapping_NeuroscanGrael()
+void Cedrus::XIDDevice::SetMPodLineMapping_NeuroscanGrael()
 {
     unsigned char initial_table = GetTranslationTable();
 
@@ -1462,4 +1524,25 @@ void Cedrus::XIDDevice::SetPodLineMapping_NeuroscanGrael()
     SetTranslationTable(initial_table);
     SetMpodOutputMode(1);
     SetMpodPulseDuration(5);
+}
+
+void Cedrus::XIDDevice::SetCPodLineMapping_NeuroscanGrael()
+{
+    MapSignals(0, 0);
+    MapSignals(1, 0);
+    MapSignals(2, 0);
+    MapSignals(3, 0);
+    MapSignals(4, 0);
+    MapSignals(5, 0);
+    MapSignals(6, 0);
+    MapSignals(7, 0);
+    MapSignals(8, 1);
+    MapSignals(9, 2);
+    MapSignals(10, 4);
+    MapSignals(11, 8);
+    MapSignals(12, 16);
+    MapSignals(13, 32);
+    MapSignals(14, 64);
+    MapSignals(15, 128);
+    CommitLineMappingToFlash();
 }

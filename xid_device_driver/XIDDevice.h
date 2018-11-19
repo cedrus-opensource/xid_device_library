@@ -124,10 +124,14 @@ namespace Cedrus
         void SetSingleShotMode(unsigned char selector, bool enable, unsigned int delay); // ia
         SignalFilter GetSignalFilter(unsigned char selector) const; // _if
         void SetSignalFilter(unsigned char selector, unsigned int holdOn, unsigned int holdOff); // if
+        bool IsKbAutorepeatOn() const; // _ig
+        void EnableKbAutorepeat(bool pause); // ig
         bool IsRBx40LEDEnabled() const; // _il
         void EnableRBx40LED(bool enable); // il
         bool GetEnableDigitalOutput(unsigned char selector) const; // _io
         void SetEnableDigitalOutput(unsigned char selector, bool mode); // io
+        bool IsOutputPaused() const; // _ip
+        void PauseAllOutput(bool pause); // ip
         int GetTimerResetOnOnsetMode(unsigned char selector) const; // _ir
         void SetTimerResetOnOnsetMode(unsigned char selector, unsigned char mode); // ir
         bool GetEnableUSBOutput(unsigned char selector) const; // _iu
@@ -175,8 +179,9 @@ namespace Cedrus
         void SetDigitalOutputLines_ST(std::shared_ptr<Connection> xidCon, unsigned int lines);
         void MatchConfigToModel(char model);
 
-        void SetPodLineMapping_Neuroscan16bit();
-        void SetPodLineMapping_NeuroscanGrael();
+        void SetMPodLineMapping_Neuroscan16bit();
+        void SetMPodLineMapping_NeuroscanGrael();
+        void SetCPodLineMapping_NeuroscanGrael();
 
         unsigned int m_linesState;
         std::shared_ptr<Connection> m_xidCon;

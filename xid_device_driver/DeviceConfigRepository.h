@@ -166,7 +166,8 @@ namespace
     {
         std::map<unsigned int, Cedrus::DevicePort> devicePorts;
 
-        Cedrus::DevicePort port("Key + Scanner Trigger", 0, 5);
+        std::vector<int> keyMap = { -1, 0, 1, 2, 3, 4, -1, -1 };
+        Cedrus::DevicePort port("Key + Scanner Trigger", 0, 5, keyMap);
         devicePorts.emplace(0, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Lumina LP-400", 48, 69, 1, 6, devicePorts));
@@ -298,7 +299,8 @@ namespace
         AddPodConfig("c-pod for iWorx", 52, 105, 2, 8, listOfAllConfigs); // 'i'
         AddPodConfig("c-pod for Mangold", 52, 109, 2, 8, listOfAllConfigs); // 'm'
         AddPodConfig("c-pod for MindWare", 52, 71, 2, 8, listOfAllConfigs); // 'G'
-        AddPodConfig("c-pod for Neuroscan", 52, 72, 2, 16, listOfAllConfigs); // 'H'
+        AddPodConfig("c-pod for Neuroscan 16-bit", 52, 72, 2, 16, listOfAllConfigs); // 'H'
+        AddPodConfig("c-pod for Neuroscan Grael", 52, 104, 2, 16, listOfAllConfigs); // 'h'
         AddPodConfig("c-pod for NIRx", 52, 78, 2, 8, listOfAllConfigs); // 'N'
         AddPodConfig("c-pod for Parallel port", 52, 80, 2, 13, listOfAllConfigs); // 'P'
         AddPodConfig("c-pod for SMI", 52, 74, 2, 8, listOfAllConfigs); // 'J'
