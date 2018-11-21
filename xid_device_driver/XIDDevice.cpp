@@ -551,7 +551,7 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)set_model_cmd, 3, &bytes_written);
 
-    SLEEP_FUNC(200 * SLEEP_INC);
+    SLEEP_FUNC(250 * SLEEP_INC);
 
     MatchConfigToModel(model);
 
@@ -933,7 +933,7 @@ void Cedrus::XIDDevice::SetSignalFilter(unsigned char selector, unsigned int hol
 
 bool Cedrus::XIDDevice::IsKbAutorepeatOn() const
 {
-    if (!m_config->IsXID2())
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
         return false;
 
     unsigned char cmd_return[4];
@@ -945,7 +945,7 @@ bool Cedrus::XIDDevice::IsKbAutorepeatOn() const
 
 void Cedrus::XIDDevice::EnableKbAutorepeat(bool pause)
 {
-    if (!m_config->IsXID2())
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
         return;
 
     static unsigned char enable_kb_autorepeat_cmd[3] = { 'i','g' };
@@ -1011,7 +1011,7 @@ void Cedrus::XIDDevice::SetEnableDigitalOutput(unsigned char selector, bool mode
 
 bool Cedrus::XIDDevice::IsOutputPaused() const
 {
-    if (!m_config->IsXID2())
+    if (!m_config->IsXID2InputDevice())
         return false;
 
     unsigned char cmd_return[4];
@@ -1023,7 +1023,7 @@ bool Cedrus::XIDDevice::IsOutputPaused() const
 
 void Cedrus::XIDDevice::PauseAllOutput(bool pause)
 {
-    if (!m_config->IsXID2())
+    if (!m_config->IsXID2InputDevice())
         return;
 
     static unsigned char pause_output_cmd[3] = { 'i','p' };

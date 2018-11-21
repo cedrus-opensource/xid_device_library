@@ -204,6 +204,11 @@ namespace Cedrus
             return IsXID1() && !IsStimTracker();
         }
 
+        bool IsXID2InputDevice() const
+        {
+            return IsXID2() && !IsMPod() && !IsCPod();
+        }
+
         bool ModelIDMatters() const
         {
             return IsRB() || IsStimTracker() || IsCPod() || IsMPod();
