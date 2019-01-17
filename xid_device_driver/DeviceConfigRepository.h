@@ -225,7 +225,7 @@ namespace
         devicePorts.emplace(75, port);
 
         // 'S' and '2'
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker 2 Duo", 83, 49, 2, 16, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Duo", 83, 49, 2, 16, devicePorts));
 
         listOfAllConfigs.push_back(config);
     }
@@ -238,7 +238,7 @@ namespace
         devicePorts.emplace(75, port);
 
         // 'S' and '2'
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker 2 Quad", 83, 50, 2, 16, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Quad", 83, 50, 2, 16, devicePorts));
 
         listOfAllConfigs.push_back(config);
     }
