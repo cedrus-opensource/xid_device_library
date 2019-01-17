@@ -160,17 +160,22 @@ separately, in order to change those settings.
 """
 def test_mpod_commands(devCon):
     print "Checking if an m-pod is present via GetMpodModel()..."
-    print "m-pod 1 model (- means no connection): ", unichr(devCon.GetMpodModel(1))
+    podModel = unichr(devCon.GetMpodModel(1))
+    print "m-pod 1 model (- means no connection): ", podModel
+
+    if podModel == '-':
+        return
+
     devCon.ConnectToMpod(1,1)
     print_dev_info(devCon)
 
     print '%-20s%-20s' % ("GetTranslationTable(): ", devCon.GetTranslationTable())
 
-    ass = devCon.GetMappedSignals(0)
-    print '%-20s%-20s' % ("GetMappedSignals(): ", ass)
+    mappedSignals = devCon.GetMappedSignals(0)
+    print '%-20s%-20s' % ("GetMappedSignals(): ", mappedSignals)
     devCon.MapSignals(0, 536870912)
     print '%-20s%-20s' % ("GetMappedSignals(): ", devCon.GetMappedSignals(0))
-    devCon.MapSignals(0, ass)
+    devCon.MapSignals(0, mappedSignals)
     print '%-20s%-20s' % ("GetMappedSignals(): ", devCon.GetMappedSignals(0))
 
     print '%-20s%-20s' % ("GetMpodPulseDuration(): ", devCon.GetMpodPulseDuration())
