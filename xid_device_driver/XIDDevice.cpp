@@ -53,7 +53,7 @@ Cedrus::XIDDevice::XIDDevice(
     m_config(devConfig),
     m_podHostConfig(),
     m_ResponseMgr((devConfig->IsRB() || devConfig->IsSV1() || devConfig->IsLumina() || devConfig->IsStimTracker2()) ?
-        new ResponseManager(GetMinorFirmwareVersion(), devConfig) : nullptr)
+        new ResponseManager(m_config) : nullptr)
 {
 }
 
@@ -1431,6 +1431,8 @@ void Cedrus::XIDDevice::SetDigitalOutputLines_ST(std::shared_ptr<Connection> xid
 void Cedrus::XIDDevice::MatchConfigToModel(char model)
 {
     m_config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(GetProductID(), model != -1 ? model : GetModelID(), m_config->GetMajorVersion());
+    if (model != -1)
+        m_ResponseMgr.reset(m_config->IsInputDevice() ? new ResponseManager(m_config) : nullptr);
 }
 
 void Cedrus::XIDDevice::SetMPodLineMapping_Neuroscan16bit()

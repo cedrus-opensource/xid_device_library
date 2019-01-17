@@ -187,7 +187,7 @@ namespace Cedrus
         std::shared_ptr<Connection> m_xidCon;
         std::shared_ptr<const DeviceConfig> m_config;
         std::shared_ptr<const DeviceConfig> m_podHostConfig;
-        const std::shared_ptr<ResponseManager> m_ResponseMgr;
+        std::shared_ptr<ResponseManager> m_ResponseMgr;
         int m_baudRatePriorToMpod;
     };
 

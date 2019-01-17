@@ -8,52 +8,27 @@
 
 #include <boost/bind.hpp>
 
-namespace
-{
-    bool device_is_7byte_lumina3g_21
-    (
-        const int minorFirmwareVer,
-        std::shared_ptr<const Cedrus::DeviceConfig> devConfig
-    )
-    {
-        const bool prod_is_lumina3g_21 = (devConfig->GetProductID() == Cedrus::PRODUCT_ID_LUMINA);
-        const bool maj_fw_is_lumina3g_21 = (devConfig->GetMajorVersion() == 2);
-        const bool min_fw_is_lumina3g_21 = (minorFirmwareVer == 1);
-
-        return (prod_is_lumina3g_21 && maj_fw_is_lumina3g_21 && min_fw_is_lumina3g_21);
-    }
-}
-
-Cedrus::ResponseManager::ResponseManager( const int minorFirmwareVer, std::shared_ptr<const DeviceConfig> devConfig )
+Cedrus::ResponseManager::ResponseManager(std::shared_ptr<const DeviceConfig> devConfig )
     : m_BytesInBuffer(0),
       m_XIDPacketIndex(INVALID_PACKET_INDEX),
       m_numKeysDown(0),
       m_packetSize(XID_PACKET_SIZE),
-      m_ResponseParsingFunction( boost::bind( &Cedrus::ResponseManager::XidInputFound, this, _1 ) ),
+      m_ResponseParsingFunction(  ),
       m_respDevConfig(devConfig)
 {
     m_packetSize = devConfig->IsStimTracker2() ? ST2_PACKET_SIZE : XID_PACKET_SIZE;
-    for(int i = 0; i < m_packetSize; ++i)
+    for (int i = 0; i < m_packetSize; ++i)
     {
         m_InputBuffer[i] = '\0';
     }
 
-    /*
-     This is a sort of a rough outline of a way to maintain bugwards compatibility
-     going forward. At the time of writing, the Lumina 3G firmware version 2.1 is
-     bugged and is producing 7-byte xid response packets, which is weird and bad
-     for a variety of reasons. Our parsing can handle snipping off the extra byte,
-     but since the 7th byte isn't at the end of the packet, this messes with the
-     timestamp, making the problem described in the comment at the top of
-     Cedrus::ResponseManager::XidInputFound much, much worse.
-    */
-    if ( devConfig && device_is_7byte_lumina3g_21( minorFirmwareVer, devConfig ) )
-    {
-        m_ResponseParsingFunction = boost::bind( &Cedrus::ResponseManager::XIDInputFoundLumina3G_21, this, _1 );
-    }
-    else if (devConfig->IsStimTracker2())
+    if (devConfig && devConfig->IsStimTracker2())
     {
         m_ResponseParsingFunction = boost::bind(&Cedrus::ResponseManager::ST2InputFound, this, _1);
+    }
+    else
+    {
+        m_ResponseParsingFunction = boost::bind(&Cedrus::ResponseManager::XidInputFound, this, _1);
     }
 }
 
@@ -175,59 +150,6 @@ bool Cedrus::ResponseManager::ST2InputFound(Response &res)
     {
         m_BytesInBuffer = 0;
         memset(m_InputBuffer, 0x00, ST2_PACKET_SIZE);
-    }
-
-    return input_found;
-}
-
-bool Cedrus::ResponseManager::XIDInputFoundLumina3G_21(Response &res)
-{
-    bool input_found = false;
-    m_XIDPacketIndex = INVALID_PACKET_INDEX;
-
-    if (m_InputBuffer[0] == 'k' && ((m_InputBuffer[1] & INVALID_PORT_BITS) == 0))
-    {
-        m_XIDPacketIndex = 0;
-
-        if (m_BytesInBuffer == XID_PACKET_SIZE)
-        {
-            res.wasPressed = (m_InputBuffer[1] & KEY_RELEASE_BITMASK) == KEY_RELEASE_BITMASK;
-            res.port = m_InputBuffer[1] & 0x0F;
-            res.key = (m_InputBuffer[1] & 0xE0) >> 5;
-
-            CEDRUS_ASSERT(res.port < 6, "As of March 2015, no devices should be able to receive input from more than 5 ports!");
-
-            res.reactionTime = AdjustEndiannessCharsToUint
-            (m_InputBuffer[2], m_InputBuffer[3], m_InputBuffer[4], m_InputBuffer[5]);
-
-            input_found = true;
-        }
-    }
-
-    if (m_XIDPacketIndex == INVALID_PACKET_INDEX)
-    {
-        for (int i = 1; i < XID_PACKET_SIZE; ++i)
-        {
-            if (m_InputBuffer[i] == 'k')
-            {
-                m_XIDPacketIndex = i;
-                break;
-            }
-        }
-    }
-
-    if (m_XIDPacketIndex != INVALID_PACKET_INDEX && m_XIDPacketIndex != 0)
-        AdjustBufferForPacketRecovery();
-
-    if (m_BytesInBuffer == XID_PACKET_SIZE)
-    {
-        CEDRUS_ASSERT(input_found, "We failed to get a response from an XID device! See comments for why it may have failed.");
-
-        m_BytesInBuffer = 0;
-
-        // We need to clean out the buffer. If the next read doesn't grab a full
-        // XID_PACKET_SIZE bytes, things can get REALLY weird.
-        memset(m_InputBuffer, 0x00, XID_PACKET_SIZE);
     }
 
     return input_found;

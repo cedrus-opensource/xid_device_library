@@ -46,11 +46,11 @@ namespace Cedrus
 
     struct Response
     {
-        Response():
+        Response() :
             port(-1),
             key(-1),
             wasPressed(false),
-            reactionTime(-1){}
+            reactionTime(-1) {}
 
         // Port the response came from, usually 0.
         int port;
@@ -68,7 +68,7 @@ namespace Cedrus
             INVALID_PORT_BITS = 0x08
         };
 
-         ResponseManager(int minorFirmwareVer, std::shared_ptr<const DeviceConfig> devConfig);
+        ResponseManager(std::shared_ptr<const DeviceConfig> devConfig);
 
         ~ResponseManager();
 
@@ -92,7 +92,6 @@ namespace Cedrus
         void AdjustBufferForPacketRecovery();
         bool XidInputFound(Response &res);
         bool ST2InputFound(Response &res);
-        bool XIDInputFoundLumina3G_21(Response &res);
 
         enum { XID_PACKET_SIZE = 6 };
         enum { ST2_PACKET_SIZE = 9 };
