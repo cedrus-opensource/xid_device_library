@@ -161,10 +161,14 @@ void Cedrus::ResponseManager::CheckForKeypress(std::shared_ptr<Connection> portC
     Response res;
     bool response_found = false;
 
+    portConnection->SetReadTimeout(2);
+
     // The amount of bytes read is variable as a part of a process that attempts to recover
     // malformed xid packets. The process will not work 100% reliably, but it's the best we
     // can do given the protocol.
     portConnection->Read(&m_InputBuffer[m_BytesInBuffer], (m_packetSize - m_BytesInBuffer), &bytes_read);
+
+    portConnection->SetReadTimeout(50);
 
     if(bytes_read > 0)
     {

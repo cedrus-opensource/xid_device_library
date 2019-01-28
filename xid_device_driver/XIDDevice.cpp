@@ -489,8 +489,12 @@ void Cedrus::XIDDevice::SwitchToKeyboardMode()
 
 std::string Cedrus::XIDDevice::GetCombinedInfo() const
 {
+    m_xidCon->SetReadTimeout(100);
+
     unsigned char return_info[1000];
     m_xidCon->SendXIDCommand("_d0", 3, return_info, sizeof(return_info));
+
+    m_xidCon->SetReadTimeout(50);
 
     std::string return_name((char*)return_info);
 
@@ -501,8 +505,12 @@ std::string Cedrus::XIDDevice::GetCombinedInfo() const
 
 std::string Cedrus::XIDDevice::GetInternalProductName() const
 {
+    m_xidCon->SetReadTimeout(100);
+
     unsigned char return_info[100];
     m_xidCon->SendXIDCommand("_d1", 3, return_info, sizeof(return_info));
+
+    m_xidCon->SetReadTimeout(50);
 
     std::string return_name((char*)return_info);
 

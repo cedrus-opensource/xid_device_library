@@ -92,6 +92,8 @@ namespace Cedrus
 
         bool HasLostConnection();
 
+        void SetReadTimeout(DWORD readTimeout);
+
     private:
 
         bool SetupCOMPort();

@@ -117,7 +117,7 @@ bool Cedrus::Connection::SetupCOMPort()
     FT_SetBaudRate(m_DeviceHandle, m_BaudRate);
     FT_SetDataCharacteristics(m_DeviceHandle, m_ByteSize, m_StopBits, m_BitParity);
 
-    FT_SetTimeouts(m_DeviceHandle, 100, 100);
+    FT_SetTimeouts(m_DeviceHandle, 50, 50);
     FT_SetUSBParameters(m_DeviceHandle, 64, 64);
     FT_SetLatencyTimer(m_DeviceHandle, 10);
 
@@ -126,6 +126,11 @@ bool Cedrus::Connection::SetupCOMPort()
         status = FlushReadFromDeviceBuffer();
 
     return status;
+}
+
+void Cedrus::Connection::SetReadTimeout(DWORD readTimeout)
+{
+    FT_SetTimeouts(m_DeviceHandle, readTimeout, 50);
 }
 
 bool Cedrus::Connection::Read(
