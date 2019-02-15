@@ -96,6 +96,12 @@ namespace Cedrus
             unsigned int outputLines,
             std::map<unsigned int, DevicePort> devicePorts);
 
+        DeviceConfig(std::string deviceName,
+            int productID,
+            int modelID,
+            int majorFirmwareVer,
+            unsigned int outputLines);
+
         ~DeviceConfig(void);
 
         static void PopulateConfigList(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs);

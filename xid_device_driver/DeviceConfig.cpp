@@ -89,6 +89,22 @@ Cedrus::DeviceConfig::DeviceConfig(std::string deviceName,
     m_requiresDelay = (IsRB() && IsXID1()) || IsSV1();
 }
 
+Cedrus::DeviceConfig::DeviceConfig(std::string deviceName,
+    int productID,
+    int modelID,
+    int majorFirmwareVer,
+    unsigned int outputLines)
+    :
+    m_DeviceName(deviceName),
+    m_ProductID(productID),
+    m_ModelID(modelID),
+    m_MajorFirmwareVer(majorFirmwareVer),
+    m_requiresDelay(false),
+    m_outputLines(outputLines)
+{
+    m_requiresDelay = (IsRB() && IsXID1()) || IsSV1();
+}
+
 Cedrus::DeviceConfig::~DeviceConfig(void)
 {
 }

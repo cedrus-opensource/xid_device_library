@@ -209,36 +209,24 @@ namespace
 
     void CreateST100Config(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
-        std::map<unsigned int, Cedrus::DevicePort> devicePorts;
-
         // 'S' and 'C'
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker ST-100", 83, 67, 0, 8, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker ST-100", 83, 67, 0, 8));
 
         listOfAllConfigs.push_back(config);
     }
 
     void CreateST2DuoConfig(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
-        std::map<unsigned int, Cedrus::DevicePort> devicePorts;
-        std::vector<int> keyMap = { -1, 1, 2, 3, 4, 5, 6, 7, 8 };
-        Cedrus::DevicePort port("Key", 75, 9, keyMap);
-        devicePorts.emplace(75, port);
-
-        // 'S' and '2'
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Duo", 83, 49, 2, 16, devicePorts));
+        // 'S' and '1'
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Duo", 83, 49, 2, 16));
 
         listOfAllConfigs.push_back(config);
     }
 
     void CreateST2QuadConfig(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
-        std::map<unsigned int, Cedrus::DevicePort> devicePorts;
-        std::vector<int> keyMap = { -1, 1, 2, 3, 4, 5, 6, 7, 8 };
-        Cedrus::DevicePort port("Key", 75, 9, keyMap);
-        devicePorts.emplace(75, port);
-
         // 'S' and '2'
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Quad", 83, 50, 2, 16, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Quad", 83, 50, 2, 16));
 
         listOfAllConfigs.push_back(config);
     }
