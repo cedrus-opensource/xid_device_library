@@ -66,6 +66,7 @@ namespace Cedrus
         void SetAccessoryConnectorMode(unsigned char mode); // a1
         int GetACDebouncingTime() const; // _a6
         void SetACDebouncingTime(unsigned char time); // a6
+        void SavePodDataToFactoryBlock(); // ab (v2.2.2)
         bool IsMpodOutputEnabled() const; // _ae
         void EnableMpodOutput(bool enable); // ae
         unsigned char GetMpodOutputMode() const; // _am
@@ -78,6 +79,8 @@ namespace Cedrus
         void MapSignals(unsigned int line, unsigned int map); // at
         void ResetMappedLinesToDefault(); // atX
         void CommitLineMappingToFlash(); // af
+        bool IsPodLocked() const; // _au (v2.2.2)
+        void LockPod(bool lock); // au (v2.2.2)
         unsigned char GetMpodPulseDuration() const; // _aw
         void SetMpodPulseDuration(unsigned char duration); // aw
 
@@ -124,14 +127,14 @@ namespace Cedrus
         void SetSingleShotMode(unsigned char selector, bool enable, unsigned int delay); // ia
         SignalFilter GetSignalFilter(unsigned char selector) const; // _if
         void SetSignalFilter(unsigned char selector, unsigned int holdOn, unsigned int holdOff); // if
-        bool IsKbAutorepeatOn() const; // _ig
-        void EnableKbAutorepeat(bool pause); // ig
+        bool IsKbAutorepeatOn() const; // _ig (v2.2.1)
+        void EnableKbAutorepeat(bool pause); // ig (v2.2.1)
         bool IsRBx40LEDEnabled() const; // _il
         void EnableRBx40LED(bool enable); // il
         bool GetEnableDigitalOutput(unsigned char selector) const; // _io
         void SetEnableDigitalOutput(unsigned char selector, bool mode); // io
-        bool IsOutputPaused() const; // _ip
-        void PauseAllOutput(bool pause); // ip
+        bool IsOutputPaused() const; // _ip (v2.2.1)
+        void PauseAllOutput(bool pause); // ip (v2.2.1)
         int GetTimerResetOnOnsetMode(unsigned char selector) const; // _ir
         void SetTimerResetOnOnsetMode(unsigned char selector, unsigned char mode); // ir
         bool GetEnableUSBOutput(unsigned char selector) const; // _iu
@@ -189,6 +192,7 @@ namespace Cedrus
         std::shared_ptr<const DeviceConfig> m_podHostConfig;
         std::shared_ptr<ResponseManager> m_ResponseMgr;
         int m_baudRatePriorToMpod;
+        unsigned int m_curMinorFwVer;
     };
 
 } // namespace Cedrus

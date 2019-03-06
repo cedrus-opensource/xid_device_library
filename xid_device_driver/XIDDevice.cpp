@@ -45,15 +45,14 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 
-Cedrus::XIDDevice::XIDDevice(
-    std::shared_ptr<Connection> xidCon,
-    std::shared_ptr<const DeviceConfig> devConfig)
+Cedrus::XIDDevice::XIDDevice(std::shared_ptr<Connection> xidCon, std::shared_ptr<const DeviceConfig> devConfig)
     : m_linesState(0),
     m_xidCon(xidCon),
     m_config(devConfig),
     m_podHostConfig(),
-    m_ResponseMgr((devConfig->IsRB() || devConfig->IsSV1() || devConfig->IsLumina() || devConfig->IsStimTracker2()) ?
-        new ResponseManager(m_config) : nullptr)
+    m_ResponseMgr(devConfig->IsInputDevice() ? new ResponseManager(m_config) : nullptr),
+    m_baudRatePriorToMpod(115200),
+    m_curMinorFwVer(GetMinorFirmwareVersion())
 {
 }
 
@@ -145,6 +144,25 @@ void Cedrus::XIDDevice::SetACDebouncingTime(unsigned char time)
     m_xidCon->Write(sacdt_command, 3, &bytes_written);
 }
 
+void Cedrus::XIDDevice::SavePodDataToFactoryBlock()
+{
+    if (!(m_config->IsMPod() || m_config->IsCPod()) || m_curMinorFwVer < 22)
+        return;
+
+    // Get the CRC to unlock the m-pod
+    unsigned char crc_return[7];
+    m_xidCon->SendXIDCommand("_ab", 3, crc_return, sizeof(crc_return));
+
+    static unsigned char spdtfb_cmd[6] = { 'a','b' };
+    spdtfb_cmd[2] = crc_return[3];
+    spdtfb_cmd[3] = crc_return[4];
+    spdtfb_cmd[4] = crc_return[5];
+    spdtfb_cmd[5] = crc_return[6];
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write(spdtfb_cmd, 6, &bytes_written);
+}
+
 bool Cedrus::XIDDevice::IsMpodOutputEnabled() const
 {
     if (!m_config->IsMPod())
@@ -193,6 +211,41 @@ void Cedrus::XIDDevice::SetMpodOutputMode(unsigned char mode)
     m_xidCon->Write(smom_command, 3, &bytes_written);
 
     SLEEP_FUNC(50 * SLEEP_INC);
+}
+
+bool Cedrus::XIDDevice::IsPodLocked() const
+{
+    if (!(m_config->IsMPod() || m_config->IsCPod()) || m_curMinorFwVer < 22)
+        return false;
+
+    unsigned char locked_return[8];
+    m_xidCon->SendXIDCommand("_au", 3, locked_return, sizeof(locked_return));
+
+    return (bool)(locked_return[3] - '0');
+}
+
+void Cedrus::XIDDevice::LockPod(bool lock)
+{
+    if (!(m_config->IsMPod() || m_config->IsCPod()) || m_curMinorFwVer < 22)
+        return;
+
+    // Get the CRC to unlock the m-pod
+    unsigned char crc_return[8];
+
+    if (!lock)
+        m_xidCon->SendXIDCommand("_au", 3, crc_return, sizeof(crc_return));
+    else
+        memset(crc_return, 0x00, 8);
+
+    static unsigned char lock_pod_cmd[7] = { 'a','u' };
+    lock_pod_cmd[2] = lock ? '0' : '1';
+    lock_pod_cmd[3] = crc_return[4];
+    lock_pod_cmd[4] = crc_return[5];
+    lock_pod_cmd[5] = crc_return[6];
+    lock_pod_cmd[6] = crc_return[7];
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write(lock_pod_cmd, 7, &bytes_written);
 }
 
 unsigned char Cedrus::XIDDevice::GetMpodPulseDuration() const
@@ -286,6 +339,8 @@ void Cedrus::XIDDevice::ConnectToMpod(unsigned char mpod, unsigned char action)
 
     m_podHostConfig = (action == 0 ? nullptr : m_config);
     MatchConfigToModel(-1);
+
+    m_curMinorFwVer = GetMinorFirmwareVersion();
 
     if (action == 0)
         SetBaudRate(rate);
@@ -941,7 +996,7 @@ void Cedrus::XIDDevice::SetSignalFilter(unsigned char selector, unsigned int hol
 
 bool Cedrus::XIDDevice::IsKbAutorepeatOn() const
 {
-    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()) || m_curMinorFwVer < 21)
         return false;
 
     unsigned char cmd_return[4];
@@ -953,7 +1008,7 @@ bool Cedrus::XIDDevice::IsKbAutorepeatOn() const
 
 void Cedrus::XIDDevice::EnableKbAutorepeat(bool pause)
 {
-    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()) || m_curMinorFwVer < 21)
         return;
 
     static unsigned char enable_kb_autorepeat_cmd[3] = { 'i','g' };
@@ -1019,7 +1074,7 @@ void Cedrus::XIDDevice::SetEnableDigitalOutput(unsigned char selector, bool mode
 
 bool Cedrus::XIDDevice::IsOutputPaused() const
 {
-    if (!m_config->IsXID2InputDevice())
+    if (!m_config->IsXID2InputDevice() || m_curMinorFwVer < 21)
         return false;
 
     unsigned char cmd_return[4];
@@ -1031,7 +1086,7 @@ bool Cedrus::XIDDevice::IsOutputPaused() const
 
 void Cedrus::XIDDevice::PauseAllOutput(bool pause)
 {
-    if (!m_config->IsXID2InputDevice())
+    if (!m_config->IsXID2InputDevice() || m_curMinorFwVer < 21)
         return;
 
     static unsigned char pause_output_cmd[3] = { 'i','p' };
