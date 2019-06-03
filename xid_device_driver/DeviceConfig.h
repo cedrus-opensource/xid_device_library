@@ -170,6 +170,11 @@ namespace Cedrus
             return m_ProductID == PRODUCT_ID_CPOD;
         }
 
+        bool IsPod() const
+        {
+            return IsMPod() || IsCPod();
+        }
+
         bool IsStimTracker() const
         {
             return m_ProductID == PRODUCT_ID_STIMTRACKER;

@@ -66,7 +66,9 @@ namespace Cedrus
         void SetAccessoryConnectorMode(unsigned char mode); // a1
         int GetACDebouncingTime() const; // _a6
         void SetACDebouncingTime(unsigned char time); // a6
-        void SavePodDataToFactoryBlock(); // ab (v2.2.2)
+        unsigned int GetFlashBackupCRC() const; // _ab (v2.2.2)
+        void BackupFlashData(); // ab (v2.2.2)
+        unsigned int GetTranslationTableCRC() const; // _ac (v2.2.2)
         bool IsMpodOutputEnabled() const; // _ae
         void EnableMpodOutput(bool enable); // ae
         unsigned char GetMpodOutputMode() const; // _am
@@ -80,6 +82,7 @@ namespace Cedrus
         void ResetMappedLinesToDefault(); // atX
         void CommitLineMappingToFlash(); // af
         bool IsPodLocked() const; // _au (v2.2.2)
+        unsigned int GetPodUnlockCRC() const; // _au (v2.2.2)
         void LockPod(bool lock); // au (v2.2.2)
         unsigned char GetMpodPulseDuration() const; // _aw
         void SetMpodPulseDuration(unsigned char duration); // aw
@@ -91,7 +94,9 @@ namespace Cedrus
         static std::string GetProtocol_Scan(std::shared_ptr<Connection> xidCon); // _c1 used during device detection
         void SetProtocol(unsigned char protocol); // c1
         static void SetProtocol_Scan(std::shared_ptr<Connection> xidCon, unsigned char protocol); // c1
-        void SwitchToKeyboardMode();
+        unsigned int GetKBModeProtocol() const; // _c2
+        void SetKBModeProtocol(unsigned char mode); // c2
+        void SwitchToKeyboardMode(); // c3
         std::string GetCombinedInfo() const; // _d0
         std::string GetInternalProductName() const; // _d1
         int GetProductID() const; // _d2
@@ -122,6 +127,7 @@ namespace Cedrus
         void SetButtonDebounceTime(unsigned char time); // f6
         void RestoreFactoryDefaults(); // f7
         void SaveSettingsToFlash(); //f9
+        bool IsOpticalIsolationSwitchOn() const; //_fo
 
         SingleShotMode GetSingleShotMode (unsigned char selector) const; // _ia
         void SetSingleShotMode(unsigned char selector, bool enable, unsigned int delay); // ia
@@ -144,6 +150,7 @@ namespace Cedrus
         int GetMixedInputMode() const; // _iv
         void SetMixedInputMode(unsigned char mode); // iv
 
+        unsigned int GetRaisedLines() const; // _mh / _ah
         unsigned int GetNumberOfLines() const; // _ml
         void SetNumberOfLines(unsigned int lines); // ml
         unsigned int GetPulseDuration() const; // _mp

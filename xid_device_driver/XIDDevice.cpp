@@ -144,7 +144,24 @@ void Cedrus::XIDDevice::SetACDebouncingTime(unsigned char time)
     m_xidCon->Write(sacdt_command, 3, &bytes_written);
 }
 
-void Cedrus::XIDDevice::SavePodDataToFactoryBlock()
+unsigned int Cedrus::XIDDevice::GetFlashBackupCRC() const
+{
+    if (!(m_config->IsMPod() || m_config->IsCPod()) || m_curMinorFwVer < 22)
+        return 0;
+
+    unsigned char crc_return[7];
+    m_xidCon->SendXIDCommand("_ab", 3, crc_return, sizeof(crc_return));
+
+    unsigned int crc = AdjustEndiannessCharsToUint(
+        crc_return[3],
+        crc_return[4],
+        crc_return[5],
+        crc_return[6]);
+
+    return crc;
+}
+
+void Cedrus::XIDDevice::BackupFlashData()
 {
     if (!(m_config->IsMPod() || m_config->IsCPod()) || m_curMinorFwVer < 22)
         return;
@@ -163,21 +180,38 @@ void Cedrus::XIDDevice::SavePodDataToFactoryBlock()
     m_xidCon->Write(spdtfb_cmd, 6, &bytes_written);
 }
 
+unsigned int Cedrus::XIDDevice::GetTranslationTableCRC() const
+{
+    if (!(m_config->IsMPod() || m_config->IsCPod()) || m_curMinorFwVer < 22)
+        return 0;
+
+    unsigned char crc_return[7];
+    m_xidCon->SendXIDCommand("_ac", 3, crc_return, sizeof(crc_return));
+
+    unsigned int crc = AdjustEndiannessCharsToUint(
+        crc_return[3],
+        crc_return[4],
+        crc_return[5],
+        crc_return[6]);
+
+    return crc;
+}
+
 bool Cedrus::XIDDevice::IsMpodOutputEnabled() const
 {
-    if (!m_config->IsMPod())
+    if (!m_config->IsXID2InputDevice())
         return false;
 
     unsigned char cmd_return[4];
 
     m_xidCon->SendXIDCommand("_ae", 3, cmd_return, sizeof(cmd_return));
 
-    return (bool)(cmd_return[3] - '0');
+    return cmd_return[3] == '1' ? true : false;
 }
 
 void Cedrus::XIDDevice::EnableMpodOutput(bool enable)
 {
-    if (!m_config->IsMPod())
+    if (!m_config->IsXID2InputDevice())
         return;
 
     static unsigned char emo_command[3] = { 'a','e' };
@@ -221,7 +255,24 @@ bool Cedrus::XIDDevice::IsPodLocked() const
     unsigned char locked_return[8];
     m_xidCon->SendXIDCommand("_au", 3, locked_return, sizeof(locked_return));
 
-    return (bool)(locked_return[3] - '0');
+    return locked_return[3] == '1' ? false : true;
+}
+
+unsigned int Cedrus::XIDDevice::GetPodUnlockCRC() const
+{
+    if (!(m_config->IsMPod() || m_config->IsCPod()) || m_curMinorFwVer < 22)
+        return 0;
+
+    unsigned char crc_return[7];
+    m_xidCon->SendXIDCommand("_au", 3, crc_return, sizeof(crc_return));
+
+    unsigned int crc = AdjustEndiannessCharsToUint(
+        crc_return[3],
+        crc_return[4],
+        crc_return[5],
+        crc_return[6]);
+
+    return crc;
 }
 
 void Cedrus::XIDDevice::LockPod(bool lock)
@@ -349,7 +400,7 @@ void Cedrus::XIDDevice::ConnectToMpod(unsigned char mpod, unsigned char action)
 unsigned char Cedrus::XIDDevice::GetTranslationTable() const
 {
     if (!m_config->IsMPod())
-        return '0';
+        return 0;
 
     static char gtt_command[3] = { '_','a','s' };
 
@@ -529,6 +580,30 @@ void Cedrus::XIDDevice::SetProtocol_Scan(std::shared_ptr<Connection> xidCon, uns
 
     DWORD bytes_written = 0;
     xidCon->Write(sdp_cmd, 3, &bytes_written);
+}
+
+unsigned int Cedrus::XIDDevice::GetKBModeProtocol() const
+{
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
+        return INVALID_RETURN_VALUE;
+
+    unsigned char return_info[4];
+    m_xidCon->SendXIDCommand("_c2", 3, return_info, sizeof(return_info));
+
+
+    return return_info[3] - '0';
+}
+
+void Cedrus::XIDDevice::SetKBModeProtocol(unsigned char mode)
+{
+    if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
+        return;
+
+    static unsigned char sacm_cmd[3] = { 'c','2' };
+    sacm_cmd[2] = mode + '0';
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write(sacm_cmd, 3, &bytes_written);
 }
 
 void Cedrus::XIDDevice::SwitchToKeyboardMode()
@@ -801,6 +876,9 @@ void Cedrus::XIDDevice::ReprogramFlash()
 
 bool Cedrus::XIDDevice::GetTriggerDefault() const
 {
+    if (!m_config->IsLumina())
+        return false;
+
     unsigned char default_return[4];
 
     m_xidCon->SendXIDCommand("_f4", 3, default_return, sizeof(default_return));
@@ -810,6 +888,9 @@ bool Cedrus::XIDDevice::GetTriggerDefault() const
 
 void Cedrus::XIDDevice::SetTriggerDefault(bool defaultOn)
 {
+    if (!m_config->IsLumina())
+        return;
+
     static unsigned char set_trigger_default_cmd[3] = { 'f', '4' };
     set_trigger_default_cmd[2] = (unsigned char)defaultOn + '0';
 
@@ -819,6 +900,9 @@ void Cedrus::XIDDevice::SetTriggerDefault(bool defaultOn)
 
 int Cedrus::XIDDevice::GetTriggerDebounceTime() const
 {
+    if (!m_config->IsLumina())
+        return 0;
+
     unsigned char threshold_return[4]; // we rely on SendXIDCommand to zero-initialize this buffer
 
     m_xidCon->SendXIDCommand("_f5", 3, threshold_return, sizeof(threshold_return));
@@ -833,6 +917,9 @@ int Cedrus::XIDDevice::GetTriggerDebounceTime() const
 
 void Cedrus::XIDDevice::SetTriggerDebounceTime(unsigned char time)
 {
+    if (!m_config->IsLumina())
+        return;
+
     static unsigned char set_debouncing_time_cmd[3] = { 'f', '5' };
     set_debouncing_time_cmd[2] = time;
 
@@ -842,6 +929,9 @@ void Cedrus::XIDDevice::SetTriggerDebounceTime(unsigned char time)
 
 int Cedrus::XIDDevice::GetButtonDebounceTime() const
 {
+    if (!m_config->IsLumina() && !m_config->IsRB())
+        return INVALID_RETURN_VALUE;
+
     unsigned char threshold_return[4]; // we rely on SendXIDCommand to zero-initialize this buffer
 
     m_xidCon->SendXIDCommand("_f6", 3, threshold_return, sizeof(threshold_return));
@@ -856,6 +946,9 @@ int Cedrus::XIDDevice::GetButtonDebounceTime() const
 
 void Cedrus::XIDDevice::SetButtonDebounceTime(unsigned char time)
 {
+    if (!m_config->IsLumina() && !m_config->IsRB())
+        return;
+
     static unsigned char set_debouncing_time_cmd[3] = { 'f', '6' };
     set_debouncing_time_cmd[2] = time;
 
@@ -894,6 +987,18 @@ void Cedrus::XIDDevice::SaveSettingsToFlash()
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"f9", 2, &bytes_written);
     SLEEP_FUNC(50 * SLEEP_INC);
+}
+
+bool Cedrus::XIDDevice::IsOpticalIsolationSwitchOn() const
+{
+    if (!m_config->IsLumina3G())
+        return false;
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_fo", 3, cmd_return, sizeof(cmd_return));
+
+    return cmd_return[3] == '1' ? true : false;
 }
 
 Cedrus::SingleShotMode Cedrus::XIDDevice::GetSingleShotMode(unsigned char selector) const
@@ -1003,7 +1108,7 @@ bool Cedrus::XIDDevice::IsKbAutorepeatOn() const
 
     m_xidCon->SendXIDCommand("_ig", 3, cmd_return, sizeof(cmd_return));
 
-    return (bool)(cmd_return[3] - '0');
+    return cmd_return[3] == '1' ? true : false;
 }
 
 void Cedrus::XIDDevice::EnableKbAutorepeat(bool pause)
@@ -1027,7 +1132,7 @@ bool Cedrus::XIDDevice::IsRBx40LEDEnabled() const
 
     m_xidCon->SendXIDCommand("_il", 3, cmd_return, sizeof(cmd_return));
 
-    return (bool)(cmd_return[3] - '0');
+    return cmd_return[3] == '1' ? true : false;
 }
 
 void Cedrus::XIDDevice::EnableRBx40LED(bool enable)
@@ -1081,7 +1186,7 @@ bool Cedrus::XIDDevice::IsOutputPaused() const
 
     m_xidCon->SendXIDCommand("_ip", 3, cmd_return, sizeof(cmd_return));
 
-    return (bool)(cmd_return[3] - '0');
+    return cmd_return[3] == '1' ? true : false;
 }
 
 void Cedrus::XIDDevice::PauseAllOutput(bool pause)
@@ -1202,6 +1307,22 @@ void Cedrus::XIDDevice::SetMixedInputMode(unsigned char mode)
     m_xidCon->Write(change_threshold_cmd, 3, &bytes_written);
 }
 
+unsigned int Cedrus::XIDDevice::GetRaisedLines() const
+{
+    unsigned char return_info[5];
+
+    if (m_config->IsXID2() || m_config->IsStimTracker1())
+        m_xidCon->SendXIDCommand("_mh", 3, return_info, sizeof(return_info));
+    else
+        m_xidCon->SendXIDCommand("_ah", 3, return_info, sizeof(return_info));
+
+    unsigned int mask = AdjustEndiannessCharsToUint(0, 0,
+        return_info[3],
+        return_info[4]);
+
+    return mask;
+}
+
 unsigned int Cedrus::XIDDevice::GetNumberOfLines() const
 {
     if (!m_config->IsXID2())
@@ -1268,11 +1389,11 @@ unsigned int Cedrus::XIDDevice::GetPulseTableBitMask()
     unsigned char return_info[5];
     m_xidCon->SendXIDCommand("_mk", 3, return_info, sizeof(return_info));
 
-    unsigned int dur = AdjustEndiannessCharsToUint(0,0,
+    unsigned int mask = AdjustEndiannessCharsToUint(0,0,
         return_info[3],
         return_info[4]);
 
-    return dur;
+    return mask;
 }
 
 void Cedrus::XIDDevice::SetPulseTableBitMask(unsigned int lines)
@@ -1357,7 +1478,7 @@ void Cedrus::XIDDevice::RaiseLines(unsigned int linesBitmask, bool leaveRemainin
     if (leaveRemainingLines)
         output_lines |= m_linesState;
 
-    if (((m_config->IsRB() || m_config->IsLumina()) && m_config->IsXID2()) || m_config->IsSV1())
+    if (((m_config->IsRB() || m_config->IsLumina()) && m_config->IsXID1()) || m_config->IsSV1())
     {
         SetDigitalOutputLines_RB(m_xidCon, output_lines);
     }
@@ -1376,7 +1497,7 @@ void Cedrus::XIDDevice::LowerLines(unsigned int linesBitmask, bool leaveRemainin
     if (leaveRemainingLines)
         output_lines &= m_linesState;
 
-    if (((m_config->IsRB() || m_config->IsLumina()) && m_config->IsXID2()) || m_config->IsSV1())
+    if (((m_config->IsRB() || m_config->IsLumina()) && m_config->IsXID1()) || m_config->IsSV1())
     {
         SetDigitalOutputLines_RB(m_xidCon, output_lines);
     }
@@ -1385,13 +1506,12 @@ void Cedrus::XIDDevice::LowerLines(unsigned int linesBitmask, bool leaveRemainin
         SetDigitalOutputLines_ST(m_xidCon, output_lines);
     }
 
-
     m_linesState = output_lines;
 }
 
 void Cedrus::XIDDevice::ClearLines()
 {
-    if (((m_config->IsRB() || m_config->IsLumina()) && m_config->IsXID2()) || m_config->IsSV1())
+    if (((m_config->IsRB() || m_config->IsLumina()) && m_config->IsXID1()) || m_config->IsSV1())
     {
         SetDigitalOutputLines_RB(m_xidCon, 0);
     }
