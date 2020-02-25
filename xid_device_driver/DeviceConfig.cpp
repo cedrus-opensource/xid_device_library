@@ -60,6 +60,8 @@ void Cedrus::DeviceConfig::PopulateConfigList(std::vector<std::shared_ptr<Cedrus
     CreateST100Config(listOfAllConfigs);
     CreateST2DuoConfig(listOfAllConfigs);
     CreateST2QuadConfig(listOfAllConfigs);
+    CreateST2QuadWithMpod4(listOfAllConfigs);
+    CreateST2StimTrigger(listOfAllConfigs);
 
     CreateAllmpodConfigs(listOfAllConfigs);
 

@@ -200,6 +200,16 @@ namespace Cedrus
             return IsStimTracker2() && m_ModelID == '2';
         }
 
+        bool IsStimTracker2WithMpod4() const
+        {
+            return IsStimTracker2() && m_ModelID == '3';
+        }
+
+        bool IsStimTracker2StimTrigger() const
+        {
+            return IsStimTracker2() && m_ModelID == '4';
+        }
+
         bool IsXID1() const
         {
             return m_MajorFirmwareVer == 1;

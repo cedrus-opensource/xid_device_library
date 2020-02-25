@@ -231,6 +231,22 @@ namespace
         listOfAllConfigs.push_back(config);
     }
 
+    void CreateST2QuadWithMpod4(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
+    {
+        // 'S' and '3'
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Quad with m-pod 4", 83, 51, 2, 16));
+
+        listOfAllConfigs.push_back(config);
+    }
+
+    void CreateST2StimTrigger(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
+    {
+        // 'S' and '4'
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTrigger", 83, 52, 2, 16));
+
+        listOfAllConfigs.push_back(config);
+    }
+
     void AddPodConfig(std::string deviceName,
         int productID,
         int modelID,
@@ -256,10 +272,11 @@ namespace
         AddPodConfig("m-pod for Brain Products actiCHamp", 51, 77, 2, 8, listOfAllConfigs); // 'M'
         AddPodConfig("m-pod for Brain Products DB-26", 51, 66, 2, 16, listOfAllConfigs); // 'B'
         AddPodConfig("m-pod for Bittium NeurOne", 51, 110, 2, 8, listOfAllConfigs); // 'n'
+        AddPodConfig("m-pod for CGX Systems", 51, 88, 2, 16, listOfAllConfigs); // 'X'
         AddPodConfig("m-pod for EGI", 51, 79, 2, 8, listOfAllConfigs); // 'O'
         AddPodConfig("m-pod for iWorx", 51, 105, 2, 8, listOfAllConfigs); // 'i'
-        AddPodConfig("m-pod for Mangold", 51, 109, 2, 8, listOfAllConfigs); // 'm'
         AddPodConfig("m-pod for MindWare", 51, 71, 2, 8, listOfAllConfigs); // 'G'
+        AddPodConfig("m-pod for NeuraLynx", 51, 82, 2, 16, listOfAllConfigs); // 'R'
         AddPodConfig("m-pod for Neuroscan 16-bit", 51, 72, 2, 16, listOfAllConfigs); // 'H'
         AddPodConfig("m-pod for Neuroscan Grael", 51, 104, 2, 16, listOfAllConfigs); // 'h'
         AddPodConfig("m-pod for NIRx", 51, 78, 2, 8, listOfAllConfigs); // 'N'
@@ -283,10 +300,11 @@ namespace
         AddPodConfig("c-pod for Brain Products actiCHamp", 52, 77, 2, 8, listOfAllConfigs); // 'M'
         AddPodConfig("c-pod for Brain Products DB-26", 52, 66, 2, 16, listOfAllConfigs); // 'B'
         AddPodConfig("c-pod for Bittium NeurOne", 52, 110, 2, 8, listOfAllConfigs); // 'n'
+        AddPodConfig("c-pod for CGX Systems", 52, 88, 2, 16, listOfAllConfigs); // 'X'
         AddPodConfig("c-pod for EGI", 52, 79, 2, 8, listOfAllConfigs); // 'O'
         AddPodConfig("c-pod for iWorx", 52, 105, 2, 8, listOfAllConfigs); // 'i'
-        AddPodConfig("c-pod for Mangold", 52, 109, 2, 8, listOfAllConfigs); // 'm'
         AddPodConfig("c-pod for MindWare", 52, 71, 2, 8, listOfAllConfigs); // 'G'
+        AddPodConfig("c-pod for NeuraLynx", 52, 82, 2, 16, listOfAllConfigs); // 'R'
         AddPodConfig("c-pod for Neuroscan 16-bit", 52, 72, 2, 16, listOfAllConfigs); // 'H'
         AddPodConfig("c-pod for Neuroscan Grael", 52, 104, 2, 16, listOfAllConfigs); // 'h'
         AddPodConfig("c-pod for NIRx", 52, 78, 2, 8, listOfAllConfigs); // 'N'

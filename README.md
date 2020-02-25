@@ -76,6 +76,38 @@ the CedrusXidDriver subfolder in the repository.
         return 0;
     }
 
+### Python Code Example for Response Collection ###
+
+    import time
+    import pyxid2
+
+    scanner = pyxid2.XIDDeviceScanner.GetDeviceScanner()
+
+    print "Detecting XID devices..."
+    scanner.DetectXIDDevices()
+
+    devCount = scanner.DeviceCount()
+    if (devCount == 0):
+        print "No devices found."
+        quit()
+
+    devCon = scanner.DeviceConnectionAtIndex(0)
+    print devCon.GetCombinedInfo()
+
+    devCon.ClearResponseQueue()
+    devCon.ClearResponsesFromBuffer()
+
+    print "Press a button!"
+    while (devCon.HasQueuedResponses() == False):
+        devCon.PollForResponse()
+
+    response = devCon.GetNextResponse()
+    print "---Fetched Response---"
+    print '%-20s%-20s' % ("port: ", response.port)
+    print '%-20s%-20s' % ("key: ", response.key)
+    print '%-20s%-20s' % ("wasPressed: ", response.wasPressed)
+    print '%-20s%-20s' % ("reactionTime: ", response.reactionTime)
+
 ### Python Code Example for Digital Output ###
 
     import time
