@@ -83,10 +83,12 @@ if sys.platform == 'win32':
     name_of_pyd += ".pyd"
 
 if sys.platform == 'darwin':
-    lib_dependencies = ['ftd2xx.1.4.4', 'libpython2.7']
+    lib_dependencies = ['ftd2xx.1.4.16']
+    if env['PYXID_FLAG']:
+        lib_dependencies += ['libpython2.7']
     include_path.append( python_path +'/osx/include/' )
     lib_path.append( python_path +'/osx/libs/' )
-    env.Install( staging_dir, env.subst(ftd2xx_loc + '/libftd2xx.1.4.4.dylib') )
+    env.Install( staging_dir, env.subst(ftd2xx_loc + '/libftd2xx.1.4.16.dylib') )
     project_target += "lib" + project_target_name + ".dylib"
     name_of_pyd += ".so"
 
