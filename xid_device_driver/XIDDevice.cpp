@@ -1478,7 +1478,7 @@ void Cedrus::XIDDevice::RaiseLines(unsigned int linesBitmask, bool leaveRemainin
     if (leaveRemainingLines)
         output_lines |= m_linesState;
 
-    if (((m_config->IsRB() || m_config->IsLumina()) && m_config->IsXID1()) || m_config->IsSV1())
+    if (m_config->IsXID1InputDevice())
     {
         SetDigitalOutputLines_RB(m_xidCon, output_lines);
     }

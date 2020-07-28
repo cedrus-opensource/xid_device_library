@@ -54,7 +54,7 @@ namespace
         Cedrus::DevicePort port("Key", 0, 5, keyMap);
         devicePorts.emplace(0, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-530", 50, 49, 1, 6, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-530", 50, 49, 1, 8, devicePorts));
 
         listOfAllConfigs.push_back(config);
     }
@@ -83,7 +83,7 @@ namespace
         Cedrus::DevicePort port("Key", 0, 7, keyMap);
         devicePorts.emplace(0, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-730", 50, 50, 1, 6, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-730", 50, 50, 1, 8, devicePorts));
 
         listOfAllConfigs.push_back(config);
     }
@@ -112,7 +112,7 @@ namespace
         Cedrus::DevicePort port("Key", 0, 8, keyMap);
         devicePorts.emplace(0, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-830", 50, 51, 1, 6, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-830", 50, 51, 1, 8, devicePorts));
 
         listOfAllConfigs.push_back(config);
     }
@@ -141,7 +141,7 @@ namespace
         Cedrus::DevicePort port("Key", 0, 8, keyMap);
         devicePorts.emplace(0, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-834", 50, 52, 1, 6, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-834", 50, 52, 1, 8, devicePorts));
 
         listOfAllConfigs.push_back(config);
     }
@@ -170,7 +170,7 @@ namespace
         Cedrus::DevicePort port("Key + Scanner Trigger", 0, 5, keyMap);
         devicePorts.emplace(0, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Lumina LP-400", 48, 69, 1, 6, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Lumina LP-400", 48, 69, 1, 8, devicePorts));
 
         listOfAllConfigs.push_back(config);
     }
@@ -202,7 +202,7 @@ namespace
         Cedrus::DevicePort port("Voice Key", 2, 1);
         devicePorts.emplace(2, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("SV-1 Voice Key", 49, 66, 1, 6, devicePorts));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("SV-1 Voice Key", 49, 66, 1, 8, devicePorts));
 
         listOfAllConfigs.push_back(config);
     }
