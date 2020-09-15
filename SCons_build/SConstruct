@@ -20,7 +20,7 @@ env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup(env_
 env.SetDefault(PYXID_FLAG = GetOption('pyxid_flag'))
 
 env['CURRENT_CEDRUS_REPO_ROOT'] = sys.path[0] + os.path.sep + '..' + os.path.sep
-print 'Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ]
+print('Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ])
 env.Repository( env[ 'CURRENT_CEDRUS_REPO_ROOT' ] )
 
 env['WX_VERSION'] = 'NONE'
@@ -61,5 +61,5 @@ def BuildEnvironmentSConscripts(masterConfig):
 
 env = CedrusSConsDefaultEnvironments.GetDefaultSetupForCurrentSystemAndCommandLine( env )
 
-print 'Name of selected build environment: ' + str(env['BUILD_TYPE_DESCRIPTION'])
+print('Name of selected build environment: ' + str(env['BUILD_TYPE_DESCRIPTION']))
 BuildEnvironmentSConscripts(env)
