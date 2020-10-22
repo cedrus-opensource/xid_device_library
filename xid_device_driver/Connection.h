@@ -92,10 +92,11 @@ namespace Cedrus
 
         bool HasLostConnection();
 
+        void SetCmdThroughputLimit(bool isXid2device);
+
         void SetReadTimeout(DWORD readTimeout);
 
     private:
-
         bool SetupCOMPort();
         unsigned long GetTickCount() const;
 
@@ -106,6 +107,7 @@ namespace Cedrus
         DWORD m_Location;
 
         bool m_ConnectionDead;
+        unsigned int m_cmdThroughputLimit;
 
         FT_HANDLE m_DeviceHandle;
 

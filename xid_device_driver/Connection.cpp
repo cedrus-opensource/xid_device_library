@@ -49,6 +49,7 @@ Cedrus::Connection::Connection(
     m_StopBits(stop_bits),
     m_Location(location),
     m_ConnectionDead(false),
+    m_cmdThroughputLimit(3),
     m_DeviceHandle(nullptr)
 {
 }
@@ -160,7 +161,7 @@ bool Cedrus::Connection::Write(
 {
     FlushWriteToDeviceBuffer();
 
-    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - m_timestamp).count() < 10)
+    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - m_timestamp).count() < m_cmdThroughputLimit)
     {
     }
     m_timestamp = std::chrono::high_resolution_clock::now();
@@ -226,6 +227,11 @@ void Cedrus::Connection::SetBaudRate(unsigned char rate)
 bool Cedrus::Connection::HasLostConnection()
 {
     return m_ConnectionDead;
+}
+
+void Cedrus::Connection::SetCmdThroughputLimit(bool isXid2device)
+{
+    m_cmdThroughputLimit = isXid2device ? 3 : 10;
 }
 
 DWORD Cedrus::Connection::SendXIDCommand(

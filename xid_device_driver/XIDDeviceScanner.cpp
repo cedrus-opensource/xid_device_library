@@ -55,6 +55,7 @@ std::shared_ptr<Cedrus::XIDDevice> CreateDevice
     {
         if (configCandidates[i]->DoesConfigMatchDevice(productID, modelID, majorFirmwareVersion))
         {
+            xidCon->SetCmdThroughputLimit(configCandidates[i]->IsXID2());
             result.reset(new Cedrus::XIDDevice(xidCon, configCandidates[i]));
             break;
         }
