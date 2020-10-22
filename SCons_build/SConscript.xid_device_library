@@ -45,7 +45,7 @@ project_target_name = 'xid_device_driver'
 
 prefix = ''
 
-if env.has_key('THE_CEDRUS_SUPERLAB_BUILD') or env.has_key('CEDRUS_XIDON_BUILD'):
+if 'THE_CEDRUS_SUPERLAB_BUILD' in env or 'CEDRUS_XIDON_BUILD' in env:
     prefix = '$OBJ_ROOT/xid_device_library/'
 
 inputs = [
