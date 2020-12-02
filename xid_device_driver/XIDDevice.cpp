@@ -1387,7 +1387,7 @@ unsigned int Cedrus::XIDDevice::GetPulseTableBitMask()
         return 0;
 
     unsigned char return_info[5];
-    m_xidCon->SendXIDCommand("_mk", 3, return_info, sizeof(return_info));
+    m_xidCon->SendXIDCommand("_mk", 5, return_info, sizeof(return_info));
 
     unsigned int mask = AdjustEndiannessCharsToUint(0,0,
         return_info[3],
@@ -1414,6 +1414,9 @@ void Cedrus::XIDDevice::SetPulseTableBitMask(unsigned int lines)
 
 void Cedrus::XIDDevice::ClearPulseTable()
 {
+    if (!m_config->IsXID2())
+        return;
+
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"mc", 2, &bytes_written);
 }
@@ -1432,12 +1435,18 @@ bool Cedrus::XIDDevice::IsPulseTableRunning() const
 
 void Cedrus::XIDDevice::RunPulseTable()
 {
+    if (!m_config->IsXID2())
+        return;
+
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"mr", 2, &bytes_written);
 }
 
 void Cedrus::XIDDevice::StopPulseTable()
 {
+    if (!m_config->IsXID2())
+        return;
+
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"ms", 2, &bytes_written);
 }
@@ -1467,6 +1476,9 @@ void Cedrus::XIDDevice::AddPulseTableEntry(unsigned int time, unsigned int lines
 
 void Cedrus::XIDDevice::ResetOutputLines()
 {
+    if (!m_config->IsXID2())
+        return;
+
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"mz", 2, &bytes_written);
 }
