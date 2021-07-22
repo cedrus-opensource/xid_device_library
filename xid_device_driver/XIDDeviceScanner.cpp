@@ -37,8 +37,6 @@
 
 #include "XIDDevice.h"
 
-#include <boost/algorithm/string.hpp>
-
 std::shared_ptr<Cedrus::XIDDevice> CreateDevice
 (
     const int productID, // d2 value
@@ -181,8 +179,8 @@ void Cedrus::XIDDeviceScanner::CheckConnectionsDropDeadOnes()
 
 int Cedrus::XIDDeviceScanner::DetectXIDDevices
 (
-    boost::function< void(std::string) > reportFunction,
-    boost::function< bool(unsigned int) > progressFunction
+    std::function< void(std::string) > reportFunction,
+    std::function< bool(unsigned int) > progressFunction
 )
 {
     CheckConnectionsDropDeadOnes();
@@ -232,7 +230,7 @@ int Cedrus::XIDDeviceScanner::DetectXIDDevices
                 // NOTE THE USAGE OF XIDGlossaryPSTProof IN THIS CODE. IT'S IMPORTANT!
                 std::string info = XIDDevice::GetProtocol_Scan(xid_con);
 
-                if (boost::starts_with(info, "_xid"))
+                if (info.rfind("_xid", 0) == 0)
                 {
                     device_found = true;
                     bool mode_changed = false;

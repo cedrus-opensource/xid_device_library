@@ -35,7 +35,8 @@
 
 #include <vector>
 #include <string>
-#include <boost/function.hpp>
+#include <memory>
+#include <functional>
 
 namespace Cedrus
 {
@@ -67,8 +68,8 @@ namespace Cedrus
         // return value is to signal that we need to cancel the scanning process.
         // true for stop, false for don't
         int DetectXIDDevices(
-            boost::function< void(std::string) > reportFunction = NULL,
-            boost::function< bool(unsigned int) > progressFunction = NULL);
+            std::function< void(std::string) > reportFunction = NULL,
+            std::function< bool(unsigned int) > progressFunction = NULL);
 
         std::shared_ptr<XIDDevice> DeviceConnectionAtIndex(unsigned int i) const;
 

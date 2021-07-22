@@ -34,8 +34,6 @@
 #include "XidDriverImpExpDefs.h"
 #include "ResponseManager.h"
 
-#include <boost/utility.hpp>
-
 namespace Cedrus
 {
     struct SignalFilter

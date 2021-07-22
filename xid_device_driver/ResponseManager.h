@@ -33,8 +33,8 @@
 
 #include "constants.h"
 
-#include <boost/function.hpp>
-#include <boost/noncopyable.hpp>
+#include <memory>
+#include <functional>
 #include <queue>
 
 #include "XidDriverImpExpDefs.h"
@@ -60,9 +60,13 @@ namespace Cedrus
         int reactionTime;
     };
 
-    class ResponseManager : private boost::noncopyable
+    class ResponseManager
     {
     public:
+        // Make noncopyable
+        ResponseManager(const ResponseManager&) = delete;
+        ResponseManager& operator=(const ResponseManager&) = delete;
+
         enum
         {
             INVALID_PORT_BITS = 0x08
@@ -106,7 +110,7 @@ namespace Cedrus
 
         unsigned int m_numKeysDown;
         std::queue<Response> m_responseQueue;
-        boost::function< bool(Response&) > m_ResponseParsingFunction;
+        std::function< bool(Response&) > m_ResponseParsingFunction;
         const std::shared_ptr<const DeviceConfig> m_respDevConfig;
     };
 } // namespace Cedrus

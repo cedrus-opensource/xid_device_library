@@ -1,12 +1,10 @@
 #include "ResponseManager.h"
 
+#include "CedrusAssert.h"
+
 #include "Connection.h"
 #include "DeviceConfig.h"
 #include "constants.h"
-
-#include "CedrusAssert.h"
-
-#include <boost/bind.hpp>
 
 Cedrus::ResponseManager::ResponseManager(std::shared_ptr<const DeviceConfig> devConfig )
     : m_BytesInBuffer(0),
@@ -24,11 +22,11 @@ Cedrus::ResponseManager::ResponseManager(std::shared_ptr<const DeviceConfig> dev
 
     if (devConfig && devConfig->IsStimTracker2())
     {
-        m_ResponseParsingFunction = boost::bind(&Cedrus::ResponseManager::ST2InputFound, this, _1);
+        m_ResponseParsingFunction = std::bind(&Cedrus::ResponseManager::ST2InputFound, this, std::placeholders::_1);
     }
     else
     {
-        m_ResponseParsingFunction = boost::bind(&Cedrus::ResponseManager::XidInputFound, this, _1);
+        m_ResponseParsingFunction = std::bind(&Cedrus::ResponseManager::XidInputFound, this, std::placeholders::_1);
     }
 }
 

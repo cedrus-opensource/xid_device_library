@@ -7,17 +7,8 @@ import os
 import sys
 import SCons
 
-SCons.Script.AddOption(
-    '--make-pyxid',
-    dest='pyxid_flag',
-    action='store_true',
-    metavar='TRUTH',
-    help='build library with py bindings to make it callable by pyxid')
-
 env_settings = {'MSVC_VERSION': '14.0'}
 env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup(env_settings)
-
-env.SetDefault(PYXID_FLAG = GetOption('pyxid_flag'))
 
 env['CURRENT_CEDRUS_REPO_ROOT'] = sys.path[0] + os.path.sep + '..' + os.path.sep
 print('Setting repo root to: ' + env[ 'CURRENT_CEDRUS_REPO_ROOT' ])

@@ -35,7 +35,6 @@
 
 #include "constants.h"
 
-#include <boost/algorithm/string.hpp>
 #include <iostream>
 #include <sstream>
 

@@ -43,8 +43,6 @@
 #include <iomanip>
 #include <locale>
 
-#include <boost/algorithm/string/predicate.hpp>
-
 Cedrus::XIDDevice::XIDDevice(std::shared_ptr<Connection> xidCon, std::shared_ptr<const DeviceConfig> devConfig)
     : m_linesState(0),
     m_xidCon(xidCon),
@@ -69,7 +67,7 @@ int Cedrus::XIDDevice::GetOutputLogic() const
 
     m_xidCon->SendXIDCommand("_a0", 3, output_logic, sizeof(output_logic));
 
-    bool return_valid_a0 = boost::starts_with(output_logic, "_a0");
+    bool return_valid_a0 = strncmp((char*)output_logic, "_a0", 3) == 0;
 
     return return_valid_a0 ? output_logic[3] - '0' : INVALID_RETURN_VALUE;
 }
@@ -94,7 +92,7 @@ int Cedrus::XIDDevice::GetAccessoryConnectorMode() const
     unsigned char return_info[4]; // we rely on SendXIDCommand to zero-initialize this buffer
     m_xidCon->SendXIDCommand("_a1", 3, return_info, sizeof(return_info));
 
-    bool return_valid_a1 = boost::starts_with(return_info, "_a1");
+    bool return_valid_a1 = strncmp((char*)return_info, "_a1", 3) == 0;
     bool return_valid_val = return_info[3] >= 48 && return_info[3] <= 51;
 
     CEDRUS_ASSERT(return_valid_a1, "GetAccessoryConnectorMode's return value must start with _a1");
@@ -124,7 +122,7 @@ int Cedrus::XIDDevice::GetACDebouncingTime() const
 
     m_xidCon->SendXIDCommand("_a6", 3, threshold_return, sizeof(threshold_return));
 
-    bool return_valid = boost::starts_with(threshold_return, "_a6");
+    bool return_valid = strncmp((char*)threshold_return, "_a6", 3) == 0;
 
     CEDRUS_ASSERT(return_valid, "GetACDebouncingTime's xid query result must start with _a6");
 
@@ -336,7 +334,7 @@ int Cedrus::XIDDevice::GetMpodModel(unsigned char mpod) const
     unsigned char mpod_model_return[5];
     m_xidCon->SendXIDCommand(gmm_cmd, 4, mpod_model_return, sizeof(mpod_model_return));
 
-    bool return_valid = boost::starts_with(mpod_model_return, "_aq");
+    bool return_valid = strncmp((char*)mpod_model_return, "_aq", 3) == 0;
 
     unsigned char return_val = (unsigned char)(mpod_model_return[4]);
     return return_valid ? (int)(return_val) : INVALID_RETURN_VALUE;
@@ -435,7 +433,7 @@ unsigned int Cedrus::XIDDevice::GetMappedSignals(unsigned int line)
     unsigned char mapped_signals_return[12];
     m_xidCon->SendXIDCommand(gms_cmd, 4, mapped_signals_return, sizeof(mapped_signals_return));
 
-    bool return_valid = boost::starts_with(mapped_signals_return, "_at");
+    bool return_valid = strncmp((char*)mapped_signals_return, "_at", 3) == 0;
 
     char mask[9];
     mask[8] = '\0';
@@ -559,7 +557,7 @@ std::string Cedrus::XIDDevice::GetProtocol() const
         "in the case where SendXIDCommand neglected to store ANY BYTES, we are relying on a GUARANTEE that \
 it will at least zero our buffer");
 
-    bool return_valid = boost::starts_with(return_info, "_xid");
+    bool return_valid = strncmp((char*)return_info, "_xid", 4) == 0;
 
     // It's okay for this to sometimes return nothing at all. That just
     // means we queried an incorrect baud and there's nothing wrong with that.
@@ -790,7 +788,7 @@ unsigned int Cedrus::XIDDevice::QueryBaseTimer()
     unsigned char return_info[6];
     int read = m_xidCon->SendXIDCommand("e3", 2, return_info, sizeof(return_info));
 
-    CEDRUS_ASSERT(boost::starts_with(return_info, "e3"), "QueryBaseTimer xid query result must start with e3");
+    CEDRUS_ASSERT(strncmp((char*)return_info, "e3", 2) == 0, "QueryBaseTimer xid query result must start with e3");
     bool valid_response = (read == 6);
 
     if (valid_response)
@@ -907,7 +905,7 @@ int Cedrus::XIDDevice::GetTriggerDebounceTime() const
 
     m_xidCon->SendXIDCommand("_f5", 3, threshold_return, sizeof(threshold_return));
 
-    bool return_valid = boost::starts_with(threshold_return, "_f5");
+    bool return_valid = strncmp((char*)threshold_return, "_f5", 3) == 0;
 
     CEDRUS_ASSERT(return_valid, "GetTriggerDebounceTime's xid query result must start with _f5");
 
@@ -936,7 +934,7 @@ int Cedrus::XIDDevice::GetButtonDebounceTime() const
 
     m_xidCon->SendXIDCommand("_f6", 3, threshold_return, sizeof(threshold_return));
 
-    bool return_valid = boost::starts_with(threshold_return, "_f6");
+    bool return_valid = strncmp((char*)threshold_return, "_f6", 3) == 0;
 
     CEDRUS_ASSERT(return_valid, "GetButtonDebounceTime's xid query result must start with _f6");
 
@@ -1212,7 +1210,7 @@ int Cedrus::XIDDevice::GetTimerResetOnOnsetMode(unsigned char selector) const
     unsigned char return_info[5];
     m_xidCon->SendXIDCommand(gtrom_command, 4, return_info, sizeof(return_info));
 
-    return boost::starts_with(return_info, "_ir") ? return_info[4] - '0' : INVALID_RETURN_VALUE;
+    return strncmp((char*)return_info, "_ir", 3) == 0 ? return_info[4] - '0' : INVALID_RETURN_VALUE;
 }
 
 void Cedrus::XIDDevice::SetTimerResetOnOnsetMode(unsigned char selector, unsigned char mode)
@@ -1267,7 +1265,7 @@ int Cedrus::XIDDevice::GetAnalogInputThreshold(unsigned char selector) const
 
     m_xidCon->SendXIDCommand(gait_command, 4, cmd_return, sizeof(cmd_return));
 
-    return boost::starts_with(cmd_return, "_it") ? (int)(cmd_return[4]) : INVALID_RETURN_VALUE;
+    return strncmp((char*)cmd_return, "_it", 3) == 0 ? (int)(cmd_return[4]) : INVALID_RETURN_VALUE;
 }
 
 void Cedrus::XIDDevice::SetAnalogInputThreshold(unsigned char selector, unsigned char threshold)
@@ -1292,7 +1290,7 @@ int Cedrus::XIDDevice::GetMixedInputMode() const
 
     m_xidCon->SendXIDCommand("_iv", 3, cmd_return, sizeof(cmd_return));
 
-    return boost::starts_with(cmd_return, "_iv") ? (int)(cmd_return[3]) - '0' : INVALID_RETURN_VALUE;
+    return strncmp((char*)cmd_return, "_iv", 3) == 0 ? (int)(cmd_return[3]) - '0' : INVALID_RETURN_VALUE;
 }
 
 void Cedrus::XIDDevice::SetMixedInputMode(unsigned char mode)
@@ -1352,7 +1350,7 @@ unsigned int Cedrus::XIDDevice::GetPulseDuration() const
     unsigned char return_info[7];
     m_xidCon->SendXIDCommand("_mp", 3, return_info, sizeof(return_info));
 
-    CEDRUS_ASSERT(boost::starts_with(return_info, "_mp"), "GetPulseDuration's return value must start with _mp");
+    CEDRUS_ASSERT(strncmp((char*)return_info, "_mp", 3) == 0, "GetPulseDuration's return value must start with _mp");
 
     unsigned int dur = AdjustEndiannessCharsToUint(
         return_info[3],

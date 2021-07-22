@@ -1,19 +1,6 @@
+#pragma once
 
-
-#ifndef CEDRUS_UTILITY_CODE_CASSERT_WRAPPER
-#define CEDRUS_UTILITY_CODE_CASSERT_WRAPPER
-
-
-// If NDEBUG is defined as a macro name at the point in the source code where <cassert> is included, then assert does nothing.
-
-#ifdef NDEBUG
-// Hard-enabling of assert() even if NDEBUG is defined
-#    define NDEBUG_WAS_SET_CEDRUS_HEADER
-#    undef NDEBUG
-#
-#    include <cassert>
-#endif
-
+#include <cassert>
 #include <iostream> // for std::cerr
 #include <signal.h> // for raise
 #include <stdlib.h> // for getenv
@@ -285,18 +272,10 @@ namespace Cedrus
         // TODO
 #endif // Win/Apple
 
-
 #endif // #ifdef CEDRUS_DISABLE_ASSERT
-
-
-
-
 
 #ifdef NDEBUG_WAS_SET_CEDRUS_HEADER
 // Restoring NDEBUG if it was enabled originally
 #    define NDEBUG
 #endif
-
-
-#endif // CEDRUS_UTILITY_CODE_CASSERT_WRAPPER
 

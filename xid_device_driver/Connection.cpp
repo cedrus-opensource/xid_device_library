@@ -34,7 +34,6 @@
 #include "CedrusAssert.h"
 
 #include "constants.h"
-#include <boost/date_time/posix_time/posix_time.hpp>
 
 Cedrus::Connection::Connection(
     const DWORD location,
@@ -185,14 +184,6 @@ bool Cedrus::Connection::Write(
     m_ConnectionDead = (write_status != FT_OK);
 
     return m_ConnectionDead;
-}
-
-unsigned long Cedrus::Connection::GetTickCount() const
-{
-    boost::posix_time::ptime time_microseconds = boost::posix_time::microsec_clock::local_time();
-    unsigned long milliseconds = static_cast<unsigned long>(time_microseconds.time_of_day().total_milliseconds());
-
-    return milliseconds;
 }
 
 int Cedrus::Connection::GetBaudRate() const

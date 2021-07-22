@@ -98,7 +98,6 @@ namespace Cedrus
 
     private:
         bool SetupCOMPort();
-        unsigned long GetTickCount() const;
 
         DWORD m_BaudRate;
         BYTE m_ByteSize;
