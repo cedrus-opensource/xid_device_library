@@ -71,10 +71,10 @@ if sys.platform == 'win32':
     project_target += project_target_name + ".dll"
 
 if sys.platform == 'darwin':
-    lib_dependencies = ['ftd2xx.1.4.16']
+    lib_dependencies = ['ftd2xx.1.4.24']
     include_path.append( python_path +'/osx/include/' )
     lib_path.append( python_path +'/osx/libs/' )
-    env.Install( staging_dir, env.subst(ftd2xx_loc + '/libftd2xx.1.4.16.dylib') )
+    env.Install( staging_dir, env.subst(ftd2xx_loc + '/libftd2xx.1.4.24.dylib') )
     project_target += "lib" + project_target_name + ".dylib"
 
 linkflags = []
