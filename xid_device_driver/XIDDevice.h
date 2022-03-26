@@ -181,6 +181,8 @@ namespace Cedrus
         void RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines = false);
         void LowerLines(unsigned int linesBitmask, bool leaveRemainingLines = false);
         void ClearLines();
+        void SendPulse(unsigned int duration, unsigned int lines, unsigned int pulses, unsigned int ipi); // mx
+        bool ArePulsesBeingSent() const; // _mx
 
     private:
         void SetDigitalOutputLines_RB(std::shared_ptr<Connection> xidCon, unsigned int lines);

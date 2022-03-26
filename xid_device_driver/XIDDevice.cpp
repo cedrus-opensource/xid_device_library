@@ -1533,6 +1533,46 @@ void Cedrus::XIDDevice::ClearLines()
     m_linesState = 0;
 }
 
+void Cedrus::XIDDevice::SendPulse(unsigned int duration, unsigned int lines, unsigned int pulses, unsigned int ipi)
+{
+    if (!m_config->IsXID2())
+        return;
+
+    static unsigned char send_pulse_cmd[9] = { 'm','x' };
+
+    AdjustEndiannessUintToChars(
+        duration,
+        &(send_pulse_cmd[2]),
+        &(send_pulse_cmd[3]));
+
+    AdjustEndiannessUintToChars(
+        lines,
+        &(send_pulse_cmd[4]),
+        &(send_pulse_cmd[5]));
+
+    send_pulse_cmd[6] = pulses & 0x000000FF;
+
+    AdjustEndiannessUintToChars(
+        ipi,
+        &(send_pulse_cmd[7]),
+        &(send_pulse_cmd[8]));
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write((unsigned char*)send_pulse_cmd, 9, &bytes_written);
+}
+
+bool Cedrus::XIDDevice::ArePulsesBeingSent() const
+{
+    if (!m_config->IsXID2())
+        return 0;
+
+    unsigned char get_pulse_return[4];
+
+    m_xidCon->SendXIDCommand("_mx", 3, get_pulse_return, sizeof(get_pulse_return));
+
+    return get_pulse_return[3] == '1' ? true : false;
+}
+
 int Cedrus::XIDDevice::GetBaudRate() const
 {
     return m_xidCon->GetBaudRate();
