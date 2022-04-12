@@ -84,6 +84,8 @@ namespace Cedrus
         void LockPod(bool lock); // au (v2.2.2)
         unsigned char GetMpodPulseDuration() const; // _aw
         void SetMpodPulseDuration(unsigned char duration); // aw
+        char GetPodOutputLogic() const; // _al
+        void SetPodOutputLogic(char logic); // al
 
         int GetVKDropDelay() const; // _b3
         void SetVKDropDelay(unsigned char delay); // b3
