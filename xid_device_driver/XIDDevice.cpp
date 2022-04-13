@@ -323,6 +323,30 @@ void Cedrus::XIDDevice::SetMpodPulseDuration(unsigned char duration)
     SLEEP_FUNC(50 * SLEEP_INC);
 }
 
+char Cedrus::XIDDevice::GetPodOutputLogic() const
+{
+    if (!m_config->IsPod())
+        return '0';
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_al", 3, cmd_return, sizeof(cmd_return));
+
+    return cmd_return[3];
+}
+
+void Cedrus::XIDDevice::SetPodOutputLogic(char logic)
+{
+    if (!m_config->IsPod())
+        return;
+
+    static unsigned char spol_command[3] = { 'a','l' };
+    spol_command[2] = logic;
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write(spol_command, 3, &bytes_written);
+}
+
 int Cedrus::XIDDevice::GetMpodModel(unsigned char mpod) const
 {
     if (!m_config->IsXID2())
@@ -717,6 +741,11 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
             ResetMappedLinesToDefault();
             CommitLineMappingToFlash();
         }
+    }
+
+    if (m_config->IsPod() && model == 79)
+    {
+        SetPodOutputLogic('n');
     }
 }
 
