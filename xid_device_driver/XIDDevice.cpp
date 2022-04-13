@@ -742,6 +742,11 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
             CommitLineMappingToFlash();
         }
     }
+
+    if (m_config->IsPod() && model == 79)
+    {
+        SetPodOutputLogic('n');
+    }
 }
 
 int Cedrus::XIDDevice::GetMajorFirmwareVersion() const
