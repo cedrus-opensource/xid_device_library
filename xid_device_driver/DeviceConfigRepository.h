@@ -234,7 +234,7 @@ namespace
     void CreateST2QuadWithMpod4(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
         // 'S' and '3'
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Quad with m-pod 4", 83, 51, 2, 16));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("StimTracker Quad", 83, 51, 2, 16));
 
         listOfAllConfigs.push_back(config);
     }
