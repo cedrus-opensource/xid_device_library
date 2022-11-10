@@ -54,6 +54,8 @@ namespace Cedrus
     class CEDRUS_XIDDRIVER_IMPORTEXPORT XIDDevice
     {
     public:
+        enum { IS_ANALOG_POD = 'V' };
+
         XIDDevice(std::shared_ptr<Connection> xidCon, std::shared_ptr<const DeviceConfig> devConfig);
 
         ~XIDDevice();
@@ -163,6 +165,8 @@ namespace Cedrus
         void StopPulseTable(); // ms
         void AddPulseTableEntry(unsigned int time, unsigned int lines); // mt
         void ResetOutputLines(); // mz
+        void SetVoltageRange ( unsigned int nMinimum, unsigned int nMaximum ); // fv
+        unsigned int GetMaxVoltageRange() const; // _fv
 
         // The following two blocks of commands do not query the device directly
         int GetBaudRate() const;

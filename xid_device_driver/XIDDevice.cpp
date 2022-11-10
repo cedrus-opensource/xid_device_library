@@ -43,8 +43,9 @@
 #include <iomanip>
 #include <locale>
 
+
 Cedrus::XIDDevice::XIDDevice(std::shared_ptr<Connection> xidCon, std::shared_ptr<const DeviceConfig> devConfig)
-    : m_linesState(0),
+  : m_linesState(0),
     m_xidCon(xidCon),
     m_config(devConfig),
     m_podHostConfig(),
@@ -1509,6 +1510,37 @@ void Cedrus::XIDDevice::ResetOutputLines()
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"mz", 2, &bytes_written);
 }
+
+
+void Cedrus::XIDDevice::SetVoltageRange ( unsigned int nMinimum, unsigned int nMaximum )
+{
+    if ( !m_config->IsXID2())
+        return;
+
+    //if ( GetModelID() != Cedrus::XIDDevice::IS_ANALOG_POD )
+    //    return;
+
+    static unsigned char set_voltage_range_cmd[4] = { 'f','v' };
+    set_voltage_range_cmd[2] = 0;   // Minimum voltage, always 0V for now
+    set_voltage_range_cmd[3] = nMaximum;
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write((unsigned char*)set_voltage_range_cmd, 4, &bytes_written);
+}
+
+
+unsigned int Cedrus::XIDDevice::GetMaxVoltageRange() const
+{
+    if (!m_config->IsXID2())
+        return 0;
+
+    unsigned char gen_return[5];
+
+    m_xidCon->SendXIDCommand("_fv", 3, gen_return, sizeof(gen_return));
+
+    return gen_return[4];
+}
+
 
 void Cedrus::XIDDevice::RaiseLines(unsigned int linesBitmask, bool leaveRemainingLines)
 {
