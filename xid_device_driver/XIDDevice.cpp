@@ -1517,9 +1517,6 @@ void Cedrus::XIDDevice::SetVoltageRange ( unsigned int nMinimum, unsigned int nM
     if ( !m_config->IsXID2())
         return;
 
-    //if ( GetModelID() != Cedrus::XIDDevice::IS_ANALOG_POD )
-    //    return;
-
     static unsigned char set_voltage_range_cmd[4] = { 'f','v' };
     set_voltage_range_cmd[2] = 0;   // Minimum voltage, always 0V for now
     set_voltage_range_cmd[3] = nMaximum;
@@ -1536,7 +1533,7 @@ unsigned int Cedrus::XIDDevice::GetMaxVoltageRange() const
 
     unsigned char gen_return[5];
 
-    m_xidCon->SendXIDCommand("_fv", 3, gen_return, sizeof(gen_return));
+    m_xidCon->SendXIDCommand("_vr", 3, gen_return, sizeof(gen_return));
 
     return gen_return[4];
 }

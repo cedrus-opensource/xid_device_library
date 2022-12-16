@@ -55,6 +55,7 @@ namespace Cedrus
     {
     public:
         enum { IS_ANALOG_POD = 'V' };
+        enum { AM_FIXED_DELTA = 1, AM_BINARY = 2 };   // AM = analog mode
 
         XIDDevice(std::shared_ptr<Connection> xidCon, std::shared_ptr<const DeviceConfig> devConfig);
 
