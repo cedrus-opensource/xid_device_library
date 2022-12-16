@@ -166,8 +166,15 @@ namespace Cedrus
         void StopPulseTable(); // ms
         void AddPulseTableEntry(unsigned int time, unsigned int lines); // mt
         void ResetOutputLines(); // mz
-        void SetVoltageRange ( unsigned int nMinimum, unsigned int nMaximum ); // fv
-        unsigned int GetMaxVoltageRange() const; // _fv
+
+        void SetVoltageRange ( unsigned int nMinimum, unsigned int nMaximum ); // vr
+        unsigned int GetMaxVoltageRange() const; // _vr
+        void SetVoltageRangeForTesting ( unsigned int nMinimum, unsigned int nMaximum ); // vt
+        unsigned int GetMaxVoltageRangeForTesting() const; // _vt
+        void SetAnalogOutputMode ( unsigned int mode ); // vm
+        unsigned int GetAnalogOutputMode() const; // _vm
+        void SetNumberOfAnalogOutputLevels ( unsigned int numLevels ); // vl
+        unsigned int GetNumberOfAnalogOutputLevels() const; // _vl
 
         // The following two blocks of commands do not query the device directly
         int GetBaudRate() const;

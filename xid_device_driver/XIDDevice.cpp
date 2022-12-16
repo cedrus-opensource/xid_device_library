@@ -1514,10 +1514,37 @@ void Cedrus::XIDDevice::ResetOutputLines()
 
 void Cedrus::XIDDevice::SetVoltageRange ( unsigned int nMinimum, unsigned int nMaximum )
 {
-    if ( !m_config->IsXID2())
+    if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
         return;
 
-    static unsigned char set_voltage_range_cmd[4] = { 'f','v' };
+    static unsigned char set_voltage_range_cmd[4] = { 'v','r' };
+    set_voltage_range_cmd[2] = 0;   // Minimum voltage, always 0V for now
+    set_voltage_range_cmd[3] = nMaximum;
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
+}
+
+
+unsigned int Cedrus::XIDDevice::GetMaxVoltageRange() const
+{
+    if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
+        return 0;
+
+    unsigned char gen_return[5];
+
+    m_xidCon->SendXIDCommand("_vr", 3, gen_return, sizeof(gen_return));
+
+    return gen_return[4];
+}
+
+
+void Cedrus::XIDDevice::SetVoltageRangeForTesting ( unsigned int nMinimum, unsigned int nMaximum )
+{
+    if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
+        return;
+
+    static unsigned char set_voltage_range_cmd[4] = { 'v','t' };
     set_voltage_range_cmd[2] = 0;   // Minimum voltage, always 0V for now
     set_voltage_range_cmd[3] = nMaximum;
 
@@ -1526,16 +1553,72 @@ void Cedrus::XIDDevice::SetVoltageRange ( unsigned int nMinimum, unsigned int nM
 }
 
 
-unsigned int Cedrus::XIDDevice::GetMaxVoltageRange() const
+unsigned int Cedrus::XIDDevice::GetMaxVoltageRangeForTesting() const
 {
-    if (!m_config->IsXID2())
+    if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
         return 0;
 
     unsigned char gen_return[5];
 
-    m_xidCon->SendXIDCommand("_vr", 3, gen_return, sizeof(gen_return));
+    m_xidCon->SendXIDCommand("_vt", 3, gen_return, sizeof(gen_return));
 
     return gen_return[4];
+}
+
+
+void Cedrus::XIDDevice::SetAnalogOutputMode ( unsigned int mode )
+{
+    CEDRUS_ASSERT ( mode == AM_FIXED_DELTA  ||  mode == AM_BINARY, "Invalid parameter sent to SetAnalogOutputMode() !" );
+
+    if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
+        return;
+
+    static unsigned char set_voltage_range_cmd[3] = { 'v','m' };
+    set_voltage_range_cmd[2] = mode;
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
+}
+
+
+unsigned int Cedrus::XIDDevice::GetAnalogOutputMode() const
+{
+    if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
+        return 0;
+
+    unsigned char gen_return[4];
+
+    m_xidCon->SendXIDCommand("_vm", 3, gen_return, sizeof(gen_return));
+
+    return gen_return[3];
+}
+
+
+void Cedrus::XIDDevice::SetNumberOfAnalogOutputLevels ( unsigned int numLevels )
+{
+    CEDRUS_ASSERT ( numLevels == 8  ||  numLevels == 16, "Number of analog output levels can be ONLY 8 or 16." );
+
+    if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
+        return;
+
+    static unsigned char set_voltage_range_cmd[3] = { 'v','l' };
+    set_voltage_range_cmd[2] = numLevels;
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
+}
+
+
+unsigned int Cedrus::XIDDevice::GetNumberOfAnalogOutputLevels() const
+{
+    if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
+        return 0;
+
+    unsigned char gen_return[4];
+
+    m_xidCon->SendXIDCommand("_vl", 3, gen_return, sizeof(gen_return));
+
+    return gen_return[3];
 }
 
 
