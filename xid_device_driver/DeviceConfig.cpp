@@ -51,6 +51,11 @@ void Cedrus::DeviceConfig::PopulateConfigList(std::vector<std::shared_ptr<Cedrus
     CreateRB834Config(listOfAllConfigs);
     CreateRB844Config(listOfAllConfigs);
 
+    CreateRipondaModel_C_Config(listOfAllConfigs);
+    CreateRipondaModel_L_Config(listOfAllConfigs);
+    CreateRipondaModel_E_Config(listOfAllConfigs);
+    CreateRipondaModel_S_Config(listOfAllConfigs);
+
     CreateLuminaLP400Config(listOfAllConfigs);
     CreateLumina3GConfig(listOfAllConfigs);
 

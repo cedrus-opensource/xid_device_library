@@ -34,6 +34,9 @@ UseableAsResponse = No
 
 #include "DeviceConfig.h"
 #include <memory>
+//#include <iostream>
+//#include <utility>
+
 
 namespace
 {
@@ -158,6 +161,87 @@ namespace
         devicePorts.emplace(2, port);
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("RB-844", 50, 52, 2, 8, devicePorts));
+
+        listOfAllConfigs.push_back(config);
+    }
+
+    void CreateRipondaModel_C_Config(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
+    {
+        std::map<unsigned int, Cedrus::DevicePort> device_ports;
+
+        std::vector<int>    key_map = { -1, 0, -1, 1, 2, 3, 4, -1 };
+        Cedrus::DevicePort  port("Key", 0, 5, key_map);
+        device_ports.emplace(0, port);
+
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
+        device_ports.emplace(2, port);
+
+        port = Cedrus::DevicePort("Voice Key", 2, 1);
+        device_ports.emplace(2, port);
+
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model L", '5', '1', 2, 8, device_ports));
+
+        listOfAllConfigs.push_back(config);
+    }
+
+    void CreateRipondaModel_L_Config(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
+    {
+        std::map<unsigned int, Cedrus::DevicePort> device_ports;
+
+        std::vector<int>    key_map = { -1, 0, 1, 2, 3, 4, 5, 6 };
+        Cedrus::DevicePort  port("Key", 0, 7, key_map);
+        device_ports.emplace(0, port);
+
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
+        device_ports.emplace(2, port);
+
+        port = Cedrus::DevicePort("Voice Key", 2, 1);
+        device_ports.emplace(2, port);
+
+        //for (const auto &p : device_ports) 
+        //{
+        //    std::cout << p.first << " => Port number = " << p.second.portNumber << "  Number of lines" << p.second.numberOfLines << '\n';
+        //}
+
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model L", '5', '2', 2, 8, device_ports));
+
+        listOfAllConfigs.push_back(config);
+    }
+
+    void CreateRipondaModel_E_Config(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
+    {
+        std::map<unsigned int, Cedrus::DevicePort> device_ports;
+
+        std::vector<int>    key_map = { 7, 3, 4, 1, 2, 5, 6, 0 };
+        Cedrus::DevicePort  port("Key", 0, 8, key_map);
+        device_ports.emplace(0, port);
+
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
+        device_ports.emplace(2, port);
+
+        port = Cedrus::DevicePort("Voice Key", 2, 1);
+        device_ports.emplace(2, port);
+
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model E", '5', '3', 3, 8, device_ports));
+
+        listOfAllConfigs.push_back(config);
+    }
+
+    void CreateRipondaModel_S_Config(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
+    {
+        std::map<unsigned int, Cedrus::DevicePort> device_ports;
+
+        std::vector<int>    key_map = { 7, 0, 1, 2, 3, 4, 5, 6 };
+        Cedrus::DevicePort  port("Key", 0, 8, key_map);
+        device_ports.emplace(0, port);
+
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
+        device_ports.emplace(2, port);
+
+        port = Cedrus::DevicePort("Voice Key", 2, 1);
+        device_ports.emplace(2, port);
+
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model S", '5', '4', 2, 8, device_ports));
 
         listOfAllConfigs.push_back(config);
     }
