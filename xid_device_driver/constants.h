@@ -118,8 +118,11 @@ namespace Cedrus
         PRODUCT_ID_RB = 50,
         PRODUCT_ID_MPOD = 51,
         PRODUCT_ID_CPOD = 52,
+        PRODUCT_ID_RIPONDA = 53,
         PRODUCT_ID_STIMTRACKER = 83 // 'S'
     };
+
+    enum RipondaModel { MODEL_C = '1', MODEL_L = '2', MODEL_E = '3', MODEL_S = '4' };
 
     // These are laid out in pairs in blocks of 8. The masks are the same,
     // but they have different meanings for RB/Lumina and StimTracker.

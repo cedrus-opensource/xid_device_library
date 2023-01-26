@@ -179,7 +179,7 @@ namespace
         port = Cedrus::DevicePort("Voice Key", 2, 1);
         device_ports.emplace(2, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model L", '5', '1', 2, 8, device_ports));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model C", Cedrus::PRODUCT_ID_RIPONDA, Cedrus::MODEL_C, 2, 8, device_ports));
 
         listOfAllConfigs.push_back(config);
     }
@@ -203,7 +203,7 @@ namespace
         //    std::cout << p.first << " => Port number = " << p.second.portNumber << "  Number of lines" << p.second.numberOfLines << '\n';
         //}
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model L", '5', '2', 2, 8, device_ports));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model L", Cedrus::PRODUCT_ID_RIPONDA, Cedrus::MODEL_L, 2, 8, device_ports));
 
         listOfAllConfigs.push_back(config);
     }
@@ -222,7 +222,7 @@ namespace
         port = Cedrus::DevicePort("Voice Key", 2, 1);
         device_ports.emplace(2, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model E", '5', '3', 3, 8, device_ports));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model E", Cedrus::PRODUCT_ID_RIPONDA, Cedrus::MODEL_E, 3, 8, device_ports));
 
         listOfAllConfigs.push_back(config);
     }
@@ -241,7 +241,7 @@ namespace
         port = Cedrus::DevicePort("Voice Key", 2, 1);
         device_ports.emplace(2, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model S", '5', '4', 2, 8, device_ports));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model S", Cedrus::PRODUCT_ID_RIPONDA, Cedrus::MODEL_S, 2, 8, device_ports));
 
         listOfAllConfigs.push_back(config);
     }
