@@ -160,6 +160,11 @@ namespace Cedrus
             return IsRB() && IsXID2();
         }
 
+        bool IsRiponda() const
+        {
+            return m_ProductID == PRODUCT_ID_RIPONDA;
+        }
+
         bool IsMPod() const
         {
             return m_ProductID == PRODUCT_ID_MPOD;
