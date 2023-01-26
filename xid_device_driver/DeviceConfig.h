@@ -242,7 +242,7 @@ namespace Cedrus
 
         bool ModelIDMatters() const
         {
-            return IsRB() || IsStimTracker() || IsCPod() || IsMPod();
+            return IsRB() || IsStimTracker() || IsCPod() || IsMPod() || IsRiponda();
         }
 
     private:
