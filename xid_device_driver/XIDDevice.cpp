@@ -417,7 +417,7 @@ void Cedrus::XIDDevice::ConnectToMpod(unsigned char mpod, unsigned char action)
     m_curMinorFwVer = GetMinorFirmwareVersion();
 
     if (action == 0)
-        SetBaudRate(rate);
+        SetBaudRate ( static_cast<unsigned char> (rate) );
 }
 
 unsigned char Cedrus::XIDDevice::GetTranslationTable() const
@@ -453,12 +453,13 @@ unsigned int Cedrus::XIDDevice::GetMappedSignals(unsigned int line)
         return 0;
 
     static char gms_cmd[4] = { '_','a','t' };
-    gms_cmd[3] = line > 9 ? '7' + line : '0' + line;
+    char        line_as_char = static_cast<char> (line);
+    gms_cmd[3] = line_as_char > 9 ? '7' + line_as_char : '0' + line_as_char;
 
     unsigned char mapped_signals_return[12];
     m_xidCon->SendXIDCommand(gms_cmd, 4, mapped_signals_return, sizeof(mapped_signals_return));
 
-    bool return_valid = strncmp((char*)mapped_signals_return, "_at", 3) == 0;
+    //bool return_valid = strncmp((char*)mapped_signals_return, "_at", 3) == 0;
 
     char mask[9];
     mask[8] = '\0';
@@ -485,7 +486,9 @@ void Cedrus::XIDDevice::MapSignals(unsigned int line, unsigned int map)
     for (auto & c : string_mask) c = toupper(c);
 
     static unsigned char map_signals_cmd[11] = { 'a','t' };
-    map_signals_cmd[2] = line > 9 ? '7' + line : '0' + line;
+    unsigned char        line_as_char = static_cast<unsigned char> (line);
+
+    map_signals_cmd[2] = line_as_char > 9 ? '7' + line_as_char : '0' + line_as_char;
     map_signals_cmd[3] = string_mask[0];
     map_signals_cmd[4] = string_mask[1];
     map_signals_cmd[5] = string_mask[2];
@@ -608,7 +611,7 @@ void Cedrus::XIDDevice::SetProtocol_Scan(std::shared_ptr<Connection> xidCon, uns
 unsigned int Cedrus::XIDDevice::GetKBModeProtocol() const
 {
     if (!(m_config->IsRBx40() || m_config->IsLumina3G()))
-        return INVALID_RETURN_VALUE;
+        return static_cast<unsigned int> (INVALID_RETURN_VALUE);
 
     unsigned char return_info[4];
     m_xidCon->SendXIDCommand("_c2", 3, return_info, sizeof(return_info));
@@ -1197,7 +1200,7 @@ void Cedrus::XIDDevice::SetRipondaLEDFunction ( unsigned int nFunction )
 
     if (!m_config->IsXID2())
         return;
-
+    
     static unsigned char enable_rb_led_cmd[3] = { 'i','l' };
     enable_rb_led_cmd[2] = static_cast<unsigned char> ( nFunction );
 
@@ -1397,7 +1400,7 @@ unsigned int Cedrus::XIDDevice::GetNumberOfLines() const
 void Cedrus::XIDDevice::SetNumberOfLines(unsigned int lines)
 {
     static unsigned char set_number_of_lines_cmd[3] = { 'm','l' };
-    set_number_of_lines_cmd[2] = lines;
+    set_number_of_lines_cmd[2] = static_cast<unsigned char> (lines);
 
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)set_number_of_lines_cmd, 3, &bytes_written);
@@ -1543,14 +1546,14 @@ void Cedrus::XIDDevice::ResetOutputLines()
 }
 
 
-void Cedrus::XIDDevice::SetVoltageRange ( unsigned int nMinimum, unsigned int nMaximum )
+void Cedrus::XIDDevice::SetVoltageRange ( unsigned int /* nMinimum */, unsigned int nMaximum )
 {
     if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
         return;
 
     static unsigned char set_voltage_range_cmd[4] = { 'v','r' };
     set_voltage_range_cmd[2] = 0;   // Minimum voltage, always 0V for now
-    set_voltage_range_cmd[3] = nMaximum;
+    set_voltage_range_cmd[3] = static_cast<unsigned char> (nMaximum);
 
     DWORD bytes_written = 0;
     m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
@@ -1570,14 +1573,14 @@ unsigned int Cedrus::XIDDevice::GetMaxVoltageRange() const
 }
 
 
-void Cedrus::XIDDevice::SetVoltageRangeForTesting ( unsigned int nMinimum, unsigned int nMaximum )
+void Cedrus::XIDDevice::SetVoltageRangeForTesting ( unsigned int /* nMinimum */, unsigned int nMaximum )
 {
     if ( !m_config->IsXID2()  ||  GetModelID() != 'V' )
         return;
 
     static unsigned char set_voltage_range_cmd[4] = { 'v','t' };
     set_voltage_range_cmd[2] = 0;   // Minimum voltage, always 0V for now
-    set_voltage_range_cmd[3] = nMaximum;
+    set_voltage_range_cmd[3] = static_cast<unsigned char> (nMaximum);
 
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)set_voltage_range_cmd, 4, &bytes_written);
@@ -1605,7 +1608,7 @@ void Cedrus::XIDDevice::SetAnalogOutputMode ( unsigned int mode )
         return;
 
     static unsigned char set_voltage_range_cmd[3] = { 'v','m' };
-    set_voltage_range_cmd[2] = mode;
+    set_voltage_range_cmd[2] = static_cast<unsigned char> (mode);
 
     DWORD bytes_written = 0;
     m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
@@ -1633,7 +1636,7 @@ void Cedrus::XIDDevice::SetNumberOfAnalogOutputLevels ( unsigned int numLevels )
         return;
 
     static unsigned char set_voltage_range_cmd[3] = { 'v','l' };
-    set_voltage_range_cmd[2] = numLevels;
+    set_voltage_range_cmd[2] = static_cast<unsigned char> (numLevels);
 
     DWORD bytes_written = 0;
     m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
