@@ -57,6 +57,8 @@ namespace Cedrus
         enum { IS_ANALOG_POD = 'V' };
         enum { AM_FIXED_DELTA = 1, AM_BINARY = 2 };   // AM = analog mode
 
+        enum RipondaLEDFunction { LED_OFF = '0', LED_FOR_LIGHT_SENSOR = '1', LED_FOR_VOICE_KEY = '2' };
+
         XIDDevice(std::shared_ptr<Connection> xidCon, std::shared_ptr<const DeviceConfig> devConfig);
 
         ~XIDDevice();
@@ -140,6 +142,8 @@ namespace Cedrus
         void EnableKbAutorepeat(bool pause); // ig (v2.2.1)
         bool IsRBx40LEDEnabled() const; // _il
         void EnableRBx40LED(bool enable); // il
+        unsigned int GetRipondaLEDFunction() const; // _il again
+        void SetRipondaLEDFunction ( unsigned int nFunction ); // il again
         bool GetEnableDigitalOutput(unsigned char selector) const; // _io
         void SetEnableDigitalOutput(unsigned char selector, bool mode); // io
         bool IsOutputPaused() const; // _ip (v2.2.1)

@@ -1177,6 +1177,37 @@ void Cedrus::XIDDevice::EnableRBx40LED(bool enable)
     SLEEP_FUNC(50 * SLEEP_INC);
 }
 
+
+unsigned int Cedrus::XIDDevice::GetRipondaLEDFunction() const
+{
+    if (!m_config->IsXID2())
+        return false;
+
+    unsigned char cmd_return[4];
+
+    m_xidCon->SendXIDCommand("_il", 3, cmd_return, sizeof(cmd_return));
+
+    return static_cast<unsigned int> ( cmd_return[3] );
+}
+
+
+void Cedrus::XIDDevice::SetRipondaLEDFunction ( unsigned int nFunction )
+{
+    CEDRUS_ASSERT ( nFunction >= LED_OFF && nFunction <= LED_FOR_VOICE_KEY, "Invalid Riponda LED parameter!" );
+
+    if (!m_config->IsXID2())
+        return;
+
+    static unsigned char enable_rb_led_cmd[3] = { 'i','l' };
+    enable_rb_led_cmd[2] = static_cast<unsigned char> ( nFunction );
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( enable_rb_led_cmd, 3, &bytes_written );
+
+    SLEEP_FUNC(50 * SLEEP_INC);
+}
+
+
 bool Cedrus::XIDDevice::GetEnableDigitalOutput(unsigned char selector) const
 {
     if (!m_config->IsXID2())
