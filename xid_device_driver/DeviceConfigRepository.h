@@ -34,8 +34,6 @@ UseableAsResponse = No
 
 #include "DeviceConfig.h"
 #include <memory>
-//#include <iostream>
-//#include <utility>
 
 
 namespace
@@ -197,11 +195,6 @@ namespace
 
         port = Cedrus::DevicePort("Voice Key", 2, 1);
         device_ports.emplace(2, port);
-
-        //for (const auto &p : device_ports) 
-        //{
-        //    std::cout << p.first << " => Port number = " << p.second.portNumber << "  Number of lines" << p.second.numberOfLines << '\n';
-        //}
 
         std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model L", Cedrus::PRODUCT_ID_RIPONDA, Cedrus::MODEL_L, 2, 8, device_ports));
 
