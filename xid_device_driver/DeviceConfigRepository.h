@@ -239,6 +239,25 @@ namespace
         listOfAllConfigs.push_back(config);
     }
 
+    void CreateRipondaModel_NoModel_Config(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
+    {
+        std::map<unsigned int, Cedrus::DevicePort> device_ports;
+
+        std::vector<int>    key_map = { -1, 0, 1, 2, 3, 4, 5, 6 };
+        Cedrus::DevicePort  port("Key", 0, 7, key_map);
+        device_ports.emplace(0, port);
+
+        port = Cedrus::DevicePort("Light Sensor", 2, 1);
+        device_ports.emplace(2, port);
+
+        port = Cedrus::DevicePort("Voice Key", 2, 1);
+        device_ports.emplace(2, port);
+
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda No Model Set", Cedrus::PRODUCT_ID_RIPONDA, 48, 2, 8, device_ports));
+
+        listOfAllConfigs.push_back(config);
+    }
+
     void CreateLuminaLP400Config(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
     {
         std::map<unsigned int, Cedrus::DevicePort> devicePorts;
