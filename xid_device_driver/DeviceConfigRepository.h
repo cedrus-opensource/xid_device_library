@@ -215,7 +215,7 @@ namespace
         port = Cedrus::DevicePort("Voice Key", 2, 1);
         device_ports.emplace(2, port);
 
-        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model E", Cedrus::PRODUCT_ID_RIPONDA, Cedrus::MODEL_E, 3, 8, device_ports));
+        std::shared_ptr<Cedrus::DeviceConfig> config(new Cedrus::DeviceConfig("Riponda Model E", Cedrus::PRODUCT_ID_RIPONDA, Cedrus::MODEL_E, 2, 8, device_ports));
 
         listOfAllConfigs.push_back(config);
     }
