@@ -122,7 +122,7 @@ namespace Cedrus
         PRODUCT_ID_STIMTRACKER = 83 // 'S'
     };
 
-    enum RipondaModel { NO_MODEL_SET = '0', MODEL_C = '1', MODEL_L = '2', MODEL_E = '3', MODEL_S = '4' };
+    enum RipondaModel { NO_RIPONDA_MODEL_SET = '0', MODEL_C = '1', MODEL_L = '2', MODEL_E = '3', MODEL_S = '4' };
 
     // These are laid out in pairs in blocks of 8. The masks are the same,
     // but they have different meanings for RB/Lumina and StimTracker.
