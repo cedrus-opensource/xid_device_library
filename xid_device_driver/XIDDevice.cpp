@@ -747,7 +747,7 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
         }
     }
 
-    if (m_config->IsPod() && model == 79)
+    if ( m_config->IsPod()  && ( model == 79 || model == 111 ) )    // Magstim EGI
     {
         SetPodOutputLogic('n');
     }

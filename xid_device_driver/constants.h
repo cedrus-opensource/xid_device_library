@@ -184,7 +184,7 @@ namespace Cedrus
         //RESERVED = 0x00020000,
         LIGHT_SENS_2 = 0x00020000,
 
-        VOICE_KEY_RB = 0x00040000,
+        VOICE_KEY_RIPONDA = 0x00040000,
         LIGHT_SENS_3 = 0x00040000,
 
         LIGHT_SENS = 0x00080000,
