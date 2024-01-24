@@ -1556,7 +1556,7 @@ void Cedrus::XIDDevice::SetVoltageRange ( unsigned int /* nMinimum */, unsigned 
     set_voltage_range_cmd[3] = static_cast<unsigned char> (nMaximum);
 
     DWORD bytes_written = 0;
-    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
+    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written, SAVES_TO_FLASH );
 }
 
 

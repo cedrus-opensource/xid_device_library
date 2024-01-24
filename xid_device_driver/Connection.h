@@ -46,6 +46,8 @@
 
 namespace Cedrus
 {
+    enum { SAVES_TO_FLASH = true };
+
     class Connection
     {
     public:
@@ -72,7 +74,8 @@ namespace Cedrus
         bool Write(
             unsigned char * const inBuffer,
             DWORD bytesToWrite,
-            LPDWORD bytesWritten);
+            LPDWORD bytesWritten,
+            bool savesToFlash = false );
 
         DWORD SendXIDCommand(
             const char inCommand[],

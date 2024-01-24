@@ -156,7 +156,8 @@ bool Cedrus::Connection::Read(
 bool Cedrus::Connection::Write(
     unsigned char * const inBuffer,
     DWORD bytesToWrite,
-    LPDWORD bytesWritten)
+    LPDWORD bytesWritten,
+    bool savesToFlash )
 {
     FlushWriteToDeviceBuffer();
 
@@ -180,6 +181,9 @@ bool Cedrus::Connection::Write(
         SLEEP_FUNC(1 * SLEEP_INC);
         ++p;
     }
+
+    if ( savesToFlash )
+        SLEEP_FUNC ( 100 * SLEEP_INC );
 
     m_ConnectionDead = (write_status != FT_OK);
 
