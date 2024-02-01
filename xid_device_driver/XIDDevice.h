@@ -206,6 +206,7 @@ namespace Cedrus
         void SetDigitalOutputLines_RB(std::shared_ptr<Connection> xidCon, unsigned int lines);
         void SetDigitalOutputLines_ST(std::shared_ptr<Connection> xidCon, unsigned int lines);
         void MatchConfigToModel(char model);
+        void MatchConfigToModel_MPod(char model);
 
         void SetMPodLineMapping_Neuroscan16bit();
         void SetMPodLineMapping_NeuroscanGrael();
