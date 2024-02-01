@@ -176,7 +176,7 @@ void Cedrus::XIDDevice::BackupFlashData()
     spdtfb_cmd[5] = crc_return[6];
 
     DWORD bytes_written = 0;
-    m_xidCon->Write(spdtfb_cmd, 6, &bytes_written);
+    m_xidCon->Write ( spdtfb_cmd, 6, &bytes_written, SAVES_TO_FLASH );
 }
 
 unsigned int Cedrus::XIDDevice::GetTranslationTableCRC() const
@@ -241,7 +241,7 @@ void Cedrus::XIDDevice::SetMpodOutputMode(unsigned char mode)
     smom_command[2] = mode + '0';
 
     DWORD bytes_written = 0;
-    m_xidCon->Write(smom_command, 3, &bytes_written);
+    m_xidCon->Write ( smom_command, 3, &bytes_written, SAVES_TO_FLASH );
 
     SLEEP_FUNC(50 * SLEEP_INC);
 }
@@ -345,7 +345,7 @@ void Cedrus::XIDDevice::SetPodOutputLogic(char logic)
     spol_command[2] = logic;
 
     DWORD bytes_written = 0;
-    m_xidCon->Write(spol_command, 3, &bytes_written);
+    m_xidCon->Write ( spol_command, 3, &bytes_written, SAVES_TO_FLASH );
 }
 
 int Cedrus::XIDDevice::GetMpodModel(unsigned char mpod) const
@@ -537,7 +537,7 @@ void Cedrus::XIDDevice::CommitLineMappingToFlash()
     static unsigned char commit_map_cmd[2] = { 'a','f' };
 
     DWORD bytes_written = 0;
-    m_xidCon->Write(commit_map_cmd, 2, &bytes_written);
+    m_xidCon->Write ( commit_map_cmd, 2, &bytes_written, SAVES_TO_FLASH );
 
     SLEEP_FUNC(50 * SLEEP_INC);
 }
@@ -713,7 +713,7 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
     set_model_cmd[2] = model;
 
     DWORD bytes_written = 0;
-    m_xidCon->Write((unsigned char*)set_model_cmd, 3, &bytes_written);
+    m_xidCon->Write ( (unsigned char*)set_model_cmd, 3, &bytes_written, SAVES_TO_FLASH );
 
     SLEEP_FUNC(250 * SLEEP_INC);
 
@@ -1151,7 +1151,7 @@ void Cedrus::XIDDevice::EnableKbAutorepeat(bool pause)
     enable_kb_autorepeat_cmd[2] = pause ? '1' : '0';
 
     DWORD bytes_written = 0;
-    m_xidCon->Write(enable_kb_autorepeat_cmd, 3, &bytes_written);
+    m_xidCon->Write ( enable_kb_autorepeat_cmd, 3, &bytes_written, SAVES_TO_FLASH );
 }
 
 bool Cedrus::XIDDevice::IsRBx40LEDEnabled() const
@@ -1175,7 +1175,7 @@ void Cedrus::XIDDevice::EnableRBx40LED(bool enable)
     enable_rb_led_cmd[2] = enable ? '1' : '0';
 
     DWORD bytes_written = 0;
-    m_xidCon->Write(enable_rb_led_cmd, 3, &bytes_written);
+    m_xidCon->Write ( enable_rb_led_cmd, 3, &bytes_written );
 
     SLEEP_FUNC(50 * SLEEP_INC);
 }
@@ -1205,7 +1205,7 @@ void Cedrus::XIDDevice::SetRipondaLEDFunction ( unsigned int nFunction )
     enable_rb_led_cmd[2] = static_cast<unsigned char> ( nFunction );
 
     DWORD bytes_written = 0;
-    m_xidCon->Write ( enable_rb_led_cmd, 3, &bytes_written );
+    m_xidCon->Write ( enable_rb_led_cmd, 3, &bytes_written, SAVES_TO_FLASH );
 
     SLEEP_FUNC(50 * SLEEP_INC);
 }
@@ -1403,7 +1403,7 @@ void Cedrus::XIDDevice::SetNumberOfLines(unsigned int lines)
     set_number_of_lines_cmd[2] = static_cast<unsigned char> (lines);
 
     DWORD bytes_written = 0;
-    m_xidCon->Write((unsigned char*)set_number_of_lines_cmd, 3, &bytes_written);
+    m_xidCon->Write ( (unsigned char*)set_number_of_lines_cmd, 3, &bytes_written, SAVES_TO_FLASH );
 }
 
 unsigned int Cedrus::XIDDevice::GetPulseDuration() const
@@ -1440,7 +1440,7 @@ void Cedrus::XIDDevice::SetPulseDuration(unsigned int duration)
         &(spd_command[5]));
 
     DWORD written = 0;
-    m_xidCon->Write(spd_command, 6, &written);
+    m_xidCon->Write ( spd_command, 6, &written, SAVES_TO_FLASH );
 }
 
 unsigned int Cedrus::XIDDevice::GetPulseTableBitMask()
@@ -1611,7 +1611,7 @@ void Cedrus::XIDDevice::SetAnalogOutputMode ( unsigned int mode )
     set_voltage_range_cmd[2] = static_cast<unsigned char> (mode);
 
     DWORD bytes_written = 0;
-    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
+    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written, SAVES_TO_FLASH );
 }
 
 
@@ -1639,7 +1639,7 @@ void Cedrus::XIDDevice::SetNumberOfAnalogOutputLevels ( unsigned int numLevels )
     set_voltage_range_cmd[2] = static_cast<unsigned char> (numLevels);
 
     DWORD bytes_written = 0;
-    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written );
+    m_xidCon->Write ( (unsigned char*)set_voltage_range_cmd, sizeof(set_voltage_range_cmd), &bytes_written, SAVES_TO_FLASH );
 }
 
 
