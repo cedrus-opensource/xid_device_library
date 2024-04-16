@@ -685,6 +685,14 @@ int Cedrus::XIDDevice::GetModelID() const
     return XIDDevice::GetModelID_Scan(m_xidCon);
 }
 
+
+bool Cedrus::XIDDevice::IsUniversalCpod() const
+{
+    //  Universal or MindWare rev B? these are the only c-pod models to offer input capability
+    return GetModelID() == 'U'  ||  GetModelID() == 'g';
+}
+
+
 /*static*/ int Cedrus::XIDDevice::GetProductID_Scan(std::shared_ptr<Connection> xidCon)
 {
     unsigned char product_id_return[1]; // we rely on SendXIDCommand to zero-initialize this buffer

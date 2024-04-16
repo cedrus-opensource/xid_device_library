@@ -106,6 +106,7 @@ namespace Cedrus
         std::string GetInternalProductName() const; // _d1
         int GetProductID() const; // _d2
         int GetModelID() const; // _d3
+        bool IsUniversalCpod() const; // Model ID is 'g' or 'U'
         static int GetProductID_Scan(std::shared_ptr<Connection> xidCon); // _d2 used during device detection
         static int GetModelID_Scan(std::shared_ptr<Connection> xidCon); // _d3 used during device detection
         void SetModelID(unsigned char model); // d3
