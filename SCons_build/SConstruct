@@ -7,7 +7,7 @@ import os
 import sys
 import SCons
 
-env_settings = {'MSVC_VERSION': '14.0'}
+env_settings = {'MSVC_VERSION': '14.3'}
 env = CedrusSConsDefaultEnvironments.PerformCedrusSConsGlobalGeneralStartup(env_settings)
 
 env['CURRENT_CEDRUS_REPO_ROOT'] = sys.path[0] + os.path.sep + '..' + os.path.sep
@@ -23,7 +23,7 @@ projects = [
 
 env.Replace(
     CEDRUS_LISTING_OF_BUILD_SCONSCRIPTS = projects,
-    TARGET_ARCH='x86'
+    TARGET_ARCH='x64'
 )
 
 if GetOption('build_mode') == 'opt':

@@ -412,7 +412,7 @@ void Cedrus::XIDDevice::ConnectToMpod(unsigned char mpod, unsigned char action)
     SLEEP_FUNC(150 * SLEEP_INC);
 
     m_podHostConfig = (action == 0 ? nullptr : m_config);
-    MatchConfigToModel(-1);
+    MatchConfigToModel_MPod(-1);
 
     m_curMinorFwVer = GetMinorFirmwareVersion();
 
@@ -725,7 +725,10 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
 
     SLEEP_FUNC(250 * SLEEP_INC);
 
-    MatchConfigToModel(model);
+    if (!m_config->IsMPod())
+        MatchConfigToModel(model);
+    else
+        MatchConfigToModel_MPod(model);
 
     if (m_config->IsMPod())
     {
@@ -1849,6 +1852,11 @@ void Cedrus::XIDDevice::MatchConfigToModel(char model)
     m_config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(GetProductID(), model != -1 ? model : GetModelID(), m_config->GetMajorVersion());
     if (model != -1)
         m_ResponseMgr.reset(m_config->IsInputDevice() ? new ResponseManager(m_config) : nullptr);
+}
+
+void Cedrus::XIDDevice::MatchConfigToModel_MPod(char model)
+{
+    m_config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(GetProductID(), model != -1 ? model : GetModelID(), m_config->GetMajorVersion());
 }
 
 void Cedrus::XIDDevice::SetMPodLineMapping_Neuroscan16bit()
