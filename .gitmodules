@@ -1,9 +1,9 @@
 [submodule "scons_helpers"]
 	path = scons_helpers
-	url = git@github.com:cedrus-opensource/scons_helpers.git
+	url = https://github.com/cedrus-opensource/scons_helpers.git
 [submodule "binaries_boost"]
 	path = binaries_boost
-	url = git@github.com:cedrus/binaries_boost.git
+	url = https://github.com/cedrus/binaries_boost.git
 [submodule "Python27"]
 	path = Python27
-	url = git@github.com:cedrus/Python27.git
+	url = https://github.com/cedrus/Python27.git
