@@ -237,7 +237,12 @@ namespace Cedrus
 
         bool IsInputDevice() const
         {
-            return IsXID1InputDevice() || IsXID2InputDevice();
+            return IsXID1InputDevice() || IsXID2InputDevice() || IsCPodWithInput();
+        }
+
+        bool IsCPodWithInput() const
+        {
+            return (IsCPod()) && (m_ModelID == 'g' || m_ModelID == 'U');
         }
 
         bool ModelIDMatters() const

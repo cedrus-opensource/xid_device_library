@@ -643,6 +643,30 @@ void Cedrus::XIDDevice::SwitchToKeyboardMode()
     m_xidCon->Write(stkm_cmd, 2, &bytes_written);
 }
 
+unsigned char Cedrus::XIDDevice::GetCPodInputMode() const
+{
+    if (!m_config->IsCPodWithInput())
+        return '0';
+
+    unsigned char return_info[4];
+    m_xidCon->SendXIDCommand("_c4", 3, return_info, sizeof(return_info));
+
+
+    return return_info[3];
+}
+
+void Cedrus::XIDDevice::SetCPodInputMode(unsigned char mode)
+{
+    if (!m_config->IsCPodWithInput())
+        return;
+
+    static unsigned char scpim_cmd[3] = { 'c','4' };
+    scpim_cmd[2] = mode; // 'p' for polled, 't' for timestamped
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write(scpim_cmd, 3, &bytes_written);
+}
+
 std::string Cedrus::XIDDevice::GetCombinedInfo() const
 {
     m_xidCon->SetReadTimeout(100);
@@ -684,14 +708,6 @@ int Cedrus::XIDDevice::GetModelID() const
 {
     return XIDDevice::GetModelID_Scan(m_xidCon);
 }
-
-
-bool Cedrus::XIDDevice::IsUniversalCpod() const
-{
-    //  Universal or MindWare rev B? these are the only c-pod models to offer input capability
-    return GetModelID() == 'U'  ||  GetModelID() == 'g';
-}
-
 
 /*static*/ int Cedrus::XIDDevice::GetProductID_Scan(std::shared_ptr<Connection> xidCon)
 {
@@ -1087,6 +1103,17 @@ void Cedrus::XIDDevice::SetSingleShotMode(unsigned char selector, bool enable, u
     m_xidCon->Write(sssm_cmd, 8, &bytes_written);
 }
 
+unsigned char Cedrus::XIDDevice::GetCPodInputLines() const
+{
+    if (!m_config->IsCPodWithInput())
+        return '0';
+
+    unsigned char return_info[4];
+    m_xidCon->SendXIDCommand("_ic0", 4, return_info, sizeof(return_info));
+
+    return return_info[3];
+}
+
 Cedrus::SignalFilter Cedrus::XIDDevice::GetSignalFilter(unsigned char selector) const
 {
     if (!m_config->IsXID2())
@@ -1305,6 +1332,15 @@ bool Cedrus::XIDDevice::GetEnableUSBOutput(unsigned char selector) const
 {
     if (!m_config->IsXID2())
         return false;
+
+    // c-pod don't respond to this command, which is generally fine, as they
+    // don't produce usb input. However, it's different for MindWare and
+    // Universal c-pods, which have their own sort-of equivalent of this
+    // command in '_c4'. This returns true rather than false for the benefit
+    // of existing software, to indicate that if input is disabled it's not
+    // due to this command. There isn't a particularly strong case either way.
+    if (m_config->IsCPodWithInput())
+        return true;
 
     unsigned char return_info[5];
 

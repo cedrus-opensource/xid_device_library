@@ -373,7 +373,8 @@ namespace
         AddPodConfig("m-pod for EGI (rev A)", 51, 79, 2, 8, listOfAllConfigs); // 'O'
         AddPodConfig("m-pod for EGI (rev B, opto isolated)", 51, 111, 2, 8, listOfAllConfigs); // 'o'
         AddPodConfig("m-pod for iWorx", 51, 105, 2, 8, listOfAllConfigs); // 'i'
-        AddPodConfig("m-pod for MindWare", 51, 71, 2, 8, listOfAllConfigs); // 'G'
+        AddPodConfig("m-pod for MindWare (rev A)", 51, 71, 2, 8, listOfAllConfigs); // 'G'
+        AddPodConfig("m-pod for MindWare (rev B)", 51, 103, 2, 8, listOfAllConfigs); // 'g'
         AddPodConfig("m-pod for NeuraLynx", 51, 82, 2, 16, listOfAllConfigs); // 'R'
         AddPodConfig("m-pod for Neuroscan 16-bit", 51, 72, 2, 16, listOfAllConfigs); // 'H'
         AddPodConfig("m-pod for Neuroscan Grael", 51, 104, 2, 16, listOfAllConfigs); // 'h'
@@ -387,7 +388,6 @@ namespace
         AddPodConfig("m-pod for Zeto", 51, 122, 2, 8, listOfAllConfigs); // 'Z'
         AddPodConfig("Analog m-pod", 51, 86, 2, 8, listOfAllConfigs); // 'V'
         AddPodConfig("m-pod no model set", 51, 48, 2, 16, listOfAllConfigs); // '0'
-        AddPodConfig("Generic m-pod", 51, 103, 2, 8, listOfAllConfigs); // 'g'
     }
 
     void CreateAllcpodConfigs(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
@@ -406,7 +406,8 @@ namespace
         AddPodConfig("c-pod for EGI (rev A)", 52, 79, 2, 8, listOfAllConfigs); // 'O'
         AddPodConfig("c-pod for EGI (rev B, opto isolated)", 52, 111, 2, 8, listOfAllConfigs); // 'o'
         AddPodConfig("c-pod for iWorx", 52, 105, 2, 8, listOfAllConfigs); // 'i'
-        AddPodConfig("c-pod for MindWare", 52, 71, 2, 8, listOfAllConfigs); // 'G'
+        AddPodConfig("m-pod for MindWare (rev A)", 52, 71, 2, 8, listOfAllConfigs); // 'G'
+        AddPodConfig("m-pod for MindWare (rev B)", 52, 103, 2, 8, listOfAllConfigs); // 'g'
         AddPodConfig("c-pod for NeuraLynx", 52, 82, 2, 16, listOfAllConfigs); // 'R'
         AddPodConfig("c-pod for Neuroscan 16-bit", 52, 72, 2, 16, listOfAllConfigs); // 'H'
         AddPodConfig("c-pod for Neuroscan Grael", 52, 104, 2, 16, listOfAllConfigs); // 'h'
@@ -420,6 +421,5 @@ namespace
         AddPodConfig("c-pod for Zeto", 52, 122, 2, 8, listOfAllConfigs); // 'Z'
         AddPodConfig("Analog c-pod", 52, 86, 2, 8, listOfAllConfigs); // 'V'
         AddPodConfig("c-pod no model set", 52, 48, 2, 16, listOfAllConfigs); // '0'
-        AddPodConfig("Generic c-pod", 52, 103, 2, 8, listOfAllConfigs); // 'g'
     }
 }

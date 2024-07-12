@@ -104,11 +104,12 @@ namespace Cedrus
         unsigned int GetKBModeProtocol() const; // _c2
         void SetKBModeProtocol(unsigned char mode); // c2
         void SwitchToKeyboardMode(); // c3
+        unsigned char GetCPodInputMode() const; // _c4
+        void SetCPodInputMode(unsigned char mode); // c4
         std::string GetCombinedInfo() const; // _d0
         std::string GetInternalProductName() const; // _d1
         int GetProductID() const; // _d2
         int GetModelID() const; // _d3
-        bool IsUniversalCpod() const; // Model ID is 'g' or 'U'
         static int GetProductID_Scan(std::shared_ptr<Connection> xidCon); // _d2 used during device detection
         static int GetModelID_Scan(std::shared_ptr<Connection> xidCon); // _d3 used during device detection
         void SetModelID(unsigned char model); // d3
@@ -139,6 +140,7 @@ namespace Cedrus
 
         SingleShotMode GetSingleShotMode (unsigned char selector) const; // _ia
         void SetSingleShotMode(unsigned char selector, bool enable, unsigned int delay); // ia
+        unsigned char GetCPodInputLines() const; // _ic
         SignalFilter GetSignalFilter(unsigned char selector) const; // _if
         void SetSignalFilter(unsigned char selector, unsigned int holdOn, unsigned int holdOff); // if
         bool IsKbAutorepeatOn() const; // _ig (v2.2.1)
