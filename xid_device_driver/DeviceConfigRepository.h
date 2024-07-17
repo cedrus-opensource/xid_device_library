@@ -386,6 +386,7 @@ namespace
         AddPodConfig("m-pod for TMSi", 51, 116, 2, 8, listOfAllConfigs); // 't'
         AddPodConfig("m-pod for Tobii", 51, 84, 2, 8, listOfAllConfigs); // 'T'
         AddPodConfig("m-pod for Zeto", 51, 122, 2, 8, listOfAllConfigs); // 'Z'
+        AddPodConfig("Universal m-pod", 51, 85, 2, 8, listOfAllConfigs); // 'U'
         AddPodConfig("Analog m-pod", 51, 86, 2, 8, listOfAllConfigs); // 'V'
         AddPodConfig("m-pod no model set", 51, 48, 2, 16, listOfAllConfigs); // '0'
     }
@@ -419,6 +420,7 @@ namespace
         AddPodConfig("c-pod for TMSi", 52, 116, 2, 8, listOfAllConfigs); // 't'
         AddPodConfig("c-pod for Tobii", 52, 84, 2, 8, listOfAllConfigs); // 'T'
         AddPodConfig("c-pod for Zeto", 52, 122, 2, 8, listOfAllConfigs); // 'Z'
+        AddPodConfig("Universal c-pod", 52, 85, 2, 8, listOfAllConfigs); // 'U'
         AddPodConfig("Analog c-pod", 52, 86, 2, 8, listOfAllConfigs); // 'V'
         AddPodConfig("c-pod no model set", 52, 48, 2, 16, listOfAllConfigs); // '0'
     }
