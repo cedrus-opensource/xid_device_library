@@ -10,6 +10,7 @@
 * Cedrus RB-740
 * Cedrus RB-840
 * Cedrus RB-844
+* Cedrus Riponda
 * Cedrus SV-1 Voice Key
 * Cedrus Lumina LP-400 fMRI Response Pad System
 * Cedrus Lumina 3G
@@ -76,65 +77,6 @@ the CedrusXidDriver subfolder in the repository.
         return 0;
     }
 
-### Python Code Example for Response Collection ###
-
-    import time
-    import pyxid2
-
-    scanner = pyxid2.XIDDeviceScanner.GetDeviceScanner()
-
-    print "Detecting XID devices..."
-    scanner.DetectXIDDevices()
-
-    devCount = scanner.DeviceCount()
-    if (devCount == 0):
-        print "No devices found."
-        quit()
-
-    devCon = scanner.DeviceConnectionAtIndex(0)
-    print devCon.GetCombinedInfo()
-
-    devCon.ClearResponseQueue()
-    devCon.ClearResponsesFromBuffer()
-
-    print "Press a button!"
-    while (devCon.HasQueuedResponses() == False):
-        devCon.PollForResponse()
-
-    response = devCon.GetNextResponse()
-    print "---Fetched Response---"
-    print '%-20s%-20s' % ("port: ", response.port)
-    print '%-20s%-20s' % ("key: ", response.key)
-    print '%-20s%-20s' % ("wasPressed: ", response.wasPressed)
-    print '%-20s%-20s' % ("reactionTime: ", response.reactionTime)
-
-### Python Code Example for Digital Output ###
-
-    import time
-    import pyxid2
-
-    scanner = pyxid2.XIDDeviceScanner.GetDeviceScanner()
-
-    print "Detecting XID devices, stand by..."
-    scanner.DetectXIDDevices()
-
-    devCount = scanner.DeviceCount()
-    if (devCount == 0):
-        print "No devices found."
-        quit()
-
-    devCon = scanner.DeviceConnectionAtIndex(0)
-    print devCon.GetCombinedInfo()
-
-    devCon.SetPulseDuration(500)
-    linesBitmask = 1
-    for bm in xrange (0, 8):
-        devCon.RaiseLines(linesBitmask)
-        linesBitmask = linesBitmask << 1
-        time.sleep(.5)
-
-    devCon.ClearLines()
-
 ## License and Copyright ##
 
 Code in the PresentationSDK subfolder is copyrighted and licensed by
@@ -146,7 +88,7 @@ under the modified BSD license (below).
 
 ### BSD License ###
 
-Copyright (c) 2018, Cedrus Corporation
+Copyright (c) 2024, Cedrus Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
