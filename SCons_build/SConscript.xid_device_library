@@ -57,23 +57,17 @@ staging_dir = str(env.subst('$STAGING_DIR'))
 
 project_target = staging_dir + os.path.sep
 
-python_path = outer_repo_root_dir + 'Python27'
-
 ftd2xx_loc = outer_repo_root_dir + 'ftd2xx'
 include_path.append(ftd2xx_loc)
 lib_path.append(ftd2xx_loc)
 
 if sys.platform == 'win32':
     lib_dependencies = ['ftd2xx']
-    include_path.append( python_path +'/win32/include/' )
-    lib_path.append( python_path + '/win32/libs/' )
     env.Install( staging_dir, env.subst(ftd2xx_loc + '/ftd2xx.dll') )
     project_target += project_target_name + ".dll"
 
 if sys.platform == 'darwin':
     lib_dependencies = ['ftd2xx.1.4.24']
-    include_path.append( python_path +'/osx/include/' )
-    lib_path.append( python_path +'/osx/libs/' )
     env.Install( staging_dir, env.subst(ftd2xx_loc + '/libftd2xx.1.4.24.dylib') )
     project_target += "lib" + project_target_name + ".dylib"
 
@@ -105,8 +99,5 @@ staged_binary = CedrusSConsHelperFunctions.DeclareSConsSharedLibraryBuild(
 # This only serves to let an OSX app know what to include in the app bundle. This could
 # be made darwin-only but there isn't really harm in always returning this information.
 required_libs_for_copying = list(env['LIBS'])
-
-# don't actually need to copy dylibs for this one
-if 'libpython2.7' in required_libs_for_copying: required_libs_for_copying.remove('libpython2.7')
 
 Return('required_libs_for_copying')

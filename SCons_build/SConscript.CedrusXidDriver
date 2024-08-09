@@ -1,6 +1,5 @@
 #!/bin/python
 
-import CedrusBoost
 import CedrusSConsDefaultEnvironments
 import CedrusSConsHelperFunctions
 
@@ -8,8 +7,6 @@ import os
 import sys
 
 Import('env')
-
-boost = CedrusBoost.CedrusBoostSettings(env)
 
 project_target_name = 'CedrusXidDriver'
 

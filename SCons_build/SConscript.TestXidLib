@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import CedrusQt
-import CedrusBoost
 import CedrusSConsDefaultEnvironments
 import CedrusSConsHelperFunctions
 import gMock
@@ -37,7 +36,6 @@ defines = []
 include_path = [ prefix + 'scons_helpers/cpp_src/' ]
 include_path += [ prefix + 'xid_device_driver/' ]
 
-
 cxxflags = []
 frameworks = ['Cocoa']
 lib_dependencies = ['xid_device_driver']
@@ -47,8 +45,6 @@ linkflags = []
 # shouldn't this next win-only stuff be handled INSIDE DeclareSConsProgramWithRunnableGoogleTests ?
 if sys.platform == 'win32':
     linkflags = [ '/SUBSYSTEM:CONSOLE',  '/VERSION:1.0', '/MANIFEST', '/INCREMENTAL', ]
-
-boost = CedrusBoost.CedrusBoostSettings(env)
 
 qt_cedrus = CedrusQt.CedrusQtSettings(env)
 qt_cedrus.need_qt_basics()
