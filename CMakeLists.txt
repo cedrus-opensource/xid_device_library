@@ -1,0 +1,35 @@
+cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
+
+project(xid_device_driver VERSION 1.0 LANGUAGES CXX)
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+MESSAGE ("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
+MESSAGE ("CMAKE_CURRENT_BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}")
+
+file(GLOB XID_SOURCES xid_device_driver/*.cpp)
+
+find_library(FTD2XX_LIBRARY 
+    NAMES ftd2xx
+    PATHS "${CMAKE_CURRENT_SOURCE_DIR}/ftd2xx"
+#    HINTS "${CMAKE_CURRENT_SOURCE_DIR}/ftd2xx"
+    REQUIRED
+    NO_DEFAULT_PATH
+)
+
+add_library(${PROJECT_NAME} SHARED ${XID_SOURCES})
+
+target_include_directories(${PROJECT_NAME} PUBLIC xid_device_driver)
+target_include_directories(${PROJECT_NAME} PUBLIC ftd2xx)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC ${FTD2XX_LIBRARY})
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/ftd2xx/ftd2xx.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+  COMMAND_EXPAND_LISTS
+)

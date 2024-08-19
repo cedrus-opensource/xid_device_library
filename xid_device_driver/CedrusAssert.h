@@ -182,16 +182,21 @@ namespace Cedrus
         return false;
 
     #else
-
+#ifdef _UNICODE
         size_t converted = 0;
         wchar_t wtext[500];
         mbstowcs_s(&converted, wtext, 500, name, 480);
         LPWSTR ptr = wtext;
 
-        bool rslt = false;
-
         // get the size of the buffer
         DWORD dwRet = ::GetEnvironmentVariable(ptr, NULL, 0);
+#else
+        // get the size of the buffer
+        DWORD dwRet = ::GetEnvironmentVariable(name, NULL, 0);
+#endif _UNICODE
+
+        bool rslt = false;
+
         if ( dwRet )
         {
             rslt = true;
