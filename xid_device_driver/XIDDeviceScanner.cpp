@@ -316,7 +316,7 @@ std::shared_ptr<const Cedrus::DeviceConfig> Cedrus::XIDDeviceScanner::GetConfigF
     // The model value didn't match any known pod configs. Give the "no model set" config instead.
     if (!config)
     {
-        if (deviceID == PRODUCT_ID_MPOD || deviceID == PRODUCT_ID_CPOD)
+        if (deviceID == XidProductID::MPOD || deviceID == XidProductID::CPOD)
             config = XIDDeviceScanner::GetDeviceScanner().GetConfigForGivenDevice(deviceID, '0', majorFirmwareVer);
         else
             config = m_emptyConfig;

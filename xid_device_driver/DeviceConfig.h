@@ -127,7 +127,7 @@ namespace Cedrus
 
         bool IsLumina() const
         {
-            return m_ProductID == PRODUCT_ID_LUMINA;
+            return m_ProductID == XidProductID::LUMINA;
         }
 
         bool IsLuminaLP400() const
@@ -142,12 +142,12 @@ namespace Cedrus
 
         bool IsSV1() const
         {
-            return m_ProductID == PRODUCT_ID_SV1;
+            return m_ProductID == XidProductID::SV1;
         }
 
         bool IsRB() const
         {
-            return m_ProductID == PRODUCT_ID_RB;
+            return m_ProductID == XidProductID::RB;
         }
 
         bool IsRBx30() const
@@ -162,17 +162,17 @@ namespace Cedrus
 
         bool IsRiponda() const
         {
-            return m_ProductID == PRODUCT_ID_RIPONDA;
+            return m_ProductID == XidProductID::RIPONDA;
         }
 
         bool IsMPod() const
         {
-            return m_ProductID == PRODUCT_ID_MPOD;
+            return m_ProductID == XidProductID::MPOD;
         }
 
         bool IsCPod() const
         {
-            return m_ProductID == PRODUCT_ID_CPOD;
+            return m_ProductID == XidProductID::CPOD;
         }
 
         bool IsPod() const
@@ -182,7 +182,7 @@ namespace Cedrus
 
         bool IsStimTracker() const
         {
-            return m_ProductID == PRODUCT_ID_STIMTRACKER;
+            return m_ProductID == XidProductID::STIMTRACKER;
         }
 
         bool IsStimTracker1() const

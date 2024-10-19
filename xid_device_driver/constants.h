@@ -111,18 +111,29 @@ namespace Cedrus
     };
 
     // These correspond to ASCII values
-    enum
+    enum XidProductID
     {
-        PRODUCT_ID_LUMINA = 48, // '0'
-        PRODUCT_ID_SV1 = 49,
-        PRODUCT_ID_RB = 50,
-        PRODUCT_ID_MPOD = 51,
-        PRODUCT_ID_CPOD = 52,
-        PRODUCT_ID_RIPONDA = 53,
-        PRODUCT_ID_STIMTRACKER = 83 // 'S'
+        UNDEFINED = 0,
+        LUMINA = 48, // '0'
+        SV1 = 49,
+        RB = 50,
+        MPOD = 51,
+        CPOD = 52,
+        RIPONDA = 53,
+        STIMTRACKER = 83 // 'S'
     };
 
-    enum RipondaModel { NO_RIPONDA_MODEL_SET = '0', MODEL_C = '1', MODEL_L = '2', MODEL_E = '3', MODEL_S = '4' };
+    enum XidModelID
+    {
+        UNDETERMINED = 0,
+        MODEL_C = '1', MODEL_L = '2', MODEL_E = '3', MODEL_S = '4',
+        RB_540 = '1', RB_740 = '2', RB_840 = '3', RB_844 = '4',
+
+        ST_DUO = '1',
+        ST_QUAD = '2',
+        ST_QUAD_MPOD4 = '3',
+        ST_STIMTRIGGER = '4'
+    };
 
     // These are laid out in pairs in blocks of 8. The masks are the same,
     // but they have different meanings for RB/Lumina and StimTracker.
