@@ -47,7 +47,7 @@ namespace Cedrus
         (void) funcname;
 
         #elif defined(__APPLE__)
-
+/*
         std::cerr << title << ":\n";
         std::cerr << funcname << "\n";
         std::cerr << filename << ":" << line << "\n";
@@ -98,6 +98,7 @@ namespace Cedrus
 
             std::cerr << "ignoring opportunity to debug the FAIL (either due to inaction or ESC key)\n";
         }
+*/
         #else
             // TODO
         #endif // Win/Apple
