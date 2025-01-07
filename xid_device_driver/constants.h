@@ -126,7 +126,7 @@ namespace Cedrus
     enum XidModelID
     {
         UNDETERMINED = 0,
-        MODEL_C = '1', MODEL_L = '2', MODEL_E = '3', MODEL_S = '4',
+        NO_RIPONDA_MODEL_SET = '0', MODEL_C = '1', MODEL_L = '2', MODEL_E = '3', MODEL_S = '4',
         RB_540 = '1', RB_740 = '2', RB_840 = '3', RB_844 = '4',
 
         ST_DUO = '1',
