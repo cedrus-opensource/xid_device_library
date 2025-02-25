@@ -38,7 +38,8 @@
 #include "XIDDeviceScanner.h"
 
 #include "CedrusAssert.h"
-#include <string.h>
+#include <string>
+#include <algorithm>
 #include <sstream>
 #include <iomanip>
 #include <locale>
