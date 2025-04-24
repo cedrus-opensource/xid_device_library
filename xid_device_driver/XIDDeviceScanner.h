@@ -32,6 +32,7 @@
 #pragma once
 
 #include "XidDriverImpExpDefs.h"
+#include "constants.h"
 
 #include <vector>
 #include <string>
@@ -72,6 +73,8 @@ namespace Cedrus
             std::function< bool(unsigned int) > progressFunction = NULL);
 
         std::shared_ptr<XIDDevice> DeviceConnectionAtIndex(unsigned int i) const;
+
+        std::shared_ptr<Cedrus::XIDDevice> GetDeviceOfGivenProductID(Cedrus::XidProductID devID) const;
 
         unsigned int DeviceCount() const;
 

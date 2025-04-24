@@ -31,7 +31,6 @@
 
 #include "XIDDeviceScanner.h"
 
-#include "constants.h"
 #include "DeviceConfig.h"
 #include "Connection.h"
 
@@ -280,6 +279,20 @@ std::shared_ptr<Cedrus::XIDDevice> Cedrus::XIDDeviceScanner::DeviceConnectionAtI
         return std::shared_ptr<XIDDevice>();
 
     return m_Devices[i];
+}
+
+std::shared_ptr<Cedrus::XIDDevice> Cedrus::XIDDeviceScanner::GetDeviceOfGivenProductID(Cedrus::XidProductID devID) const
+{
+    if (devID == Cedrus::XidProductID::UNDEFINED)
+        return m_Devices[0];
+
+    for (auto i : m_Devices)
+    {
+        if (i->GetDeviceConfig()->GetProductID() == devID)
+            return i;
+    }
+
+    return nullptr;
 }
 
 unsigned int Cedrus::XIDDeviceScanner::DeviceCount() const
