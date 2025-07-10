@@ -1050,7 +1050,7 @@ void Cedrus::XIDDevice::SaveSettingsToFlash()
 unsigned int Cedrus::XIDDevice::GetTimeSinceLastOscillatorTest ()
 {
     if ( !m_config->IsCPod () )
-        return;
+        return 0;
 
     static char time_since_osc_cmd[3] = { '_', 'f','a' };
 
