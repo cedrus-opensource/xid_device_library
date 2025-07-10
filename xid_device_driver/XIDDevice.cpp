@@ -871,7 +871,6 @@ unsigned int Cedrus::XIDDevice::QueryRtTimer()
 
     static char qrt_command[3] = { '_', 'e','5' };
 
-
     unsigned char return_info[7];
     m_xidCon->SendXIDCommand(qrt_command, 3, return_info, sizeof(return_info));
 
@@ -1046,6 +1045,61 @@ void Cedrus::XIDDevice::SaveSettingsToFlash()
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"f9", 2, &bytes_written);
     SLEEP_FUNC(50 * SLEEP_INC);
+}
+
+unsigned int Cedrus::XIDDevice::GetTimeSinceLastOscillatorTest ()
+{
+    if ( !m_config->IsCPod () )
+        return;
+
+    static char time_since_osc_cmd[3] = { '_', 'f','a' };
+
+    unsigned char return_info[7];
+    m_xidCon->SendXIDCommand ( time_since_osc_cmd, 3, return_info, sizeof ( return_info ) );
+
+    unsigned int timer = AdjustEndiannessCharsToUint (
+        return_info[3],
+        return_info[4],
+        return_info[5],
+        return_info[6] );
+
+    return timer;
+}
+
+void Cedrus::XIDDevice::StartOscillatorTest (bool start)
+{
+    if ( !m_config->IsCPod () )
+        return;
+
+    static unsigned char start_osc_test_cmd[3] = { 'f','a' };
+    start_osc_test_cmd[2] = start ? '1' : '0';
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( start_osc_test_cmd, 3, &bytes_written );
+}
+
+void Cedrus::XIDDevice::SetAdjustmentValue ( char adj )
+{
+    if ( !m_config->IsCPod () )
+        return;
+
+    static unsigned char set_adj_val_cmd[3] = { 'f','b' };
+    set_adj_val_cmd[2] = adj;
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( set_adj_val_cmd, 3, &bytes_written, SAVES_TO_FLASH );
+}
+
+void Cedrus::XIDDevice::SetAdjustmentFlag (bool testConducted)
+{
+    if (!m_config->IsCPod ())
+        return;
+
+    static unsigned char set_adj_flag_cmd[3] = { 'f','c' };
+    set_adj_flag_cmd[2] = testConducted ? '1' : '0';
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( set_adj_flag_cmd, 3, &bytes_written, SAVES_TO_FLASH );
 }
 
 bool Cedrus::XIDDevice::IsOpticalIsolationSwitchOn() const

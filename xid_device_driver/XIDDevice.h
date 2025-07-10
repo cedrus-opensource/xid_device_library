@@ -136,6 +136,10 @@ namespace Cedrus
         void SetButtonDebounceTime(unsigned char time); // f6
         void RestoreFactoryDefaults(); // f7
         void SaveSettingsToFlash(); //f9
+        unsigned int GetTimeSinceLastOscillatorTest(); // _fa
+        void StartOscillatorTest(bool start); // fa
+        void SetAdjustmentValue(char adj); // fb
+        void SetAdjustmentFlag(bool testConducted); // fc
         bool IsOpticalIsolationSwitchOn() const; //_fo
 
         SingleShotMode GetSingleShotMode (unsigned char selector) const; // _ia
