@@ -44,6 +44,10 @@
 #include <iomanip>
 #include <locale>
 
+#if defined(__linux__)
+#include <cstring>
+#endif
+
 
 Cedrus::XIDDevice::XIDDevice(std::shared_ptr<Connection> xidCon, std::shared_ptr<const DeviceConfig> devConfig)
   : m_linesState(0),

@@ -36,6 +36,11 @@
 
 #include "XIDDevice.h"
 
+#if defined(__linux__)
+#include <cstring>
+#endif
+
+
 std::shared_ptr<Cedrus::XIDDevice> CreateDevice
 (
     const int productID, // d2 value

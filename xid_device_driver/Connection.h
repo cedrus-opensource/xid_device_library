@@ -40,6 +40,10 @@
 #   include <windows.h>
 #   define SLEEP_FUNC Sleep
 #   define SLEEP_INC 1
+#elif defined(__linux__)
+#   include <unistd.h>
+#   define SLEEP_FUNC usleep
+#   define SLEEP_INC 1000
 #endif
 
 #include <chrono>

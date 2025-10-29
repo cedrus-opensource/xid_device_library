@@ -35,6 +35,10 @@
 
 #include "constants.h"
 
+#if defined(__linux__)
+#include <cstring>
+#endif
+
 Cedrus::Connection::Connection(
     const DWORD location,
     DWORD port_speed,

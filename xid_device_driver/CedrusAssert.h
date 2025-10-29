@@ -14,6 +14,11 @@
 #    define _putenv putenv
 #endif // defined(__APPLE__)
 
+#if defined(__linux__)
+#    include <stdlib.h>
+#    define _putenv putenv
+#endif // defined(__linux__)
+
 namespace Cedrus
 {
     // break into the debugger
@@ -23,9 +28,11 @@ namespace Cedrus
             DebugBreak();
         #elif defined(__APPLE__)
             raise(SIGTRAP);
+        #elif defined(__linux__)
+            raise(SIGTRAP);
         #else
-            // TODO
-        #endif // Win/Apple
+            // TODO (TODONE now that linux is included?)
+        #endif // Win/Apple/linux
     }
 
     inline void OptionToContinue
@@ -274,7 +281,11 @@ namespace Cedrus
             Cedrus::Ced_Fail_Mac( msg, __FILE__, __LINE__,  __func__ )
 
 
-#else
+#    elif defined(__linux__)
+#           define CEDRUS_DISABLE_ASSERT 1 // UGLY HACK! TODO fix for linux
+#           define CEDRUS_ASSERT(cond, msg)
+#           define CEDRUS_FAIL(msg)
+#else 
         // TODO
 #endif // Win/Apple
 
