@@ -61,6 +61,9 @@ namespace Cedrus
 
         ~Connection();
 
+        Connection ( const Connection& ) = delete;
+        Connection& operator=( const Connection& ) = delete;
+
         bool Close();
 
         bool FlushWriteToDeviceBuffer();
@@ -69,10 +72,18 @@ namespace Cedrus
 
         int Open();
 
+        DWORD GetBytesAvailable();
+
         bool Read(unsigned char *inBuffer, DWORD bytesToRead, LPDWORD bytesRead);
 
         bool Write(
             unsigned char * const inBuffer,
+            DWORD bytesToWrite,
+            LPDWORD bytesWritten,
+            bool savesToFlash = false );
+
+        bool WriteLarge (
+            unsigned char* const inBuffer,
             DWORD bytesToWrite,
             LPDWORD bytesWritten,
             bool savesToFlash = false );
@@ -93,11 +104,15 @@ namespace Cedrus
 
         void SetBaudRate(unsigned char rate);
 
-        bool HasLostConnection();
+        bool HasLostConnection() const;
 
         void SetCmdThroughputLimit(bool isXid2device);
 
         void SetReadTimeout(DWORD readTimeout);
+
+        void SetWriteTimeout ( DWORD writeTimeout );
+
+        DWORD GetWriteTimeout() { return m_WriteTimeout; }
 
     private:
         bool SetupCOMPort();
@@ -114,5 +129,8 @@ namespace Cedrus
         FT_HANDLE m_DeviceHandle;
 
         std::chrono::high_resolution_clock::time_point m_timestamp;
+
+        DWORD m_ReadTimeout;
+        DWORD m_WriteTimeout;
     };
 } // namespace Cedrus

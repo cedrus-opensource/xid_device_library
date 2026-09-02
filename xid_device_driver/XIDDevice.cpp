@@ -263,14 +263,14 @@ unsigned int Cedrus::XIDDevice::GetPodUnlockCRC() const
     if (!(m_config->IsMPod() || m_config->IsCPod()) || m_curMinorFwVer < 22)
         return 0;
 
-    unsigned char crc_return[7];
+    unsigned char crc_return[8];
     m_xidCon->SendXIDCommand("_au", 3, crc_return, sizeof(crc_return));
 
     unsigned int crc = AdjustEndiannessCharsToUint(
-        crc_return[3],
         crc_return[4],
         crc_return[5],
-        crc_return[6]);
+        crc_return[6],
+        crc_return[7]);
 
     return crc;
 }
@@ -550,7 +550,7 @@ int Cedrus::XIDDevice::GetVKDropDelay() const
 
     unsigned char vk_drop_delay[4];
 
-    m_xidCon->SendXIDCommand("_b3", 4, vk_drop_delay, sizeof(vk_drop_delay));
+    m_xidCon->SendXIDCommand("_b3", 3, vk_drop_delay, sizeof(vk_drop_delay));
 
     return vk_drop_delay[3];
 }
@@ -1047,9 +1047,9 @@ void Cedrus::XIDDevice::SaveSettingsToFlash()
     SLEEP_FUNC(50 * SLEEP_INC);
 }
 
-unsigned int Cedrus::XIDDevice::GetTimeSinceLastOscillatorTest ()
+unsigned int Cedrus::XIDDevice::GetTimeSinceLastOscillatorTest()
 {
-    if ( !m_config->IsCPod () )
+    if ( !m_config->IsCPod() )
         return 0;
 
     static char time_since_osc_cmd[3] = { '_', 'f','a' };
@@ -1068,7 +1068,7 @@ unsigned int Cedrus::XIDDevice::GetTimeSinceLastOscillatorTest ()
 
 void Cedrus::XIDDevice::StartOscillatorTest (bool start)
 {
-    if ( !m_config->IsCPod () )
+    if ( !m_config->IsCPod() )
         return;
 
     static unsigned char start_osc_test_cmd[3] = { 'f','a' };
@@ -1080,7 +1080,7 @@ void Cedrus::XIDDevice::StartOscillatorTest (bool start)
 
 void Cedrus::XIDDevice::SetAdjustmentValue ( char adj )
 {
-    if ( !m_config->IsCPod () )
+    if ( !m_config->IsCPod() )
         return;
 
     static unsigned char set_adj_val_cmd[3] = { 'f','b' };
@@ -1092,7 +1092,7 @@ void Cedrus::XIDDevice::SetAdjustmentValue ( char adj )
 
 void Cedrus::XIDDevice::SetAdjustmentFlag (bool testConducted)
 {
-    if (!m_config->IsCPod ())
+    if (!m_config->IsCPod())
         return;
 
     static unsigned char set_adj_flag_cmd[3] = { 'f','c' };
@@ -1277,7 +1277,7 @@ void Cedrus::XIDDevice::EnableRBx40LED(bool enable)
 unsigned int Cedrus::XIDDevice::GetRipondaLEDFunction() const
 {
     if (!m_config->IsXID2())
-        return false;
+        return 0;
 
     unsigned char cmd_return[4];
 
@@ -1471,6 +1471,83 @@ void Cedrus::XIDDevice::SetMixedInputMode(unsigned char mode)
     m_xidCon->Write(change_threshold_cmd, 3, &bytes_written);
 }
 
+void Cedrus::XIDDevice::GetLicenseString ( std::string& crc, std::string& str ) const
+{
+    if ( !m_config->IsXID2() )
+        return;
+
+    // 4 length chars + 4 crc chars + up to 0xFFFF characters of payload
+    std::vector<unsigned char> return_info ( 8 + 0xFFFF );
+
+    m_xidCon->SetReadTimeout ( 5000 );
+
+    const DWORD bytes_read = m_xidCon->SendXIDCommand ( "_li", 3, return_info.data(), static_cast<unsigned int> ( return_info.size() ) );
+
+    m_xidCon->SetReadTimeout ( 50 );
+
+    bool return_valid = bytes_read >= 8;
+
+    if ( !return_valid )
+    {
+        m_xidCon->FlushReadFromDeviceBuffer();
+        return;
+    }
+
+    const unsigned int str_length = std::stoul ( std::string ( (char*)return_info.data(), 4 ), nullptr, 16 );
+
+    crc.assign ( (char*)&( return_info[4] ), 4 );
+
+    const unsigned int available = bytes_read - 8;
+
+    CEDRUS_ASSERT ( str_length <= available, "GetLicenseString read fewer bytes than alleged string length!" );
+
+    str.assign ( (char*)&( return_info[8] ), str_length < available ? str_length : available );
+}
+
+bool Cedrus::XIDDevice::SetLicenseString ( std::string crc, std::string str )
+{
+    if ( !m_config->IsXID2() )
+        return false;
+
+    CEDRUS_ASSERT ( crc.size() == 4, "SetDongleString's crc must be exactly 4 characters" );
+
+    if ( crc.size() != 4 )
+        return false;
+
+    const unsigned int str_length = static_cast<unsigned int> ( str.size() );
+
+    // 'l','i' + 4 length bytes + 4 crc bytes + the string itself
+    std::vector<unsigned char> sds_cmd ( 10 + str.size() );
+    sds_cmd[0] = 'l';
+    sds_cmd[1] = 'i';
+
+    std::stringstream stream;
+    stream << std::uppercase << std::setfill ( '0' ) << std::setw ( 4 ) << std::hex << str.size();
+    const std::string length_as_chars ( stream.str() );
+
+    sds_cmd[2] = length_as_chars[0];
+    sds_cmd[3] = length_as_chars[1];
+    sds_cmd[4] = length_as_chars[2];
+    sds_cmd[5] = length_as_chars[3];
+
+    sds_cmd[6] = crc[0];
+    sds_cmd[7] = crc[1];
+    sds_cmd[8] = crc[2];
+    sds_cmd[9] = crc[3];
+
+    memcpy ( &( sds_cmd[10] ), str.data(), str.size() );
+
+    DWORD old_write_timeout = m_xidCon->GetWriteTimeout();
+    m_xidCon->SetWriteTimeout (1500);
+
+    DWORD bytes_written = 0;
+    bool success = m_xidCon->WriteLarge ( sds_cmd.data(), static_cast<int> ( sds_cmd.size() ), &bytes_written, true );
+
+    m_xidCon->SetWriteTimeout ( old_write_timeout );
+
+    return success;
+}
+
 unsigned int Cedrus::XIDDevice::GetRaisedLines() const
 {
     unsigned char return_info[5];
@@ -1551,7 +1628,7 @@ unsigned int Cedrus::XIDDevice::GetPulseTableBitMask()
         return 0;
 
     unsigned char return_info[5];
-    m_xidCon->SendXIDCommand("_mk", 5, return_info, sizeof(return_info));
+    m_xidCon->SendXIDCommand("_mk", 3, return_info, sizeof(return_info));
 
     unsigned int mask = AdjustEndiannessCharsToUint(0,0,
         return_info[3],

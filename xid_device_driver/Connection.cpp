@@ -49,7 +49,9 @@ Cedrus::Connection::Connection(
     m_Location(location),
     m_ConnectionDead(false),
     m_cmdThroughputLimit(3),
-    m_DeviceHandle(nullptr)
+    m_DeviceHandle(nullptr),
+    m_ReadTimeout ( 50 ),
+    m_WriteTimeout ( 50 )
 {
 }
 
@@ -112,82 +114,176 @@ int Cedrus::Connection::Open()
 
 bool Cedrus::Connection::SetupCOMPort()
 {
-    bool status = false;
+    if (m_DeviceHandle == nullptr)
+        return false;
 
-    FT_SetBaudRate(m_DeviceHandle, m_BaudRate);
-    FT_SetDataCharacteristics(m_DeviceHandle, m_ByteSize, m_StopBits, m_BitParity);
+    if (FT_SetBaudRate(m_DeviceHandle, m_BaudRate) != FT_OK)
+        return false;
 
-    FT_SetTimeouts(m_DeviceHandle, 50, 50);
-    FT_SetUSBParameters(m_DeviceHandle, 64, 64);
-    FT_SetLatencyTimer(m_DeviceHandle, 10);
+    if (FT_SetDataCharacteristics(m_DeviceHandle, m_ByteSize, m_StopBits, m_BitParity) != FT_OK)
+        return false;
 
-    status = FlushWriteToDeviceBuffer();
-    if (status)
-        status = FlushReadFromDeviceBuffer();
+    if (FT_SetTimeouts(m_DeviceHandle, m_ReadTimeout, m_WriteTimeout) != FT_OK)
+        return false;
 
-    return status;
+    if (FT_SetUSBParameters(m_DeviceHandle, 64, 64) != FT_OK)
+        return false;
+
+    if (FT_SetLatencyTimer(m_DeviceHandle, 10) != FT_OK)
+        return false;
+
+    return FlushWriteToDeviceBuffer() && FlushReadFromDeviceBuffer();
 }
 
 void Cedrus::Connection::SetReadTimeout(DWORD readTimeout)
 {
-    FT_SetTimeouts(m_DeviceHandle, readTimeout, 50);
+    m_ReadTimeout = readTimeout;
+    FT_SetTimeouts(m_DeviceHandle, readTimeout, m_WriteTimeout );
 }
 
-bool Cedrus::Connection::Read(
-    unsigned char *inBuffer,
-    DWORD bytesToRead,
-    LPDWORD bytesRead)
+void Cedrus::Connection::SetWriteTimeout ( DWORD writeTimeout )
 {
-    DWORD read_status = FT_OK;
+    m_WriteTimeout = writeTimeout;
+    FT_SetTimeouts ( m_DeviceHandle, m_ReadTimeout, writeTimeout );
+}
 
-    read_status = FT_Read(m_DeviceHandle, inBuffer, bytesToRead, bytesRead);
+DWORD Cedrus::Connection::GetBytesAvailable()
+{
+    DWORD bytes_in_queue = 0;
 
-    if (read_status != FT_OK)
+    if ( FT_GetQueueStatus ( m_DeviceHandle, &bytes_in_queue ) != FT_OK )
     {
-        // We used to check for specific error codes here, but I'm not certain why.
-        // I don't know that any of them are errors you can recover from, so let's
-        // err on the side of caution here.
         m_ConnectionDead = true;
+        bytes_in_queue = 0;
     }
 
-    return read_status == FT_OK;
+    return bytes_in_queue;
+}
+
+bool Cedrus::Connection::Read (
+    unsigned char* inBuffer,
+    DWORD bytesToRead,
+    LPDWORD bytesRead )
+{
+    if ( bytesRead == nullptr || inBuffer == nullptr )
+        return false;
+
+    *bytesRead = 0;
+
+    if ( m_DeviceHandle == nullptr )
+    {
+        m_ConnectionDead = true;
+        return false;
+    }
+
+    const DWORD readStatus = FT_Read ( m_DeviceHandle, inBuffer, bytesToRead, bytesRead );
+
+    if ( readStatus != FT_OK )
+    {
+        m_ConnectionDead = true;
+        return false;
+    }
+
+    return true;
 }
 
 bool Cedrus::Connection::Write(
     unsigned char * const inBuffer,
     DWORD bytesToWrite,
     LPDWORD bytesWritten,
-    bool savesToFlash )
+    bool savesToFlash)
 {
-    FlushWriteToDeviceBuffer();
+    if (bytesWritten == nullptr || inBuffer == nullptr)
+        return false;
 
-    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - m_timestamp).count() < m_cmdThroughputLimit)
+    if (m_DeviceHandle == nullptr || !FlushWriteToDeviceBuffer() )
     {
+        m_ConnectionDead = true;
+        return false;
     }
+
+    *bytesWritten = 0;
+
+    while (std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::high_resolution_clock::now() - m_timestamp).count() < m_cmdThroughputLimit)
+    {
+        SLEEP_FUNC(1 * SLEEP_INC);
+    }
+
     m_timestamp = std::chrono::high_resolution_clock::now();
 
-    DWORD write_status = FT_OK;
-
-    unsigned char *p = inBuffer;
-    for (unsigned int i = 0; i < bytesToWrite; ++i)
+    for (; *bytesWritten < bytesToWrite; ++(*bytesWritten))
     {
-        DWORD byte_count;
-        write_status = FT_Write(m_DeviceHandle, p, 1, &byte_count);
-        if ((write_status != FT_OK) || (++(*bytesWritten) == bytesToWrite))
+        DWORD byteCount = 0;
+        const DWORD writeStatus = FT_Write(
+            m_DeviceHandle,
+            inBuffer + *bytesWritten,
+            1,
+            &byteCount);
+
+        if ( writeStatus != FT_OK )
         {
-            break;
+            m_ConnectionDead = true;
+            return false;
         }
 
-        SLEEP_FUNC(1 * SLEEP_INC);
-        ++p;
+        if ( byteCount != 1 )
+            return false;
+
+        if (*bytesWritten + 1 < bytesToWrite)
+            SLEEP_FUNC(1 * SLEEP_INC);
     }
 
-    if ( savesToFlash )
-        SLEEP_FUNC ( 100 * SLEEP_INC );
+    if (savesToFlash)
+        SLEEP_FUNC(100 * SLEEP_INC);
 
-    m_ConnectionDead = (write_status != FT_OK);
+    return true;
+}
 
-    return m_ConnectionDead;
+bool Cedrus::Connection::WriteLarge (
+    unsigned char * const inBuffer,
+    DWORD bytesToWrite,
+    LPDWORD bytesWritten,
+    bool savesToFlash)
+{
+    if (bytesWritten == nullptr || inBuffer == nullptr)
+        return false;
+
+    if (m_DeviceHandle == nullptr || !FlushWriteToDeviceBuffer())
+    {
+        m_ConnectionDead = true;
+        return false;
+    }
+
+    *bytesWritten = 0;
+
+    while (std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::high_resolution_clock::now() - m_timestamp).count() < m_cmdThroughputLimit)
+    {
+        SLEEP_FUNC(1 * SLEEP_INC);
+    }
+
+    m_timestamp = std::chrono::high_resolution_clock::now();
+
+    const DWORD writeStatus = FT_Write(
+        m_DeviceHandle,
+        inBuffer,
+        bytesToWrite,
+        bytesWritten);
+
+    if (writeStatus != FT_OK)
+    {
+        m_ConnectionDead = true;
+        return false;
+    }
+
+    if (*bytesWritten != bytesToWrite)
+        return false;
+
+    if (savesToFlash)
+        SLEEP_FUNC(100 * SLEEP_INC);
+
+    return true;
 }
 
 int Cedrus::Connection::GetBaudRate() const
@@ -219,7 +315,7 @@ void Cedrus::Connection::SetBaudRate(unsigned char rate)
     }
 }
 
-bool Cedrus::Connection::HasLostConnection()
+bool Cedrus::Connection::HasLostConnection() const
 {
     return m_ConnectionDead;
 }
@@ -235,35 +331,57 @@ DWORD Cedrus::Connection::SendXIDCommand(
     unsigned char outResponse[],
     unsigned int maxOutResponseSize)
 {
-    if (outResponse != NULL)
-        memset(outResponse, 0x00, maxOutResponseSize);
+    CEDRUS_ASSERT ( outResponse != NULL, "outResponse should be non-null. If you don't care about the response, use Write!" );
 
-    FlushReadFromDeviceBuffer();
+    memset(outResponse, 0x00, maxOutResponseSize);
+
+    if ( !FlushReadFromDeviceBuffer () )
+    {
+        m_ConnectionDead = true;
+        return 0;
+    }
 
     DWORD bytes_written = 0;
-    Write((unsigned char*)inCommand, commandSize, &bytes_written);
+    if ( !Write ( (unsigned char*)inCommand, commandSize, &bytes_written ) )
+        return 0;
 
-    unsigned char in_buff[64];
-    memset(in_buff, 0x00, sizeof(in_buff));
-    DWORD bytes_read = 0;
     DWORD bytes_stored = 0;
 
-    unsigned int num_retries = 0;
-    do
-    {
-        Read(in_buff, sizeof(in_buff), &bytes_read);
+    // A long response is allowed to take as many reads as it needs,
+    // so long as the device keeps feeding us bytes. We only give up
+    // after the queue has stayed empty for this long.
+    const auto idle_budget = std::chrono::milliseconds(150);
+    auto last_progress = std::chrono::high_resolution_clock::now();
 
-        if (bytes_read > 0)
+    while ( bytes_stored < maxOutResponseSize && !m_ConnectionDead )
+    {
+        if ( std::chrono::high_resolution_clock::now () - last_progress >= idle_budget )
+            break;
+
+        const DWORD available = GetBytesAvailable();
+
+        if ( available == 0 )
         {
-            for (unsigned int j = 0; (j < bytes_read) && (bytes_stored < maxOutResponseSize); ++j)
-            {
-                outResponse[bytes_stored] = in_buff[j];
-                bytes_stored++;
-            }
+            SLEEP_FUNC ( 1 * SLEEP_INC );
+            continue;
         }
 
-        ++num_retries;
-    } while (bytes_stored < maxOutResponseSize && num_retries < 3);
+        const DWORD remaining = maxOutResponseSize - bytes_stored;
+        const DWORD to_read = ( available < remaining ) ? available : remaining;
+
+        DWORD bytes_read = 0;
+        if ( !Read ( outResponse + bytes_stored, to_read, &bytes_read ) )
+            break;
+
+        if ( bytes_read == 0 )
+        {
+            SLEEP_FUNC ( 1 * SLEEP_INC );
+            continue;
+        }
+
+        bytes_stored += bytes_read;
+        last_progress = std::chrono::high_resolution_clock::now ();
+    }
 
     return bytes_stored;
 }
@@ -274,40 +392,43 @@ DWORD Cedrus::Connection::SendXIDCommand_PST_Proof(
     unsigned char outResponse[],
     unsigned int maxOutResponseSize)
 {
-    if (outResponse != NULL)
-        memset(outResponse, 0x00, maxOutResponseSize);
+    CEDRUS_ASSERT(outResponse != nullptr, "outResponse should be non-null. If you don't care about the response, use Write!");
 
-    FlushReadFromDeviceBuffer();
+    if (inCommand == nullptr || outResponse == nullptr)
+        return 0;
 
-    DWORD bytes_written = 0;
-    Write((unsigned char*)inCommand, commandSize, &bytes_written);
+    memset(outResponse, 0x00, maxOutResponseSize);
 
-    unsigned char in_buff[64];
-    memset(in_buff, 0x00, sizeof(in_buff));
-    DWORD bytes_read = 0;
-    DWORD bytes_stored = 0;
-
-    unsigned int num_retries = 0;
-    do
+    if (!FlushReadFromDeviceBuffer())
     {
-        // We're reading from the buffer in chunks of 64 because of all the potential zeroes.
-        Read(in_buff, sizeof(in_buff), &bytes_read);
+        m_ConnectionDead = true;
+        return 0;
+    }
 
-        if (bytes_read > 0)
+    DWORD bytesWritten = 0;
+    if (!Write((unsigned char*)inCommand, commandSize, &bytesWritten))
+        return 0;
+
+    unsigned char inBuffer[64];
+    DWORD bytesStored = 0;
+    unsigned int numRetries = 0;
+
+    // We're reading from the buffer in chunks of 64 because of all the potential zeroes.
+    while (bytesStored < maxOutResponseSize && numRetries < 3 && !m_ConnectionDead)
+    {
+        DWORD bytesRead = 0;
+        if (!Read(inBuffer, sizeof(inBuffer), &bytesRead))
+            break;
+
+        for (DWORD i = 0; i < bytesRead && bytesStored < maxOutResponseSize; ++i)
         {
-            for (unsigned int i = 0; (i < bytes_read) && (bytes_stored < maxOutResponseSize); ++i)
-            {
-                // Ignore potential zeroes in the buffer.
-                if (in_buff[i] != 0)
-                {
-                    outResponse[bytes_stored] = in_buff[i];
-                    bytes_stored++;
-                }
-            }
+            // Ignore potential zeroes in the buffer.
+            if (inBuffer[i] != 0)
+                outResponse[bytesStored++] = inBuffer[i];
         }
 
-        ++num_retries;
-    } while (bytes_stored < maxOutResponseSize && num_retries < 3);
+        ++numRetries;
+    }
 
-    return bytes_stored;
+    return bytesStored;
 }

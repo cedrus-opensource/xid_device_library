@@ -166,6 +166,9 @@ namespace Cedrus
         int GetMixedInputMode() const; // _iv
         void SetMixedInputMode(unsigned char mode); // iv
 
+        void GetLicenseString( std::string& crc, std::string& str ) const; // _li
+        bool SetLicenseString ( std::string crc, std::string str ); // li
+
         unsigned int GetRaisedLines() const; // _mh / _ah
         unsigned int GetNumberOfLines() const; // _ml
         void SetNumberOfLines(unsigned int lines); // ml
@@ -229,7 +232,7 @@ namespace Cedrus
         std::shared_ptr<const DeviceConfig> m_podHostConfig;
         std::shared_ptr<ResponseManager> m_ResponseMgr;
         int m_baudRatePriorToMpod;
-        unsigned int m_curMinorFwVer;
+        int m_curMinorFwVer;
     };
 
 } // namespace Cedrus
