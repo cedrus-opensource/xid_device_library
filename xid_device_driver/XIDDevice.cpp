@@ -1479,7 +1479,7 @@ void Cedrus::XIDDevice::GetLicenseString ( std::string& crc, std::string& str ) 
     // 4 length chars + 4 crc chars + up to 0xFFFF characters of payload
     std::vector<unsigned char> return_info ( 8 + 0xFFFF );
 
-    m_xidCon->SetReadTimeout ( 5000 );
+    m_xidCon->SetReadTimeout ( 1000 );
 
     const DWORD bytes_read = m_xidCon->SendXIDCommand ( "_li", 3, return_info.data(), static_cast<unsigned int> ( return_info.size() ) );
 
@@ -1535,10 +1535,11 @@ bool Cedrus::XIDDevice::SetLicenseString ( std::string crc, std::string str )
     sds_cmd[8] = crc[2];
     sds_cmd[9] = crc[3];
 
-    memcpy ( &( sds_cmd[10] ), str.data(), str.size() );
+    if ( !str.empty() )
+        memcpy ( sds_cmd.data() + 10, str.data(), str.size() );
 
     DWORD old_write_timeout = m_xidCon->GetWriteTimeout();
-    m_xidCon->SetWriteTimeout (1500);
+    m_xidCon->SetWriteTimeout ( 1500 );
 
     DWORD bytes_written = 0;
     bool success = m_xidCon->WriteLarge ( sds_cmd.data(), static_cast<int> ( sds_cmd.size() ), &bytes_written, true );
