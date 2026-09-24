@@ -1471,80 +1471,167 @@ void Cedrus::XIDDevice::SetMixedInputMode(unsigned char mode)
     m_xidCon->Write(change_threshold_cmd, 3, &bytes_written);
 }
 
-void Cedrus::XIDDevice::GetLicenseString ( std::string& crc, std::string& str ) const
+bool Cedrus::XIDDevice::GetLicenseString ( std::uint16_t& crc, std::string& str ) const
 {
+    crc = 0;
+    str.clear();
+
     if ( !m_config->IsXID2() )
-        return;
+        return false;
 
-    // 4 length chars + 4 crc chars + up to 0xFFFF characters of payload
-    std::vector<unsigned char> return_info ( 8 + 0xFFFF );
+    // "_li" + 2-byte little-endian length + 2-byte little-endian CRC.
+    unsigned char header[7];
 
-    m_xidCon->SetReadTimeout ( 1000 );
+    m_xidCon->SetReadTimeout ( 2000 );
 
-    const DWORD bytes_read = m_xidCon->SendXIDCommand ( "_li", 3, return_info.data(), static_cast<unsigned int> ( return_info.size() ) );
+    const DWORD header_bytes_read = m_xidCon->SendXIDCommand (
+        "_li",
+        3,
+        header,
+        sizeof ( header ) );
 
-    m_xidCon->SetReadTimeout ( 50 );
+    const bool header_valid =
+        header_bytes_read == sizeof ( header ) &&
+        strncmp ( reinterpret_cast<const char*>( header ), "_li", 3 ) == 0;
 
-    bool return_valid = bytes_read >= 8;
+    bool license_read = false;
 
-    if ( !return_valid )
+    if ( !header_valid )
     {
+        m_xidCon->SetReadTimeout ( 50 );
         m_xidCon->FlushReadFromDeviceBuffer();
-        return;
+    }
+    else
+    {
+        const unsigned int str_length =
+            static_cast<unsigned int>( header[3] ) |
+            ( static_cast<unsigned int>( header[4] ) << 8 );
+
+        crc = static_cast<std::uint16_t>(
+            static_cast<std::uint16_t>( header[5] ) |
+            ( static_cast<std::uint16_t>( header[6] ) << 8 ) );
+
+        if ( str_length == 0 )
+        {
+            m_xidCon->SetReadTimeout ( 50 );
+            license_read = true;
+        }
+        else
+        {
+            str.assign ( str_length, '\0' );
+
+            DWORD payload_bytes_read = 0;
+            const bool payload_read = m_xidCon->Read (
+                reinterpret_cast<unsigned char*>( str.data() ),
+                static_cast<DWORD>( str_length ),
+                &payload_bytes_read );
+
+            m_xidCon->SetReadTimeout ( 50 );
+
+            if ( payload_read && payload_bytes_read == str_length )
+            {
+                license_read = true;
+            }
+            else
+            {
+                crc = 0;
+                str.clear();
+                m_xidCon->FlushReadFromDeviceBuffer();
+            }
+        }
     }
 
-    const unsigned int str_length = std::stoul ( std::string ( (char*)return_info.data(), 4 ), nullptr, 16 );
-
-    crc.assign ( (char*)&( return_info[4] ), 4 );
-
-    const unsigned int available = bytes_read - 8;
-
-    CEDRUS_ASSERT ( str_length <= available, "GetLicenseString read fewer bytes than alleged string length!" );
-
-    str.assign ( (char*)&( return_info[8] ), str_length < available ? str_length : available );
+    return license_read;
 }
 
-bool Cedrus::XIDDevice::SetLicenseString ( std::string crc, std::string str )
+bool Cedrus::XIDDevice::SetLicenseString ( std::uint16_t crc, const std::string& str )
 {
     if ( !m_config->IsXID2() )
         return false;
 
-    CEDRUS_ASSERT ( crc.size() == 4, "SetDongleString's crc must be exactly 4 characters" );
+    CEDRUS_ASSERT ( str.size() <= 3072, "SetLicenseString's payload must not exceed 3072 bytes" );
 
-    if ( crc.size() != 4 )
+    if ( str.size() > 3072 )
         return false;
 
-    const unsigned int str_length = static_cast<unsigned int> ( str.size() );
+    const unsigned int str_length = static_cast<unsigned int>( str.size() );
 
-    // 'l','i' + 4 length bytes + 4 crc bytes + the string itself
-    std::vector<unsigned char> sds_cmd ( 10 + str.size() );
-    sds_cmd[0] = 'l';
-    sds_cmd[1] = 'i';
-
-    std::stringstream stream;
-    stream << std::uppercase << std::setfill ( '0' ) << std::setw ( 4 ) << std::hex << str.size();
-    const std::string length_as_chars ( stream.str() );
-
-    sds_cmd[2] = length_as_chars[0];
-    sds_cmd[3] = length_as_chars[1];
-    sds_cmd[4] = length_as_chars[2];
-    sds_cmd[5] = length_as_chars[3];
-
-    sds_cmd[6] = crc[0];
-    sds_cmd[7] = crc[1];
-    sds_cmd[8] = crc[2];
-    sds_cmd[9] = crc[3];
+    // 'l', 'i' + 2-byte length + 2-byte CRC + payload.
+    std::vector<unsigned char> command ( 6 + str.size() );
+    command[0] = 'l';
+    command[1] = 'i';
+    command[2] = static_cast<unsigned char>( str_length );
+    command[3] = static_cast<unsigned char>( str_length >> 8 );
+    command[4] = static_cast<unsigned char>( crc );
+    command[5] = static_cast<unsigned char>( crc >> 8 );
 
     if ( !str.empty() )
-        memcpy ( sds_cmd.data() + 10, str.data(), str.size() );
+        memcpy ( command.data() + 6, str.data(), str.size() );
 
-    DWORD old_write_timeout = m_xidCon->GetWriteTimeout();
-    m_xidCon->SetWriteTimeout ( 1500 );
+    m_xidCon->FlushReadFromDeviceBuffer();
+
+    const DWORD old_write_timeout = m_xidCon->GetWriteTimeout();
+    const DWORD old_read_timeout = m_xidCon->GetReadTimeout();
+
+    m_xidCon->SetWriteTimeout ( 2500 );
+    m_xidCon->SetReadTimeout ( 2000 );
 
     DWORD bytes_written = 0;
-    bool success = m_xidCon->WriteLarge ( sds_cmd.data(), static_cast<int> ( sds_cmd.size() ), &bytes_written, true );
+    bool success = m_xidCon->WriteLarge (
+        command.data(),
+        static_cast<DWORD>( command.size() ),
+        &bytes_written,
+        true );
+
+    if ( success )
+    {
+        unsigned char response = 0;
+        DWORD bytes_read = 0;
+
+        success = m_xidCon->Read ( &response, 1, &bytes_read ) &&
+            bytes_read == 1 &&
+            response == '1';
+    }
 
     m_xidCon->SetWriteTimeout ( old_write_timeout );
+    m_xidCon->SetReadTimeout ( old_read_timeout );
+
+    return success;
+}
+
+bool Cedrus::XIDDevice::ClearLicenseString ( std::uint16_t crc )
+{
+    if ( !m_config->IsXID2() )
+        return false;
+
+    // 'l', 'c' + 2-byte little-endian CRC.
+    unsigned char command[4] =
+    {
+        'l',
+        'c',
+        static_cast<unsigned char>( crc ),
+        static_cast<unsigned char>( crc >> 8 )
+    };
+
+    m_xidCon->FlushReadFromDeviceBuffer();
+
+    const DWORD old_read_timeout = m_xidCon->GetReadTimeout();
+    m_xidCon->SetReadTimeout ( 2000 );
+
+    DWORD bytes_written = 0;
+    bool success = m_xidCon->Write ( command, sizeof ( command ), &bytes_written, SAVES_TO_FLASH );
+
+    if ( success )
+    {
+        unsigned char response = 0;
+        DWORD bytes_read = 0;
+
+        success = m_xidCon->Read ( &response, 1, &bytes_read ) &&
+            bytes_read == 1 &&
+            response == '1';
+    }
+
+    m_xidCon->SetReadTimeout ( old_read_timeout );
 
     return success;
 }
@@ -1725,6 +1812,127 @@ void Cedrus::XIDDevice::ResetOutputLines()
     m_xidCon->Write((unsigned char*)"mz", 2, &bytes_written);
 }
 
+void Cedrus::XIDDevice::SetStoredString1 ( const std::string& str )
+{
+    if ( !m_config->IsXID2() )
+        return;
+
+    const std::size_t str_length = str.size() > 32 ? 32 : str.size();
+
+    unsigned char command[3 + 32] = { 's', '1' };
+    command[2] = static_cast<unsigned char> ( str_length );
+
+    if ( str_length > 0 )
+        memcpy ( command + 3, str.data(), str_length );
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( command, static_cast<DWORD> ( 3 + str_length ), &bytes_written );
+}
+
+void Cedrus::XIDDevice::SetStoredString2 ( const std::string& str )
+{
+    if ( !m_config->IsXID2() )
+        return;
+
+    const std::size_t str_length = str.size() > 32 ? 32 : str.size();
+
+    unsigned char command[3 + 32] = { 's', '2' };
+    command[2] = static_cast<unsigned char> ( str_length );
+
+    if ( str_length > 0 )
+        memcpy ( command + 3, str.data(), str_length );
+
+    DWORD bytes_written = 0;
+    m_xidCon->Write ( command, static_cast<DWORD> ( 3 + str_length ), &bytes_written );
+}
+
+std::string Cedrus::XIDDevice::GetStoredString1() const
+{
+    if ( !m_config->IsXID2() )
+        return std::string();
+
+    // "_s1" + 1-byte length.
+    unsigned char header[4];
+    const DWORD header_bytes_read = m_xidCon->SendXIDCommand (
+        "_s1",
+        3,
+        header,
+        sizeof ( header ) );
+
+    const bool header_valid =
+        header_bytes_read == sizeof ( header ) &&
+        strncmp ( reinterpret_cast<const char*>( header ), "_s1", 3 ) == 0;
+
+    std::string str;
+
+    if ( !header_valid || header[3] > 32 )
+    {
+        m_xidCon->FlushReadFromDeviceBuffer();
+    }
+    else if ( header[3] > 0 )
+    {
+        const unsigned int str_length = header[3];
+        str.assign ( str_length, '\0' );
+
+        DWORD payload_bytes_read = 0;
+        const bool payload_read = m_xidCon->Read (
+            reinterpret_cast<unsigned char*>( str.data() ),
+            static_cast<DWORD>( str_length ),
+            &payload_bytes_read );
+
+        if ( !payload_read || payload_bytes_read != str_length )
+        {
+            str.clear();
+            m_xidCon->FlushReadFromDeviceBuffer();
+        }
+    }
+
+    return str;
+}
+
+std::string Cedrus::XIDDevice::GetStoredString2() const
+{
+    if ( !m_config->IsXID2() )
+        return std::string();
+
+    // "_s2" + 1-byte length.
+    unsigned char header[4];
+    const DWORD header_bytes_read = m_xidCon->SendXIDCommand (
+        "_s2",
+        3,
+        header,
+        sizeof ( header ) );
+
+    const bool header_valid =
+        header_bytes_read == sizeof ( header ) &&
+        strncmp ( reinterpret_cast<const char*>( header ), "_s2", 3 ) == 0;
+
+    std::string str;
+
+    if ( !header_valid || header[3] > 32 )
+    {
+        m_xidCon->FlushReadFromDeviceBuffer();
+    }
+    else if ( header[3] > 0 )
+    {
+        const unsigned int str_length = header[3];
+        str.assign ( str_length, '\0' );
+
+        DWORD payload_bytes_read = 0;
+        const bool payload_read = m_xidCon->Read (
+            reinterpret_cast<unsigned char*>( str.data() ),
+            static_cast<DWORD>( str_length ),
+            &payload_bytes_read );
+
+        if ( !payload_read || payload_bytes_read != str_length )
+        {
+            str.clear();
+            m_xidCon->FlushReadFromDeviceBuffer();
+        }
+    }
+
+    return str;
+}
 
 void Cedrus::XIDDevice::SetVoltageRange ( unsigned int /* nMinimum */, unsigned int nMaximum )
 {
@@ -1963,26 +2171,32 @@ void Cedrus::XIDDevice::PollForResponse() const
 
 bool Cedrus::XIDDevice::HasQueuedResponses() const
 {
-    if (m_ResponseMgr)
-        return m_ResponseMgr->HasQueuedResponses();
-    else
-        return false;
+    bool has_responses = false;
+
+    if ( m_ResponseMgr )
+        has_responses = m_ResponseMgr->HasQueuedResponses();
+
+    return has_responses;
 }
 
 unsigned int Cedrus::XIDDevice::GetNumberOfKeysDown() const
 {
-    if (m_ResponseMgr)
-        return m_ResponseMgr->GetNumberOfKeysDown();
-    else
-        return 0;
+    unsigned int keys_down = 0;
+
+    if ( m_ResponseMgr )
+        keys_down = m_ResponseMgr->GetNumberOfKeysDown();
+
+    return keys_down;
 }
 
 Cedrus::Response Cedrus::XIDDevice::GetNextResponse() const
 {
-    if (m_ResponseMgr)
-        return m_ResponseMgr->GetNextResponse();
-    else
-        return Response();
+    Response response;
+
+    if ( m_ResponseMgr )
+        response = m_ResponseMgr->GetNextResponse();
+
+    return response;
 }
 
 void Cedrus::XIDDevice::ClearResponseQueue()

@@ -34,6 +34,7 @@
 #include "XidDriverImpExpDefs.h"
 #include "ResponseManager.h"
 
+#include <cstdint>
 #include <string>
 
 namespace Cedrus
@@ -166,8 +167,9 @@ namespace Cedrus
         int GetMixedInputMode() const; // _iv
         void SetMixedInputMode(unsigned char mode); // iv
 
-        void GetLicenseString( std::string& crc, std::string& str ) const; // _li
-        bool SetLicenseString ( std::string crc, std::string str ); // li
+        bool GetLicenseString ( std::uint16_t& crc, std::string& str ) const; // _li
+        bool SetLicenseString ( std::uint16_t crc, const std::string& str ); // li
+        bool ClearLicenseString ( std::uint16_t crc ); // lc
 
         unsigned int GetRaisedLines() const; // _mh / _ah
         unsigned int GetNumberOfLines() const; // _ml
@@ -182,6 +184,12 @@ namespace Cedrus
         void StopPulseTable(); // ms
         void AddPulseTableEntry(unsigned int time, unsigned int lines); // mt
         void ResetOutputLines(); // mz
+
+        void SetStoredString1 ( const std::string& str ); // s1
+        void SetStoredString2 ( const std::string& str ); // s2
+
+        std::string GetStoredString1() const; // _s1
+        std::string GetStoredString2() const; // _s2
 
         void SetVoltageRange ( unsigned int nMinimum, unsigned int nMaximum ); // vr
         unsigned int GetMaxVoltageRange() const; // _vr

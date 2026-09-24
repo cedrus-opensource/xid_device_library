@@ -112,6 +112,7 @@ namespace Cedrus
 
         void SetWriteTimeout ( DWORD writeTimeout );
 
+        DWORD GetReadTimeout () { return m_ReadTimeout; }
         DWORD GetWriteTimeout() { return m_WriteTimeout; }
 
     private:
