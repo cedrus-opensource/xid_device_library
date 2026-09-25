@@ -6,6 +6,10 @@
 #include "DeviceConfig.h"
 #include "constants.h"
 
+#if defined(__linux__)
+#include <cstring>
+#endif
+
 Cedrus::ResponseManager::ResponseManager(std::shared_ptr<const DeviceConfig> devConfig )
     : m_BytesInBuffer(0),
       m_XIDPacketIndex(INVALID_PACKET_INDEX),
