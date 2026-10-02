@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "XidDriverImpExpDefs.h"
 #include "ResponseManager.h"
 
 #include <cstdint>
@@ -54,7 +53,7 @@ namespace Cedrus
     class Connection;
     class DeviceConfig;
 
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT XIDDevice
+    class XIDDevice
     {
     public:
         enum { IS_ANALOG_POD = 'V' };

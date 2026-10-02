@@ -33,19 +33,20 @@
 
 #include "ftd2xx.h"
 
-#ifdef __APPLE__
-#   define SLEEP_FUNC usleep
-#   define SLEEP_INC 1000
-#elif defined(_WIN32)
+#if defined(_WIN32)
 #   include <windows.h>
-#   define SLEEP_FUNC Sleep
-#   define SLEEP_INC 1
 #endif
 
 #include <chrono>
+#include <thread>
 
 namespace Cedrus
 {
+    inline void SleepMs(unsigned int milliseconds)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+    }
+
     enum { SAVES_TO_FLASH = true };
 
     class Connection

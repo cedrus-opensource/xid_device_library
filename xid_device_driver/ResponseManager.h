@@ -37,8 +37,6 @@
 #include <functional>
 #include <queue>
 
-#include "XidDriverImpExpDefs.h"
-
 namespace Cedrus
 {
     class Connection;
@@ -114,4 +112,3 @@ namespace Cedrus
         const std::shared_ptr<const DeviceConfig> m_respDevConfig;
     };
 } // namespace Cedrus
-

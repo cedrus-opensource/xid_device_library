@@ -39,6 +39,8 @@
 
 #include "CedrusAssert.h"
 #include <string>
+#include <cctype>
+#include <cstring>
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
@@ -244,7 +246,7 @@ void Cedrus::XIDDevice::SetMpodOutputMode(unsigned char mode)
     DWORD bytes_written = 0;
     m_xidCon->Write ( smom_command, 3, &bytes_written, SAVES_TO_FLASH );
 
-    SLEEP_FUNC(50 * SLEEP_INC);
+    Cedrus::SleepMs(50);
 }
 
 bool Cedrus::XIDDevice::IsPodLocked() const
@@ -322,7 +324,7 @@ void Cedrus::XIDDevice::SetMpodPulseDuration(unsigned char duration)
     DWORD bytes_written = 0;
     m_xidCon->Write(smpd_command, 3, &bytes_written);
 
-    SLEEP_FUNC(50 * SLEEP_INC);
+    Cedrus::SleepMs(50);
 }
 
 char Cedrus::XIDDevice::GetPodOutputLogic() const
@@ -410,7 +412,7 @@ void Cedrus::XIDDevice::ConnectToMpod(unsigned char mpod, unsigned char action)
     DWORD bytes_written = 0;
     m_xidCon->Write(ctm_cmd, 4, &bytes_written);
 
-    SLEEP_FUNC(150 * SLEEP_INC);
+    Cedrus::SleepMs(150);
 
     m_podHostConfig = (action == 0 ? nullptr : m_config);
     MatchConfigToModel_MPod(-1);
@@ -445,7 +447,7 @@ void Cedrus::XIDDevice::SetTranslationTable(unsigned char table)
     DWORD bytes_written = 0;
     m_xidCon->Write(stt_cmd, 3, &bytes_written);
 
-    SLEEP_FUNC(50 * SLEEP_INC);
+    Cedrus::SleepMs(50);
 }
 
 unsigned int Cedrus::XIDDevice::GetMappedSignals(unsigned int line)
@@ -540,7 +542,7 @@ void Cedrus::XIDDevice::CommitLineMappingToFlash()
     DWORD bytes_written = 0;
     m_xidCon->Write ( commit_map_cmd, 2, &bytes_written, SAVES_TO_FLASH );
 
-    SLEEP_FUNC(50 * SLEEP_INC);
+    Cedrus::SleepMs(50);
 }
 
 int Cedrus::XIDDevice::GetVKDropDelay() const
@@ -740,7 +742,7 @@ void Cedrus::XIDDevice::SetModelID(unsigned char model)
     DWORD bytes_written = 0;
     m_xidCon->Write ( (unsigned char*)set_model_cmd, 3, &bytes_written, SAVES_TO_FLASH );
 
-    SLEEP_FUNC(250 * SLEEP_INC);
+    Cedrus::SleepMs(250);
 
     if (!m_config->IsMPod())
         MatchConfigToModel(model);
@@ -1019,7 +1021,7 @@ void Cedrus::XIDDevice::RestoreFactoryDefaults()
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"f7", 2, &bytes_written);
 
-    SLEEP_FUNC(100 * SLEEP_INC);
+    Cedrus::SleepMs(100);
 
     if (m_config->IsMPod())
     {
@@ -1044,7 +1046,7 @@ void Cedrus::XIDDevice::SaveSettingsToFlash()
 {
     DWORD bytes_written = 0;
     m_xidCon->Write((unsigned char*)"f9", 2, &bytes_written);
-    SLEEP_FUNC(50 * SLEEP_INC);
+    Cedrus::SleepMs(50);
 }
 
 unsigned int Cedrus::XIDDevice::GetTimeSinceLastOscillatorTest()
@@ -1270,7 +1272,7 @@ void Cedrus::XIDDevice::EnableRBx40LED(bool enable)
     DWORD bytes_written = 0;
     m_xidCon->Write ( enable_rb_led_cmd, 3, &bytes_written );
 
-    SLEEP_FUNC(50 * SLEEP_INC);
+    Cedrus::SleepMs(50);
 }
 
 
@@ -1300,7 +1302,7 @@ void Cedrus::XIDDevice::SetRipondaLEDFunction ( unsigned int nFunction )
     DWORD bytes_written = 0;
     m_xidCon->Write ( enable_rb_led_cmd, 3, &bytes_written, SAVES_TO_FLASH );
 
-    SLEEP_FUNC(50 * SLEEP_INC);
+    Cedrus::SleepMs(50);
 }
 
 

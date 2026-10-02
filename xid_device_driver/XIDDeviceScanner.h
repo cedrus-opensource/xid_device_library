@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "XidDriverImpExpDefs.h"
 #include "constants.h"
 
 #include <vector>
@@ -46,7 +45,7 @@ namespace Cedrus
     class StimTracker;
     class DeviceConfig;
 
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT XIDDeviceScanner
+    class XIDDeviceScanner
     {
     private:
         XIDDeviceScanner();

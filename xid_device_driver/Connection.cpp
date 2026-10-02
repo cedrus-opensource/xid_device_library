@@ -34,6 +34,7 @@
 #include "CedrusAssert.h"
 
 #include "constants.h"
+#include <cstring>
 
 Cedrus::Connection::Connection(
     const DWORD location,
@@ -207,7 +208,7 @@ bool Cedrus::Connection::Write(
     while (std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::high_resolution_clock::now() - m_timestamp).count() < m_cmdThroughputLimit)
     {
-        SLEEP_FUNC(1 * SLEEP_INC);
+        Cedrus::SleepMs(1);
     }
 
     m_timestamp = std::chrono::high_resolution_clock::now();
@@ -231,11 +232,11 @@ bool Cedrus::Connection::Write(
             return false;
 
         if (*bytesWritten + 1 < bytesToWrite)
-            SLEEP_FUNC(1 * SLEEP_INC);
+            Cedrus::SleepMs(1);
     }
 
     if (savesToFlash)
-        SLEEP_FUNC(100 * SLEEP_INC);
+        Cedrus::SleepMs(100);
 
     return true;
 }
@@ -260,7 +261,7 @@ bool Cedrus::Connection::WriteLarge (
     while (std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::high_resolution_clock::now() - m_timestamp).count() < m_cmdThroughputLimit)
     {
-        SLEEP_FUNC(1 * SLEEP_INC);
+        Cedrus::SleepMs(1);
     }
 
     m_timestamp = std::chrono::high_resolution_clock::now();
@@ -281,7 +282,7 @@ bool Cedrus::Connection::WriteLarge (
         return false;
 
     if (savesToFlash)
-        SLEEP_FUNC(100 * SLEEP_INC);
+        Cedrus::SleepMs(100);
 
     return true;
 }
@@ -362,7 +363,7 @@ DWORD Cedrus::Connection::SendXIDCommand(
 
         if ( available == 0 )
         {
-            SLEEP_FUNC ( 1 * SLEEP_INC );
+            Cedrus::SleepMs(1);
             continue;
         }
 
@@ -375,7 +376,7 @@ DWORD Cedrus::Connection::SendXIDCommand(
 
         if ( bytes_read == 0 )
         {
-            SLEEP_FUNC ( 1 * SLEEP_INC );
+            Cedrus::SleepMs(1);
             continue;
         }
 

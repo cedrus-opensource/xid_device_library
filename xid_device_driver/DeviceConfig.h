@@ -32,7 +32,6 @@
 #pragma once
 
 #include "constants.h"
-#include "XidDriverImpExpDefs.h"
 
 #include <map>
 #include <string>
@@ -86,7 +85,7 @@ namespace Cedrus
         }
     };
 
-    class CEDRUS_XIDDRIVER_IMPORTEXPORT DeviceConfig
+    class DeviceConfig
     {
     public:
         DeviceConfig(std::string deviceName,

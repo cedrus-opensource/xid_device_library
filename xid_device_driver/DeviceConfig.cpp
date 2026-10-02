@@ -38,8 +38,6 @@
 #include <iostream>
 #include <sstream>
 
-#include "CedrusAssert.h"
-
 void Cedrus::DeviceConfig::PopulateConfigList(std::vector<std::shared_ptr<Cedrus::DeviceConfig> > & listOfAllConfigs)
 {
     CreateRB530Config(listOfAllConfigs);
