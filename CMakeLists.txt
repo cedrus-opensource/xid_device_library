@@ -43,3 +43,17 @@ set_target_properties(xid_device_driver PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON
 target_include_directories(xid_device_driver PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/xid_device_driver")
 
 target_link_libraries(xid_device_driver PUBLIC ftd2xx::ftd2xx)
+
+# ---------------------------------------------------------------------------
+# Samples
+# ---------------------------------------------------------------------------
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    set(_xid_samples_default ON)
+else()
+    set(_xid_samples_default OFF)
+endif()
+option(XID_BUILD_SAMPLES "Build the samples" ${_xid_samples_default})
+
+if(XID_BUILD_SAMPLES)
+    add_subdirectory(samples)
+endif()
